@@ -2,6 +2,7 @@
 name = "actix-web-cors"
 version = "0.1.0"
 authors = ["krircc <krircc@aliyun.com>"]
+workspace = "../../"
 
 [dependencies]
 serde = "1.0"

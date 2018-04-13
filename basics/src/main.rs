@@ -109,7 +109,7 @@ fn main() {
                     io::Error::new(io::ErrorKind::Other, "test"), StatusCode::OK)
             }))
             // static files
-            .handler("/static/", fs::StaticFiles::new("../static/"))
+            .handler("/static/", fs::StaticFiles::new("static/"))
             // redirect
             .resource("/", |r| r.method(Method::GET).f(|req| {
                 println!("{:?}", req);

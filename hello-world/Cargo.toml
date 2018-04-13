@@ -2,6 +2,7 @@
 name = "hello-world"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+workspace = "../"
 
 [dependencies]
 env_logger = "0.5"

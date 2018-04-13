@@ -1,0 +1,21 @@
+[workspace]
+members = [
+  "./",
+  "basics",
+  "diesel",
+  "hello-world",
+  "http-proxy",
+  "json",
+  "juniper",
+  "multipart",
+  "protobuf",
+  "r2d2",
+  "redis-session",
+  "state",
+  "template_tera",
+  "tls",
+  "unix-socket",
+  "web-cors/backend",
+  "websocket",
+  "websocket-chat",
+]
