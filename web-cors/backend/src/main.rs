@@ -31,7 +31,7 @@ fn main() {
                              http::header::ACCEPT,
                              http::header::CONTENT_TYPE])
                     .max_age(3600)
-                    .finish().expect("Can not create CORS middleware")
+                    .finish()
                     .register(r);
                 r.method(http::Method::POST).a(info);
             }))
