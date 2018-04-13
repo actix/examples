@@ -54,6 +54,6 @@ script:
       cd template_tera && cargo check && cd ..
       cd tls && cargo check && cd ..
       cd unix-socket && cargo check && cd ..
-      cd web-cors/backend && cargo check && cd ..
+      cd web-cors/backend && cargo check && cd ../..
       cd websocket && cargo check && cd ..
       cd websocket-chat && cargo check && cd ..
