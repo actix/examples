@@ -2,7 +2,7 @@
 
 A curated list of examples related to actix.
 
-## more commulity project
+## from commulity
 * [Rust-webapp-starter](https://github.com/OUISRC/Rust-webapp-starter) : A full-stack Single Page Webapp written in actix-web with vuejs.
 
 ## Contribute
