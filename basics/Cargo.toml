@@ -1,0 +1,10 @@
+[package]
+name = "basics"
+version = "0.1.0"
+authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+
+[dependencies]
+futures = "0.1"
+env_logger = "0.5"
+actix = "0.5"
+actix-web = "^0.5"

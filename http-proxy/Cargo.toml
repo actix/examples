@@ -1,0 +1,10 @@
+[package]
+name = "http-proxy"
+version = "0.1.0"
+authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+
+[dependencies]
+env_logger = "0.5"
+futures = "0.1"
+actix = "0.5"
+actix-web = { version = "^0.5", features=["alpn"] }
