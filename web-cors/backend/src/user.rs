@@ -1,19 +1,20 @@
-use actix_web::{AsyncResponder, Error, HttpMessage, HttpResponse, HttpRequest};
-use futures::Future;
-
+use actix_web::{Result, Json};
 
 #[derive(Deserialize,Serialize, Debug)]
-struct Info {
+pub struct Info {
     username: String,
     email: String,
     password: String,
     confirm_password: String,
 }
 
-pub fn info(req: HttpRequest) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.json()
-        .from_err()
-        .and_then(|res: Info| {
-            Ok(HttpResponse::Ok().json(res))
-        }).responder()
+pub fn info(info: Json<Info>) -> Result<Json<Info>> {
+    println!("=========={:?}=========", info);
+    Ok(Json(Info{
+                username: info.username.clone(),
+                email: info.email.clone(),
+                password: info.password.clone(),
+                confirm_password: info.confirm_password.clone(),
+            }))
 }
+
