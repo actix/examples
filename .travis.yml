@@ -1,0 +1,60 @@
+language: rust
+sudo: false
+dist: trusty
+
+cache:
+  cargo: true
+  apt: true
+
+matrix:
+  include:
+    - rust: 1.21.0
+    - rust: stable
+    - rust: beta
+    - rust: nightly
+  allow_failures:
+    - rust: nightly
+
+#rust:
+#  - 1.21.0
+#  - stable
+#  - beta
+#  - nightly-2018-01-03
+
+env:
+  global:
+    # - RUSTFLAGS="-C link-dead-code"
+    - OPENSSL_VERSION=openssl-1.0.2
+
+before_install:
+  - sudo add-apt-repository -y ppa:0k53d-karl-f830m/openssl
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libssl-dev libelf-dev libdw-dev cmake gcc binutils-dev libiberty-dev
+
+# Add clippy
+before_script:
+  - |
+    if [[ "$TRAVIS_RUST_VERSION" == "nightly" ]]; then
+        ( ( cargo install clippy && export CLIPPY=true ) || export CLIPPY=false );
+    fi
+  - export PATH=$PATH:~/.cargo/bin
+
+script:
+  - |
+      cd basics && cargo check && cd ..
+      cd diesel && cargo check && cd ..
+      cd hello-world && cargo check && cd ..
+      cd http-proxy && cargo check && cd ..
+      cd json && cargo check && cd ..
+      cd juniper && cargo check && cd ..
+      cd multipart && cargo check && cd ..
+      cd protobuf && cargo check && cd ..
+      cd r2d2 && cargo check && cd ..
+      cd redis-session && cargo check && cd ..
+      cd state && cargo check && cd ..
+      cd template_tera && cargo check && cd ..
+      cd tls && cargo check && cd ..
+      cd unix-socket && cargo check && cd ..
+      cd web-cors/backend && cargo check && cd ..
+      cd websocket && cargo check && cd ..
+      cd websocket-chat && cargo check && cd ..
