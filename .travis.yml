@@ -41,7 +41,6 @@ before_script:
 
 script:
   - |
-    if [[ "$TRAVIS_RUST_VERSION" == "stable" ]]; then
       cd basics && cargo check && cd ..
       cd diesel && cargo check && cd ..
       cd hello-world && cargo check && cd ..
@@ -59,4 +58,3 @@ script:
       cd web-cors/backend && cargo check && cd ..
       cd websocket && cargo check && cd ..
       cd websocket-chat && cargo check && cd ..
-    fi
