@@ -12,9 +12,9 @@ cargo run
 
 ### web client
 
-- [http://localhost:8080/index.html](http://localhost:8080/index.html)
-- [http://localhost:8080/async/bob](http://localhost:8080/async/bob)
+- [http://localhost:8080/index.html](http://localhost:8080/index.html) - open welcome.html
+- [http://localhost:8080/async/bob](http://localhost:8080/async/bob) - display "Hello bob!"
 - [http://localhost:8080/user/bob/](http://localhost:8080/user/bob/) plain/text download
 - [http://localhost:8080/test](http://localhost:8080/test) (return status switch GET or POST or other)
-- [http://localhost:8080/static/index.html](http://localhost:8080/static/index.html)
-- [http://localhost:8080/static/notexit](http://localhost:8080/static/notexit) display 404 page
+- [http://localhost:8080/static/welcome.html](http://localhost:8080/static/welcome.html) - open welcome.html
+- [http://localhost:8080/notexit](http://localhost:8080/notexit) - display 404 page
