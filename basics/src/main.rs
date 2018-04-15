@@ -16,11 +16,11 @@ use futures::future::{FutureResult, result};
 
 /// favicon handler
 fn favicon(req: HttpRequest) -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open("../static/favicon.ico")?)
+    Ok(fs::NamedFile::open("static/favicon.ico")?)
 }
 
 /// simple index handler
-fn index(mut req: HttpRequest) -> Result<HttpResponse> {
+fn welcome(mut req: HttpRequest) -> Result<HttpResponse> {
     println!("{:?}", req);
 
     // example of ...
@@ -50,7 +50,7 @@ fn index(mut req: HttpRequest) -> Result<HttpResponse> {
 
 /// 404 handler
 fn p404(req: HttpRequest) -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open("./static/404.html")?
+    Ok(fs::NamedFile::open("static/404.html")?
        .set_status_code(StatusCode::NOT_FOUND))
 }
 
@@ -90,31 +90,33 @@ fn main() {
                 middleware::CookieSessionBackend::signed(&[0; 32]).secure(false)
             ))
             // register favicon
-            .resource("/favicon.ico", |r| r.f(favicon))
+            .resource("/favicon", |r| r.f(favicon))
             // register simple route, handle all methods
-            .resource("/index.html", |r| r.f(index))
+            .resource("/welcome", |r| r.f(welcome))
             // with path parameters
-            .resource("/user/{name}/", |r| r.method(Method::GET).f(with_param))
+            .resource("/user/{name}", |r| r.method(Method::GET).f(with_param))
             // async handler
             .resource("/async/{name}", |r| r.method(Method::GET).a(index_async))
             .resource("/test", |r| r.f(|req| {
+                println!("=============test=============");
                 match *req.method() {
                     Method::GET => HttpResponse::Ok(),
                     Method::POST => HttpResponse::MethodNotAllowed(),
                     _ => HttpResponse::NotFound(),
                 }
             }))
-            .resource("/error.html", |r| r.f(|req| {
+            .resource("/error", |r| r.f(|req| {
+                println!("=============error=============");
                 error::InternalError::new(
                     io::Error::new(io::ErrorKind::Other, "test"), StatusCode::OK)
             }))
             // static files
-            .handler("/static/", fs::StaticFiles::new("static/"))
+            .handler("/static", fs::StaticFiles::new("static"))
             // redirect
             .resource("/", |r| r.method(Method::GET).f(|req| {
                 println!("{:?}", req);
                 HttpResponse::Found()
-                    .header(header::LOCATION, "/index.html")
+                    .header(header::LOCATION, "static/index.html")
                     .finish()
             }))
             // default
