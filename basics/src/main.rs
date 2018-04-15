@@ -98,7 +98,6 @@ fn main() {
             // async handler
             .resource("/async/{name}", |r| r.method(Method::GET).a(index_async))
             .resource("/test", |r| r.f(|req| {
-                println!("=============test=============");
                 match *req.method() {
                     Method::GET => HttpResponse::Ok(),
                     Method::POST => HttpResponse::MethodNotAllowed(),
@@ -106,7 +105,6 @@ fn main() {
                 }
             }))
             .resource("/error", |r| r.f(|req| {
-                println!("=============error=============");
                 error::InternalError::new(
                     io::Error::new(io::ErrorKind::Other, "test"), StatusCode::OK)
             }))
