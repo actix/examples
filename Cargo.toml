@@ -2,6 +2,7 @@
 members = [
   "./",
   "basics",
+  "cookie-auth",
   "diesel",
   "hello-world",
   "http-proxy",
