@@ -106,7 +106,7 @@ fn main() {
             }))
             .resource("/error", |r| r.f(|req| {
                 error::InternalError::new(
-                    io::Error::new(io::ErrorKind::Other, "test"), StatusCode::OK)
+                    io::Error::new(io::ErrorKind::Other, "test"), StatusCode::INTERNAL_SERVER_ERROR)
             }))
             // static files
             .handler("/static", fs::StaticFiles::new("static"))
