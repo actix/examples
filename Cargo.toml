@@ -13,6 +13,7 @@ members = [
   "r2d2",
   "redis-session",
   "state",
+  "template_askama",
   "template_tera",
   "tls",
   "unix-socket",
