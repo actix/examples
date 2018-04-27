@@ -43,12 +43,12 @@ impl Handler<CreateUser> for DbExecutor {
         diesel::insert_into(users)
             .values(&new_user)
             .execute(conn)
-            .expect("Error inserting person");
+            .map_err(|_| error::ErrorInternalServerError("Error inserting person"))?;
 
         let mut items = users
             .filter(id.eq(&uuid))
             .load::<models::User>(conn)
-            .expect("Error loading person");
+            .map_err(|_| error::ErrorInternalServerError("Error loading person"))?;
 
         Ok(items.pop().unwrap())
     }
