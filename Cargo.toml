@@ -3,6 +3,7 @@ members = [
   "./",
   "basics",
   "cookie-auth",
+  "cookie-session",
   "diesel",
   "hello-world",
   "http-proxy",
