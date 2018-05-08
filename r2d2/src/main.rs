@@ -1,24 +1,23 @@
 //! Actix web r2d2 example
-extern crate serde;
-extern crate serde_json;
-extern crate uuid;
-extern crate futures;
 extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
+extern crate futures;
 extern crate r2d2;
 extern crate r2d2_sqlite;
 extern crate rusqlite;
+extern crate serde;
+extern crate serde_json;
+extern crate uuid;
 
 use actix::prelude::*;
-use actix_web::{
-    middleware, http, server, App, AsyncResponder, HttpRequest, HttpResponse, Error};
+use actix_web::{http, middleware, server, App, AsyncResponder, Error, HttpRequest,
+                HttpResponse};
 use futures::future::Future;
 use r2d2_sqlite::SqliteConnectionManager;
 
 mod db;
 use db::{CreateUser, DbExecutor};
-
 
 /// State with DbExecutor address
 struct State {
@@ -26,16 +25,18 @@ struct State {
 }
 
 /// Async request handler
-fn index(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
+fn index(req: HttpRequest<State>) -> Box<Future<Item = HttpResponse, Error = Error>> {
     let name = &req.match_info()["name"];
 
-    req.state().db.send(CreateUser{name: name.to_owned()})
+    req.state()
+        .db
+        .send(CreateUser {
+            name: name.to_owned(),
+        })
         .from_err()
-        .and_then(|res| {
-            match res {
-                Ok(user) => Ok(HttpResponse::Ok().json(user)),
-                Err(_) => Ok(HttpResponse::InternalServerError().into())
-            }
+        .and_then(|res| match res {
+            Ok(user) => Ok(HttpResponse::Ok().json(user)),
+            Err(_) => Ok(HttpResponse::InternalServerError().into()),
         })
         .responder()
 }
@@ -57,8 +58,9 @@ fn main() {
         App::with_state(State{db: addr.clone()})
             // enable logger
             .middleware(middleware::Logger::default())
-            .resource("/{name}", |r| r.method(http::Method::GET).a(index))})
-        .bind("127.0.0.1:8080").unwrap()
+            .resource("/{name}", |r| r.method(http::Method::GET).a(index))
+    }).bind("127.0.0.1:8080")
+        .unwrap()
         .start();
 
     let _ = sys.run();

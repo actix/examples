@@ -24,7 +24,7 @@ fn main() {
             .middleware(middleware::Logger::default())
             .resource("/index.html", |r| r.f(|_| "Hello world!"))
             .resource("/", |r| r.f(index))
-    }).threads(1)
+    }).workers(1)
         .bind("127.0.0.1:8081")
         .unwrap()
         .start();

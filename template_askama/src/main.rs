@@ -3,8 +3,9 @@ extern crate actix_web;
 #[macro_use]
 extern crate askama;
 
-use actix::prelude::*;
-use actix_web::{http, server, App, HttpRequest, HttpResponse, Result};
+use std::collections::HashMap;
+
+use actix_web::{http, server, App, HttpResponse, Query, Result};
 use askama::Template;
 
 #[derive(Template)]
@@ -18,8 +19,8 @@ struct UserTemplate<'a> {
 #[template(path = "index.html")]
 struct Index;
 
-fn index(req: HttpRequest) -> Result<HttpResponse> {
-    let s = if let Some(name) = req.query().get("name") {
+fn index(query: Query<HashMap<String, String>>) -> Result<HttpResponse> {
+    let s = if let Some(name) = query.get("name") {
         UserTemplate {
             name: name,
             text: "Welcome!",
@@ -32,11 +33,12 @@ fn index(req: HttpRequest) -> Result<HttpResponse> {
 }
 
 fn main() {
-    let sys = System::new("template-askama");
+    let sys = actix::System::new("template-askama");
 
     // start http server
-    server::new(move || App::new().resource("/", |r| r.method(http::Method::GET).f(index)))
-        .bind("0.0.0.0:8080")
+    server::new(move || {
+        App::new().resource("/", |r| r.method(http::Method::GET).with(index))
+    }).bind("0.0.0.0:8080")
         .unwrap()
         .start();
 

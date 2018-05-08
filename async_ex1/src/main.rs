@@ -1,8 +1,8 @@
 // This is a contrived example intended to illustrate actix-web features.
 // *Imagine* that you have a process that involves 3 steps.  The steps here
 // are dumb in that they do nothing other than call an
-// httpbin endpoint that returns the json that was posted to it.  The intent here
-// is to illustrate how to chain these steps together as futures and return
+// httpbin endpoint that returns the json that was posted to it.  The intent
+// here is to illustrate how to chain these steps together as futures and return
 // a final result in a response.
 //
 // Actix-web features illustrated here include:
@@ -20,15 +20,15 @@ extern crate serde_derive;
 extern crate serde_json;
 #[macro_use]
 extern crate validator_derive;
+extern crate env_logger;
 extern crate futures;
 extern crate validator;
-extern crate env_logger;
 
-use std::time::Duration;
+use actix_web::{client, dev::Handler, http::Method, server, App, AsyncResponder, Body,
+                Error, HttpMessage, HttpRequest, HttpResponse, Json, Result};
 use futures::{future::ok as fut_ok, Future};
 use std::collections::HashMap;
-use actix_web::{client, dev::Handler, http::Method, server, App, AsyncResponder, Body, Error,
-                HttpMessage, HttpRequest, HttpResponse, Json, Result};
+use std::time::Duration;
 use validator::{Validate, ValidationError};
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
@@ -46,9 +46,9 @@ struct HttpBinResponse {
     files: HashMap<String, String>,
     form: HashMap<String, String>,
     headers: HashMap<String, String>,
-    json: SomeData, 
+    json: SomeData,
     origin: String,
-    url: String
+    url: String,
 }
 
 /// post json to httpbin, get it back in the response body, return deserialized
@@ -70,15 +70,18 @@ fn step_x(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
     )
 }
 
-fn create_something(some_data: Json<SomeData>) -> Box<Future<Item = HttpResponse, Error = Error>> {
+fn create_something(
+    some_data: Json<SomeData>,
+) -> Box<Future<Item = HttpResponse, Error = Error>> {
     step_x(some_data.into_inner())
         .and_then(|some_data_2| {
             step_x(some_data_2).and_then(|some_data_3| {
-                step_x(some_data_3).and_then(|d| 
+                step_x(some_data_3).and_then(|d| {
                     Ok(HttpResponse::Ok()
-                    .content_type("application/json")
-                    .body(serde_json::to_string(&d).unwrap())
-                    .into()))
+                        .content_type("application/json")
+                        .body(serde_json::to_string(&d).unwrap())
+                        .into())
+                })
             })
         })
         .responder()

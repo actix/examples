@@ -3,11 +3,11 @@
 //! that is shared across all handlers within same Application.
 //! And individual handler can have state.
 //!
-//! > **Note**: http server accepts an application factory rather than an application
-//! > instance. Http server constructs an application instance for each thread,
-//! > thus application state
-//! > must be constructed multiple times. If you want to share state between different
-//! > threads, a shared object should be used, e.g. `Arc`.
+//! > **Note**: http server accepts an application factory rather than an
+//! application > instance. Http server constructs an application instance for
+//! each thread, > thus application state
+//! > must be constructed multiple times. If you want to share state between
+//! different > threads, a shared object should be used, e.g. `Arc`.
 //!
 //! Check [user guide](https://actix.rs/book/actix-web/sec-2-application.html) for more info.
 
@@ -17,8 +17,7 @@ extern crate env_logger;
 
 use std::cell::Cell;
 
-use actix::prelude::*;
-use actix_web::{http, middleware, server, ws, App, HttpRequest, HttpResponse};
+use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
 
 /// Application state
 struct AppState {
@@ -30,7 +29,10 @@ fn index(req: HttpRequest<AppState>) -> HttpResponse {
     println!("{:?}", req);
     req.state().counter.set(req.state().counter.get() + 1);
 
-    HttpResponse::Ok().body(format!("Num of requests: {}", req.state().counter.get()))
+    HttpResponse::Ok().body(format!(
+        "Num of requests: {}",
+        req.state().counter.get()
+    ))
 }
 
 fn main() {

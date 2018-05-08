@@ -1,10 +1,10 @@
 //! Db executor actor
-use uuid;
-use diesel;
-use actix_web::*;
 use actix::prelude::*;
+use actix_web::*;
+use diesel;
 use diesel::prelude::*;
-use diesel::r2d2::{Pool, ConnectionManager};
+use diesel::r2d2::{ConnectionManager, Pool};
+use uuid;
 
 use models;
 use schema;
@@ -12,8 +12,8 @@ use schema;
 /// This is db executor actor. We are going to run 3 of them in parallel.
 pub struct DbExecutor(pub Pool<ConnectionManager<SqliteConnection>>);
 
-/// This is only message that this actor can handle, but it is easy to extend number of
-/// messages.
+/// This is only message that this actor can handle, but it is easy to extend
+/// number of messages.
 pub struct CreateUser {
     pub name: String,
 }

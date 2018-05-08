@@ -9,8 +9,8 @@ extern crate actix_web;
 extern crate env_logger;
 
 use actix::prelude::*;
-use actix_web::{
-    http, middleware, server, fs, ws, App, HttpRequest, HttpResponse, Error};
+use actix_web::ws::WsWriter;
+use actix_web::{fs, http, middleware, server, ws, App, Error, HttpRequest, HttpResponse};
 
 /// do websocket handshake and start `MyWebSocket` actor
 fn ws_index(r: HttpRequest) -> Result<HttpResponse, Error> {
@@ -27,7 +27,6 @@ impl Actor for MyWebSocket {
 
 /// Handler for `ws::Message`
 impl StreamHandler<ws::Message, ws::ProtocolError> for MyWebSocket {
-
     fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
         // process websocket messages
         println!("WS: {:?}", msg);

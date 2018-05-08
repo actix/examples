@@ -1,15 +1,16 @@
 extern crate actix;
 extern crate actix_web;
 extern crate bytes;
-extern crate futures;
 extern crate env_logger;
+extern crate futures;
 extern crate serde_json;
-#[macro_use] extern crate serde_derive;
-#[macro_use] extern crate json;
+#[macro_use]
+extern crate serde_derive;
+#[macro_use]
+extern crate json;
 
-use actix_web::{
-    middleware, http, error, server,
-    App, AsyncResponder, HttpRequest, HttpResponse, HttpMessage, Error, Json};
+use actix_web::{error, http, middleware, server, App, AsyncResponder, Error,
+                HttpMessage, HttpRequest, HttpResponse, Json};
 
 use bytes::BytesMut;
 use futures::{Future, Stream};
@@ -22,7 +23,7 @@ struct MyObj {
 }
 
 /// This handler uses `HttpRequest::json()` for loading json object.
-fn index(req: HttpRequest) -> Box<Future<Item=HttpResponse, Error=Error>> {
+fn index(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     req.json()
         .from_err()  // convert all errors into `Error`
         .and_then(|val: MyObj| {
@@ -35,13 +36,13 @@ fn index(req: HttpRequest) -> Box<Future<Item=HttpResponse, Error=Error>> {
 /// This handler uses json extractor
 fn extract_item(item: Json<MyObj>) -> HttpResponse {
     println!("model: {:?}", &item);
-    HttpResponse::Ok().json(item.0)  // <- send response
+    HttpResponse::Ok().json(item.0) // <- send response
 }
 
-const MAX_SIZE: usize = 262_144;  // max payload size is 256k
+const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 /// This handler manually load request payload and parse json object
-fn index_manual(req: HttpRequest) -> Box<Future<Item=HttpResponse, Error=Error>> {
+fn index_manual(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     // HttpRequest is stream of Bytes objects
     req
         // `Future::from_err` acts like `?` in that it coerces the error type from
@@ -70,13 +71,16 @@ fn index_manual(req: HttpRequest) -> Box<Future<Item=HttpResponse, Error=Error>>
 }
 
 /// This handler manually load request payload and parse json-rust
-fn index_mjsonrust(req: HttpRequest) -> Box<Future<Item=HttpResponse, Error=Error>> {
+fn index_mjsonrust(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     req.concat2()
         .from_err()
         .and_then(|body| {
             // body is loaded, now we can deserialize json-rust
             let result = json::parse(std::str::from_utf8(&body).unwrap()); // return Result
-            let injson: JsonValue = match result { Ok(v) => v, Err(e) => object!{"err" => e.to_string() } };
+            let injson: JsonValue = match result {
+                Ok(v) => v,
+                Err(e) => object!{"err" => e.to_string() },
+            };
             Ok(HttpResponse::Ok()
                 .content_type("application/json")
                 .body(injson.dump()))
@@ -100,8 +104,9 @@ fn main() {
             })
             .resource("/manual", |r| r.method(http::Method::POST).f(index_manual))
             .resource("/mjsonrust", |r| r.method(http::Method::POST).f(index_mjsonrust))
-            .resource("/", |r| r.method(http::Method::POST).f(index))})
-        .bind("127.0.0.1:8080").unwrap()
+            .resource("/", |r| r.method(http::Method::POST).f(index))
+    }).bind("127.0.0.1:8080")
+        .unwrap()
         .shutdown_timeout(1)
         .start();
 

@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "./",
+  "async_ex1",
   "basics",
   "cookie-auth",
   "cookie-session",

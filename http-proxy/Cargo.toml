@@ -16,4 +16,4 @@ path = "src/server.rs"
 env_logger = "0.5"
 futures = "0.1"
 actix = "0.5"
-actix-web = { version = "^0.5", features=["alpn"] }
+actix-web = { version = "^0.6", features=["alpn"] }

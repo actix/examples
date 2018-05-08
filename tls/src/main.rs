@@ -4,17 +4,15 @@ extern crate actix_web;
 extern crate env_logger;
 extern crate openssl;
 
-use openssl::ssl::{SslMethod, SslAcceptor, SslFiletype};
-use actix_web::{
-    http, middleware, server, App, HttpRequest, HttpResponse, Error};
-
+use actix_web::{http, middleware, server, App, Error, HttpRequest, HttpResponse};
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 /// simple handle
 fn index(req: HttpRequest) -> Result<HttpResponse, Error> {
     println!("{:?}", req);
     Ok(HttpResponse::Ok()
-       .content_type("text/plain")
-       .body("Welcome!"))
+        .content_type("text/plain")
+        .body("Welcome!"))
 }
 
 fn main() {
@@ -26,11 +24,15 @@ fn main() {
 
     // load ssl keys
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
-    builder.set_private_key_file("key.pem", SslFiletype::PEM).unwrap();
-    builder.set_certificate_chain_file("cert.pem").unwrap();
+    builder
+        .set_private_key_file("key.pem", SslFiletype::PEM)
+        .unwrap();
+    builder
+        .set_certificate_chain_file("cert.pem")
+        .unwrap();
 
-    server::new(
-        || App::new()
+    server::new(|| {
+        App::new()
             // enable logger
             .middleware(middleware::Logger::default())
             // register simple handler, handle all methods
@@ -40,9 +42,10 @@ fn main() {
                 HttpResponse::Found()
                     .header("LOCATION", "/index.html")
                     .finish()
-            })))
-        .bind("127.0.0.1:8443").unwrap()
-        .start_ssl(builder).unwrap();
+            }))
+    }).bind_ssl("127.0.0.1:8443", builder)
+        .unwrap()
+        .start();
 
     println!("Started http server: 127.0.0.1:8443");
     let _ = sys.run();

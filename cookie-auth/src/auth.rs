@@ -1,18 +1,16 @@
 use std::rc::Rc;
 
 use cookie::{Cookie, CookieJar, Key};
+use futures::future::{err as FutErr, ok as FutOk, FutureResult};
 use futures::Future;
-use futures::future::{FutureResult, err as FutErr, ok as FutOk};
 use time::Duration;
 
-use actix_web::{HttpRequest, HttpResponse, Error, Result};
 use actix_web::http::header::{self, HeaderValue};
 use actix_web::middleware::{Middleware, Response, Started};
-
+use actix_web::{Error, HttpRequest, HttpResponse, Result};
 
 /// Trait provides identity service for the request.
 pub trait RequestIdentity {
-
     /// Return the claimed identity of the user associated request or
     /// ``None`` if no identity can be found associated with the request.
     fn identity(&mut self) -> Option<&str>;
@@ -20,32 +18,31 @@ pub trait RequestIdentity {
     /// Remember identity.
     fn remember(&mut self, identity: String);
 
-    /// This method is used to 'forget' the current identity on subsequent requests.
+    /// This method is used to 'forget' the current identity on subsequent
+    /// requests.
     fn forget(&mut self);
-
 }
 
 impl<S> RequestIdentity for HttpRequest<S> {
     fn identity(&mut self) -> Option<&str> {
         if let Some(id) = self.extensions().get::<IdentityBox>() {
-            return id.0.identity()
+            return id.0.identity();
         }
         None
     }
 
     fn remember(&mut self, identity: String) {
-        if let Some(id) = self.extensions().get_mut::<IdentityBox>() {
-            return id.0.remember(identity)
+        if let Some(id) = self.extensions_mut().get_mut::<IdentityBox>() {
+            return id.0.remember(identity);
         }
     }
 
     fn forget(&mut self) {
-        if let Some(id) = self.extensions().get_mut::<IdentityBox>() {
-            return id.0.forget()
+        if let Some(id) = self.extensions_mut().get_mut::<IdentityBox>() {
+            return id.0.forget();
         }
     }
 }
-
 
 /// An identity
 pub trait Identity: 'static {
@@ -87,7 +84,6 @@ unsafe impl Send for IdentityBox {}
 #[doc(hidden)]
 unsafe impl Sync for IdentityBox {}
 
-
 impl<S: 'static, T: IdentityPolicy<S>> Middleware<S> for IdentityService<T> {
     fn start(&self, req: &mut HttpRequest<S>) -> Result<Started> {
         let mut req = req.clone();
@@ -96,7 +92,7 @@ impl<S: 'static, T: IdentityPolicy<S>> Middleware<S> for IdentityService<T> {
             .from_request(&mut req)
             .then(move |res| match res {
                 Ok(id) => {
-                    req.extensions().insert(IdentityBox(Box::new(id)));
+                    req.extensions_mut().insert(IdentityBox(Box::new(id)));
                     FutOk(None)
                 }
                 Err(err) => FutErr(err),
@@ -104,8 +100,10 @@ impl<S: 'static, T: IdentityPolicy<S>> Middleware<S> for IdentityService<T> {
         Ok(Started::Future(Box::new(fut)))
     }
 
-    fn response(&self, req: &mut HttpRequest<S>, resp: HttpResponse) -> Result<Response> {
-        if let Some(mut id) = req.extensions().remove::<IdentityBox>() {
+    fn response(
+        &self, req: &mut HttpRequest<S>, resp: HttpResponse,
+    ) -> Result<Response> {
+        if let Some(mut id) = req.extensions_mut().remove::<IdentityBox>() {
             id.0.write(resp)
         } else {
             Ok(Response::Done(resp))
@@ -207,7 +205,7 @@ impl CookieIdentityInner {
 
                     let cookie_opt = jar.private(&self.key).get(&self.name);
                     if let Some(cookie) = cookie_opt {
-                        return Some(cookie.value().into())
+                        return Some(cookie.value().into());
                     }
                 }
             }
@@ -220,7 +218,6 @@ impl CookieIdentityInner {
 pub struct CookieIdentityPolicy(Rc<CookieIdentityInner>);
 
 impl CookieIdentityPolicy {
-
     /// Construct new `CookieIdentityPolicy` instance.
     ///
     /// Panics if key length is less than 32 bytes.

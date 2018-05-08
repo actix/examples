@@ -14,4 +14,4 @@ prost = "0.2.0"
 prost-derive = "0.2.0"
 
 actix = "0.5"
-actix-web = "^0.5"
+actix-web = "^0.6"

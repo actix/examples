@@ -2,8 +2,7 @@ extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
 
-use actix_web::{App, HttpRequest, server, middleware};
-
+use actix_web::{middleware, server, App, HttpRequest};
 
 fn index(_req: HttpRequest) -> &'static str {
     "Hello world!"
@@ -14,13 +13,14 @@ fn main() {
     env_logger::init();
     let sys = actix::System::new("hello-world");
 
-    server::new(
-        || App::new()
+    server::new(|| {
+        App::new()
             // enable logger
             .middleware(middleware::Logger::default())
             .resource("/index.html", |r| r.f(|_| "Hello world!"))
-            .resource("/", |r| r.f(index)))
-        .bind("127.0.0.1:8080").unwrap()
+            .resource("/", |r| r.f(index))
+    }).bind("127.0.0.1:8080")
+        .unwrap()
         .start();
 
     println!("Started http server: 127.0.0.1:8080");

@@ -10,12 +10,12 @@ extern crate actix_web;
 extern crate env_logger;
 extern crate futures;
 
-use actix_web::middleware::{self, RequestSession};
-use actix_web::{server, App, HttpRequest, Result};
+use actix_web::middleware::session::{self, RequestSession};
+use actix_web::{middleware, server, App, HttpRequest, Result};
 use std::env;
 
 /// simple index handler with session
-fn index(mut req: HttpRequest) -> Result<&'static str> {
+fn index(req: HttpRequest) -> Result<&'static str> {
     println!("{:?}", req);
 
     // RequestSession trait is used for session access
@@ -41,8 +41,8 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             // cookie session middleware
-            .middleware(middleware::SessionStorage::new(
-                middleware::CookieSessionBackend::signed(&[0; 32]).secure(false)
+            .middleware(session::SessionStorage::new(
+                session::CookieSessionBackend::signed(&[0; 32]).secure(false)
             ))
             .resource("/", |r| r.f(index))
     }).bind("127.0.0.1:8080")

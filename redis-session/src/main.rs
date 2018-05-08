@@ -7,11 +7,11 @@ extern crate actix_web;
 extern crate env_logger;
 
 use actix_redis::RedisSessionBackend;
-use actix_web::middleware::{Logger, RequestSession, SessionStorage};
-use actix_web::{server, App, HttpRequest, HttpResponse, Result};
+use actix_web::middleware::session::{RequestSession, SessionStorage};
+use actix_web::{middleware, server, App, HttpRequest, HttpResponse, Result};
 
 /// simple handler
-fn index(mut req: HttpRequest) -> Result<HttpResponse> {
+fn index(req: HttpRequest) -> Result<HttpResponse> {
     println!("{:?}", req);
 
     // session
@@ -33,7 +33,7 @@ fn main() {
     server::new(|| {
         App::new()
             // enable logger
-            .middleware(Logger::default())
+            .middleware(middleware::Logger::default())
             // redis session middleware
             .middleware(SessionStorage::new(
                 RedisSessionBackend::new("127.0.0.1:6379", &[0; 32])

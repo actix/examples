@@ -5,16 +5,13 @@ extern crate env_logger;
 extern crate futures;
 
 use actix::*;
-use actix_web::{
-    http, middleware, multipart, server,
-    App, AsyncResponder, HttpRequest, HttpResponse, HttpMessage, Error};
+use actix_web::{http, middleware, multipart, server, App, AsyncResponder, Error,
+                HttpMessage, HttpRequest, HttpResponse};
 
-use futures::{Future, Stream};
 use futures::future::{result, Either};
+use futures::{Future, Stream};
 
-
-fn index(req: HttpRequest) -> Box<Future<Item=HttpResponse, Error=Error>>
-{
+fn index(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     println!("{:?}", req);
 
     req.multipart()            // <- get multipart stream for current request
@@ -49,11 +46,12 @@ fn main() {
     let _ = env_logger::init();
     let sys = actix::System::new("multipart-example");
 
-    server::new(
-        || App::new()
+    server::new(|| {
+        App::new()
             .middleware(middleware::Logger::default()) // <- logger
-            .resource("/multipart", |r| r.method(http::Method::POST).a(index)))
-        .bind("127.0.0.1:8080").unwrap()
+            .resource("/multipart", |r| r.method(http::Method::POST).a(index))
+    }).bind("127.0.0.1:8080")
+        .unwrap()
         .start();
 
     println!("Starting http server: 127.0.0.1:8080");

@@ -7,13 +7,13 @@ extern crate env_logger;
 extern crate futures;
 extern crate tokio_core;
 
-use std::{io, thread};
 use std::time::Duration;
+use std::{io, thread};
 
 use actix::*;
+use actix_web::ws::WsWriter;
+use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};
 use futures::Future;
-use actix_web::ws::{Message, ProtocolError, Client, ClientWriter};
-
 
 fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
@@ -34,24 +34,21 @@ fn main() {
                 });
 
                 // start console loop
-                thread::spawn(move|| {
-                    loop {
-                        let mut cmd = String::new();
-                        if io::stdin().read_line(&mut cmd).is_err() {
-                            println!("error");
-                            return
-                        }
-                        addr.do_send(ClientCommand(cmd));
+                thread::spawn(move || loop {
+                    let mut cmd = String::new();
+                    if io::stdin().read_line(&mut cmd).is_err() {
+                        println!("error");
+                        return;
                     }
+                    addr.do_send(ClientCommand(cmd));
                 });
 
                 ()
-            })
+            }),
     );
 
     let _ = sys.run();
 }
-
 
 struct ChatClient(ClientWriter);
 
@@ -94,11 +91,10 @@ impl Handler<ClientCommand> for ChatClient {
 
 /// Handle server websocket messages
 impl StreamHandler<Message, ProtocolError> for ChatClient {
-
     fn handle(&mut self, msg: Message, ctx: &mut Context<Self>) {
         match msg {
             Message::Text(txt) => println!("Server: {:?}", txt),
-            _ => ()
+            _ => (),
         }
     }
 

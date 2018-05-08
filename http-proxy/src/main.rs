@@ -3,8 +3,8 @@ extern crate actix_web;
 extern crate env_logger;
 extern crate futures;
 
-use actix_web::{client, middleware, server, App, AsyncResponder, Body, Error, HttpMessage,
-                HttpRequest, HttpResponse};
+use actix_web::{client, middleware, server, App, AsyncResponder, Body, Error,
+                HttpMessage, HttpRequest, HttpResponse};
 use futures::{Future, Stream};
 
 /// Stream client request response and then send body to a server response
@@ -48,7 +48,7 @@ fn main() {
             .middleware(middleware::Logger::default())
             .resource("/streaming", |r| r.f(streaming))
             .resource("/", |r| r.f(index))
-    }).threads(1)
+    }).workers(1)
         .bind("127.0.0.1:8080")
         .unwrap()
         .start();

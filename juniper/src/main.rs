@@ -7,23 +7,22 @@ extern crate serde_json;
 extern crate serde_derive;
 #[macro_use]
 extern crate juniper;
-extern crate futures;
 extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
+extern crate futures;
 
 use actix::prelude::*;
-use actix_web::{
-    middleware, http, server,
-    App, AsyncResponder, HttpRequest, HttpResponse, FutureResponse, Error, State, Json};
+use actix_web::{http, middleware, server, App, AsyncResponder, Error, FutureResponse,
+                HttpRequest, HttpResponse, Json, State};
+use futures::future::Future;
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
-use futures::future::Future;
 
 mod schema;
 
-use schema::Schema;
 use schema::create_schema;
+use schema::Schema;
 
 struct AppState {
     executor: Addr<Syn, GraphQLExecutor>,
@@ -37,14 +36,12 @@ impl Message for GraphQLData {
 }
 
 pub struct GraphQLExecutor {
-    schema: std::sync::Arc<Schema>
+    schema: std::sync::Arc<Schema>,
 }
 
 impl GraphQLExecutor {
     fn new(schema: std::sync::Arc<Schema>) -> GraphQLExecutor {
-        GraphQLExecutor {
-            schema: schema,
-        }
+        GraphQLExecutor { schema: schema }
     }
 }
 
@@ -62,23 +59,24 @@ impl Handler<GraphQLData> for GraphQLExecutor {
     }
 }
 
-fn graphiql(_req: HttpRequest<AppState>) -> Result<HttpResponse, Error>  {
+fn graphiql(_req: HttpRequest<AppState>) -> Result<HttpResponse, Error> {
     let html = graphiql_source("http://127.0.0.1:8080/graphql");
     Ok(HttpResponse::Ok()
-       .content_type("text/html; charset=utf-8")
-       .body(html))
+        .content_type("text/html; charset=utf-8")
+        .body(html))
 }
 
-fn graphql(st: State<AppState>, data: Json<GraphQLData>) -> FutureResponse<HttpResponse> {
-    st.executor.send(data.0)
+fn graphql(
+    st: State<AppState>, data: Json<GraphQLData>,
+) -> FutureResponse<HttpResponse> {
+    st.executor
+        .send(data.0)
         .from_err()
-        .and_then(|res| {
-            match res {
-                Ok(user) => Ok(HttpResponse::Ok()
-                               .content_type("application/json")
-                               .body(user)),
-                Err(_) => Ok(HttpResponse::InternalServerError().into())
-            }
+        .and_then(|res| match res {
+            Ok(user) => Ok(HttpResponse::Ok()
+                .content_type("application/json")
+                .body(user)),
+            Err(_) => Ok(HttpResponse::InternalServerError().into()),
         })
         .responder()
 }
@@ -89,9 +87,7 @@ fn main() {
     let sys = actix::System::new("juniper-example");
 
     let schema = std::sync::Arc::new(create_schema());
-    let addr = SyncArbiter::start(3, move || {
-        GraphQLExecutor::new(schema.clone())
-    });
+    let addr = SyncArbiter::start(3, move || GraphQLExecutor::new(schema.clone()));
 
     // Start http server
     server::new(move || {
@@ -99,8 +95,9 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             .resource("/graphql", |r| r.method(http::Method::POST).with2(graphql))
-            .resource("/graphiql", |r| r.method(http::Method::GET).h(graphiql))})
-        .bind("127.0.0.1:8080").unwrap()
+            .resource("/graphiql", |r| r.method(http::Method::GET).h(graphiql))
+    }).bind("127.0.0.1:8080")
+        .unwrap()
         .start();
 
     println!("Started http server: 127.0.0.1:8080");

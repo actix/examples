@@ -1,5 +1,5 @@
 #![allow(unused_variables)]
-#![cfg_attr(feature="cargo-clippy", allow(needless_pass_by_value))]
+#![cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
 
 extern crate actix;
 extern crate actix_web;
@@ -7,12 +7,12 @@ extern crate env_logger;
 extern crate futures;
 use futures::Stream;
 
-use std::{io, env};
-use actix_web::{error, fs, pred, server,
-                App, HttpRequest, HttpResponse, Result, Error};
 use actix_web::http::{header, Method, StatusCode};
-use actix_web::middleware::{self, RequestSession};
-use futures::future::{FutureResult, result};
+use actix_web::middleware::session::{self, RequestSession};
+use actix_web::{error, fs, middleware, pred, server, App, Error, HttpRequest,
+                HttpResponse, Result};
+use futures::future::{result, FutureResult};
+use std::{env, io};
 
 /// favicon handler
 fn favicon(req: HttpRequest) -> Result<fs::NamedFile> {
@@ -40,39 +40,36 @@ fn welcome(mut req: HttpRequest) -> Result<HttpResponse> {
         req.session().set("counter", counter)?;
     }
 
-
     // response
     Ok(HttpResponse::build(StatusCode::OK)
-       .content_type("text/html; charset=utf-8")
-       .body(include_str!("../static/welcome.html")))
-
+        .content_type("text/html; charset=utf-8")
+        .body(include_str!("../static/welcome.html")))
 }
 
 /// 404 handler
 fn p404(req: HttpRequest) -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open("static/404.html")?
-       .set_status_code(StatusCode::NOT_FOUND))
+    Ok(fs::NamedFile::open("static/404.html")?.set_status_code(StatusCode::NOT_FOUND))
 }
 
-
 /// async handler
-fn index_async(req: HttpRequest) -> FutureResult<HttpResponse, Error>
-{
+fn index_async(req: HttpRequest) -> FutureResult<HttpResponse, Error> {
     println!("{:?}", req);
 
-    result(Ok(HttpResponse::Ok()
-              .content_type("text/html")
-              .body(format!("Hello {}!", req.match_info().get("name").unwrap()))))
+    result(Ok(HttpResponse::Ok().content_type("text/html").body(
+        format!("Hello {}!", req.match_info().get("name").unwrap()),
+    )))
 }
 
 /// handler with path parameters like `/user/{name}/`
-fn with_param(req: HttpRequest) -> HttpResponse
-{
+fn with_param(req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
         .content_type("test/plain")
-        .body(format!("Hello {}!", req.match_info().get("name").unwrap()))
+        .body(format!(
+            "Hello {}!",
+            req.match_info().get("name").unwrap()
+        ))
 }
 
 fn main() {
@@ -86,8 +83,8 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             // cookie session middleware
-            .middleware(middleware::SessionStorage::new(
-                middleware::CookieSessionBackend::signed(&[0; 32]).secure(false)
+            .middleware(session::SessionStorage::new(
+                session::CookieSessionBackend::signed(&[0; 32]).secure(false)
             ))
             // register favicon
             .resource("/favicon", |r| r.f(favicon))
