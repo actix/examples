@@ -4,6 +4,14 @@ version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = "../"
 
+[[bin]]
+name = "proxy"
+path = "src/main.rs"
+
+[[bin]]
+name = "server"
+path = "src/server.rs"
+
 [dependencies]
 env_logger = "0.5"
 futures = "0.1"
