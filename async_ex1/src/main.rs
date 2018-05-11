@@ -11,6 +11,10 @@
 //     2. actix-web client features:
 //           - POSTing json body
 //     3. chaining futures into a single response used by an asynch endpoint
+//
+//  There are 2 versions in this example, one that uses Boxed Futures and the other that uses Impl
+// Future, available since rustc v1.26.
+
 
 extern crate actix;
 extern crate actix_web;
@@ -51,8 +55,13 @@ struct HttpBinResponse {
     url: String,
 }
 
+
+// -----------------------------------------------------------------------
+// v1 uses Boxed Futures, which were the only option prior to rustc v1.26 
+// -----------------------------------------------------------------------
+
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
+fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
     Box::new(
         client::ClientRequest::post("https://httpbin.org/post")
             .json(data).unwrap()
@@ -70,13 +79,13 @@ fn step_x(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
     )
 }
 
-fn create_something(
+fn create_something_v1(
     some_data: Json<SomeData>,
 ) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    step_x(some_data.into_inner())
+    step_x_v1(some_data.into_inner())
         .and_then(|some_data_2| {
-            step_x(some_data_2).and_then(|some_data_3| {
-                step_x(some_data_3).and_then(|d| {
+            step_x_v1(some_data_2).and_then(|some_data_3| {
+                step_x_v1(some_data_3).and_then(|d| {
                     Ok(HttpResponse::Ok()
                         .content_type("application/json")
                         .body(serde_json::to_string(&d).unwrap())
@@ -87,17 +96,59 @@ fn create_something(
         .responder()
 }
 
+
+// ---------------------------------------------------------------
+// v2 uses impl Future, available as of rustc v1.26 
+// ---------------------------------------------------------------
+
+/// post json to httpbin, get it back in the response body, return deserialized
+fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
+    client::ClientRequest::post("https://httpbin.org/post")
+        .json(data).unwrap()
+        .send()
+        .conn_timeout(Duration::from_secs(10))
+        .map_err(Error::from)   // <- convert SendRequestError to an Error
+        .and_then(
+            |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
+                .from_err()            // <- convert PayloadError to a Error
+                .and_then(|body| {
+                    let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+                    fut_ok(resp.json)
+                })
+        )
+}
+
+fn create_something_v2(some_data: Json<SomeData>) 
+                    -> impl Future<Item = HttpResponse, Error = Error> {
+    step_x_v2(some_data.into_inner())
+        .and_then(|some_data_2| {
+            step_x_v2(some_data_2).and_then(|some_data_3| {
+                step_x_v2(some_data_3).and_then(|d| 
+                    Ok(HttpResponse::Ok()
+                    .content_type("application/json")
+                    .body(serde_json::to_string(&d).unwrap())
+                    .into()))
+            })
+        })
+}
+
+
+
+
 fn main() {
     env_logger::init();
     let sys = actix::System::new("asyncio_example");
 
     server::new(move || {
-        App::new().resource("/something", |r| {
-            r.method(Method::POST).with(create_something)
+         App::new()
+            .resource("/something_v1", |r| {
+            r.method(Method::POST).with(create_something_v1)})
+            .resource("/something_v2", |r| {
+            r.method(Method::POST).with_async(create_something_v2)})
         })
-    }).bind("127.0.0.1:8088")
-        .unwrap()
-        .start();
+    .bind("127.0.0.1:8088")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8088");
     let _ = sys.run();
