@@ -1,5 +1,5 @@
 [package]
-name = "websocket-example"
+name = "websocket-tcp-example"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = "../"
@@ -7,6 +7,10 @@ workspace = "../"
 [[bin]]
 name = "server"
 path = "src/main.rs"
+
+[[bin]]
+name = "client"
+path = "src/client.rs"
 
 [dependencies]
 rand = "*"
@@ -19,6 +23,7 @@ env_logger = "*"
 
 serde = "1.0"
 serde_json = "1.0"
+serde_derive = "1.0"
 
 actix = "0.5"
 actix-web = "^0.6"

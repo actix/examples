@@ -8,6 +8,8 @@ extern crate serde;
 extern crate serde_json;
 extern crate tokio_core;
 extern crate tokio_io;
+#[macro_use]
+extern crate serde_derive;
 
 #[macro_use]
 extern crate actix;
@@ -20,7 +22,9 @@ use actix_web::server::HttpServer;
 use actix_web::ws::WsWriter;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
 
+mod codec;
 mod server;
+mod session;
 
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
@@ -92,10 +96,10 @@ impl Actor for WsChatSession {
 }
 
 /// Handle messages from chat server, we simply send it to peer websocket
-impl Handler<server::Message> for WsChatSession {
+impl Handler<session::Message> for WsChatSession {
     type Result = ();
 
-    fn handle(&mut self, msg: server::Message, ctx: &mut Self::Context) {
+    fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
         ctx.text(msg.0);
     }
 }
@@ -166,7 +170,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                         m.to_owned()
                     };
                     // send message to chat server
-                    ctx.state().addr.do_send(server::ClientMessage {
+                    ctx.state().addr.do_send(server::Message {
                         id: self.id,
                         msg: msg,
                         room: self.room.clone(),
@@ -187,6 +191,13 @@ fn main() {
 
     // Start chat server actor in separate thread
     let server: Addr<Syn, _> = Arbiter::start(|_| server::ChatServer::default());
+
+    // Start tcp server in separate thread
+    let srv = server.clone();
+    Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
+        session::TcpServer::new("127.0.0.1:12345", srv);
+        Ok(())
+    }));
 
     // Create Http server with websocket support
     HttpServer::new(move || {

@@ -168,3 +168,58 @@ impl ChatSession {
         });
     }
 }
+
+/// Define tcp server that will accept incoming tcp connection and create
+/// chat actors.
+pub struct TcpServer {
+    chat: Addr<Syn, ChatServer>,
+}
+
+impl TcpServer {
+    pub fn new(s: &str, chat: Addr<Syn, ChatServer>) {
+        // Create server listener
+        let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
+        let listener = TcpListener::bind(&addr, Arbiter::handle()).unwrap();
+
+        // Our chat server `Server` is an actor, first we need to start it
+        // and then add stream on incoming tcp connections to it.
+        // TcpListener::incoming() returns stream of the (TcpStream, net::SocketAddr)
+        // items So to be able to handle this events `Server` actor has to
+        // implement stream handler `StreamHandler<(TcpStream,
+        // net::SocketAddr), io::Error>`
+        let _: () = TcpServer::create(|ctx| {
+            ctx.add_message_stream(
+                listener
+                    .incoming()
+                    .map_err(|_| ())
+                    .map(|(t, a)| TcpConnect(t, a)),
+            );
+            TcpServer { chat: chat }
+        });
+    }
+}
+
+/// Make actor from `Server`
+impl Actor for TcpServer {
+    /// Every actor has to provide execution `Context` in which it can run.
+    type Context = Context<Self>;
+}
+
+#[derive(Message)]
+struct TcpConnect(TcpStream, net::SocketAddr);
+
+/// Handle stream of TcpStream's
+impl Handler<TcpConnect> for TcpServer {
+    type Result = ();
+
+    fn handle(&mut self, msg: TcpConnect, _: &mut Context<Self>) {
+        // For each incoming connection we create `ChatSession` actor
+        // with out chat server address.
+        let server = self.chat.clone();
+        let _: () = ChatSession::create(|ctx| {
+            let (r, w) = msg.0.split();
+            ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
+            ChatSession::new(server, actix::io::FramedWrite::new(w, ChatCodec, ctx))
+        });
+    }
+}

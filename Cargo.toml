@@ -22,4 +22,5 @@ members = [
   "web-cors/backend",
   "websocket",
   "websocket-chat",
+  "websocket-tcp-chat",
 ]

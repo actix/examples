@@ -7,9 +7,7 @@ use rand::{self, Rng, ThreadRng};
 use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 
-/// Chat server sends this messages to session
-#[derive(Message)]
-pub struct Message(pub String);
+use session;
 
 /// Message for chat server communications
 
@@ -17,7 +15,7 @@ pub struct Message(pub String);
 #[derive(Message)]
 #[rtype(usize)]
 pub struct Connect {
-    pub addr: Recipient<Syn, Message>,
+    pub addr: Recipient<Syn, session::Message>,
 }
 
 /// Session is disconnected
@@ -28,7 +26,7 @@ pub struct Disconnect {
 
 /// Send message to specific room
 #[derive(Message)]
-pub struct ClientMessage {
+pub struct Message {
     /// Id of the client session
     pub id: usize,
     /// Peer message
@@ -56,7 +54,7 @@ pub struct Join {
 /// `ChatServer` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
 pub struct ChatServer {
-    sessions: HashMap<usize, Recipient<Syn, Message>>,
+    sessions: HashMap<usize, Recipient<Syn, session::Message>>,
     rooms: HashMap<String, HashSet<usize>>,
     rng: RefCell<ThreadRng>,
 }
@@ -82,7 +80,7 @@ impl ChatServer {
             for id in sessions {
                 if *id != skip_id {
                     if let Some(addr) = self.sessions.get(id) {
-                        let _ = addr.do_send(Message(message.to_owned()));
+                        let _ = addr.do_send(session::Message(message.to_owned()));
                     }
                 }
             }
@@ -150,10 +148,10 @@ impl Handler<Disconnect> for ChatServer {
 }
 
 /// Handler for Message message.
-impl Handler<ClientMessage> for ChatServer {
+impl Handler<Message> for ChatServer {
     type Result = ();
 
-    fn handle(&mut self, msg: ClientMessage, _: &mut Context<Self>) {
+    fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
         self.send_message(&msg.room, msg.msg.as_str(), msg.id);
     }
 }
