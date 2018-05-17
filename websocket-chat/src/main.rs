@@ -17,7 +17,6 @@ use std::time::Instant;
 
 use actix::*;
 use actix_web::server::HttpServer;
-use actix_web::ws::WsWriter;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
 
 mod server;
