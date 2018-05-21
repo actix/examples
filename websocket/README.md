@@ -7,7 +7,7 @@ Simple echo websocket server.
 ### server
 
 ```bash
-cd actix-web/examples/websocket
+cd examples/websocket
 cargo run
 # Started http server: 127.0.0.1:8080
 ```
