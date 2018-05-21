@@ -1,6 +1,6 @@
 //! Simple echo websocket server.
 //! Open `http://localhost:8080/ws/index.html` in browser
-//! or [python console client](https://github.com/actix/actix-web/blob/master/examples/websocket-client.py)
+//! or [python console client](https://github.com/actix/examples/blob/master/websocket/websocket-client.py)
 //! could be used for testing.
 
 #![allow(unused_variables)]
