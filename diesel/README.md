@@ -8,7 +8,7 @@ Diesel's `Getting Started` guide using SQLite for Actix web
 
 ```bash
 cargo install diesel_cli --no-default-features --features sqlite
-cd actix-web/examples/diesel
+cd examples/diesel
 echo "DATABASE_URL=file:test.db" > .env
 diesel migration run
 ```
@@ -18,7 +18,7 @@ diesel migration run
 ```bash
 # if ubuntu : sudo apt-get install libsqlite3-dev
 # if fedora : sudo dnf install libsqlite3x-devel
-cd actix-web/examples/diesel
+cd examples/diesel
 cargo run (or ``cargo watch -x run``)
 # Started http server: 127.0.0.1:8080
 ```
