@@ -5,7 +5,7 @@
 ### server
 
 ```bash
-cd actix-web/examples/state
+cd examples/state
 cargo run
 # Started http server: 127.0.0.1:8080
 ```
