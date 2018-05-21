@@ -9,8 +9,9 @@ extern crate actix_web;
 extern crate env_logger;
 
 use actix::prelude::*;
-use actix_web::ws::WsWriter;
-use actix_web::{fs, http, middleware, server, ws, App, Error, HttpRequest, HttpResponse};
+use actix_web::{
+    fs, http, middleware, server, ws, App, Error, HttpRequest, HttpResponse,
+};
 
 /// do websocket handshake and start `MyWebSocket` actor
 fn ws_index(r: HttpRequest) -> Result<HttpResponse, Error> {

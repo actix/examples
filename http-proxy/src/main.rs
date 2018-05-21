@@ -3,8 +3,10 @@ extern crate actix_web;
 extern crate env_logger;
 extern crate futures;
 
-use actix_web::{client, middleware, server, App, AsyncResponder, Body, Error,
-                HttpMessage, HttpRequest, HttpResponse};
+use actix_web::{
+    client, middleware, server, App, AsyncResponder, Body, Error, HttpMessage,
+    HttpRequest, HttpResponse,
+};
 use futures::{Future, Stream};
 
 /// Stream client request response and then send body to a server response

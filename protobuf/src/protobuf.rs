@@ -132,7 +132,8 @@ where
             }
 
             let limit = self.limit;
-            let fut = req.from_err()
+            let fut = req
+                .from_err()
                 .fold(BytesMut::new(), move |mut body, chunk| {
                     if (body.len() + chunk.len()) > limit {
                         Err(ProtoBufPayloadError::Overflow)

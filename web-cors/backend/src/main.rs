@@ -7,11 +7,9 @@ extern crate futures;
 extern crate serde;
 extern crate serde_json;
 
-use actix_web::{http::{header, Method},
-                middleware,
-                middleware::cors::Cors,
-                server,
-                App};
+use actix_web::{
+    http::{header, Method}, middleware, middleware::cors::Cors, server, App,
+};
 use std::env;
 
 mod user;

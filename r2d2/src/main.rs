@@ -11,8 +11,9 @@ extern crate serde_json;
 extern crate uuid;
 
 use actix::prelude::*;
-use actix_web::{http, middleware, server, App, AsyncResponder, Error, HttpRequest,
-                HttpResponse};
+use actix_web::{
+    http, middleware, server, App, AsyncResponder, Error, HttpRequest, HttpResponse,
+};
 use futures::future::Future;
 use r2d2_sqlite::SqliteConnectionManager;
 

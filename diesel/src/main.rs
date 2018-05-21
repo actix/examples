@@ -18,8 +18,10 @@ extern crate r2d2;
 extern crate uuid;
 
 use actix::prelude::*;
-use actix_web::{http, middleware, server, App, AsyncResponder, FutureResponse,
-                HttpResponse, Path, State};
+use actix_web::{
+    http, middleware, server, App, AsyncResponder, FutureResponse, HttpResponse, Path,
+    State,
+};
 
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};

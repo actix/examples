@@ -9,8 +9,9 @@ use futures::Stream;
 
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::middleware::session::{self, RequestSession};
-use actix_web::{error, fs, middleware, pred, server, App, Error, HttpRequest,
-                HttpResponse, Result};
+use actix_web::{
+    error, fs, middleware, pred, server, App, Error, HttpRequest, HttpResponse, Result,
+};
 use futures::future::{result, FutureResult};
 use std::{env, io};
 
@@ -66,10 +67,7 @@ fn with_param(req: HttpRequest) -> HttpResponse {
 
     HttpResponse::Ok()
         .content_type("test/plain")
-        .body(format!(
-            "Hello {}!",
-            req.match_info().get("name").unwrap()
-        ))
+        .body(format!("Hello {}!", req.match_info().get("name").unwrap()))
 }
 
 fn main() {

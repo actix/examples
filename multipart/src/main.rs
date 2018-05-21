@@ -5,8 +5,10 @@ extern crate env_logger;
 extern crate futures;
 
 use actix::*;
-use actix_web::{http, middleware, multipart, server, App, AsyncResponder, Error,
-                HttpMessage, HttpRequest, HttpResponse};
+use actix_web::{
+    http, middleware, multipart, server, App, AsyncResponder, Error, HttpMessage,
+    HttpRequest, HttpResponse,
+};
 
 use futures::future::{result, Either};
 use futures::{Future, Stream};

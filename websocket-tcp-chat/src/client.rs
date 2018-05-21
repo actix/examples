@@ -121,8 +121,7 @@ impl Handler<ClientCommand> for ChatClient {
                 }
                 "/join" => {
                     if v.len() == 2 {
-                        self.framed
-                            .write(codec::ChatRequest::Join(v[1].to_owned()));
+                        self.framed.write(codec::ChatRequest::Join(v[1].to_owned()));
                     } else {
                         println!("!!! room name is required");
                     }
@@ -130,8 +129,7 @@ impl Handler<ClientCommand> for ChatClient {
                 _ => println!("!!! unknown command"),
             }
         } else {
-            self.framed
-                .write(codec::ChatRequest::Message(m.to_owned()));
+            self.framed.write(codec::ChatRequest::Message(m.to_owned()));
         }
     }
 }

@@ -19,7 +19,6 @@ use std::time::Instant;
 
 use actix::*;
 use actix_web::server::HttpServer;
-use actix_web::ws::WsWriter;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
 
 mod codec;
@@ -88,9 +87,7 @@ impl Actor for WsChatSession {
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         // notify chat server
-        ctx.state()
-            .addr
-            .do_send(server::Disconnect { id: self.id });
+        ctx.state().addr.do_send(server::Disconnect { id: self.id });
         Running::Stop
     }
 }

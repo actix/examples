@@ -6,7 +6,9 @@ extern crate tera;
 
 use std::collections::HashMap;
 
-use actix_web::{error, http, middleware, server, App, Error, HttpResponse, Query, State};
+use actix_web::{
+    error, http, middleware, server, App, Error, HttpResponse, Query, State,
+};
 
 struct AppState {
     template: tera::Tera, // <- store tera template in application state

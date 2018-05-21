@@ -12,9 +12,8 @@
 //           - POSTing json body
 //     3. chaining futures into a single response used by an asynch endpoint
 //
-//  There are 2 versions in this example, one that uses Boxed Futures and the other that uses Impl
-// Future, available since rustc v1.26.
-
+// There are 2 versions in this example, one that uses Boxed Futures and the
+// other that uses Impl Future, available since rustc v1.26.
 
 extern crate actix;
 extern crate actix_web;
@@ -28,12 +27,14 @@ extern crate env_logger;
 extern crate futures;
 extern crate validator;
 
-use actix_web::{client, dev::Handler, http::Method, server, App, AsyncResponder, Body,
-                Error, HttpMessage, HttpRequest, HttpResponse, Json, Result};
+use actix_web::{
+    client, http::Method, server, App, AsyncResponder, Error, HttpMessage, HttpResponse,
+    Json,
+};
 use futures::{future::ok as fut_ok, Future};
 use std::collections::HashMap;
 use std::time::Duration;
-use validator::{Validate, ValidationError};
+use validator::Validate;
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
 struct SomeData {
@@ -55,9 +56,8 @@ struct HttpBinResponse {
     url: String,
 }
 
-
 // -----------------------------------------------------------------------
-// v1 uses Boxed Futures, which were the only option prior to rustc v1.26 
+// v1 uses Boxed Futures, which were the only option prior to rustc v1.26
 // -----------------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
@@ -96,9 +96,8 @@ fn create_something_v1(
         .responder()
 }
 
-
 // ---------------------------------------------------------------
-// v2 uses impl Future, available as of rustc v1.26 
+// v2 uses impl Future, available as of rustc v1.26
 // ---------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
@@ -118,37 +117,36 @@ fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
         )
 }
 
-fn create_something_v2(some_data: Json<SomeData>) 
-                    -> impl Future<Item = HttpResponse, Error = Error> {
-    step_x_v2(some_data.into_inner())
-        .and_then(|some_data_2| {
-            step_x_v2(some_data_2).and_then(|some_data_3| {
-                step_x_v2(some_data_3).and_then(|d| 
-                    Ok(HttpResponse::Ok()
+fn create_something_v2(
+    some_data: Json<SomeData>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+    step_x_v2(some_data.into_inner()).and_then(|some_data_2| {
+        step_x_v2(some_data_2).and_then(|some_data_3| {
+            step_x_v2(some_data_3).and_then(|d| {
+                Ok(HttpResponse::Ok()
                     .content_type("application/json")
                     .body(serde_json::to_string(&d).unwrap())
-                    .into()))
+                    .into())
             })
         })
+    })
 }
-
-
-
 
 fn main() {
     env_logger::init();
     let sys = actix::System::new("asyncio_example");
 
     server::new(move || {
-         App::new()
+        App::new()
             .resource("/something_v1", |r| {
-            r.method(Method::POST).with(create_something_v1)})
+                r.method(Method::POST).with(create_something_v1)
+            })
             .resource("/something_v2", |r| {
-            r.method(Method::POST).with_async(create_something_v2)})
-        })
-    .bind("127.0.0.1:8088")
-    .unwrap()
-    .start();
+                r.method(Method::POST).with_async(create_something_v2)
+            })
+    }).bind("127.0.0.1:8088")
+        .unwrap()
+        .start();
 
     println!("Started http server: 127.0.0.1:8088");
     let _ = sys.run();

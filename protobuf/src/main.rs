@@ -9,8 +9,9 @@ extern crate prost;
 #[macro_use]
 extern crate prost_derive;
 
-use actix_web::{http, middleware, server, App, AsyncResponder, Error, HttpRequest,
-                HttpResponse};
+use actix_web::{
+    http, middleware, server, App, AsyncResponder, Error, HttpRequest, HttpResponse,
+};
 use futures::Future;
 
 mod protobuf;

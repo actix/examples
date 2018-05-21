@@ -1688,6 +1688,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "static_index"
+version = "0.1.0"
+dependencies = [
+ "actix 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-web 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "env_logger 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "futures 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "string"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

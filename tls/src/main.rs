@@ -27,9 +27,7 @@ fn main() {
     builder
         .set_private_key_file("key.pem", SslFiletype::PEM)
         .unwrap();
-    builder
-        .set_certificate_chain_file("cert.pem")
-        .unwrap();
+    builder.set_certificate_chain_file("cert.pem").unwrap();
 
     server::new(|| {
         App::new()

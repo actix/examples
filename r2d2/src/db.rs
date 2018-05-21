@@ -35,10 +35,10 @@ impl Handler<CreateUser> for DbExecutor {
             &[&uuid, &msg.name],
         ).unwrap();
 
-        Ok(conn.query_row(
-            "SELECT name FROM users WHERE id=$1",
-            &[&uuid],
-            |row| row.get(0),
-        ).map_err(|_| io::Error::new(io::ErrorKind::Other, "db error"))?)
+        Ok(conn
+            .query_row("SELECT name FROM users WHERE id=$1", &[&uuid], |row| {
+                row.get(0)
+            })
+            .map_err(|_| io::Error::new(io::ErrorKind::Other, "db error"))?)
     }
 }

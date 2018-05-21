@@ -29,10 +29,7 @@ fn index(req: HttpRequest<AppState>) -> HttpResponse {
     println!("{:?}", req);
     req.state().counter.set(req.state().counter.get() + 1);
 
-    HttpResponse::Ok().body(format!(
-        "Num of requests: {}",
-        req.state().counter.get()
-    ))
+    HttpResponse::Ok().body(format!("Num of requests: {}", req.state().counter.get()))
 }
 
 fn main() {

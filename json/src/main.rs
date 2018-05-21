@@ -9,8 +9,10 @@ extern crate serde_derive;
 #[macro_use]
 extern crate json;
 
-use actix_web::{error, http, middleware, server, App, AsyncResponder, Error,
-                HttpMessage, HttpRequest, HttpResponse, Json};
+use actix_web::{
+    error, http, middleware, server, App, AsyncResponder, Error, HttpMessage,
+    HttpRequest, HttpResponse, Json,
+};
 
 use bytes::BytesMut;
 use futures::{Future, Stream};

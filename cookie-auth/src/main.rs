@@ -5,7 +5,6 @@ extern crate env_logger;
 extern crate futures;
 extern crate time;
 
-use actix_web::middleware::session::RequestSession;
 use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
 
 mod auth;

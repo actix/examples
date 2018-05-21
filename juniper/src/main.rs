@@ -13,8 +13,10 @@ extern crate env_logger;
 extern crate futures;
 
 use actix::prelude::*;
-use actix_web::{http, middleware, server, App, AsyncResponder, Error, FutureResponse,
-                HttpRequest, HttpResponse, Json, State};
+use actix_web::{
+    http, middleware, server, App, AsyncResponder, Error, FutureResponse, HttpRequest,
+    HttpResponse, Json, State,
+};
 use futures::future::Future;
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;

@@ -15,6 +15,7 @@ members = [
   "r2d2",
   "redis-session",
   "state",
+  "static_index",
   "template_askama",
   "template_tera",
   "tls",
