@@ -70,7 +70,7 @@ fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
             .map_err(Error::from)   // <- convert SendRequestError to an Error
             .and_then(
                 |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                    .from_err()            // <- convert PayloadError to a Error
+                    .from_err()            // <- convert PayloadError to an Error
                     .and_then(|body| {
                         let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
                         fut_ok(resp.json)
@@ -109,7 +109,7 @@ fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
         .map_err(Error::from)   // <- convert SendRequestError to an Error
         .and_then(
             |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                .from_err()            // <- convert PayloadError to a Error
+                .from_err()            // <- convert PayloadError to an Error
                 .and_then(|body| {
                     let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
                     fut_ok(resp.json)
