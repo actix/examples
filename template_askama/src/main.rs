@@ -38,7 +38,7 @@ fn main() {
     // start http server
     server::new(move || {
         App::new().resource("/", |r| r.method(http::Method::GET).with(index))
-    }).bind("0.0.0.0:8080")
+    }).bind("127.0.0.1:8080")
         .unwrap()
         .start();
 
