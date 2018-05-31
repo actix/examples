@@ -40,7 +40,7 @@ fn main() {
             ))
             // register simple route, handle all methods
             .resource("/", |r| r.f(index))
-    }).bind("0.0.0.0:8080")
+    }).bind("127.0.0.1:8080")
         .unwrap()
         .start();
 
