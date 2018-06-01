@@ -9,3 +9,6 @@ env_logger = "0.5"
 actix = "0.5"
 actix-web = "^0.6"
 askama = "0.6"
+
+[build-dependencies]
+askama = "0.6"
