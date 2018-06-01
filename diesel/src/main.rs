@@ -24,8 +24,8 @@ use actix_web::{
 };
 
 use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager, Pool};
-use futures::future::Future;
+use diesel::r2d2::ConnectionManager;
+use futures::Future;
 
 mod db;
 mod models;
@@ -39,7 +39,9 @@ struct AppState {
 }
 
 /// Async request handler
-fn index(name: Path<String>, state: State<AppState>) -> FutureResponse<HttpResponse> {
+fn index(
+    (name, state): (Path<String>, State<AppState>),
+) -> FutureResponse<HttpResponse> {
     // send async `CreateUser` message to a `DbExecutor`
     state
         .db
@@ -72,7 +74,7 @@ fn main() {
         App::with_state(AppState{db: addr.clone()})
             // enable logger
             .middleware(middleware::Logger::default())
-            .resource("/{name}", |r| r.method(http::Method::GET).with2(index))
+            .resource("/{name}", |r| r.method(http::Method::GET).with(index))
     }).bind("127.0.0.1:8080")
         .unwrap()
         .start();

@@ -15,7 +15,7 @@ struct AppState {
 }
 
 fn index(
-    state: State<AppState>, query: Query<HashMap<String, String>>,
+    (state, query): (State<AppState>, Query<HashMap<String, String>>),
 ) -> Result<HttpResponse, Error> {
     let s = if let Some(name) = query.get("name") {
         // <- submitted form
@@ -47,7 +47,7 @@ fn main() {
         App::with_state(AppState{template: tera})
             // enable logger
             .middleware(middleware::Logger::default())
-            .resource("/", |r| r.method(http::Method::GET).with2(index))
+            .resource("/", |r| r.method(http::Method::GET).with(index))
     }).bind("127.0.0.1:8080")
         .unwrap()
         .start();
