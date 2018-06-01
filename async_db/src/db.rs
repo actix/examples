@@ -1,5 +1,4 @@
 use actix::prelude::*;
-use actix_web::*;
 use std::{time::Duration, thread::sleep};
 use failure::Error;
 use r2d2;
