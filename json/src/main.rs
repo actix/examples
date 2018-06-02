@@ -41,6 +41,12 @@ fn extract_item(item: Json<MyObj>) -> HttpResponse {
     HttpResponse::Ok().json(item.0) // <- send response
 }
 
+/// This handler uses json extractor with limit
+fn extract_item_limit((item, _req): (Json<MyObj>, HttpRequest)) -> HttpResponse {
+    println!("model: {:?}", &item);
+    HttpResponse::Ok().json(item.0) // <- send response
+}
+
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 /// This handler manually load request payload and parse json object
@@ -103,6 +109,11 @@ fn main() {
                 r.method(http::Method::POST)
                     .with(extract_item)
                     .limit(4096); // <- limit size of the payload
+            })
+            .resource("/extractor2", |r| {
+                r.method(http::Method::POST)
+                    .with(extract_item_limit)
+                    .0.limit(4096); // <- limit size of the payload
             })
             .resource("/manual", |r| r.method(http::Method::POST).f(index_manual))
             .resource("/mjsonrust", |r| r.method(http::Method::POST).f(index_mjsonrust))
