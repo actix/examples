@@ -3,14 +3,19 @@
 
 extern crate actix;
 extern crate actix_web;
+extern crate bytes;
 extern crate env_logger;
 extern crate futures;
+
+use bytes::Bytes;
+use futures::sync::mpsc;
 use futures::Stream;
 
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::middleware::session::{self, RequestSession};
 use actix_web::{
-    error, fs, middleware, pred, server, App, Error, HttpRequest, HttpResponse, Result,
+    error, fs, middleware, pred, server, App, Error, HttpRequest, HttpResponse, Path,
+    Result,
 };
 use futures::future::{result, FutureResult};
 use std::{env, io};
@@ -61,6 +66,17 @@ fn index_async(req: HttpRequest) -> FutureResult<HttpResponse, Error> {
     )))
 }
 
+/// async body
+fn index_async_body(path: Path<String>) -> HttpResponse {
+    let text = format!("Hello {}!", *path);
+
+    let (tx, rx_body) = mpsc::unbounded();
+    let _ = tx.unbounded_send(Bytes::from(text.as_bytes()));
+
+    HttpResponse::Ok()
+        .streaming(rx_body.map_err(|e| error::ErrorBadRequest("bad request")))
+}
+
 /// handler with path parameters like `/user/{name}/`
 fn with_param(req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
@@ -92,6 +108,8 @@ fn main() {
             .resource("/user/{name}", |r| r.method(Method::GET).f(with_param))
             // async handler
             .resource("/async/{name}", |r| r.method(Method::GET).a(index_async))
+            // async handler
+            .resource("/async-body/{name}", |r| r.method(Method::GET).with(index_async_body))
             .resource("/test", |r| r.f(|req| {
                 match *req.method() {
                     Method::GET => HttpResponse::Ok(),
