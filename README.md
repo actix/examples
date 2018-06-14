@@ -3,7 +3,6 @@
 A curated list of examples related to actix.
 
 ## from community
-* [Rust-webapp-starter](https://github.com/OUISRC/Rust-webapp-starter) : A full-stack Single Page Webapp written in actix-web with vuejs.
 * [muro](https://github.com/OUISRC/muro) : A Reddit like project full-stack Single Page Webapp written in actix-web with vuejs.
 
 ## Contribute
