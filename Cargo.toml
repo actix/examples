@@ -19,6 +19,7 @@ members = [
   "static_index",
   "template_askama",
   "template_tera",
+  "template_maud",
   "tls",
   "unix-socket",
   "web-cors/backend",

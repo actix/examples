@@ -1,0 +1,11 @@
+[package]
+name = "template-maud"
+version = "0.1.0"
+authors = ["Max Frai <me@maxfrai.com>"]
+workspace = "../"
+
+[dependencies]
+env_logger = "0.5"
+actix = "0.5"
+actix-web = "^0.6"
+maud = {git = "https://github.com/lfairy/maud", features=["actix-web"]}
