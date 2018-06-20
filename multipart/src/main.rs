@@ -6,6 +6,7 @@ extern crate futures;
 
 use std::fs;
 use std::io::Write;
+use std::cell::Cell;
 
 use actix_web::{
     error, http, middleware, multipart, server, App, Error, FutureResponse, HttpMessage,
@@ -15,9 +16,11 @@ use actix_web::{
 use futures::future;
 use futures::{Future, Stream};
 
-pub fn save_file(
-    field: multipart::Field<HttpRequest>,
-) -> Box<Future<Item = i64, Error = Error>> {
+pub struct AppState {
+    pub counter: Cell<usize>,
+}
+
+pub fn save_file( field: multipart::Field<HttpRequest<AppState>>) -> Box<Future<Item = i64, Error = Error>> {
     let file_path_string = "upload.png";
     let mut file = match fs::File::create(file_path_string) {
         Ok(file) => file,
@@ -42,9 +45,7 @@ pub fn save_file(
     )
 }
 
-pub fn handle_multipart_item(
-    item: multipart::MultipartItem<HttpRequest>,
-) -> Box<Stream<Item = i64, Error = Error>> {
+pub fn handle_multipart_item( item: multipart::MultipartItem<HttpRequest<AppState>>) -> Box<Stream<Item = i64, Error = Error>> {
     match item {
         multipart::MultipartItem::Field(field) => {
             Box::new(save_file(field).into_stream())
@@ -57,7 +58,9 @@ pub fn handle_multipart_item(
     }
 }
 
-pub fn upload(req: HttpRequest) -> FutureResponse<HttpResponse> {
+pub fn upload(req: HttpRequest<AppState>) -> FutureResponse<HttpResponse> {
+    req.state().counter.set(req.state().counter.get() + 1);
+    println!("{:?}",  req.state().counter.get());
     Box::new(
         req.clone()
             .multipart()
@@ -73,7 +76,7 @@ pub fn upload(req: HttpRequest) -> FutureResponse<HttpResponse> {
     )
 }
 
-fn index(_req: HttpRequest) -> Result<HttpResponse, error::Error> {
+fn index(_req: HttpRequest<AppState>) -> Result<HttpResponse, error::Error> {
     let html = r#"<html>
         <head><title>Upload Test</title></head>
         <body>
@@ -93,7 +96,7 @@ fn main() {
     let sys = actix::System::new("multipart-example");
 
     server::new(|| {
-        App::new()
+        App::with_state(AppState{counter: Cell::new(0)})
             .middleware(middleware::Logger::default())
             .resource("/", |r| {
                 r.method(http::Method::GET).with(index);
