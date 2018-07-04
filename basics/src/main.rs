@@ -82,7 +82,7 @@ fn with_param(req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
-        .content_type("test/plain")
+        .content_type("text/plain")
         .body(format!("Hello {}!", req.match_info().get("name").unwrap()))
 }
 
