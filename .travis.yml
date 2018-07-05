@@ -40,6 +40,7 @@ script:
       cd cookie-auth && cargo check && cd ..
       cd cookie-session && cargo check && cd ..
       cd diesel && cargo check && cd ..
+      cd form && cargo check && cd ..
       cd hello-world && cargo check && cd ..
       cd http-proxy && cargo check && cd ..
       cd json && cargo check && cd ..
