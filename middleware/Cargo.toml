@@ -1,0 +1,8 @@
+[package]
+name = "middleware-example"
+version = "0.1.0"
+authors = ["Gorm Casper <gcasper@gmail.com>"]
+
+[dependencies]
+actix = "0.5"
+actix-web = "^0.6"

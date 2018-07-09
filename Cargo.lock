@@ -1039,6 +1039,14 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "middleware-example"
+version = "0.1.0"
+dependencies = [
+ "actix 0.5.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-web 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
