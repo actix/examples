@@ -3,6 +3,9 @@ extern crate actix_web;
 
 use actix_web::{server, App};
 
+#[allow(dead_code)]
+mod redirect;
+#[allow(dead_code)]
 mod simple;
 
 fn main() {
@@ -11,8 +14,14 @@ fn main() {
     let _addr = server::new(|| {
         App::new()
             .middleware(simple::SayHi)
-            .resource("/index.html", |r| r.f(|_| "Hello, middleware!"))
-    }).bind("0.0.0.0:8080")
+            // .middleware(redirect::CheckLogin)
+            .resource("/login", |r| {
+                r.f(|_| "You are on /login. Go to src/redirect.rs to change this behavior.")
+            })
+            .resource("/", |r| {
+                r.f(|_| "Hello, middleware! Check the console where the server is run.")
+            })
+    }).bind("127.0.0.1:8080")
         .unwrap()
         .start();
 
