@@ -35,7 +35,7 @@ use db::{CreateUser, DbExecutor};
 
 /// State with DbExecutor address
 struct AppState {
-    db: Addr<Syn, DbExecutor>,
+    db: Addr<DbExecutor>,
 }
 
 /// Async request handler

@@ -25,7 +25,7 @@ struct AppState {
 }
 
 /// simple handle
-fn index(req: HttpRequest<AppState>) -> HttpResponse {
+fn index(req: &HttpRequest<AppState>) -> HttpResponse {
     println!("{:?}", req);
     req.state().counter.set(req.state().counter.get() + 1);
 

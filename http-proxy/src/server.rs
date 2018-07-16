@@ -6,7 +6,7 @@ extern crate futures;
 use actix_web::*;
 use futures::Future;
 
-fn index(req: HttpRequest) -> FutureResponse<HttpResponse> {
+fn index(req: &HttpRequest) -> FutureResponse<HttpResponse> {
     req.body()
         .from_err()
         .map(|bytes| HttpResponse::Ok().body(bytes))

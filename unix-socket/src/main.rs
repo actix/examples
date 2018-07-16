@@ -7,7 +7,7 @@ use actix::*;
 use actix_web::{middleware, server, App, HttpRequest};
 use tokio_uds::UnixListener;
 
-fn index(_req: HttpRequest) -> &'static str {
+fn index(_req: &HttpRequest) -> &'static str {
     "Hello world!"
 }
 
@@ -16,8 +16,7 @@ fn main() {
     env_logger::init();
     let sys = actix::System::new("unix-socket");
 
-    let listener = UnixListener::bind("/tmp/actix-uds.socket", Arbiter::handle())
-        .expect("bind failed");
+    let listener = UnixListener::bind("/tmp/actix-uds.socket").expect("bind failed");
     server::new(|| {
         App::new()
             // enable logger

@@ -5,13 +5,11 @@ extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
 extern crate futures;
-extern crate tokio_core;
 
 use std::time::Duration;
 use std::{io, thread};
 
 use actix::*;
-use actix_web::ws::WsWriter;
 use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};
 use futures::Future;
 
@@ -20,7 +18,7 @@ fn main() {
     let _ = env_logger::init();
     let sys = actix::System::new("ws-example");
 
-    Arbiter::handle().spawn(
+    Arbiter::spawn(
         Client::new("http://127.0.0.1:8080/ws/")
             .connect()
             .map_err(|e| {
@@ -28,7 +26,7 @@ fn main() {
                 ()
             })
             .map(|(reader, writer)| {
-                let addr: Addr<Syn, _> = ChatClient::create(|ctx| {
+                let addr = ChatClient::create(|ctx| {
                     ChatClient::add_stream(reader, ctx);
                     ChatClient(writer)
                 });
@@ -67,7 +65,7 @@ impl Actor for ChatClient {
         println!("Disconnected");
 
         // Stop application on disconnect
-        Arbiter::system().do_send(actix::msgs::SystemExit(0));
+        System::current().stop();
     }
 }
 

@@ -10,7 +10,7 @@ use actix_web::{
 use futures::{Future, Stream};
 
 /// Stream client request response and then send body to a server response
-fn index(_req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
+fn index(_req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     client::ClientRequest::get("http://127.0.0.1:8081/")
         .finish().unwrap()
         .send()
@@ -25,7 +25,7 @@ fn index(_req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
 }
 
 /// streaming client request to a streaming server response
-fn streaming(_req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
+fn streaming(_req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     // send client request
     client::ClientRequest::get("https://www.rust-lang.org/en-US/")
         .finish().unwrap()
@@ -35,7 +35,7 @@ fn streaming(_req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error
             Ok(HttpResponse::Ok()
                // read one chunk from client response and send this chunk to a server response
                // .from_err() converts PayloadError to an Error
-               .body(Body::Streaming(Box::new(resp.from_err()))))
+               .body(Body::Streaming(Box::new(resp.payload().from_err()))))
         })
         .responder()
 }

@@ -25,7 +25,7 @@ struct MyObj {
 }
 
 /// This handler uses `HttpRequest::json()` for loading json object.
-fn index(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
+fn index(req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     req.json()
         .from_err()  // convert all errors into `Error`
         .and_then(|val: MyObj| {
@@ -50,9 +50,9 @@ fn extract_item_limit((item, _req): (Json<MyObj>, HttpRequest)) -> HttpResponse 
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 /// This handler manually load request payload and parse json object
-fn index_manual(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    // HttpRequest is stream of Bytes objects
-    req
+fn index_manual(req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
+    // HttpRequest::payload() is stream of Bytes objects
+    req.payload()
         // `Future::from_err` acts like `?` in that it coerces the error type from
         // the future into the final error type
         .from_err()
@@ -79,8 +79,11 @@ fn index_manual(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Err
 }
 
 /// This handler manually load request payload and parse json-rust
-fn index_mjsonrust(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    req.concat2()
+fn index_mjsonrust(
+    req: &HttpRequest,
+) -> Box<Future<Item = HttpResponse, Error = Error>> {
+    req.payload()
+        .concat2()
         .from_err()
         .and_then(|body| {
             // body is loaded, now we can deserialize json-rust
@@ -107,13 +110,15 @@ fn main() {
             .middleware(middleware::Logger::default())
             .resource("/extractor", |r| {
                 r.method(http::Method::POST)
-                    .with(extract_item)
-                    .limit(4096); // <- limit size of the payload
+                    .with_config(extract_item, |cfg| {
+                        cfg.limit(4096); // <- limit size of the payload
+                    })
             })
             .resource("/extractor2", |r| {
                 r.method(http::Method::POST)
-                    .with(extract_item_limit)
-                    .0.limit(4096); // <- limit size of the payload
+                    .with_config(extract_item_limit, |cfg| {
+                        cfg.0.limit(4096); // <- limit size of the payload
+                    })
             })
             .resource("/manual", |r| r.method(http::Method::POST).f(index_manual))
             .resource("/mjsonrust", |r| r.method(http::Method::POST).f(index_mjsonrust))

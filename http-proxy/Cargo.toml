@@ -15,5 +15,7 @@ path = "src/server.rs"
 [dependencies]
 env_logger = "0.5"
 futures = "0.1"
-actix = "0.5"
-actix-web = { version = "^0.6", features=["alpn"] }
+
+actix = "0.7"
+#actix-web = "^0.7"
+actix-web = { git = "https://github.com/actix/actix-web.git" }

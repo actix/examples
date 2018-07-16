@@ -8,7 +8,7 @@ use actix_web::{http, middleware, server, App, Error, HttpRequest, HttpResponse}
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 /// simple handle
-fn index(req: HttpRequest) -> Result<HttpResponse, Error> {
+fn index(req: &HttpRequest) -> Result<HttpResponse, Error> {
     println!("{:?}", req);
     Ok(HttpResponse::Ok()
         .content_type("text/plain")

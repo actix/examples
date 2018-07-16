@@ -24,11 +24,11 @@ mod server;
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
 struct WsChatSessionState {
-    addr: Addr<Syn, server::ChatServer>,
+    addr: Addr<server::ChatServer>,
 }
 
 /// Entry point for our route
-fn chat_route(req: HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Error> {
+fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Error> {
     ws::start(
         req,
         WsChatSession {
@@ -63,7 +63,7 @@ impl Actor for WsChatSession {
         // before processing any other events.
         // HttpContext::state() is instance of WsChatSessionState, state is shared
         // across all routes within application
-        let addr: Addr<Syn, _> = ctx.address();
+        let addr = ctx.address();
         ctx.state()
             .addr
             .send(server::Connect {
@@ -183,7 +183,7 @@ fn main() {
     let sys = actix::System::new("websocket-example");
 
     // Start chat server actor in separate thread
-    let server: Addr<Syn, _> = Arbiter::start(|_| server::ChatServer::default());
+    let server = Arbiter::start(|_| server::ChatServer::default());
 
     // Create Http server with websocket support
     HttpServer::new(move || {
@@ -193,16 +193,16 @@ fn main() {
         };
 
         App::with_state(state)
-                // redirect to websocket.html
-                .resource("/", |r| r.method(http::Method::GET).f(|_| {
-                    HttpResponse::Found()
-                        .header("LOCATION", "/static/websocket.html")
-                        .finish()
-                }))
-                // websocket
-                .resource("/ws/", |r| r.route().f(chat_route))
-                // static resources
-                .handler("/static/", fs::StaticFiles::new("static/"))
+        // redirect to websocket.html
+            .resource("/", |r| r.method(http::Method::GET).f(|_| {
+                HttpResponse::Found()
+                    .header("LOCATION", "/static/websocket.html")
+                    .finish()
+            }))
+        // websocket
+            .resource("/ws/", |r| r.route().f(chat_route))
+        // static resources
+            .handler("/static/", fs::StaticFiles::new("static/").unwrap())
     }).bind("127.0.0.1:8080")
         .unwrap()
         .start();

@@ -5,8 +5,10 @@ authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = "../"
 
 [dependencies]
+actix = "0.7"
+#actix-web = "^0.7"
+actix-web = { git = "https://github.com/actix/actix-web.git" }
+
 futures = "0.1"
 env_logger = "0.5"
-actix = "0.5"
-actix-web = "^0.6"
 bytes = "0.4"

@@ -14,7 +14,7 @@ use actix_web::{
 };
 
 /// do websocket handshake and start `MyWebSocket` actor
-fn ws_index(r: HttpRequest) -> Result<HttpResponse, Error> {
+fn ws_index(r: &HttpRequest) -> Result<HttpResponse, Error> {
     ws::start(r, MyWebSocket)
 }
 
@@ -56,6 +56,7 @@ fn main() {
             .resource("/ws/", |r| r.method(http::Method::GET).f(ws_index))
             // static files
             .handler("/", fs::StaticFiles::new("static/")
+                     .unwrap()
                      .index_file("index.html")))
         // start http server on 127.0.0.1:8080
         .bind("127.0.0.1:8080").unwrap()

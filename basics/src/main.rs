@@ -21,20 +21,13 @@ use futures::future::{result, FutureResult};
 use std::{env, io};
 
 /// favicon handler
-fn favicon(req: HttpRequest) -> Result<fs::NamedFile> {
+fn favicon(req: &HttpRequest) -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("static/favicon.ico")?)
 }
 
 /// simple index handler
-fn welcome(mut req: HttpRequest) -> Result<HttpResponse> {
+fn welcome(req: &HttpRequest) -> Result<HttpResponse> {
     println!("{:?}", req);
-
-    // example of ...
-    if let Ok(ch) = req.poll() {
-        if let futures::Async::Ready(Some(d)) = ch {
-            println!("{}", String::from_utf8_lossy(d.as_ref()));
-        }
-    }
 
     // session
     let mut counter = 1;
@@ -53,12 +46,12 @@ fn welcome(mut req: HttpRequest) -> Result<HttpResponse> {
 }
 
 /// 404 handler
-fn p404(req: HttpRequest) -> Result<fs::NamedFile> {
+fn p404(req: &HttpRequest) -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("static/404.html")?.set_status_code(StatusCode::NOT_FOUND))
 }
 
 /// async handler
-fn index_async(req: HttpRequest) -> FutureResult<HttpResponse, Error> {
+fn index_async(req: &HttpRequest) -> FutureResult<HttpResponse, Error> {
     println!("{:?}", req);
 
     result(Ok(HttpResponse::Ok().content_type("text/html").body(
@@ -78,7 +71,7 @@ fn index_async_body(path: Path<String>) -> HttpResponse {
 }
 
 /// handler with path parameters like `/user/{name}/`
-fn with_param(req: HttpRequest) -> HttpResponse {
+fn with_param(req: &HttpRequest) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
@@ -122,7 +115,7 @@ fn main() {
                     io::Error::new(io::ErrorKind::Other, "test"), StatusCode::INTERNAL_SERVER_ERROR)
             }))
             // static files
-            .handler("/static", fs::StaticFiles::new("static"))
+            .handler("/static", fs::StaticFiles::new("static").unwrap())
             // redirect
             .resource("/", |r| r.method(Method::GET).f(|req| {
                 println!("{:?}", req);

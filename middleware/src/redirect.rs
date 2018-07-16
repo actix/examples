@@ -7,7 +7,7 @@ pub struct CheckLogin;
 
 impl<S> Middleware<S> for CheckLogin {
     // We only need to hook into the `start` for this middleware.
-    fn start(&self, req: &mut HttpRequest<S>) -> Result<Started> {
+    fn start(&self, req: &HttpRequest<S>) -> Result<Started> {
         let is_logged_in = false; // Change this to see the change in outcome in the browser
 
         if is_logged_in {

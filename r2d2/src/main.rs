@@ -22,11 +22,11 @@ use db::{CreateUser, DbExecutor};
 
 /// State with DbExecutor address
 struct State {
-    db: Addr<Syn, DbExecutor>,
+    db: Addr<DbExecutor>,
 }
 
 /// Async request handler
-fn index(req: HttpRequest<State>) -> Box<Future<Item = HttpResponse, Error = Error>> {
+fn index(req: &HttpRequest<State>) -> Box<Future<Item = HttpResponse, Error = Error>> {
     let name = &req.match_info()["name"];
 
     req.state()

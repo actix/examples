@@ -14,31 +14,31 @@ use actix_web::{Error, HttpRequest, HttpResponse, Result};
 pub trait RequestIdentity {
     /// Return the claimed identity of the user associated request or
     /// ``None`` if no identity can be found associated with the request.
-    fn identity(&mut self) -> Option<&str>;
+    fn identity(&self) -> Option<String>;
 
     /// Remember identity.
-    fn remember(&mut self, identity: String);
+    fn remember(&self, identity: String);
 
     /// This method is used to 'forget' the current identity on subsequent
     /// requests.
-    fn forget(&mut self);
+    fn forget(&self);
 }
 
 impl<S> RequestIdentity for HttpRequest<S> {
-    fn identity(&mut self) -> Option<&str> {
+    fn identity(&self) -> Option<String> {
         if let Some(id) = self.extensions().get::<IdentityBox>() {
-            return id.0.identity();
+            return id.0.identity().map(|s| s.to_owned());
         }
         None
     }
 
-    fn remember(&mut self, identity: String) {
+    fn remember(&self, identity: String) {
         if let Some(id) = self.extensions_mut().get_mut::<IdentityBox>() {
-            return id.0.remember(identity);
+            return id.0.as_mut().remember(identity);
         }
     }
 
-    fn forget(&mut self) {
+    fn forget(&self) {
         if let Some(id) = self.extensions_mut().get_mut::<IdentityBox>() {
             return id.0.forget();
         }
@@ -86,7 +86,7 @@ unsafe impl Send for IdentityBox {}
 unsafe impl Sync for IdentityBox {}
 
 impl<S: 'static, T: IdentityPolicy<S>> Middleware<S> for IdentityService<T> {
-    fn start(&self, req: &mut HttpRequest<S>) -> Result<Started> {
+    fn start(&self, req: &HttpRequest<S>) -> Result<Started> {
         let mut req = req.clone();
 
         let fut = self
@@ -102,9 +102,7 @@ impl<S: 'static, T: IdentityPolicy<S>> Middleware<S> for IdentityService<T> {
         Ok(Started::Future(Box::new(fut)))
     }
 
-    fn response(
-        &self, req: &mut HttpRequest<S>, resp: HttpResponse,
-    ) -> Result<Response> {
+    fn response(&self, req: &HttpRequest<S>, resp: HttpResponse) -> Result<Response> {
         if let Some(mut id) = req.extensions_mut().remove::<IdentityBox>() {
             id.0.write(resp)
         } else {
@@ -200,7 +198,7 @@ impl CookieIdentityInner {
 
     fn load<S>(&self, req: &mut HttpRequest<S>) -> Option<String> {
         if let Ok(cookies) = req.cookies() {
-            for cookie in cookies {
+            for cookie in cookies.iter() {
                 if cookie.name() == self.name {
                     let mut jar = CookieJar::new();
                     jar.add_original(cookie.clone());

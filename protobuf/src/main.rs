@@ -26,7 +26,7 @@ pub struct MyObj {
 }
 
 /// This handler uses `ProtoBufMessage` for loading protobuf object.
-fn index(req: HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
+fn index(req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     protobuf::ProtoBufMessage::new(req)
         .from_err()  // convert all errors into `Error`
         .and_then(|val: MyObj| {

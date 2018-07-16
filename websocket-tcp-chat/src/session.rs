@@ -4,10 +4,10 @@ use futures::Stream;
 use std::str::FromStr;
 use std::time::{Duration, Instant};
 use std::{io, net};
-use tokio_core::net::{TcpListener, TcpStream};
-use tokio_io::codec::FramedRead;
+use tokio_codec::FramedRead;
 use tokio_io::io::WriteHalf;
 use tokio_io::AsyncRead;
+use tokio_tcp::{TcpListener, TcpStream};
 
 use actix::prelude::*;
 
@@ -23,7 +23,7 @@ pub struct ChatSession {
     /// unique session id
     id: usize,
     /// this is address of chat server
-    addr: Addr<Syn, ChatServer>,
+    addr: Addr<ChatServer>,
     /// Client must send ping at least once per 10 seconds, otherwise we drop
     /// connection.
     hb: Instant,
@@ -45,7 +45,7 @@ impl Actor for ChatSession {
         // register self in chat server. `AsyncContext::wait` register
         // future within context, but context waits until this future resolves
         // before processing any other events.
-        let addr: Addr<Syn, _> = ctx.address();
+        let addr = ctx.address();
         self.addr
             .send(server::Connect {
                 addr: addr.recipient(),
@@ -133,7 +133,7 @@ impl Handler<Message> for ChatSession {
 /// Helper methods
 impl ChatSession {
     pub fn new(
-        addr: Addr<Syn, ChatServer>,
+        addr: Addr<ChatServer>,
         framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
     ) -> ChatSession {
         ChatSession {
@@ -172,14 +172,14 @@ impl ChatSession {
 /// Define tcp server that will accept incoming tcp connection and create
 /// chat actors.
 pub struct TcpServer {
-    chat: Addr<Syn, ChatServer>,
+    chat: Addr<ChatServer>,
 }
 
 impl TcpServer {
-    pub fn new(s: &str, chat: Addr<Syn, ChatServer>) {
+    pub fn new(s: &str, chat: Addr<ChatServer>) {
         // Create server listener
         let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
-        let listener = TcpListener::bind(&addr, Arbiter::handle()).unwrap();
+        let listener = TcpListener::bind(&addr).unwrap();
 
         // Our chat server `Server` is an actor, first we need to start it
         // and then add stream on incoming tcp connections to it.
@@ -187,12 +187,9 @@ impl TcpServer {
         // items So to be able to handle this events `Server` actor has to
         // implement stream handler `StreamHandler<(TcpStream,
         // net::SocketAddr), io::Error>`
-        let _: () = TcpServer::create(|ctx| {
+        TcpServer::create(|ctx| {
             ctx.add_message_stream(
-                listener
-                    .incoming()
-                    .map_err(|_| ())
-                    .map(|(t, a)| TcpConnect(t, a)),
+                listener.incoming().map_err(|_| ()).map(|s| TcpConnect(s)),
             );
             TcpServer { chat: chat }
         });
@@ -206,7 +203,7 @@ impl Actor for TcpServer {
 }
 
 #[derive(Message)]
-struct TcpConnect(TcpStream, net::SocketAddr);
+struct TcpConnect(TcpStream);
 
 /// Handle stream of TcpStream's
 impl Handler<TcpConnect> for TcpServer {
@@ -216,7 +213,7 @@ impl Handler<TcpConnect> for TcpServer {
         // For each incoming connection we create `ChatSession` actor
         // with out chat server address.
         let server = self.chat.clone();
-        let _: () = ChatSession::create(|ctx| {
+        ChatSession::create(|ctx| {
             let (r, w) = msg.0.split();
             ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
             ChatSession::new(server, actix::io::FramedWrite::new(w, ChatCodec, ctx))

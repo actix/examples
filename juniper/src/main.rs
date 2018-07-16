@@ -27,7 +27,7 @@ use schema::create_schema;
 use schema::Schema;
 
 struct AppState {
-    executor: Addr<Syn, GraphQLExecutor>,
+    executor: Addr<GraphQLExecutor>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -61,7 +61,7 @@ impl Handler<GraphQLData> for GraphQLExecutor {
     }
 }
 
-fn graphiql(_req: HttpRequest<AppState>) -> Result<HttpResponse, Error> {
+fn graphiql(_req: &HttpRequest<AppState>) -> Result<HttpResponse, Error> {
     let html = graphiql_source("http://127.0.0.1:8080/graphql");
     Ok(HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")

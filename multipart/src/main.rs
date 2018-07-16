@@ -4,13 +4,13 @@ extern crate actix_web;
 extern crate env_logger;
 extern crate futures;
 
+use std::cell::Cell;
 use std::fs;
 use std::io::Write;
-use std::cell::Cell;
 
 use actix_web::{
-    error, http, middleware, multipart, server, App, Error, FutureResponse, HttpMessage,
-    HttpRequest, HttpResponse,
+    dev, error, http, middleware, multipart, server, App, Error, FutureResponse,
+    HttpMessage, HttpRequest, HttpResponse,
 };
 
 use futures::future;
@@ -20,7 +20,9 @@ pub struct AppState {
     pub counter: Cell<usize>,
 }
 
-pub fn save_file( field: multipart::Field<HttpRequest<AppState>>) -> Box<Future<Item = i64, Error = Error>> {
+pub fn save_file(
+    field: multipart::Field<dev::Payload>,
+) -> Box<Future<Item = i64, Error = Error>> {
     let file_path_string = "upload.png";
     let mut file = match fs::File::create(file_path_string) {
         Ok(file) => file,
@@ -45,7 +47,9 @@ pub fn save_file( field: multipart::Field<HttpRequest<AppState>>) -> Box<Future<
     )
 }
 
-pub fn handle_multipart_item( item: multipart::MultipartItem<HttpRequest<AppState>>) -> Box<Stream<Item = i64, Error = Error>> {
+pub fn handle_multipart_item(
+    item: multipart::MultipartItem<dev::Payload>,
+) -> Box<Stream<Item = i64, Error = Error>> {
     match item {
         multipart::MultipartItem::Field(field) => {
             Box::new(save_file(field).into_stream())
@@ -60,10 +64,9 @@ pub fn handle_multipart_item( item: multipart::MultipartItem<HttpRequest<AppStat
 
 pub fn upload(req: HttpRequest<AppState>) -> FutureResponse<HttpResponse> {
     req.state().counter.set(req.state().counter.get() + 1);
-    println!("{:?}",  req.state().counter.get());
+    println!("{:?}", req.state().counter.get());
     Box::new(
-        req.clone()
-            .multipart()
+        req.multipart()
             .map_err(error::ErrorInternalServerError)
             .map(handle_multipart_item)
             .flatten()
@@ -96,8 +99,9 @@ fn main() {
     let sys = actix::System::new("multipart-example");
 
     server::new(|| {
-        App::with_state(AppState{counter: Cell::new(0)})
-            .middleware(middleware::Logger::default())
+        App::with_state(AppState {
+            counter: Cell::new(0),
+        }).middleware(middleware::Logger::default())
             .resource("/", |r| {
                 r.method(http::Method::GET).with(index);
                 r.method(http::Method::POST).with(upload);

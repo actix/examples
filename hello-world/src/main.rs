@@ -4,7 +4,7 @@ extern crate env_logger;
 
 use actix_web::{middleware, server, App, HttpRequest};
 
-fn index(_req: HttpRequest) -> &'static str {
+fn index(_req: &HttpRequest) -> &'static str {
     "Hello world!"
 }
 

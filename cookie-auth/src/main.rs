@@ -10,16 +10,16 @@ use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
 mod auth;
 use auth::{CookieIdentityPolicy, IdentityService, RequestIdentity};
 
-fn index(mut req: HttpRequest) -> String {
-    format!("Hello {}", req.identity().unwrap_or("Anonymous"))
+fn index(req: &HttpRequest) -> String {
+    format!("Hello {}", req.identity().unwrap_or("Anonymous".to_owned()))
 }
 
-fn login(mut req: HttpRequest) -> HttpResponse {
+fn login(req: &HttpRequest) -> HttpResponse {
     req.remember("user1".to_owned());
     HttpResponse::Found().header("location", "/").finish()
 }
 
-fn logout(mut req: HttpRequest) -> HttpResponse {
+fn logout(req: &HttpRequest) -> HttpResponse {
     req.forget();
     HttpResponse::Found().header("location", "/").finish()
 }

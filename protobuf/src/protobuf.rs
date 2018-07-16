@@ -1,4 +1,4 @@
-use bytes::{Bytes, BytesMut};
+use bytes::BytesMut;
 use futures::{Future, Poll, Stream};
 
 use bytes::IntoBuf;
@@ -8,7 +8,7 @@ use prost::Message;
 
 use actix_web::dev::HttpResponseBuilder;
 use actix_web::error::{Error, PayloadError, ResponseError};
-use actix_web::http::header::{CONTENT_LENGTH, CONTENT_TYPE};
+use actix_web::http::header::CONTENT_TYPE;
 use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder};
 
 #[derive(Fail, Debug)]
@@ -72,84 +72,32 @@ impl<T: Message> Responder for ProtoBuf<T> {
     }
 }
 
-pub struct ProtoBufMessage<T, U: Message + Default> {
-    limit: usize,
-    ct: &'static str,
-    req: Option<T>,
-    fut: Option<Box<Future<Item = U, Error = ProtoBufPayloadError>>>,
+pub struct ProtoBufMessage<U: Message + Default> {
+    fut: Box<Future<Item = U, Error = ProtoBufPayloadError>>,
 }
 
-impl<T, U: Message + Default> ProtoBufMessage<T, U> {
+impl<U: Message + Default + 'static> ProtoBufMessage<U> {
     /// Create `ProtoBufMessage` for request.
-    pub fn new(req: T) -> Self {
-        ProtoBufMessage {
-            limit: 262_144,
-            req: Some(req),
-            fut: None,
-            ct: "application/protobuf",
-        }
-    }
+    pub fn new(req: &HttpRequest) -> Self {
+        let fut = req
+            .payload()
+            .map_err(|e| ProtoBufPayloadError::Payload(e))
+            .fold(BytesMut::new(), move |mut body, chunk| {
+                body.extend_from_slice(&chunk);
+                Ok::<_, ProtoBufPayloadError>(body)
+            })
+            .and_then(|body| Ok(<U>::decode(&mut body.into_buf())?));
 
-    /// Change max size of payload. By default max size is 256Kb
-    pub fn limit(mut self, limit: usize) -> Self {
-        self.limit = limit;
-        self
-    }
-
-    /// Set allowed content type.
-    ///
-    /// By default *application/protobuf* content type is used. Set content type
-    /// to empty string if you want to disable content type check.
-    pub fn content_type(mut self, ct: &'static str) -> Self {
-        self.ct = ct;
-        self
+        ProtoBufMessage { fut: Box::new(fut) }
     }
 }
 
-impl<T, U: Message + Default + 'static> Future for ProtoBufMessage<T, U>
-where
-    T: HttpMessage + Stream<Item = Bytes, Error = PayloadError> + 'static,
-{
+impl<U: Message + Default + 'static> Future for ProtoBufMessage<U> where {
     type Item = U;
     type Error = ProtoBufPayloadError;
 
     fn poll(&mut self) -> Poll<U, ProtoBufPayloadError> {
-        if let Some(req) = self.req.take() {
-            if let Some(len) = req.headers().get(CONTENT_LENGTH) {
-                if let Ok(s) = len.to_str() {
-                    if let Ok(len) = s.parse::<usize>() {
-                        if len > self.limit {
-                            return Err(ProtoBufPayloadError::Overflow);
-                        }
-                    } else {
-                        return Err(ProtoBufPayloadError::Overflow);
-                    }
-                }
-            }
-            // check content-type
-            if !self.ct.is_empty() && req.content_type() != self.ct {
-                return Err(ProtoBufPayloadError::ContentType);
-            }
-
-            let limit = self.limit;
-            let fut = req
-                .from_err()
-                .fold(BytesMut::new(), move |mut body, chunk| {
-                    if (body.len() + chunk.len()) > limit {
-                        Err(ProtoBufPayloadError::Overflow)
-                    } else {
-                        body.extend_from_slice(&chunk);
-                        Ok(body)
-                    }
-                })
-                .and_then(|body| Ok(<U>::decode(&mut body.into_buf())?));
-            self.fut = Some(Box::new(fut));
-        }
-
-        self.fut
-            .as_mut()
-            .expect("ProtoBufBody could not be used second time")
-            .poll()
+        self.fut.poll()
     }
 }
 

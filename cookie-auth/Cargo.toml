@@ -5,8 +5,10 @@ authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = "../"
 
 [dependencies]
-actix = "0.5"
-actix-web = "^0.6"
+actix = "0.7"
+#actix-web = "^0.7"
+actix-web = { git = "https://github.com/actix/actix-web.git" }
+
 cookie = { version="0.10", features=["percent-encode", "secure"] }
 futures = "0.1"
 time = "0.1"

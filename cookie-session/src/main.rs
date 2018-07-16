@@ -15,7 +15,7 @@ use actix_web::{middleware, server, App, HttpRequest, Result};
 use std::env;
 
 /// simple index handler with session
-fn index(req: HttpRequest) -> Result<&'static str> {
+fn index(req: &HttpRequest) -> Result<&'static str> {
     println!("{:?}", req);
 
     // RequestSession trait is used for session access

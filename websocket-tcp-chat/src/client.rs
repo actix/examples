@@ -5,8 +5,9 @@ extern crate bytes;
 extern crate futures;
 extern crate serde;
 extern crate serde_json;
-extern crate tokio_core;
+extern crate tokio_codec;
 extern crate tokio_io;
+extern crate tokio_tcp;
 #[macro_use]
 extern crate serde_derive;
 
@@ -15,10 +16,10 @@ use futures::Future;
 use std::str::FromStr;
 use std::time::Duration;
 use std::{io, net, process, thread};
-use tokio_core::net::TcpStream;
-use tokio_io::codec::FramedRead;
+use tokio_codec::FramedRead;
 use tokio_io::io::WriteHalf;
 use tokio_io::AsyncRead;
+use tokio_tcp::TcpStream;
 
 mod codec;
 
@@ -27,10 +28,10 @@ fn main() {
 
     // Connect to server
     let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
-    Arbiter::handle().spawn(
-        TcpStream::connect(&addr, Arbiter::handle())
+    Arbiter::spawn(
+        TcpStream::connect(&addr)
             .and_then(|stream| {
-                let addr: Addr<Syn, _> = ChatClient::create(|ctx| {
+                let addr = ChatClient::create(|ctx| {
                     let (r, w) = stream.split();
                     ChatClient::add_stream(
                         FramedRead::new(r, codec::ClientChatCodec),
@@ -87,7 +88,7 @@ impl Actor for ChatClient {
         println!("Disconnected");
 
         // Stop application on disconnect
-        Arbiter::system().do_send(actix::msgs::SystemExit(0));
+        System::current().stop();
     }
 }
 

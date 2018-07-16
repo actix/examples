@@ -17,7 +17,7 @@ fn main() {
 	        .middleware(middleware::Logger::default())
 	        .handler(
                 "/",
-                fs::StaticFiles::new("./static/").index_file("index.html")
+                fs::StaticFiles::new("./static/").unwrap().index_file("index.html")
             )
     }).bind("127.0.0.1:8080")
         .expect("Can not start server on given IP/Port")
