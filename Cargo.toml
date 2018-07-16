@@ -12,6 +12,7 @@ members = [
   "http-proxy",
   "json",
   "juniper",
+  "middleware",
   "multipart",
   "protobuf",
   "r2d2",

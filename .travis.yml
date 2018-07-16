@@ -45,6 +45,7 @@ script:
       cd http-proxy && cargo check && cd ..
       cd json && cargo check && cd ..
       cd juniper && cargo check && cd ..
+      cd middleware && cargo check && cd ..
       cd multipart && cargo check && cd ..
       cd protobuf && cargo check && cd ..
       cd r2d2 && cargo check && cd ..
