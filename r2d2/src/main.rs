@@ -22,7 +22,7 @@ use db::{CreateUser, DbExecutor};
 
 /// State with DbExecutor address
 struct State {
-    db: Addr<Syn, DbExecutor>,
+    db: Addr<DbExecutor>,
 }
 
 /// Async request handler
