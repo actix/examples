@@ -6,9 +6,8 @@ extern crate futures;
 extern crate time;
 
 use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
-
-mod auth;
-use auth::{CookieIdentityPolicy, IdentityService, RequestIdentity};
+use actix_web::middleware::identity::RequestIdentity;
+use actix_web::middleware::identity::{CookieIdentityPolicy, IdentityService};
 
 fn index(req: &HttpRequest) -> String {
     format!("Hello {}", req.identity().unwrap_or("Anonymous".to_owned()))
