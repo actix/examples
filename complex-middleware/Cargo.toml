@@ -1,0 +1,14 @@
+[package]
+name = "complex-middleware"
+version = "0.1.0"
+authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+workspace = "../"
+
+[dependencies]
+actix = "0.7"
+actix-web = "0.7"
+
+cookie = { version="0.10", features=["percent-encode", "secure"] }
+futures = "0.1"
+time = "0.1"
+env_logger = "0.5"

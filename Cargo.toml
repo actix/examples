@@ -4,6 +4,7 @@ members = [
   "async_db",
   "async_ex1",
   "basics",
+  "complex-middleware",
   "cookie-auth",
   "cookie-session",
   "diesel",
