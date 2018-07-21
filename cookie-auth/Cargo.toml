@@ -6,8 +6,7 @@ workspace = "../"
 
 [dependencies]
 actix = "0.7"
-#actix-web = "^0.7"
-actix-web = { git = "https://github.com/actix/actix-web.git" }
+actix-web = "0.7"
 
 cookie = { version="0.10", features=["percent-encode", "secure"] }
 futures = "0.1"

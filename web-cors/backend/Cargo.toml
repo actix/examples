@@ -11,8 +11,7 @@ serde_json = "1.0"
 http = "0.1"
 
 actix = "0.7"
-#actix-web = "^0.7"
-actix-web = { git = "https://github.com/actix/actix-web.git" }
+actix-web = "0.7"
 
 dotenv = "0.10"
 env_logger = "0.5"

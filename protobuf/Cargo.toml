@@ -14,5 +14,4 @@ prost = "0.2.0"
 prost-derive = "0.2.0"
 
 actix = "0.7"
-#actix-web = "^0.7"
-actix-web = { git = "https://github.com/actix/actix-web.git" }
+actix-web = "0.7"
