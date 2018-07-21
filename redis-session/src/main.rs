@@ -11,7 +11,7 @@ use actix_web::middleware::session::{RequestSession, SessionStorage};
 use actix_web::{middleware, server, App, HttpRequest, HttpResponse, Result};
 
 /// simple handler
-fn index(req: HttpRequest) -> Result<HttpResponse> {
+fn index(req: &HttpRequest) -> Result<HttpResponse> {
     println!("{:?}", req);
 
     // session
