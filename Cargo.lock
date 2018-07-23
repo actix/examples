@@ -367,18 +367,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "complex-middleware"
-version = "0.1.0"
-dependencies = [
- "actix 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "actix-web 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "cookie 0.10.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "env_logger 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
- "futures 0.1.23 (registry+https://github.com/rust-lang/crates.io-index)",
- "time 0.1.40 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "cookie"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -396,6 +384,18 @@ dependencies = [
  "actix 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "actix-web 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "cookie-auth-full"
+version = "0.1.0"
+dependencies = [
+ "actix 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-web 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cookie 0.10.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "env_logger 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "futures 0.1.23 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.40 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

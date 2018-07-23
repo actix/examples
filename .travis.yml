@@ -37,8 +37,8 @@ script:
       cd async_db && cargo check && cd ..
       cd async_ex1 && cargo check && cd ..
       cd basics && cargo check && cd ..
-      cd complex-middleware && cargo check && cd ..
       cd cookie-auth && cargo check && cd ..
+      cd cookie-auth-full && cargo check && cd ..
       cd cookie-session && cargo check && cd ..
       cd diesel && cargo check && cd ..
       cd form && cargo check && cd ..
