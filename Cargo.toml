@@ -5,6 +5,7 @@ members = [
   "async_ex1",
   "basics",
   "cookie-auth",
+  "cookie-auth-full",
   "cookie-session",
   "diesel",
   "form",
