@@ -12,5 +12,5 @@ cargo run (or ``cargo watch -x run``)
 
 ### web client
 
-- curl: ``curl -v https://127.0.0.1:8443/index.html --compress -k``
-- browser: [https://127.0.0.1:8443/index.html](https://127.0.0.1:8080/index.html)
+- curl: ``curl -v https://127.0.0.1:8443/index.html --compressed -k``
+- browser: [https://127.0.0.1:8443/index.html](https://127.0.0.1:8443/index.html)
