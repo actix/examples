@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # This script could be used for actix-web multipart example test
 # just start server and run client.py
 
