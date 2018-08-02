@@ -133,6 +133,7 @@ fn create_something_v2(
 }
 
 fn main() {
+    ::std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
     let sys = actix::System::new("asyncio_example");
 
