@@ -41,6 +41,7 @@ script:
       cd cookie-auth-full && cargo check && cd ..
       cd cookie-session && cargo check && cd ..
       cd diesel && cargo check && cd ..
+      cd error_handling && cargo check && cd ..
       cd form && cargo check && cd ..
       cd hello-world && cargo check && cd ..
       cd http-proxy && cargo check && cd ..

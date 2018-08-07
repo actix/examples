@@ -8,6 +8,7 @@ members = [
   "cookie-auth-full",
   "cookie-session",
   "diesel",
+  "error_handling",
   "form",
   "hello-world",
   "http-proxy",
