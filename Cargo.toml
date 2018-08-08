@@ -24,6 +24,7 @@ members = [
   "template_askama",
   "template_tera",
   "tls",
+  "rustls",
   "unix-socket",
   "web-cors/backend",
   "websocket",

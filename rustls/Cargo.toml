@@ -1,0 +1,15 @@
+[package]
+name = "rustls-example"
+version = "0.1.0"
+authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+workspace = "../"
+
+[[bin]]
+name = "server"
+path = "src/main.rs"
+
+[dependencies]
+env_logger = "0.5"
+rustls = "0.13"
+actix = "0.7"
+actix-web = { git = "https://github.com/actix/actix-web.git", features=["rust-tls"] }
