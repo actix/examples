@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "./",
+  "actix_redis",
   "async_db",
   "async_ex1",
   "basics",
