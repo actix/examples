@@ -4,11 +4,12 @@ is so can be read at https://github.com/benashford/redis-async-rs/issues/19#issu
 
 
 
-To test the demo, POST a json object containing three strings to the /cache_stuff endpoint:
+To test the demo, POST a json object containing three strings to the /stuff endpoint:
 	{"one": "first entry",
 	 "two": "second entry",
 	 "three": "third entry" }
 
 
-
 These three entries will cache to redis, keyed accordingly.
+
+to delete these, simply issue a DELETE http request to /stuff endpoint
