@@ -21,6 +21,7 @@ use std::time::Instant;
 use actix::*;
 use actix_web::server::HttpServer;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
+use std::time::Duration;
 
 mod codec;
 mod server;
@@ -68,6 +69,10 @@ impl Actor for WsChatSession {
         // before processing any other events.
         // HttpContext::state() is instance of WsChatSessionState, state is shared
         // across all routes within application
+
+        // we'll start heartbeat process on session start.
+        self.hb(ctx);
+
         let addr = ctx.address();
         ctx.state()
             .addr
@@ -183,6 +188,31 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
     }
 }
 
+impl WsChatSession {
+    /// helper method that sends ping to client every second.
+    ///
+    /// also this method check heartbeats from client
+    fn hb(&self, ctx: &mut ws::WebsocketContext<Self, WsChatSessionState>) {
+        ctx.run_interval(Duration::new(1, 0), |act, ctx| {
+            // check client heartbeats
+            if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+                // heartbeat timed out
+                println!("Websocket Client heartbeat failed, disconnecting!");
+
+                // notify chat server
+                ctx.state()
+                    .addr
+                    .do_send(server::Disconnect { id: act.id });
+
+                // stop actor
+                ctx.stop();
+            }
+
+            ctx.ping("");
+        });
+    }
+}
+
 fn main() {
     let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");
@@ -205,15 +235,15 @@ fn main() {
         };
 
         App::with_state(state)
-        // redirect to websocket.html
+            // redirect to websocket.html
             .resource("/", |r| r.method(http::Method::GET).f(|_| {
                 HttpResponse::Found()
                     .header("LOCATION", "/static/websocket.html")
                     .finish()
             }))
-        // websocket
+            // websocket
             .resource("/ws/", |r| r.route().f(chat_route))
-        // static resources
+            // static resources
             .handler("/static/", fs::StaticFiles::new("static/").unwrap())
     }).bind("127.0.0.1:8080")
         .unwrap()
