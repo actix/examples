@@ -33,7 +33,7 @@ def start_client(loop, url):
             elif msg.type == aiohttp.WSMsgType.BINARY:
                 print('Binary: ', msg.data)
             elif msg.type == aiohttp.WSMsgType.PING:
-                ws.pong()
+                yield from ws.pong()
             elif msg.type == aiohttp.WSMsgType.PONG:
                 print('Pong received')
             else:
