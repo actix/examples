@@ -110,14 +110,14 @@ fn main() {
             .middleware(middleware::Logger::default())
             .resource("/extractor", |r| {
                 r.method(http::Method::POST)
-                    .with_config(extract_item, |cfg| {
+                    .with_config(extract_item, |(cfg,)| {
                         cfg.limit(4096); // <- limit size of the payload
                     })
             })
             .resource("/extractor2", |r| {
                 r.method(http::Method::POST)
-                    .with_config(extract_item_limit, |cfg| {
-                        cfg.0.limit(4096); // <- limit size of the payload
+                    .with_config(extract_item_limit, |((cfg, _),)| {
+                        cfg.limit(4096); // <- limit size of the payload
                     })
             })
             .resource("/manual", |r| r.method(http::Method::POST).f(index_manual))
