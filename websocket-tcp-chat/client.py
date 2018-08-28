@@ -10,7 +10,7 @@ import aiohttp
 queue = asyncio.Queue()
 
 
-async def start_client(url):
+async def start_client(url, loop):
     name = input('Please enter your name: ')
 
     ws = await aiohttp.ClientSession().ws_connect(url, autoclose=False, autoping=False)
@@ -49,12 +49,12 @@ async def start_client(url):
 
 
 async def tick():
-    while 1:
+    while True:
         await (await queue.get())
 
 
-async def main(url):
-    await asyncio.wait([start_client(url), tick()])
+async def main(url, loop):
+    await asyncio.wait([start_client(url, loop), tick()])
 
 
 ARGS = argparse.ArgumentParser(
@@ -76,5 +76,5 @@ if __name__ == '__main__':
 
     loop = asyncio.get_event_loop()
     loop.add_signal_handler(signal.SIGINT, loop.stop)
-    asyncio.Task(main(url))
+    asyncio.Task(main(url, loop))
     loop.run_forever()
