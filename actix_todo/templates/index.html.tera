@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Actix Todo Example</title>
+
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/skeleton.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <p><!-- nothing to see here --></p>
+
+    <div class="row">
+      <h4>Actix Todo</h4>
+      <form action="/todo" method="post">
+        <div class="ten columns">
+          <input type="text" placeholder="enter a task description ..."
+            name="description" id="description" value="" autofocus
+            class="u-full-width {% if msg %}field-{{msg.0}}{% endif %}" />
+          {% if msg %}
+            <small class="field-{{msg.0}}-msg">
+               {{msg.1}}
+            </small>
+          {% endif %}
+        </div>
+        <div class="two columns">
+          <input type="submit" value="add task">
+        </div>
+      </form>
+    </div>
+
+    <div class="row">
+      <div class="twelve columns">
+        <ul>
+          {% for task in tasks %}
+            <li>
+              {% if task.completed %}
+                <span class="completed">{{task.description}}</span>
+                <form action="/todo/{{task.id}}" class="inline" method="post">
+                  <input type="hidden" name="_method" value="put" />
+                  <button type="submit" class="small">undo</button>
+                </form>
+                <form action="/todo/{{task.id}}" method="post" class="inline">
+                  <input type="hidden" name="_method" value="delete" />
+                  <button type="submit" class="primary small">delete</button>
+                </form>
+              {% else %}
+                <form action="/todo/{{task.id}}" class="link" method="post">
+                  <input type="hidden" name="_method" value="put" />
+                  <button type="submit" class="link">{{ task.description }}</button>
+                </form>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
