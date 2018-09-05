@@ -25,6 +25,8 @@ pub fn index(req: HttpRequest<AppState>) -> FutureResponse<HttpResponse> {
                 let mut context = Context::new();
                 context.add("tasks", &tasks);
 
+                //Session is set during operations on other endpoints
+                //that can redirect to index
                 if let Some(flash) = session::get_flash(&req)? {
                     context.add("msg", &(flash.kind, flash.message));
                     session::clear_flash(&req);
