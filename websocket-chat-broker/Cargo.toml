@@ -1,0 +1,16 @@
+[package]
+name = "websocket-broker-example"
+version = "0.1.0"
+authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+workspace = "../"
+
+[[bin]]
+name = "server"
+path = "src/main.rs"
+
+[dependencies]
+rand = "*"
+futures = "0.1.24"
+actix = "0.7"
+actix-web = "0.7"
+actix-broker = "0.1.4"
