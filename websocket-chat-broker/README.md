@@ -7,6 +7,7 @@ Differences:
 
 * Chat Server Actor is a System Service that runs in the same thread as the HttpServer/WS Listener.
 * The [actix-broker](https://github.com/Chris-Ricketts/actix-broker) crate is used to facilitate the sending of some messages between the Chat Session and Server Actors where the session does not require a response.
+* The Client is not required to send Ping messages. The Chat Server Actor auto-clears dead sessions.
 
 Possible Improvements:
 
@@ -20,7 +21,6 @@ Chat server listens for incoming tcp connections. Server can access several type
 * `/join name` - join room, if room does not exist, create new one
 * `/name name` - set session name
 * `some message` - just string, send message to all peers in same room
-* client has to send heartbeat `Ping` messages, if server does not receive a heartbeat message for 10 seconds connection gets dropped
 
 To start server use command: `cargo run`
 
