@@ -1,18 +1,18 @@
 #[macro_use]
 extern crate actix;
-extern crate actix_web;
 extern crate actix_broker;
+extern crate actix_web;
 extern crate futures;
 extern crate rand;
 #[macro_use]
 extern crate log;
 extern crate simple_logger;
 
-use actix::prelude::*;
 use actix::fut;
+use actix::prelude::*;
+use actix_broker::BrokerIssue;
 use actix_web::server::HttpServer;
 use actix_web::{fs, ws, App, Error, HttpRequest, HttpResponse};
-use actix_broker::BrokerIssue;
 
 mod server;
 use server::*;
@@ -39,7 +39,8 @@ impl WsChatSession {
         let join_msg = JoinRoom(
             room_name.to_owned(),
             self.name.clone(),
-            ctx.address().recipient());
+            ctx.address().recipient(),
+        );
 
         WsChatServer::from_registry()
             .send(join_msg)
@@ -69,9 +70,11 @@ impl WsChatSession {
     }
 
     fn send_msg(&self, msg: &str) {
-        let content = format!("{}: {}",
-                              self.name.clone().unwrap_or("anon".to_string()),
-                              msg);
+        let content = format!(
+            "{}: {}",
+            self.name.clone().unwrap_or("anon".to_string()),
+            msg
+        );
         let msg = SendMessage(self.room.clone(), self.id, content);
         // issue_async comes from having the `BrokerIssue` trait in scope.
         self.issue_async(msg);
@@ -86,15 +89,17 @@ impl Actor for WsChatSession {
     }
 
     fn stopped(&mut self, _ctx: &mut Self::Context) {
-        info!("WsChatSession closed for {}({}) in room {}",
+        info!(
+            "WsChatSession closed for {}({}) in room {}",
             self.name.clone().unwrap_or("anon".to_string()),
             self.id,
-            self.room);
+            self.room
+        );
     }
 }
 
 impl Handler<ChatMessage> for WsChatSession {
-    type Result = (); 
+    type Result = ();
 
     fn handle(&mut self, msg: ChatMessage, ctx: &mut Self::Context) {
         ctx.text(msg.0);
@@ -129,13 +134,13 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                         _ => ctx.text(format!("!!! unknown command: {:?}", msg)),
                     }
                     return;
-                } 
+                }
                 self.send_msg(msg);
             }
             ws::Message::Close(_) => {
                 ctx.stop();
-            },
-            _ => {},
+            }
+            _ => {}
         }
     }
 }
@@ -147,13 +152,15 @@ fn main() {
     HttpServer::new(move || {
         App::new()
             .resource("/ws/", |r| r.route().f(chat_route))
-            .handler("/",
-                     fs::StaticFiles::new("./static/")
-                     .unwrap()
-                     .index_file("index.html"))
+            .handler(
+                "/",
+                fs::StaticFiles::new("./static/")
+                    .unwrap()
+                    .index_file("index.html"),
+            )
     }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+    .unwrap()
+    .start();
 
     info!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();
