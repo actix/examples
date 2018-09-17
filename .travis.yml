@@ -64,4 +64,5 @@ script:
       cd web-cors/backend && cargo check && cd ../..
       cd websocket && cargo check && cd ..
       cd websocket-chat && cargo check && cd ..
+      cd websocket-chat-broker && cargo check && cd ..
       cd websocket-tcp-chat && cargo check && cd ..
