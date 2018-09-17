@@ -75,7 +75,7 @@ impl Actor for WsChatServer {
 }
 
 impl Handler<JoinRoom> for WsChatServer {
-    type Result = usize;
+    type Result = MessageResult<JoinRoom>;
 
     fn handle(&mut self, msg: JoinRoom, _ctx: &mut Self::Context) -> Self::Result {
         let JoinRoom(room_name, client_name, client) = msg;
@@ -84,7 +84,7 @@ impl Handler<JoinRoom> for WsChatServer {
                                client_name.unwrap_or("anon".to_string()),
                                room_name);
         self.send_chat_message(&room_name, &join_msg, id);
-        id
+        MessageResult(id)
     }
 }
 
