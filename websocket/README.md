@@ -16,6 +16,13 @@ cargo run --bin websocket-server
 
 - [http://localhost:8080/ws/index.html](http://localhost:8080/ws/index.html)
 
+### rust client
+
+```bash
+cd examples/websocket
+cargo run --bin websocket-client
+```
+
 ### python client
 
 - ``pip install aiohttp``
