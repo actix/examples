@@ -9,7 +9,7 @@ name = "proxy"
 path = "src/main.rs"
 
 [[bin]]
-name = "server"
+name = "proxy-example-server"
 path = "src/server.rs"
 
 [dependencies]
