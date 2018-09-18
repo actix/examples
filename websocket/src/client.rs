@@ -56,25 +56,11 @@ struct ClientCommand(String);
 impl Actor for ChatClient {
     type Context = Context<Self>;
 
-    fn started(&mut self, ctx: &mut Context<Self>) {
-        // start heartbeats otherwise server will disconnect after 10 seconds
-        self.hb(ctx)
-    }
-
     fn stopped(&mut self, _: &mut Context<Self>) {
         println!("Disconnected");
 
         // Stop application on disconnect
         System::current().stop();
-    }
-}
-
-impl ChatClient {
-    fn hb(&self, ctx: &mut Context<Self>) {
-        ctx.run_later(Duration::new(1, 0), |act, ctx| {
-            act.0.ping("");
-            act.hb(ctx);
-        });
     }
 }
 
