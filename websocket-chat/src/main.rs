@@ -13,8 +13,6 @@ extern crate tokio_io;
 extern crate actix;
 extern crate actix_web;
 
-use std::time::Instant;
-
 use actix::*;
 use actix_web::server::HttpServer;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
@@ -33,7 +31,6 @@ fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Err
         req,
         WsChatSession {
             id: 0,
-            hb: Instant::now(),
             room: "Main".to_owned(),
             name: None,
         },
@@ -43,9 +40,6 @@ fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Err
 struct WsChatSession {
     /// unique session id
     id: usize,
-    /// Client must send ping at least once per 10 seconds, otherwise we drop
-    /// connection.
-    hb: Instant,
     /// joined room
     room: String,
     /// peer name
@@ -103,7 +97,6 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
         println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
             ws::Message::Ping(msg) => ctx.pong(&msg),
-            ws::Message::Pong(msg) => self.hb = Instant::now(),
             ws::Message::Text(text) => {
                 let m = text.trim();
                 // we check for /sss type of messages
@@ -173,7 +166,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Binary(bin) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
                 ctx.stop();
-            }
+            },
+            _ => ()
         }
     }
 }
