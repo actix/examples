@@ -110,8 +110,10 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
     fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
         println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
-            ws::Message::Ping(msg) => ctx.pong(&msg),
-            ws::Message::Pong(msg) => self.hb = Instant::now(),
+            ws::Message::Ping(msg) => {
+                self.hb = Instant::now();
+                ctx.pong(&msg);
+            }
             ws::Message::Text(text) => {
                 let m = text.trim();
                 // we check for /sss type of messages
@@ -181,7 +183,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Binary(bin) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
                 ctx.stop();
-            }
+            },
+            _ => (),
         }
     }
 }
