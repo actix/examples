@@ -192,7 +192,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
 impl WsChatSession {
     /// helper method that sends ping to client every second.
     ///
-    /// also this method check heartbeats from client
+    /// also this method checks heartbeats from client
     fn hb(&self, ctx: &mut ws::WebsocketContext<Self, WsChatSessionState>) {
         ctx.run_interval(Duration::new(1, 0), |act, ctx| {
             // check client heartbeats
@@ -207,6 +207,9 @@ impl WsChatSession {
 
                 // stop actor
                 ctx.stop();
+
+                // don't try to send a ping
+                return;
             }
 
             ctx.ping("");
