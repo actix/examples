@@ -13,7 +13,7 @@ extern crate tokio_io;
 extern crate actix;
 extern crate actix_web;
 
-use std::time::Instant;
+use std::time::{Instant, Duration};
 
 use actix::*;
 use actix_web::server::HttpServer;
@@ -58,6 +58,9 @@ impl Actor for WsChatSession {
     /// Method is called on actor start.
     /// We register ws session with ChatServer
     fn started(&mut self, ctx: &mut Self::Context) {
+        // we'll start heartbeat process on session start.
+        self.hb(ctx);
+
         // register self in chat server. `AsyncContext::wait` register
         // future within context, but context waits until this future resolves
         // before processing any other events.
@@ -102,8 +105,10 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
     fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
         println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
-            ws::Message::Ping(msg) => ctx.pong(&msg),
-            ws::Message::Pong(msg) => self.hb = Instant::now(),
+            ws::Message::Ping(msg) => {
+                self.hb = Instant::now();
+                ctx.pong(&msg);
+            }
             ws::Message::Text(text) => {
                 let m = text.trim();
                 // we check for /sss type of messages
@@ -173,8 +178,37 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Binary(bin) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
                 ctx.stop();
-            }
+            },
+            _ => (),
         }
+    }
+}
+
+impl WsChatSession {
+    /// helper method that sends ping to client every second.
+    ///
+    /// also this method checks heartbeats from client
+    fn hb(&self, ctx: &mut ws::WebsocketContext<Self, WsChatSessionState>) {
+        ctx.run_interval(Duration::new(1, 0), |act, ctx| {
+            // check client heartbeats
+            if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+                // heartbeat timed out
+                println!("Websocket Client heartbeat failed, disconnecting!");
+
+                // notify chat server
+                ctx.state()
+                    .addr
+                    .do_send(server::Disconnect { id: act.id });
+
+                // stop actor
+                ctx.stop();
+
+                // don't try to send a ping
+                return;
+            }
+
+            ctx.ping("");
+        });
     }
 }
 
