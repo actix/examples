@@ -16,12 +16,10 @@ extern crate serde_derive;
 extern crate actix;
 extern crate actix_web;
 
-use std::time::Instant;
-
 use actix::*;
 use actix_web::server::HttpServer;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
-use std::time::Duration;
+use std::time::{Instant, Duration};
 
 mod codec;
 mod server;
