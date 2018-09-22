@@ -9,7 +9,6 @@ extern crate serde_json;
 extern crate tokio_core;
 extern crate tokio_io;
 
-#[macro_use]
 extern crate actix;
 extern crate actix_web;
 
