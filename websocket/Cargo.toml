@@ -5,11 +5,11 @@ authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = "../"
 
 [[bin]]
-name = "server"
+name = "websocket-server"
 path = "src/main.rs"
 
 [[bin]]
-name = "client"
+name = "websocket-client"
 path = "src/client.rs"
 
 [dependencies]

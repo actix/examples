@@ -8,13 +8,20 @@ Simple echo websocket server.
 
 ```bash
 cd examples/websocket
-cargo run
+cargo run --bin websocket-server
 # Started http server: 127.0.0.1:8080
 ```
 
 ### web client
 
 - [http://localhost:8080/ws/index.html](http://localhost:8080/ws/index.html)
+
+### rust client
+
+```bash
+cd examples/websocket
+cargo run --bin websocket-client
+```
 
 ### python client
 

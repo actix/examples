@@ -5,7 +5,7 @@ authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = "../"
 
 [[bin]]
-name = "server"
+name = "rustls-server"
 path = "src/main.rs"
 
 [dependencies]
