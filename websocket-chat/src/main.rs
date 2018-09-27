@@ -21,9 +21,9 @@ use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
 mod server;
 
 /// How often heartbeat pings are sent
-static const HEARTBEAT_INTERVAL: Duration = Duration::new(1, 0);
+const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(1);
 /// How long before lack of client response causes a timeout
-static const CLIENT_TIMEOUT: Duration = Duration::new(10, 0);
+const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
