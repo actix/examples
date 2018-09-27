@@ -20,6 +20,11 @@ use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
 
 mod server;
 
+/// How often heartbeat pings are sent
+static const HEARTBEAT_INTERVAL: Duration = Duration::new(1, 0);
+/// How long before lack of client response causes a timeout
+static const CLIENT_TIMEOUT: Duration = Duration::new(10, 0);
+
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
 struct WsChatSessionState {
@@ -42,8 +47,8 @@ fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Err
 struct WsChatSession {
     /// unique session id
     id: usize,
-    /// Client must send ping at least once per 10 seconds, otherwise we drop
-    /// connection.
+    /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
+    /// otherwise we drop connection.
     hb: Instant,
     /// joined room
     room: String,
@@ -188,9 +193,9 @@ impl WsChatSession {
     ///
     /// also this method checks heartbeats from client
     fn hb(&self, ctx: &mut ws::WebsocketContext<Self, WsChatSessionState>) {
-        ctx.run_interval(Duration::new(1, 0), |act, ctx| {
+        ctx.run_interval(HEARTBEAT_INTERVAL, |act, ctx| {
             // check client heartbeats
-            if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+            if Instant::now().duration_since(act.hb) > CLIENT_TIMEOUT {
                 // heartbeat timed out
                 println!("Websocket Client heartbeat failed, disconnecting!");
 

@@ -15,6 +15,11 @@ use actix_web::{
     fs, http, middleware, server, ws, App, Error, HttpRequest, HttpResponse,
 };
 
+/// How often heartbeat pings are sent
+static const HEARTBEAT_INTERVAL: Duration = Duration::new(1, 0);
+/// How long before lack of client response causes a timeout
+static const CLIENT_TIMEOUT: Duration = Duration::new(10, 0);
+
 /// do websocket handshake and start `MyWebSocket` actor
 fn ws_index(r: &HttpRequest) -> Result<HttpResponse, Error> {
     ws::start(r, MyWebSocket::new())
@@ -23,8 +28,8 @@ fn ws_index(r: &HttpRequest) -> Result<HttpResponse, Error> {
 /// websocket connection is long running connection, it easier
 /// to handle with an actor
 struct MyWebSocket {
-    /// Client must send ping at least once per 10 seconds, otherwise we drop
-    /// connection.
+    /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
+    /// otherwise we drop connection.
     hb: Instant,
 }
 
@@ -66,9 +71,9 @@ impl MyWebSocket {
     ///
     /// also this method checks heartbeats from client
     fn hb(&self, ctx: &mut <Self as Actor>::Context) {
-        ctx.run_interval(Duration::new(1, 0), |act, ctx| {
+        ctx.run_interval(HEARTBEAT_INTERVAL, |act, ctx| {
             // check client heartbeats
-            if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+            if Instant::now().duration_since(act.hb) > CLIENT_TIMEOUT {
                 // heartbeat timed out
                 println!("Websocket Client heartbeat failed, disconnecting!");
 
