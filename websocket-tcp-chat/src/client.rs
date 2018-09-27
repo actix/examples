@@ -97,6 +97,9 @@ impl ChatClient {
         ctx.run_later(Duration::new(1, 0), |act, ctx| {
             act.framed.write(codec::ChatRequest::Ping);
             act.hb(ctx);
+
+            // client should also check for a timeout here, similar to the
+            // server code
         });
     }
 }

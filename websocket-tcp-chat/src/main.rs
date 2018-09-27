@@ -16,16 +16,19 @@ extern crate serde_derive;
 extern crate actix;
 extern crate actix_web;
 
-use std::time::Instant;
-
 use actix::*;
 use actix_web::server::HttpServer;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
-use std::time::Duration;
+use std::time::{Instant, Duration};
 
 mod codec;
 mod server;
 mod session;
+
+/// How often heartbeat pings are sent
+const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
+/// How long before lack of client response causes a timeout
+const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
@@ -49,8 +52,8 @@ fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Err
 struct WsChatSession {
     /// unique session id
     id: usize,
-    /// Client must send ping at least once per 10 seconds, otherwise we drop
-    /// connection.
+    /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
+    /// otherwise we drop connection.
     hb: Instant,
     /// joined room
     room: String,
@@ -112,8 +115,10 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
     fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
         println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
-            ws::Message::Ping(msg) => ctx.pong(&msg),
-            ws::Message::Pong(msg) => self.hb = Instant::now(),
+            ws::Message::Ping(msg) => {
+                self.hb = Instant::now();
+                ctx.pong(&msg);
+            }
             ws::Message::Text(text) => {
                 let m = text.trim();
                 // we check for /sss type of messages
@@ -183,7 +188,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Binary(bin) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
                 ctx.stop();
-            }
+            },
+            _ => (),
         }
     }
 }
@@ -191,11 +197,11 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
 impl WsChatSession {
     /// helper method that sends ping to client every second.
     ///
-    /// also this method check heartbeats from client
+    /// also this method checks heartbeats from client
     fn hb(&self, ctx: &mut ws::WebsocketContext<Self, WsChatSessionState>) {
-        ctx.run_interval(Duration::new(1, 0), |act, ctx| {
+        ctx.run_interval(HEARTBEAT_INTERVAL, |act, ctx| {
             // check client heartbeats
-            if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+            if Instant::now().duration_since(act.hb) > CLIENT_TIMEOUT {
                 // heartbeat timed out
                 println!("Websocket Client heartbeat failed, disconnecting!");
 
@@ -206,6 +212,9 @@ impl WsChatSession {
 
                 // stop actor
                 ctx.stop();
+
+                // don't try to send a ping
+                return;
             }
 
             ctx.ping("");

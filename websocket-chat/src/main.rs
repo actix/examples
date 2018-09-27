@@ -9,17 +9,21 @@ extern crate serde_json;
 extern crate tokio_core;
 extern crate tokio_io;
 
-#[macro_use]
 extern crate actix;
 extern crate actix_web;
 
-use std::time::Instant;
+use std::time::{Instant, Duration};
 
 use actix::*;
 use actix_web::server::HttpServer;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
 
 mod server;
+
+/// How often heartbeat pings are sent
+const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
+/// How long before lack of client response causes a timeout
+const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
@@ -43,8 +47,8 @@ fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Err
 struct WsChatSession {
     /// unique session id
     id: usize,
-    /// Client must send ping at least once per 10 seconds, otherwise we drop
-    /// connection.
+    /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
+    /// otherwise we drop connection.
     hb: Instant,
     /// joined room
     room: String,
@@ -58,6 +62,9 @@ impl Actor for WsChatSession {
     /// Method is called on actor start.
     /// We register ws session with ChatServer
     fn started(&mut self, ctx: &mut Self::Context) {
+        // we'll start heartbeat process on session start.
+        self.hb(ctx);
+
         // register self in chat server. `AsyncContext::wait` register
         // future within context, but context waits until this future resolves
         // before processing any other events.
@@ -102,8 +109,10 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
     fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
         println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
-            ws::Message::Ping(msg) => ctx.pong(&msg),
-            ws::Message::Pong(msg) => self.hb = Instant::now(),
+            ws::Message::Ping(msg) => {
+                self.hb = Instant::now();
+                ctx.pong(&msg);
+            }
             ws::Message::Text(text) => {
                 let m = text.trim();
                 // we check for /sss type of messages
@@ -173,8 +182,37 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Binary(bin) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
                 ctx.stop();
-            }
+            },
+            _ => (),
         }
+    }
+}
+
+impl WsChatSession {
+    /// helper method that sends ping to client every second.
+    ///
+    /// also this method checks heartbeats from client
+    fn hb(&self, ctx: &mut ws::WebsocketContext<Self, WsChatSessionState>) {
+        ctx.run_interval(HEARTBEAT_INTERVAL, |act, ctx| {
+            // check client heartbeats
+            if Instant::now().duration_since(act.hb) > CLIENT_TIMEOUT {
+                // heartbeat timed out
+                println!("Websocket Client heartbeat failed, disconnecting!");
+
+                // notify chat server
+                ctx.state()
+                    .addr
+                    .do_send(server::Disconnect { id: act.id });
+
+                // stop actor
+                ctx.stop();
+
+                // don't try to send a ping
+                return;
+            }
+
+            ctx.ping("");
+        });
     }
 }
 
