@@ -34,10 +34,10 @@ fn welcome(req: &HttpRequest) -> Result<HttpResponse> {
     if let Some(count) = req.session().get::<i32>("counter")? {
         println!("SESSION value: {}", count);
         counter = count + 1;
-        req.session().set("counter", counter)?;
-    } else {
-        req.session().set("counter", counter)?;
     }
+
+    // set counter to session
+    req.session().set("counter", counter)?;
 
     // response
     Ok(HttpResponse::build(StatusCode::OK)
