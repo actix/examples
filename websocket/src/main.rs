@@ -52,12 +52,14 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for MyWebSocket {
                 self.hb = Instant::now();
                 ctx.pong(&msg);
             }
+            ws::Message::Pong(_) => {
+                self.hb = Instant::now();
+            }
             ws::Message::Text(text) => ctx.text(text),
             ws::Message::Binary(bin) => ctx.binary(bin),
             ws::Message::Close(_) => {
                 ctx.stop();
             }
-            _ => (),
         }
     }
 }
