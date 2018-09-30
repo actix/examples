@@ -120,7 +120,7 @@ fn main() {
             .resource("/", |r| r.method(Method::GET).f(|req| {
                 println!("{:?}", req);
                 HttpResponse::Found()
-                    .header(header::LOCATION, "static/index.html")
+                    .header(header::LOCATION, "static/welcome.html")
                     .finish()
             }))
             // default
