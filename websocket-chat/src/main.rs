@@ -113,6 +113,9 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 self.hb = Instant::now();
                 ctx.pong(&msg);
             }
+            ws::Message::Pong(_) => {
+                self.hb = Instant::now();
+            }
             ws::Message::Text(text) => {
                 let m = text.trim();
                 // we check for /sss type of messages
@@ -183,7 +186,6 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Close(_) => {
                 ctx.stop();
             },
-            _ => (),
         }
     }
 }
