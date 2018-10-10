@@ -15,21 +15,22 @@ extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
 
-use std::cell::Cell;
+use std::sync::Arc;
+use std::sync::Mutex;
 
 use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
 
 /// Application state
 struct AppState {
-    counter: Cell<usize>,
+    counter: Arc<Mutex<usize>>,
 }
 
 /// simple handle
 fn index(req: &HttpRequest<AppState>) -> HttpResponse {
     println!("{:?}", req);
-    req.state().counter.set(req.state().counter.get() + 1);
+    *(req.state().counter.lock().unwrap()) += 1;
 
-    HttpResponse::Ok().body(format!("Num of requests: {}", req.state().counter.get()))
+    HttpResponse::Ok().body(format!("Num of requests: {}", req.state().counter.lock().unwrap()))
 }
 
 fn main() {
@@ -38,7 +39,7 @@ fn main() {
     let sys = actix::System::new("ws-example");
 
     server::new(|| {
-        App::with_state(AppState{counter: Cell::new(0)}) // <- create app with state
+        App::with_state(AppState{counter: Arc::new(Mutex::new(0))}) // <- create app with state
             // enable logger
             .middleware(middleware::Logger::default())
             // register simple handler, handle all methods
