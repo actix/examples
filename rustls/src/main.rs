@@ -9,6 +9,7 @@ use std::io::BufReader;
 use actix_web::{http, middleware, server, App, Error, HttpRequest, HttpResponse};
 use rustls::internal::pemfile::{certs, rsa_private_keys};
 use rustls::{NoClientAuth, ServerConfig};
+use server::ServerFlags;
 
 use actix_web::fs::StaticFiles;
 
@@ -36,7 +37,10 @@ fn main() {
     config.set_single_cert(cert_chain, keys.remove(0)).unwrap();
 
     // actix acceptor
-    let acceptor = server::RustlsAcceptor::new(config);
+    let acceptor = server::RustlsAcceptor::with_flags(
+        config,
+        ServerFlags::HTTP1 | ServerFlags::HTTP2,
+    );
 
     server::new(|| {
         App::new()
@@ -51,7 +55,7 @@ fn main() {
                     .finish()
             }))
             .handler("/static", StaticFiles::new("static").unwrap())
-    }).bind_with("127.0.0.1:8443", acceptor)
+    }).bind_with("127.0.0.1:8443", move || acceptor.clone())
     .unwrap()
     .start();
 
