@@ -3,7 +3,7 @@ sudo: false
 dist: trusty
 
 cache:
-  cargo: false
+  cargo: true
   apt: true
 
 matrix:
