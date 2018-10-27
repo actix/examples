@@ -38,8 +38,10 @@ fn main() {
     env_logger::init();
     let sys = actix::System::new("ws-example");
 
-    server::new(|| {
-        App::with_state(AppState{counter: Arc::new(Mutex::new(0))}) // <- create app with state
+    let counter = Arc::new(Mutex::new(0));
+    //move is necessary to give closure below ownership of counter
+    server::new(move || {
+        App::with_state(AppState{counter: counter.clone()}) // <- create app with shared state
             // enable logger
             .middleware(middleware::Logger::default())
             // register simple handler, handle all methods
