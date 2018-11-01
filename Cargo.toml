@@ -14,6 +14,7 @@ members = [
   "form",
   "hello-world",
   "http-proxy",
+  "http-full-proxy",
   "json",
   "juniper",
   "middleware",
