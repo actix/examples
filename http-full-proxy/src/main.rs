@@ -7,7 +7,8 @@ extern crate futures;
 extern crate url;
 
 use actix_web::{
-    client, server, App, AsyncResponder, Error, HttpMessage, HttpRequest, HttpResponse,
+    client, http, server, App, AsyncResponder, Error, HttpMessage, HttpRequest,
+    HttpResponse,
 };
 use clap::{value_t, Arg};
 use futures::Future;
@@ -31,11 +32,27 @@ fn forward(
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
 
-    client::ClientRequest::build_from(req)
+    let mut forwarded_req = client::ClientRequest::build_from(req)
         .no_default_headers()
         .uri(new_url)
         .streaming(req.payload())
-        .unwrap()
+        .unwrap();
+
+    if let Some(addr) = req.peer_addr() {
+        match forwarded_req.headers_mut().entry("x-forwarded-for") {
+            Ok(http::header::Entry::Vacant(entry)) => {
+                let addr = format!("{}", addr.ip());
+                entry.insert(addr.parse().unwrap());
+            }
+            Ok(http::header::Entry::Occupied(mut entry)) => {
+                let addr = format!("{}, {}", entry.get().to_str().unwrap(), addr.ip());
+                entry.insert(addr.parse().unwrap());
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    forwarded_req
         .send()
         .map_err(Error::from)
         .and_then(move |resp| {
@@ -45,6 +62,7 @@ fn forward(
             {
                 client_resp.header(header_name.clone(), header_value.clone());
             }
+
             Ok(client_resp.streaming(resp.payload()))
         }).responder()
 }
