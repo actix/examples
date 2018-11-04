@@ -47,6 +47,7 @@ script:
       cd form && cargo check && cd ..
       cd hello-world && cargo check && cd ..
       cd http-proxy && cargo check && cd ..
+      cd http-full-proxy && cargo check && cd ..
       cd json && cargo check && cd ..
       cd juniper && cargo check && cd ..
       cd middleware && cargo check && cd ..
