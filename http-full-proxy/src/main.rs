@@ -32,19 +32,20 @@ fn forward(
     new_url.set_query(req.uri().query());
 
     client::ClientRequest::build_from(req)
+        .no_default_headers()
         .uri(new_url)
         .streaming(req.payload())
         .unwrap()
         .send()
         .map_err(Error::from)
         .and_then(move |resp| {
-            resp.body().from_err().and_then(move |body| {
-                let mut client_resp = HttpResponse::build(resp.status());
-                for (header_name, header_value) in resp.headers().iter() {
-                    client_resp.header(header_name.clone(), header_value.clone());
-                }
-                Ok(client_resp.body(body))
-            })
+            let mut client_resp = HttpResponse::build(resp.status());
+            for (header_name, header_value) in
+                resp.headers().iter().filter(|(h, _)| *h != "connection")
+            {
+                client_resp.header(header_name.clone(), header_value.clone());
+            }
+            Ok(client_resp.streaming(resp.payload()))
         }).responder()
 }
 
