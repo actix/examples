@@ -167,7 +167,7 @@ fn index((params, state): (Path<(i32, i32)>, State<AppState>)) -> FutureResponse
         .flatten()
         .and_then(move |(a, b)| state.sum.send(Sum { a, b }).flatten())
         .map(|sum| actix_web::HttpResponse::Ok().json(sum))
-        .map_err(actix_web::Error::from)
+        .from_err()
         .responder()
 }
 
