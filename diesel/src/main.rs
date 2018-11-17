@@ -42,7 +42,7 @@ struct AppState {
 }
 
 /// Async request handler
-fn index(
+fn add(
     (name, state): (Path<String>, State<AppState>),
 ) -> FutureResponse<HttpResponse> {
     // send async `CreateUser` message to a `DbExecutor`
@@ -93,7 +93,8 @@ fn index_add(req: &HttpRequest<AppState>) -> Box<Future<Item = HttpResponse, Err
 
             // Send to the db for create
             match r_obj {
-                Ok(obj) => { req.state()
+                Ok(obj) => {
+                req.state()
                     .db
                     .send(CreateUser {
                         name: obj.name,
@@ -110,6 +111,19 @@ fn index_add(req: &HttpRequest<AppState>) -> Box<Future<Item = HttpResponse, Err
             }
         })
         .responder()
+}
+
+fn extract_item_limit((item, req): (Json<MyUser>, HttpRequest<AppState>)) -> HttpResponse {
+    req.state()
+        .db
+        .send(CreateUser {
+            name: item.name,
+        })
+        .from_err()
+        .and_then(|res| match res {
+            Ok(user) => HttpResponse::Ok().json(user),
+            Err(_) => HttpResponse::InternalServerError().into(),
+        })
 }
 
 fn main() {
@@ -132,8 +146,14 @@ fn main() {
             .middleware(middleware::Logger::default())
             // This can be called with:
             // curl --header "Content-Type: application/json" --request POST --data '{"name":"xyz"}'  http://127.0.0.1:8080/add
+            .resource("/add2", |r| {
+                r.method(http::Method::POST)
+                    .with_config(extract_item_limit, |((cfg, _),)| {
+                        cfg.limit(4096); // <- limit size of the payload
+                    })
+            })
             .resource("/add", |r| r.method(http::Method::POST).f(index_add))
-            .resource("/add/{name}", |r| r.method(http::Method::GET).with(index))
+            .resource("/add/{name}", |r| r.method(http::Method::GET).with(add))
     }).bind("127.0.0.1:8080")
         .unwrap()
         .start();
