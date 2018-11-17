@@ -11,7 +11,7 @@ use actix_web::{
     HttpResponse,
 };
 use clap::{value_t, Arg};
-use futures::Future;
+use futures::{future, Future};
 use std::net::ToSocketAddrs;
 use url::Url;
 
@@ -55,16 +55,28 @@ fn forward(
     forwarded_req
         .send()
         .map_err(Error::from)
-        .and_then(move |resp| {
-            let mut client_resp = HttpResponse::build(resp.status());
-            for (header_name, header_value) in
-                resp.headers().iter().filter(|(h, _)| *h != "connection")
-            {
-                client_resp.header(header_name.clone(), header_value.clone());
-            }
+        .and_then(construct_response)
+        .responder()
+}
 
-            Ok(client_resp.streaming(resp.payload()))
-        }).responder()
+fn construct_response(
+    resp: client::ClientResponse,
+) -> Box<dyn Future<Item = HttpResponse, Error = Error>> {
+    let mut client_resp = HttpResponse::build(resp.status());
+    for (header_name, header_value) in
+        resp.headers().iter().filter(|(h, _)| *h != "connection")
+    {
+        client_resp.header(header_name.clone(), header_value.clone());
+    }
+    if resp.chunked().unwrap_or(false) {
+        Box::new(future::ok(client_resp.streaming(resp.payload())))
+    } else {
+        Box::new(
+            resp.body()
+                .from_err()
+                .and_then(move |body| Ok(client_resp.body(body))),
+        )
+    }
 }
 
 fn main() {
