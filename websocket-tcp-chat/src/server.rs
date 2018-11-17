@@ -3,8 +3,7 @@
 //! room through `ChatServer`.
 
 use actix::prelude::*;
-use rand::{self, Rng, ThreadRng};
-use std::cell::RefCell;
+use rand::{self, rngs::ThreadRng, Rng};
 use std::collections::{HashMap, HashSet};
 
 use session;
@@ -56,7 +55,7 @@ pub struct Join {
 pub struct ChatServer {
     sessions: HashMap<usize, Recipient<session::Message>>,
     rooms: HashMap<String, HashSet<usize>>,
-    rng: RefCell<ThreadRng>,
+    rng: ThreadRng,
 }
 
 impl Default for ChatServer {
@@ -68,7 +67,7 @@ impl Default for ChatServer {
         ChatServer {
             sessions: HashMap::new(),
             rooms: rooms,
-            rng: RefCell::new(rand::thread_rng()),
+            rng: rand::thread_rng(),
         }
     }
 }
@@ -108,7 +107,7 @@ impl Handler<Connect> for ChatServer {
         self.send_message(&"Main".to_owned(), "Someone joined", 0);
 
         // register session with random id
-        let id = self.rng.borrow_mut().gen::<usize>();
+        let id = self.rng.gen::<usize>();
         self.sessions.insert(id, msg.addr);
 
         // auto join session to Main room
