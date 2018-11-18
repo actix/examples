@@ -20,3 +20,5 @@ serde_derive = "1.0"
 diesel = { version = "^1.1.0", features = ["sqlite", "r2d2"] }
 r2d2 = "0.8"
 dotenv = "0.10"
+
+json = "*"
