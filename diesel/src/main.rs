@@ -116,10 +116,9 @@ fn index_add((req, state): (HttpRequest<AppState>, State<AppState>)) -> impl Fut
 fn add2((item, state): (Json<MyUser>, State<AppState>)) -> impl Future<Item = HttpResponse, Error = Error> {
     state.db
          .send(CreateUser {
-             // Is it possible to do with without cloning? Apparently this is "borrowed".
-             // A risk is that when this is sent as a message, the lifetimes will
-             // be very complex to handle, and may not be reasonable ...
-             name: item.name.clone(),
+            // into_inner to move into the reference, then accessing name to
+            // move the name out.
+             name: item.into_inner().name,
          })
          .from_err()
          .and_then(|res| match res {
@@ -147,39 +146,19 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             // This can be called with:
-            // curl --header "Content-Type: application/json" --request POST --data '{"name":"xyz"}'  http://127.0.0.1:8080/add
+            // curl -S --header "Content-Type: application/json" --request POST --data '{"name":"xyz"}'  http://127.0.0.1:8080/add
+            // Use of the extractors makes some post conditions simpler such
+            // as size limit protections and built in json validation.
             .resource("/add2", |r| {
                 r.method(http::Method::POST)
-                    // MENTAL NOTE: All error types don't seem to display error content on POST?
-                    //
-                    // No example ever actually uses with_config with a tuple cfg/more
-                    //  As a result, there is no example of what type cfg should be that
-                    //  I can find, so disabling cfg as there is no way to derive this type.
-                    //  This means this usage is *not* production safe (lack of rate limit
-                    //  may lead to DoS)
-                    // No way to use with_state and with_config at the same time.
-                    // No way to return *what* decode error actually occured to caller
-                    //   to help them fix their request. IE if you are missing a field
-                    //   we should inform *what* is missingg.
-                    //   (Today you get a blank result ... :( )
-                    // extractor doesn't use serde_json (application may
-                    //  wish to standardise on a single json parser). This doesn't
-                    //  mean the extractor is bad, but that it's not going to solve
-                    //  all problems and use cases. Manual extraction will be important.
-                    // Extractor is limited to json (may want other types, see manual
-                    //  below).
-                    //
-                    // This does not work
                     .with_async_config(add2, |(json_cfg, )| {
                         json_cfg.0.limit(4096); // <- limit size of the payload
                     })
-                    // .with(add2) <-- this works
             })
             //  Manual parsing would allow custom error construction, use of
             //  other parsers *beside* json (for example CBOR, protobuf, xml), and allows
             //  an application to standardise on a single parser implementation.
-            //  It's important that this is fixed as a working example.
-            // .resource("/add", |r| r.method(http::Method::POST).f(index_add))
+            .resource("/add", |r| r.method(http::Method::POST).f(index_add))
             .resource("/add/{name}", |r| r.method(http::Method::GET).with(add))
     }).bind("127.0.0.1:8080")
         .unwrap()
