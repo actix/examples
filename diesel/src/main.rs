@@ -29,7 +29,7 @@ use actix_web::{
 
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
-use futures::{Future, Stream};
+use futures::{future, Future, Stream};
 
 mod db;
 mod models;
@@ -68,7 +68,7 @@ struct MyUser {
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 /// This handler manually load request payload and parse json object
-fn index_add(req: &HttpRequest<AppState>) -> Box<Future<Item = HttpResponse, Error = Error>> {
+fn index_add((req, state): (HttpRequest<AppState>, State<AppState>)) -> impl Future<Item = HttpResponse, Error = Error> {
     // HttpRequest::payload() is stream of Bytes objects
     req.payload()
         // `Future::from_err` acts like `?` in that it coerces the error type from
@@ -88,46 +88,44 @@ fn index_add(req: &HttpRequest<AppState>) -> Box<Future<Item = HttpResponse, Err
         })
         // `Future::and_then` can be used to merge an asynchronous workflow with a
         // synchronous workflow
-        .and_then(|body| {
+        //
+        // Douman NOTE:
+        // The return value in this closure helps, to clarify result for compiler
+        // as otheriwse it cannot understand it
+        .and_then(move |body| -> Box<Future<Item = HttpResponse, Error = Error>> {
             // body is loaded, now we can deserialize serde-json
             let r_obj = serde_json::from_slice::<MyUser>(&body);
 
             // Send to the db for create
             match r_obj {
                 Ok(obj) => {
-                req.state()
-                    .db
-                    .send(CreateUser {
-                        name: obj.name,
-                    })
-                    .from_err()
-                    .and_then(|res| match res {
-                        Ok(user) => Ok(HttpResponse::Ok().json(user)),
-                        Err(_) => Ok(HttpResponse::InternalServerError().into()),
-                    })
+                let res = state.db.send(CreateUser { name: obj.name, })
+                               .from_err()
+                               .and_then(|res| match res {
+                                   Ok(user) => Ok(HttpResponse::Ok().json(user)),
+                                   Err(_) => Ok(HttpResponse::InternalServerError().into()),
+                               });
+
+                Box::new(res)
                 }
-                Err(_) => {
-                    Err(error::ErrorBadRequest("Json Decode Failed"))
-                }
+                Err(_) => Box::new(future::err(error::ErrorBadRequest("Json Decode Failed")))
             }
         })
-        .responder()
 }
 
-fn add2((item, req): (Json<MyUser>, HttpRequest<AppState>)) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    Box::new(req.state()
-        .db
-        .send(CreateUser {
-            // Is it possible to do with without cloning? Apparently this is "borrowed".
-            // A risk is that when this is sent as a message, the lifetimes will
-            // be very complex to handle, and may not be reasonable ...
-            name: item.name.clone(),
-        })
-        .from_err()
-        .and_then(|res| match res {
-            Ok(user) => Ok(HttpResponse::Ok().json(user)),
-            Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        }))
+fn add2((item, state): (Json<MyUser>, State<AppState>)) -> impl Future<Item = HttpResponse, Error = Error> {
+    state.db
+         .send(CreateUser {
+             // Is it possible to do with without cloning? Apparently this is "borrowed".
+             // A risk is that when this is sent as a message, the lifetimes will
+             // be very complex to handle, and may not be reasonable ...
+             name: item.name.clone(),
+         })
+         .from_err()
+         .and_then(|res| match res {
+             Ok(user) => Ok(HttpResponse::Ok().json(user)),
+             Err(_) => Ok(HttpResponse::InternalServerError().into()),
+         })
 }
 
 fn main() {
@@ -172,8 +170,8 @@ fn main() {
                     //  below).
                     //
                     // This does not work
-                    .with_config(add2, |cfg| {
-                        cfg.0.limit(4096); // <- limit size of the payload
+                    .with_async_config(add2, |(json_cfg, )| {
+                        json_cfg.0.limit(4096); // <- limit size of the payload
                     })
                     // .with(add2) <-- this works
             })
