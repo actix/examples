@@ -158,7 +158,7 @@ fn main() {
             //  Manual parsing would allow custom error construction, use of
             //  other parsers *beside* json (for example CBOR, protobuf, xml), and allows
             //  an application to standardise on a single parser implementation.
-            .resource("/add", |r| r.method(http::Method::POST).f(index_add))
+            .resource("/add", |r| r.method(http::Method::POST).with_async(index_add))
             .resource("/add/{name}", |r| r.method(http::Method::GET).with(add))
     }).bind("127.0.0.1:8080")
         .unwrap()
