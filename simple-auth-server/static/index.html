@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Actix Web - Auth App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div class="login">
+      <h1>Email Invitation</h1>
+
+      <p>Please enter your email receive Invitation</p>
+      <input class="field" type="text" placeholder="email" id="email" /> <br />
+      <input class="btn" type="submit" value="Send Email" onclick="sendVerificationEmail()" />
+    </div>
+  </body>
+</html>
+<script>
+  function sendVerificationEmail() {
+    let email = document.querySelector('#email');
+
+    post('api/invitation', { email: email.value }).then(data => {
+      alert('Please check your email.');
+      email.value = '';
+      console.error(data);
+    });
+  }
+</script>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Actix Web - Auth App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div class="login">
+      <h1>Register Account</h1>
+
+      <p>Please enter your email and new password</p>
+      <input class="field" type="text" placeholder="email" id="email" />
+      <input class="field" type="password" placeholder="Password" id="password" />
+      <input class="btn" type="submit" value="Register" onclick="register()" />
+    </div>
+  </body>
+</html>
+<script>
+  function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+      vars[key] = value;
+    });
+    return vars;
+  }
+  function register() {
+    let password = document.querySelector('#password');
+    let invitation_id = getUrlVars().id;
+
+    post('api/register/' + invitation_id, { password: password.value }).then(data => {
+      password.value = '';
+      console.error(data);
+    });
+  }
+  window.addEventListener('load', function() {
+    let email = document.querySelector('#email');
+    email.value = getUrlVars().email;
+    console.log(getUrlVars());
+  });
+</script>

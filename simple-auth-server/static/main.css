@@ -1,0 +1,37 @@
+/* CSSTerm.com Easy CSS login form */
+
+.login { 
+	width:600px;
+	margin:auto;
+	border:1px #CCC solid;
+	padding:0px 30px;
+	background-color: #3b6caf;
+	color:#FFF;
+}
+
+.field { 
+	background: #1e4f8a;
+	border:1px #03306b solid;
+	padding:10px;
+	margin:5px 25px;
+	width:215px;
+	color:#FFF;
+ }
+
+.login h1, p, .chbox, .btn {
+	margin-left:25px;
+	color:#fff;
+}
+
+.btn {
+	background-color: #00CCFF;
+	border:1px #03306b solid;
+	padding:10px 30px;
+	font-weight:bold;
+  margin:25px 25px;
+  cursor: pointer;
+}
+
+.forgot {
+	color:#fff;
+}
