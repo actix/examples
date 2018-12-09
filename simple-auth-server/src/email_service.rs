@@ -7,7 +7,6 @@ fn get_api_key() -> String {
     std::env::var("SPARKPOST_API_KEY").expect("SPARKPOST_API_KEY must be set")
 }
 
-#[allow(unused)]
 pub fn send_invitation(invitation: &Invitation) {
     let tm = Transmission::new_eu(get_api_key());
     let sending_email =
@@ -50,14 +49,12 @@ pub fn send_invitation(invitation: &Invitation) {
 
     let result = tm.send(&email);
 
+    // Note that we only print out the error response from email api
     match result {
         Ok(res) => {
-            // println!("{:?}", &res);
             match res {
                 TransmissionResponse::ApiResponse(api_res) => {
                     println!("API Response: \n {:#?}", api_res);
-                    //   assert_eq!(1, api_res.total_accepted_recipients);
-                    //   assert_eq!(0, api_res.total_rejected_recipients);
                 }
                 TransmissionResponse::ApiError(errors) => {
                     println!("Response Errors: \n {:#?}", &errors);

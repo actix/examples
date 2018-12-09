@@ -19,7 +19,6 @@ pub struct RegisterUser {
     pub password: String,
 }
 
-
 impl Message for RegisterUser {
     type Result = Result<SlimUser, ServiceError>;
 }

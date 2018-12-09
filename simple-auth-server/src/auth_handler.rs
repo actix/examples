@@ -16,7 +16,6 @@ impl Message for AuthData {
     type Result = Result<SlimUser, ServiceError>;
 }
 
-
 impl Handler<AuthData> for DbExecutor {
     type Result = Result<SlimUser, ServiceError>;
     fn handle(&mut self, msg: AuthData, _: &mut Self::Context) -> Self::Result {
@@ -31,7 +30,11 @@ impl Handler<AuthData> for DbExecutor {
         if let Some(user) = items.pop() {
             match verify(&msg.password, &user.password) {
                 Ok(matching) => {
-                    if matching { return Ok(user.into()); } else { return mismatch_error; }
+                    if matching {
+                        return Ok(user.into());
+                    } else {
+                        return mismatch_error;
+                    }
                 }
                 Err(_) => { return mismatch_error; }
             }

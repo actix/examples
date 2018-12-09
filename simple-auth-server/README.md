@@ -1,7 +1,3 @@
-##### What?
-
-We are going to create a web-server in `rust` that only deals with user registration and authentication. I will be explaining the steps in each file as we go. The complete project code is here [repo](https://gitlab.com/mygnu/rust-auth-server/tree). Please take all this with a pinch of salt as I'm a still a noob to rust 😉.
-
 ##### Flow of the event would look like this:
 
 - Registers with email address ➡ Receive an 📨 with a link to verify
@@ -27,8 +23,6 @@ We are going to create a web-server in `rust` that only deals with user registra
 - [sparkpost](https://crates.io/crates/sparkpost) // Rust bindings for sparkpost email api v1.
 - [uuid](https://crates.io/crates/uuid) // A library to generate and parse UUIDs.
 
-I have provided a brief info about the crates in use from their official description. If you want to know more about any of these crates please click on the name to go to `crates.io`.
-**Shameless plug:** `sparkpost` is my crate please leave feedback if you like/dislike it.
 
 Read the full tutorial series on [hgill.io](https://hgill.io)
 
@@ -36,4 +30,3 @@ Read the full tutorial series on [hgill.io](https://hgill.io)
 - [Auth Web Microservice with rust using Actix-Web - Complete Tutorial Part 2](https://hgill.io/posts/auth-microservice-rust-actix-web-diesel-complete-tutorial-part-2/)
 - [Auth Web Microservice with rust using Actix-Web - Complete Tutorial Part 3](https://hgill.io/posts/auth-microservice-rust-actix-web-diesel-complete-tutorial-part-3/)
 
-TODO: User Login frontend page
