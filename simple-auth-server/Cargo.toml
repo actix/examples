@@ -1,7 +1,6 @@
 [package]
 name = "simple-auth-server"
 version = "0.1.0"
-license="MPL-2.0+/LGPL-3.0+"
 authors = ["mygnu <tech@hgill.io>"]
 
 [dependencies]
