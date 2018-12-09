@@ -55,6 +55,7 @@ script:
       cd protobuf && cargo check && cd ..
       cd r2d2 && cargo check && cd ..
       cd redis-session && cargo check && cd ..
+      cd simple-auth-sarver && cargo check && cd ..
       cd state && cargo check && cd ..
       cd static_index && cargo check && cd ..
       cd template_askama && cargo check && cd ..
