@@ -21,7 +21,6 @@ impl Handler<AuthData> for DbExecutor {
     fn handle(&mut self, msg: AuthData, _: &mut Self::Context) -> Self::Result {
         use schema::users::dsl::{users, email};
         let conn: &PgConnection = &self.0.get().unwrap();
-        let mismatch_error = Err(ServiceError::BadRequest("Username and Password don't match".into()));
 
         let mut items = users
             .filter(email.eq(&msg.email))
@@ -29,17 +28,13 @@ impl Handler<AuthData> for DbExecutor {
 
         if let Some(user) = items.pop() {
             match verify(&msg.password, &user.password) {
-                Ok(matching) => {
-                    if matching {
+                Ok(matching) => if matching {
                         return Ok(user.into());
-                    } else {
-                        return mismatch_error;
-                    }
-                }
-                Err(_) => { return mismatch_error; }
+                },
+                Err(_) => (),
             }
         }
-        mismatch_error
+        Err(ServiceError::BadRequest("Username and Password don't match".into()))
     }
 }
 
