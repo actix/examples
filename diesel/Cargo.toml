@@ -1,7 +1,7 @@
 [package]
 name = "diesel-example"
 version = "0.1.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+authors = ["Nikolay Kim <fafhrd91@gmail.com>", "Ryan Leckey <leckey.ryan@gmail.com"]
 workspace = "../"
 
 [dependencies]
@@ -9,6 +9,7 @@ env_logger = "0.5"
 
 actix = "0.7"
 actix-web = "0.7"
+actix-diesel = { version = "0.1", features = ["actix-web"] }
 
 futures = "0.1"
 uuid = { version = "0.5", features = ["serde", "v4"] }
