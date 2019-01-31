@@ -17,7 +17,7 @@ extern crate futures;
 extern crate r2d2;
 extern crate uuid;
 extern crate bytes;
-extern crate json;
+// extern crate json;
 
 
 use bytes::BytesMut;
