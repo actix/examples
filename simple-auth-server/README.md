@@ -8,7 +8,7 @@
 
 - [actix](https://crates.io/crates/actix) // Actix is a Rust actors framework.
 - [actix-web](https://crates.io/crates/actix-web) // Actix web is a simple, pragmatic and extremely fast web framework for Rust.
-- [brcypt](https://crates.io/crates/bcrypt) // Easily hash and verify passwords using bcrypt.
+- [bcrypt](https://crates.io/crates/bcrypt) // Easily hash and verify passwords using bcrypt.
 - [chrono](https://crates.io/crates/chrono) // Date and time library for Rust.
 - [diesel](https://crates.io/crates/diesel) // A safe, extensible ORM and Query Builder for PostgreSQL, SQLite, and MySQL.
 - [dotenv](https://crates.io/crates/dotenv) // A dotenv implementation for Rust.
