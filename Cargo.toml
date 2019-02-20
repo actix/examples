@@ -30,6 +30,7 @@ members = [
   "tls",
   "rustls",
   "unix-socket",
+  "udp-echo",
   "web-cors/backend",
   "websocket",
   "websocket-chat",
