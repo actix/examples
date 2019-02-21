@@ -31,6 +31,5 @@ Sometimes you need to prepare device to work in suitable mode. For example
 tap device should be switched to blocking mode. You can try tap example.
 ```bash
 cargo run --bin tap /dev/tap0 &
-cargo run --bin tap --feature nix /dev/tap0&
-sudo ifconfig tap0 10.0.1.1
+sudo ifconfig tap0 10.0.1.1 up
 ```
