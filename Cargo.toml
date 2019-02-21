@@ -11,6 +11,7 @@ members = [
   "cookie-session",
   "diesel",
   "error_handling",
+  "file-thread",
   "form",
   "hello-world",
   "http-proxy",

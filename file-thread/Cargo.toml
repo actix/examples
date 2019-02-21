@@ -1,0 +1,20 @@
+[package]
+name = "file-thread"
+version = "0.1.0"
+authors = ["Anton Patrushev <apatrushev@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[[bin]]
+name = "tap"
+path = "src/tap.rs"
+
+[dependencies]
+actix = "0.7"
+bytes = "*"
+
+[target.'cfg(unix)'.dependencies]
+nix = "0.13"
