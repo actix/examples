@@ -1,15 +1,11 @@
 use std::{env, fs, io::Read, process, thread, time};
 
-extern crate actix;
-extern crate bytes;
-
 use actix::{Actor, Context, Handler, Message, Running};
 use bytes::BytesMut;
-
-#[cfg(unix)] use std::os::unix::io::AsRawFd;
-#[cfg(unix)] extern crate nix;
-#[cfg(unix)] use nix::fcntl::{fcntl, OFlag, FcntlArg};
-
+#[cfg(unix)]
+use nix::fcntl::{fcntl, FcntlArg, OFlag};
+#[cfg(unix)]
+use std::os::unix::io::AsRawFd;
 
 struct FileProcessor {}
 
@@ -53,12 +49,10 @@ fn main() {
     {
         let raw_fd = file.as_raw_fd();
         let flags = OFlag::from_bits_truncate(
-            fcntl(raw_fd, FcntlArg::F_GETFL).expect("fcntl failed")
+            fcntl(raw_fd, FcntlArg::F_GETFL).expect("fcntl failed"),
         );
-        fcntl(
-            raw_fd,
-            FcntlArg::F_SETFL(flags & !OFlag::O_NONBLOCK)
-        ).expect("fcntl failed");
+        fcntl(raw_fd, FcntlArg::F_SETFL(flags & !OFlag::O_NONBLOCK))
+            .expect("fcntl failed");
     }
 
     let addr = FileProcessor {}.start();
@@ -76,12 +70,13 @@ fn main() {
                     // panicked somewhere inside mailbox on big files
                     thread::sleep(time::Duration::from_millis(1))
                 }
-                #[cfg(unix)] Err(ref err) if err.raw_os_error() == Some(5) => {
+                #[cfg(unix)]
+                Err(ref err) if err.raw_os_error() == Some(5) => {
                     // tap devices constantly returning IO error while down
                     // we are trying to throttle the number of such errors
                     // to reduce CPU usage and allow user to ifconfig
                     thread::sleep(time::Duration::from_millis(1000))
-                },
+                }
                 Err(err) => panic!("read error: {:?}", err),
             }
         }

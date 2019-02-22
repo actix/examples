@@ -1,11 +1,7 @@
 use std::{env, fs, io::Read, process, thread, time};
 
-extern crate actix;
-extern crate bytes;
-
 use actix::{Actor, Context, Handler, Message, Running};
 use bytes::BytesMut;
-
 
 struct FileProcessor {}
 
