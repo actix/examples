@@ -1,8 +1,3 @@
-extern crate actix;
-extern crate bytes;
-extern crate futures;
-extern crate tokio;
-
 use actix::{Actor, AsyncContext, Context, Message, StreamHandler};
 use bytes::BytesMut;
 use futures::stream::SplitSink;
