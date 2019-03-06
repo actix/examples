@@ -112,7 +112,7 @@ fn main() -> io::Result<()> {
                 })
             })
             // static files
-            .service(fs::StaticFiles::new("/static", "static").unwrap())
+            .service(fs::StaticFiles::new("/static", "static").show_files_listing())
             // redirect
             .resource("/", |r| {
                 r.route(web::get().to(|req: HttpRequest| {
