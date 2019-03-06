@@ -81,12 +81,14 @@ fn main() -> io::Result<()> {
             .state(pool.clone())
             // enable logger
             // .middleware(middleware::Logger::default())
-            .resource("/asyncio_weather", |r| {
-                r.route(web::get().to_async(asyncio_weather))
-            })
-            .resource("/parallel_weather", |r| {
-                r.route(web::get().to_async(parallel_weather))
-            })
+            .service(
+                web::resource("/asyncio_weather")
+                    .route(web::get().to_async(asyncio_weather)),
+            )
+            .service(
+                web::resource("/parallel_weather")
+                    .route(web::get().to_async(parallel_weather)),
+            )
     })
     .bind("127.0.0.1:8080")?
     .start();
