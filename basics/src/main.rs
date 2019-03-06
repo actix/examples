@@ -1,43 +1,34 @@
-#![allow(unused_variables)]
-#![cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
-
-extern crate actix;
-extern crate actix_web;
-extern crate bytes;
-extern crate env_logger;
-extern crate futures;
-
-use bytes::Bytes;
-use futures::sync::mpsc;
-use futures::Stream;
-
-use actix_web::http::{header, Method, StatusCode};
-use actix_web::middleware::session::{self, RequestSession};
-use actix_web::{
-    error, fs, middleware, pred, server, App, Error, HttpRequest, HttpResponse, Path,
-    Result,
-};
-use futures::future::{result, FutureResult};
 use std::{env, io};
 
+use actix_session::{CookieSession, Session};
+use actix_staticfiles as fs;
+use actix_web::extract::Path;
+use actix_web::http::{header, Method, StatusCode};
+use actix_web::{
+    error, guard, web, App, Error, HttpRequest, HttpResponse, HttpServer, Result,
+};
+use bytes::Bytes;
+use futures::unsync::mpsc;
+use futures::{future::ok, Future, Stream};
+
 /// favicon handler
-fn favicon(req: &HttpRequest) -> Result<fs::NamedFile> {
+fn favicon() -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("static/favicon.ico")?)
 }
 
 /// simple index handler
-fn welcome(req: &HttpRequest) -> Result<HttpResponse> {
+fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
     println!("{:?}", req);
 
     // session
     let mut counter = 1;
-    if let Some(count) = req.session().get::<i32>("counter")? {
+    if let Some(count) = session.get::<i32>("counter")? {
         println!("SESSION value: {}", count);
         counter = count + 1;
     }
 
     // set counter to session
-    req.session().set("counter", counter)?;
+    session.set("counter", counter)?;
 
     // response
     Ok(HttpResponse::build(StatusCode::OK)
@@ -46,17 +37,17 @@ fn welcome(req: &HttpRequest) -> Result<HttpResponse> {
 }
 
 /// 404 handler
-fn p404(req: &HttpRequest) -> Result<fs::NamedFile> {
+fn p404() -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("static/404.html")?.set_status_code(StatusCode::NOT_FOUND))
 }
 
 /// async handler
-fn index_async(req: &HttpRequest) -> FutureResult<HttpResponse, Error> {
+fn index_async(req: HttpRequest) -> impl Future<Item = HttpResponse, Error = Error> {
     println!("{:?}", req);
 
-    result(Ok(HttpResponse::Ok().content_type("text/html").body(
-        format!("Hello {}!", req.match_info().get("name").unwrap()),
-    )))
+    ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(format!("Hello {}!", req.match_info().get("name").unwrap())))
 }
 
 /// async body
@@ -67,76 +58,86 @@ fn index_async_body(path: Path<String>) -> HttpResponse {
     let _ = tx.unbounded_send(Bytes::from(text.as_bytes()));
 
     HttpResponse::Ok()
-        .streaming(rx_body.map_err(|e| error::ErrorBadRequest("bad request")))
+        .streaming(rx_body.map_err(|_| error::ErrorBadRequest("bad request")))
 }
 
 /// handler with path parameters like `/user/{name}/`
-fn with_param(req: &HttpRequest) -> HttpResponse {
+fn with_param(req: HttpRequest, path: Path<(String,)>) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
         .content_type("text/plain")
-        .body(format!("Hello {}!", req.match_info().get("name").unwrap()))
+        .body(format!("Hello {}!", path.0))
 }
 
-fn main() {
+fn main() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug");
     env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
-    let sys = actix::System::new("basic-example");
+    let sys = actix_rt::System::new("basic-example");
 
-    let addr = server::new(
-        || App::new()
+    HttpServer::new(|| {
+        App::new()
             // enable logger
-            .middleware(middleware::Logger::default())
+            // .middleware(middleware::Logger::default())
             // cookie session middleware
-            .middleware(session::SessionStorage::new(
-                session::CookieSessionBackend::signed(&[0; 32]).secure(false)
-            ))
+            .middleware(CookieSession::signed(&[0; 32]).secure(false))
             // register favicon
-            .resource("/favicon", |r| r.f(favicon))
+            .resource("/favicon", |r| r.to(favicon))
             // register simple route, handle all methods
-            .resource("/welcome", |r| r.f(welcome))
+            .resource("/welcome", |r| r.to(welcome))
             // with path parameters
-            .resource("/user/{name}", |r| r.method(Method::GET).f(with_param))
+            .resource("/user/{name}", |r| r.route(web::get().to(with_param)))
             // async handler
-            .resource("/async/{name}", |r| r.method(Method::GET).a(index_async))
+            .resource("/async/{name}", |r| {
+                r.route(web::get().to_async(index_async))
+            })
             // async handler
-            .resource("/async-body/{name}", |r| r.method(Method::GET).with(index_async_body))
-            .resource("/test", |r| r.f(|req| {
-                match *req.method() {
+            .resource("/async-body/{name}", |r| {
+                r.route(web::get().to(index_async_body))
+            })
+            .resource("/test", |r| {
+                r.to(|req: HttpRequest| match *req.method() {
                     Method::GET => HttpResponse::Ok(),
                     Method::POST => HttpResponse::MethodNotAllowed(),
                     _ => HttpResponse::NotFound(),
-                }
-            }))
-            .resource("/error", |r| r.f(|req| {
-                error::InternalError::new(
-                    io::Error::new(io::ErrorKind::Other, "test"), StatusCode::INTERNAL_SERVER_ERROR)
-            }))
+                })
+            })
+            .resource("/error", |r| {
+                r.to(|| {
+                    error::InternalError::new(
+                        io::Error::new(io::ErrorKind::Other, "test"),
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                    )
+                })
+            })
             // static files
-            .handler("/static", fs::StaticFiles::new("static").unwrap())
+            .service(fs::StaticFiles::new("/static", "static").unwrap())
             // redirect
-            .resource("/", |r| r.method(Method::GET).f(|req| {
-                println!("{:?}", req);
-                HttpResponse::Found()
-                    .header(header::LOCATION, "static/welcome.html")
-                    .finish()
-            }))
+            .resource("/", |r| {
+                r.route(web::get().to(|req: HttpRequest| {
+                    println!("{:?}", req);
+                    HttpResponse::Found()
+                        .header(header::LOCATION, "static/welcome.html")
+                        .finish()
+                }))
+            })
             // default
             .default_resource(|r| {
                 // 404 for GET request
-                r.method(Method::GET).f(p404);
-
-                // all requests that are not `GET`
-                r.route().filter(pred::Not(pred::Get())).f(
-                    |req| HttpResponse::MethodNotAllowed());
-            }))
-
-        .bind("127.0.0.1:8080").expect("Can not bind to 127.0.0.1:8080")
-        .shutdown_timeout(0)    // <- Set shutdown timeout to 0 seconds (default 60s)
-        .start();
+                r.route(web::get().to(p404))
+                    // all requests that are not `GET`
+                    .route(
+                        web::route()
+                            .guard(guard::Not(guard::Get()))
+                            .to(|| HttpResponse::MethodNotAllowed()),
+                    )
+            })
+    })
+    .bind("127.0.0.1:8080")?
+    .start();
 
     println!("Starting http server: 127.0.0.1:8080");
     let _ = sys.run();
+    Ok(())
 }
