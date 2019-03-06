@@ -2,10 +2,12 @@
 name = "async_db"
 version = "0.1.0"
 authors = ["Darin Gordon <dkcdkg@gmail.com>"]
+edition = "2018"
+workspace = ".."
 
 [dependencies]
-actix = "0.7"
-actix-web = "0.7"
+actix-rt = "0.2"
+actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
 
 dotenv = "0.10"
 env_logger = "0.5"
