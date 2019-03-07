@@ -11,9 +11,7 @@ This project illustrates two examples:
  */
 use std::io;
 
-use actix_web::{
-    middleware, web, App, Error as AWError, HttpResponse, HttpServer, State,
-};
+use actix_web::{middleware, web, App, Error as AWError, HttpResponse, HttpServer};
 use futures::future::{join_all, ok as fut_ok, Future};
 use r2d2_sqlite;
 use r2d2_sqlite::SqliteConnectionManager;
@@ -23,7 +21,7 @@ use db::{Pool, Queries, WeatherAgg};
 
 /// Version 1: Calls 4 queries in sequential order, as an asynchronous handler
 fn asyncio_weather(
-    db: State<Pool>,
+    db: web::State<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = AWError> {
     let mut result: Vec<Vec<WeatherAgg>> = vec![];
 
@@ -54,7 +52,7 @@ fn asyncio_weather(
 /// Version 2: Calls 4 queries in parallel, as an asynchronous handler
 /// Returning Error types turn into None values in the response
 fn parallel_weather(
-    db: State<Pool>,
+    db: web::State<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = AWError> {
     let fut_result = vec![
         Box::new(db::execute(&db, Queries::GetTopTenHottestYears)),

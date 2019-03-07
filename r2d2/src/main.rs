@@ -1,10 +1,7 @@
 //! Actix web r2d2 example
 use std::io;
 
-use actix_web::{
-    blocking, extract::Path, middleware, web, App, Error, HttpResponse, HttpServer,
-    State,
-};
+use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use futures::Future;
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
@@ -12,11 +9,11 @@ use uuid;
 
 /// Async request handler. Ddb pool is stored in application state.
 fn index(
-    path: Path<String>,
-    db: State<Pool<SqliteConnectionManager>>,
+    path: web::Path<String>,
+    db: web::State<Pool<SqliteConnectionManager>>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     // execute sync code in threadpool
-    blocking::run(move || {
+    web::block(move || {
         let conn = db.get().unwrap();
 
         let uuid = format!("{}", uuid::Uuid::new_v4());

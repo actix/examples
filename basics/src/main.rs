@@ -1,8 +1,10 @@
+#[macro_use]
+extern crate actix_web;
+
 use std::{env, io};
 
 use actix_files as fs;
 use actix_session::{CookieSession, Session};
-use actix_web::extract::Path;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
     error, guard, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
@@ -13,11 +15,13 @@ use futures::unsync::mpsc;
 use futures::{future::ok, Future, Stream};
 
 /// favicon handler
+#[get("/favicon")]
 fn favicon() -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("static/favicon.ico")?)
 }
 
 /// simple index handler
+#[get("/welcome")]
 fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
     println!("{:?}", req);
 
@@ -52,7 +56,7 @@ fn index_async(req: HttpRequest) -> impl Future<Item = HttpResponse, Error = Err
 }
 
 /// async body
-fn index_async_body(path: Path<String>) -> HttpResponse {
+fn index_async_body(path: web::Path<String>) -> HttpResponse {
     let text = format!("Hello {}!", *path);
 
     let (tx, rx_body) = mpsc::unbounded();
@@ -63,7 +67,7 @@ fn index_async_body(path: Path<String>) -> HttpResponse {
 }
 
 /// handler with path parameters like `/user/{name}/`
-fn with_param(req: HttpRequest, path: Path<(String,)>) -> HttpResponse {
+fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
@@ -84,9 +88,9 @@ fn main() -> io::Result<()> {
             // cookie session middleware
             .middleware(CookieSession::signed(&[0; 32]).secure(false))
             // register favicon
-            .service(web::resource("/favicon").to(favicon))
+            .service(favicon)
             // register simple route, handle all methods
-            .service(web::resource("/welcome").to(welcome))
+            .service(welcome)
             // with path parameters
             .service(web::resource("/user/{name}").route(web::get().to(with_param)))
             // async handler

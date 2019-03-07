@@ -1,7 +1,7 @@
 #![cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
-//! There are two level of statefulness in actix-web. Application has state
-//! that is shared across all handlers within same Application.
-//! And individual handler can have state.
+//! Application may have multiple states that are shared across
+//! all handlers within same Application. State could be added
+//! with `App::state()` method, multiple different states could be added.
 //!
 //! > **Note**: http server accepts an application factory rather than an
 //! application > instance. Http server constructs an application instance for
@@ -11,45 +11,34 @@
 //!
 //! Check [user guide](https://actix.rs/book/actix-web/sec-2-application.html) for more info.
 
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
+use std::io;
+use std::sync::{Arc, Mutex};
 
-use std::sync::Arc;
-use std::sync::Mutex;
-
-use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
-
-/// Application state
-struct AppState {
-    counter: Arc<Mutex<usize>>,
-}
+use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 
 /// simple handle
-fn index(req: &HttpRequest<AppState>) -> HttpResponse {
+fn index(state: web::State<Arc<Mutex<usize>>>, req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
-    *(req.state().counter.lock().unwrap()) += 1;
+    *(state.lock().unwrap()) += 1;
 
-    HttpResponse::Ok().body(format!("Num of requests: {}", req.state().counter.lock().unwrap()))
+    HttpResponse::Ok().body(format!("Num of requests: {}", state.lock().unwrap()))
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+fn main() -> io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
-    let sys = actix::System::new("ws-example");
 
     let counter = Arc::new(Mutex::new(0));
+
     //move is necessary to give closure below ownership of counter
-    server::new(move || {
-        App::with_state(AppState{counter: counter.clone()}) // <- create app with shared state
+    HttpServer::new(move || {
+        App::new()
+            .state(counter.clone()) // <- create app with shared state
             // enable logger
             .middleware(middleware::Logger::default())
             // register simple handler, handle all methods
-            .resource("/", |r| r.f(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+            .service(web::resource("/").to(index))
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
 }

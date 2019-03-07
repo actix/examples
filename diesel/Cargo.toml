@@ -2,15 +2,14 @@
 name = "diesel-example"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [dependencies]
+actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+
 bytes = "0.4"
-env_logger = "0.5"
-
-actix = "0.7"
-actix-web = "0.7"
-
+env_logger = "0.6"
 futures = "0.1"
 uuid = { version = "0.5", features = ["serde", "v4"] }
 serde = "1.0"
