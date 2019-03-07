@@ -1,7 +1,7 @@
 use std::{env, io};
 
+use actix_files as fs;
 use actix_session::{CookieSession, Session};
-use actix_staticfiles as fs;
 use actix_web::extract::Path;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
@@ -112,7 +112,7 @@ fn main() -> io::Result<()> {
                 )
             }))
             // static files
-            .service(fs::StaticFiles::new("/static", "static").show_files_listing())
+            .service(fs::Files::new("/static", "static").show_files_listing())
             // redirect
             .service(web::resource("/").route(web::get().to(|req: HttpRequest| {
                 println!("{:?}", req);
