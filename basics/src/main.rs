@@ -5,7 +5,8 @@ use actix_staticfiles as fs;
 use actix_web::extract::Path;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
-    error, guard, web, App, Error, HttpRequest, HttpResponse, HttpServer, Result,
+    error, guard, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
+    Result,
 };
 use bytes::Bytes;
 use futures::unsync::mpsc;
@@ -79,7 +80,7 @@ fn main() -> io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            // .middleware(middleware::Logger::default())
+            .middleware(middleware::Logger::default())
             // cookie session middleware
             .middleware(CookieSession::signed(&[0; 32]).secure(false))
             // register favicon

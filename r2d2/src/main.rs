@@ -2,7 +2,8 @@
 use std::io;
 
 use actix_web::{
-    blocking, extract::Path, web, App, Error, HttpResponse, HttpServer, State,
+    blocking, extract::Path, middleware, web, App, Error, HttpResponse, HttpServer,
+    State,
 };
 use futures::Future;
 use r2d2::Pool;
@@ -48,6 +49,7 @@ fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .state(pool.clone()) // <- store db pool in app state
+            .middleware(middleware::Logger::default())
             .route("/{name}", web::get().to_async(index))
     })
     .bind("127.0.0.1:8080")?

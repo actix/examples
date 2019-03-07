@@ -11,7 +11,9 @@ This project illustrates two examples:
  */
 use std::io;
 
-use actix_web::{web, App, Error as AWError, HttpResponse, HttpServer, State};
+use actix_web::{
+    middleware, web, App, Error as AWError, HttpResponse, HttpServer, State,
+};
 use futures::future::{join_all, ok as fut_ok, Future};
 use r2d2_sqlite;
 use r2d2_sqlite::SqliteConnectionManager;
@@ -79,8 +81,7 @@ fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .state(pool.clone())
-            // enable logger
-            // .middleware(middleware::Logger::default())
+            .middleware(middleware::Logger::default())
             .service(
                 web::resource("/asyncio_weather")
                     .route(web::get().to_async(asyncio_weather)),

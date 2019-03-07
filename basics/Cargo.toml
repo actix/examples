@@ -11,10 +11,6 @@ actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
 actix-session = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
 actix-staticfiles = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
 
-#actix-web = { path="../../actix-web/" }
-#actix-session = { path="../../actix-web/actix-session/" }
-#actix-staticfiles = { path="../../actix-web/actix-staticfiles/" }
-
 futures = "0.1.25"
 env_logger = "0.5"
 bytes = "0.4"
