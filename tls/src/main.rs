@@ -1,26 +1,21 @@
-#![allow(unused_variables)]
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
-extern crate openssl;
+use std::io;
 
-use actix_web::{http, middleware, server, App, Error, HttpRequest, HttpResponse};
+use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 /// simple handle
-fn index(req: &HttpRequest) -> Result<HttpResponse, Error> {
+fn index(req: HttpRequest) -> Result<HttpResponse, Error> {
     println!("{:?}", req);
     Ok(HttpResponse::Ok()
         .content_type("text/plain")
         .body("Welcome!"))
 }
 
-fn main() {
-    if ::std::env::var("RUST_LOG").is_err() {
-        ::std::env::set_var("RUST_LOG", "actix_web=info");
-    }
+fn main() -> io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=debug");
     env_logger::init();
-    let sys = actix::System::new("ws-example");
+
+    let sys = actix_rt::System::new("tls-example");
 
     // load ssl keys
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
@@ -29,22 +24,22 @@ fn main() {
         .unwrap();
     builder.set_certificate_chain_file("cert.pem").unwrap();
 
-    server::new(|| {
+    HttpServer::new(|| {
         App::new()
             // enable logger
             .middleware(middleware::Logger::default())
             // register simple handler, handle all methods
-            .resource("/index.html", |r| r.f(index))
+            .service(web::resource("/index.html").to(index))
             // with path parameters
-            .resource("/", |r| r.method(http::Method::GET).f(|req| {
+            .service(web::resource("/").route(web::get().to(|| {
                 HttpResponse::Found()
                     .header("LOCATION", "/index.html")
                     .finish()
-            }))
-    }).bind_ssl("127.0.0.1:8443", builder)
-        .unwrap()
-        .start();
+            })))
+    })
+    .bind_ssl("127.0.0.1:8443", builder)?
+    .start();
 
     println!("Started http server: 127.0.0.1:8443");
-    let _ = sys.run();
+    sys.run()
 }
