@@ -64,7 +64,7 @@ struct HttpBinResponse {
 fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
     Box::new(
         fut_result(data.validate()) // <- call .validate() on data to validate the parameters
-            .map_err(|e| ErrorBadRequest(e)) // - convert ValidationErrors to an Error
+            .map_err(ErrorBadRequest) // - convert ValidationErrors to an Error
             .and_then(|_| {
                 client::ClientRequest::post("https://httpbin.org/post")
                     .json(data).unwrap()
@@ -107,7 +107,7 @@ fn create_something_v1(
 /// post json to httpbin, get it back in the response body, return deserialized
 fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
     fut_result(data.validate()) // <- call .validate() on data to validate the parameters
-        .map_err(|e| ErrorBadRequest(e)) // - convert ValidationErrors to an Error
+        .map_err(ErrorBadRequest) // - convert ValidationErrors to an Error
         .and_then(|_| {
             client::ClientRequest::post("https://httpbin.org/post")
                 .json(data).unwrap()
