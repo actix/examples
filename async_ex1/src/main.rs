@@ -29,9 +29,9 @@ extern crate validator;
 
 use actix_web::{
     client, http::Method, server, App, AsyncResponder, Error, HttpMessage, HttpResponse,
-    Json,
+    Json, error::ErrorBadRequest,
 };
-use futures::{future::ok as fut_ok, Future};
+use futures::{future::ok as fut_ok, future::result as fut_result, Future};
 use std::collections::HashMap;
 use std::time::Duration;
 use validator::Validate;
@@ -63,19 +63,23 @@ struct HttpBinResponse {
 /// post json to httpbin, get it back in the response body, return deserialized
 fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
     Box::new(
-        client::ClientRequest::post("https://httpbin.org/post")
-            .json(data).unwrap()
-            .send()
-            .conn_timeout(Duration::from_secs(10))
-            .map_err(Error::from)   // <- convert SendRequestError to an Error
-            .and_then(
-                |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                    .from_err()            // <- convert PayloadError to an Error
-                    .and_then(|body| {
-                        let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
-                        fut_ok(resp.json)
-                    })
-            ),
+        fut_result(data.validate()) // <- call .validate() on data to validate the parameters
+            .map_err(|e| ErrorBadRequest(e)) // - convert ValidationErrors to an Error
+            .and_then(|_| {
+                client::ClientRequest::post("https://httpbin.org/post")
+                    .json(data).unwrap()
+                    .send()
+                    .conn_timeout(Duration::from_secs(10))
+                    .map_err(Error::from)   // <- convert SendRequestError to an Error
+                    .and_then(
+                        |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
+                            .from_err()            // <- convert PayloadError to an Error
+                            .and_then(|body| {
+                                let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+                                fut_ok(resp.json)
+                            })
+                    )
+            })
     )
 }
 
@@ -102,19 +106,23 @@ fn create_something_v1(
 
 /// post json to httpbin, get it back in the response body, return deserialized
 fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
-    client::ClientRequest::post("https://httpbin.org/post")
-        .json(data).unwrap()
-        .send()
-        .conn_timeout(Duration::from_secs(10))
-        .map_err(Error::from)   // <- convert SendRequestError to an Error
-        .and_then(
-            |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                .from_err()            // <- convert PayloadError to an Error
-                .and_then(|body| {
-                    let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
-                    fut_ok(resp.json)
-                })
-        )
+    fut_result(data.validate()) // <- call .validate() on data to validate the parameters
+        .map_err(|e| ErrorBadRequest(e)) // - convert ValidationErrors to an Error
+        .and_then(|_| {
+            client::ClientRequest::post("https://httpbin.org/post")
+                .json(data).unwrap()
+                .send()
+                .conn_timeout(Duration::from_secs(10))
+                .map_err(Error::from)   // <- convert SendRequestError to an Error
+                .and_then(
+                    |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
+                        .from_err()            // <- convert PayloadError to an Error
+                        .and_then(|body| {
+                            let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+                            fut_ok(resp.json)
+                        })
+                )
+        })
 }
 
 fn create_something_v2(
