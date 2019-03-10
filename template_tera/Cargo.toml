@@ -2,10 +2,10 @@
 name = "template-tera"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [dependencies]
-env_logger = "0.5"
+env_logger = "0.6"
 tera = "*"
-actix = "0.7"
-actix-web = "0.7"
+actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }

@@ -1,29 +1,21 @@
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
+use actix_web::{middleware, web, App, HttpRequest, HttpServer};
 
-use actix_web::{middleware, server, App, HttpRequest};
-
-fn index(_req: &HttpRequest) -> &'static str {
+fn index(req: HttpRequest) -> &'static str {
+    println!("REQ: {:?}", req);
     "Hello world!"
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
-    let sys = actix::System::new("hello-world");
 
-    server::new(|| {
+    HttpServer::new(|| {
         App::new()
             // enable logger
             .middleware(middleware::Logger::default())
-            .resource("/index.html", |r| r.f(|_| "Hello world!"))
-            .resource("/", |r| r.f(index))
+            .service(web::resource("/index.html").to(|| "Hello world!"))
+            .service(web::resource("/").to(index))
     })
-    .bind("127.0.0.1:8080")
-    .unwrap()
-    .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+    .bind("127.0.0.1:8080")?
+    .run()
 }
