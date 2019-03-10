@@ -39,10 +39,11 @@ fn main() {
                     })
                     .register()
             })
-    }).bind("127.0.0.1:8000")
-        .unwrap()
-        .shutdown_timeout(2)
-        .start();
+    })
+    .bind("127.0.0.1:8000")
+    .unwrap()
+    .shutdown_timeout(2)
+    .start();
 
     let _ = sys.run();
 }

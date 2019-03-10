@@ -24,8 +24,9 @@ fn index(query: Query<HashMap<String, String>>) -> Result<HttpResponse> {
         UserTemplate {
             name: name,
             text: "Welcome!",
-        }.render()
-            .unwrap()
+        }
+        .render()
+        .unwrap()
     } else {
         Index.render().unwrap()
     };
@@ -38,9 +39,10 @@ fn main() {
     // start http server
     server::new(move || {
         App::new().resource("/", |r| r.method(http::Method::GET).with(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

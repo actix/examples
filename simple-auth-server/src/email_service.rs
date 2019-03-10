@@ -9,8 +9,8 @@ fn get_api_key() -> String {
 
 pub fn send_invitation(invitation: &Invitation) {
     let tm = Transmission::new_eu(get_api_key());
-    let sending_email =
-        std::env::var("SENDING_EMAIL_ADDRESS").expect("SENDING_EMAIL_ADDRESS must be set");
+    let sending_email = std::env::var("SENDING_EMAIL_ADDRESS")
+        .expect("SENDING_EMAIL_ADDRESS must be set");
     // new email message with sender name and email
     let mut email = Message::new(EmailAddress::new(sending_email, "Let's Organise"));
 
@@ -39,7 +39,6 @@ pub fn send_invitation(invitation: &Invitation) {
             .to_string()
     );
 
-
     // complete the email message with details
     email
         .add_recipient(recipient)
@@ -51,16 +50,14 @@ pub fn send_invitation(invitation: &Invitation) {
 
     // Note that we only print out the error response from email api
     match result {
-        Ok(res) => {
-            match res {
-                TransmissionResponse::ApiResponse(api_res) => {
-                    println!("API Response: \n {:#?}", api_res);
-                }
-                TransmissionResponse::ApiError(errors) => {
-                    println!("Response Errors: \n {:#?}", &errors);
-                }
+        Ok(res) => match res {
+            TransmissionResponse::ApiResponse(api_res) => {
+                println!("API Response: \n {:#?}", api_res);
             }
-        }
+            TransmissionResponse::ApiError(errors) => {
+                println!("Response Errors: \n {:#?}", &errors);
+            }
+        },
         Err(error) => {
             println!("error \n {:#?}", error);
         }

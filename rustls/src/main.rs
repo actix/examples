@@ -49,13 +49,16 @@ fn main() {
             // register simple handler, handle all methods
             .resource("/index.html", |r| r.f(index))
             // with path parameters
-            .resource("/", |r| r.method(http::Method::GET).f(|_| {
-                HttpResponse::Found()
-                    .header("LOCATION", "/index.html")
-                    .finish()
-            }))
+            .resource("/", |r| {
+                r.method(http::Method::GET).f(|_| {
+                    HttpResponse::Found()
+                        .header("LOCATION", "/index.html")
+                        .finish()
+                })
+            })
             .handler("/static", StaticFiles::new("static").unwrap())
-    }).bind_with("127.0.0.1:8443", move || acceptor.clone())
+    })
+    .bind_with("127.0.0.1:8443", move || acceptor.clone())
     .unwrap()
     .start();
 

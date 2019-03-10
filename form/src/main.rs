@@ -18,22 +18,24 @@ fn main() {
     let _addr = server::new(|| {
         App::with_state(AppState {
             foo: "bar".to_string(),
-        }).middleware(middleware::Logger::default())
-            .resource("/", |r| {
-                r.method(http::Method::GET).with(index);
-            })
-            .resource("/post1", |r| {
-                r.method(http::Method::POST).with(handle_post_1)
-            })
-            .resource("/post2", |r| {
-                r.method(http::Method::POST).with(handle_post_2)
-            })
-            .resource("/post3", |r| {
-                r.method(http::Method::POST).with(handle_post_3)
-            })
-    }).bind("127.0.0.1:8080")
-        .expect("Can not bind to 127.0.0.1:8080")
-        .start();
+        })
+        .middleware(middleware::Logger::default())
+        .resource("/", |r| {
+            r.method(http::Method::GET).with(index);
+        })
+        .resource("/post1", |r| {
+            r.method(http::Method::POST).with(handle_post_1)
+        })
+        .resource("/post2", |r| {
+            r.method(http::Method::POST).with(handle_post_2)
+        })
+        .resource("/post3", |r| {
+            r.method(http::Method::POST).with(handle_post_3)
+        })
+    })
+    .bind("127.0.0.1:8080")
+    .expect("Can not bind to 127.0.0.1:8080")
+    .start();
 
     println!("Starting http server: 127.0.0.1:8080");
     let _ = sys.run();

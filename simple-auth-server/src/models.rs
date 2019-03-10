@@ -1,11 +1,11 @@
 use actix::{Actor, SyncContext};
+use chrono::{Local, NaiveDateTime};
 use diesel::pg::PgConnection;
 use diesel::r2d2::{ConnectionManager, Pool};
-use chrono::{NaiveDateTime, Local};
-use uuid::Uuid;
 use std::convert::From;
+use uuid::Uuid;
 
-use schema::{users, invitations};
+use schema::{invitations, users};
 
 /// This is db executor actor. can be run in parallel
 pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);
@@ -51,8 +51,6 @@ pub struct SlimUser {
 
 impl From<User> for SlimUser {
     fn from(user: User) -> Self {
-        SlimUser {
-            email: user.email
-        }
+        SlimUser { email: user.email }
     }
 }

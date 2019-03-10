@@ -12,7 +12,7 @@ extern crate tokio_io;
 extern crate actix;
 extern crate actix_web;
 
-use std::time::{Instant, Duration};
+use std::time::{Duration, Instant};
 
 use actix::*;
 use actix_web::server::HttpServer;
@@ -185,7 +185,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Binary(bin) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
                 ctx.stop();
-            },
+            }
         }
     }
 }
@@ -202,9 +202,7 @@ impl WsChatSession {
                 println!("Websocket Client heartbeat failed, disconnecting!");
 
                 // notify chat server
-                ctx.state()
-                    .addr
-                    .do_send(server::Disconnect { id: act.id });
+                ctx.state().addr.do_send(server::Disconnect { id: act.id });
 
                 // stop actor
                 ctx.stop();
@@ -233,19 +231,22 @@ fn main() {
         };
 
         App::with_state(state)
-        // redirect to websocket.html
-            .resource("/", |r| r.method(http::Method::GET).f(|_| {
-                HttpResponse::Found()
-                    .header("LOCATION", "/static/websocket.html")
-                    .finish()
-            }))
-        // websocket
+            // redirect to websocket.html
+            .resource("/", |r| {
+                r.method(http::Method::GET).f(|_| {
+                    HttpResponse::Found()
+                        .header("LOCATION", "/static/websocket.html")
+                        .finish()
+                })
+            })
+            // websocket
             .resource("/ws/", |r| r.route().f(chat_route))
-        // static resources
+            // static resources
             .handler("/static/", fs::StaticFiles::new("static/").unwrap())
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

@@ -35,14 +35,16 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             // redis session middleware
-            .middleware(SessionStorage::new(
-                RedisSessionBackend::new("127.0.0.1:6379", &[0; 32])
-            ))
+            .middleware(SessionStorage::new(RedisSessionBackend::new(
+                "127.0.0.1:6379",
+                &[0; 32],
+            )))
             // register simple route, handle all methods
             .resource("/", |r| r.f(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     let _ = sys.run();
 }

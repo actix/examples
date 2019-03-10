@@ -93,14 +93,17 @@ fn main() {
 
     // Start http server
     server::new(move || {
-        App::with_state(AppState{executor: addr.clone()})
-            // enable logger
-            .middleware(middleware::Logger::default())
-            .resource("/graphql", |r| r.method(http::Method::POST).with(graphql))
-            .resource("/graphiql", |r| r.method(http::Method::GET).h(graphiql))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+        App::with_state(AppState {
+            executor: addr.clone(),
+        })
+        // enable logger
+        .middleware(middleware::Logger::default())
+        .resource("/graphql", |r| r.method(http::Method::POST).with(graphql))
+        .resource("/graphiql", |r| r.method(http::Method::GET).h(graphiql))
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

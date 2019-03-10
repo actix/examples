@@ -1,13 +1,16 @@
-use actix_web::{AsyncResponder, FutureResponse, HttpResponse, HttpRequest, ResponseError, Json};
 use actix_web::middleware::identity::RequestIdentity;
+use actix_web::{
+    AsyncResponder, FutureResponse, HttpRequest, HttpResponse, Json, ResponseError,
+};
 use futures::future::Future;
 use utils::create_token;
 
 use app::AppState;
 use auth_handler::{AuthData, LoggedUser};
 
-pub fn login((auth_data, req): (Json<AuthData>, HttpRequest<AppState>))
-             -> FutureResponse<HttpResponse> {
+pub fn login(
+    (auth_data, req): (Json<AuthData>, HttpRequest<AppState>),
+) -> FutureResponse<HttpResponse> {
     req.state()
         .db
         .send(auth_data.into_inner())
@@ -19,7 +22,8 @@ pub fn login((auth_data, req): (Json<AuthData>, HttpRequest<AppState>))
                 Ok(HttpResponse::Ok().into())
             }
             Err(err) => Ok(err.error_response()),
-        }).responder()
+        })
+        .responder()
 }
 
 pub fn logout(req: HttpRequest<AppState>) -> HttpResponse {

@@ -28,10 +28,10 @@ pub struct MyObj {
 /// This handler uses `ProtoBufMessage` for loading protobuf object.
 fn index(req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
     protobuf::ProtoBufMessage::new(req)
-        .from_err()  // convert all errors into `Error`
+        .from_err() // convert all errors into `Error`
         .and_then(|val: MyObj| {
             println!("model: {:?}", val);
-            Ok(HttpResponse::Ok().protobuf(val)?)  // <- send response
+            Ok(HttpResponse::Ok().protobuf(val)?) // <- send response
         })
         .responder()
 }
@@ -45,10 +45,11 @@ fn main() {
         App::new()
             .middleware(middleware::Logger::default())
             .resource("/", |r| r.method(http::Method::POST).f(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .shutdown_timeout(1)
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .shutdown_timeout(1)
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

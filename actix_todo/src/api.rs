@@ -32,7 +32,8 @@ pub fn index(req: HttpRequest<AppState>) -> FutureResponse<HttpResponse> {
                     session::clear_flash(&req);
                 }
 
-                let rendered = req.state()
+                let rendered = req
+                    .state()
                     .template
                     .render("index.html.tera", &context)
                     .map_err(|e| {
@@ -61,7 +62,8 @@ pub fn create(
                 FlashMessage::error("Description cannot be empty"),
             )?;
             Ok(redirect_to("/"))
-        }).responder()
+        })
+        .responder()
     } else {
         req.state()
             .db

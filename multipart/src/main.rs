@@ -101,14 +101,16 @@ fn main() {
     server::new(|| {
         App::with_state(AppState {
             counter: Cell::new(0),
-        }).middleware(middleware::Logger::default())
-            .resource("/", |r| {
-                r.method(http::Method::GET).with(index);
-                r.method(http::Method::POST).with(upload);
-            })
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+        })
+        .middleware(middleware::Logger::default())
+        .resource("/", |r| {
+            r.method(http::Method::GET).with(index);
+            r.method(http::Method::POST).with(upload);
+        })
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     println!("Starting http server: 127.0.0.1:8080");
     let _ = sys.run();

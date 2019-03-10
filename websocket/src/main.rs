@@ -8,7 +8,7 @@ extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
 
-use std::time::{Instant, Duration};
+use std::time::{Duration, Instant};
 
 use actix::prelude::*;
 use actix_web::{
@@ -96,19 +96,24 @@ fn main() {
     env_logger::init();
     let sys = actix::System::new("ws-example");
 
-    server::new(
-        || App::new()
+    server::new(|| {
+        App::new()
             // enable logger
             .middleware(middleware::Logger::default())
             // websocket route
             .resource("/ws/", |r| r.method(http::Method::GET).f(ws_index))
             // static files
-            .handler("/", fs::StaticFiles::new("static/")
-                     .unwrap()
-                     .index_file("index.html")))
-        // start http server on 127.0.0.1:8080
-        .bind("127.0.0.1:8080").unwrap()
-        .start();
+            .handler(
+                "/",
+                fs::StaticFiles::new("static/")
+                    .unwrap()
+                    .index_file("index.html"),
+            )
+    })
+    // start http server on 127.0.0.1:8080
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

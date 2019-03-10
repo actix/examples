@@ -2,9 +2,9 @@ extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
 
-use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
 use actix_web::middleware::identity::RequestIdentity;
 use actix_web::middleware::identity::{CookieIdentityPolicy, IdentityService};
+use actix_web::{middleware, server, App, HttpRequest, HttpResponse};
 
 fn index(req: &HttpRequest) -> String {
     format!("Hello {}", req.identity().unwrap_or("Anonymous".to_owned()))
@@ -36,9 +36,10 @@ fn main() {
             .resource("/login", |r| r.f(login))
             .resource("/logout", |r| r.f(logout))
             .resource("/", |r| r.f(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

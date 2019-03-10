@@ -1,4 +1,6 @@
-use actix_web::{AsyncResponder, FutureResponse, HttpResponse, Json, ResponseError, State};
+use actix_web::{
+    AsyncResponder, FutureResponse, HttpResponse, Json, ResponseError, State,
+};
 use futures::future::Future;
 
 use app::AppState;
@@ -18,5 +20,6 @@ pub fn register_email(
                 Ok(HttpResponse::Ok().into())
             }
             Err(err) => Ok(err.error_response()),
-        }).responder()
+        })
+        .responder()
 }

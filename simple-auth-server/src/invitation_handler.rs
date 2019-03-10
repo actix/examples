@@ -35,5 +35,3 @@ impl Handler<CreateInvitation> for DbExecutor {
         Ok(inserted_invitation)
     }
 }
-
-

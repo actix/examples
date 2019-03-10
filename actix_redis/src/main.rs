@@ -3,30 +3,32 @@ extern crate actix_redis;
 extern crate actix_web;
 extern crate env_logger;
 extern crate futures;
-#[macro_use] extern crate redis_async;
+#[macro_use]
+extern crate redis_async;
 extern crate serde;
-#[macro_use] extern crate serde_derive; 
+#[macro_use]
+extern crate serde_derive;
 
-
-use std::sync::Arc;
 use actix::prelude::*;
-use actix_redis::{Command, RedisActor, Error as ARError}; 
-use actix_web::{middleware, server, App, HttpRequest, HttpResponse, Json,
-                AsyncResponder, http::Method, Error as AWError};
-use futures::future::{Future, join_all};
+use actix_redis::{Command, Error as ARError, RedisActor};
+use actix_web::{
+    http::Method, middleware, server, App, AsyncResponder, Error as AWError,
+    HttpRequest, HttpResponse, Json,
+};
+use futures::future::{join_all, Future};
 use redis_async::resp::RespValue;
-
+use std::sync::Arc;
 
 #[derive(Deserialize)]
 pub struct CacheInfo {
     one: String,
     two: String,
-    three: String
+    three: String,
 }
 
-
-fn cache_stuff((info, req): (Json<CacheInfo>, HttpRequest<AppState>))
-                -> impl Future<Item=HttpResponse, Error=AWError> {
+fn cache_stuff(
+    (info, req): (Json<CacheInfo>, HttpRequest<AppState>),
+) -> impl Future<Item = HttpResponse, Error = AWError> {
     let info = info.into_inner();
     let redis = req.state().redis_addr.clone();
 
@@ -59,25 +61,33 @@ fn cache_stuff((info, req): (Json<CacheInfo>, HttpRequest<AppState>))
     .responder()
 }
 
-fn del_stuff(req: HttpRequest<AppState>)
-                -> impl Future<Item=HttpResponse, Error=AWError> {
+fn del_stuff(
+    req: HttpRequest<AppState>,
+) -> impl Future<Item = HttpResponse, Error = AWError> {
     let redis = req.state().redis_addr.clone();
 
-    redis.send(Command(resp_array!["DEL", "mydomain:one", "mydomain:two", "mydomain:three"]))
-         .map_err(AWError::from)
-         .and_then(|res: Result<RespValue, ARError>|
-            match &res {
-                Ok(RespValue::Integer(x)) if x==&3 => 
-                    Ok(HttpResponse::Ok().body("successfully deleted values")),
-                 _ =>{println!("---->{:?}", res);
-                      Ok(HttpResponse::InternalServerError().finish())}
-              })
+    redis
+        .send(Command(resp_array![
+            "DEL",
+            "mydomain:one",
+            "mydomain:two",
+            "mydomain:three"
+        ]))
+        .map_err(AWError::from)
+        .and_then(|res: Result<RespValue, ARError>| match &res {
+            Ok(RespValue::Integer(x)) if x == &3 => {
+                Ok(HttpResponse::Ok().body("successfully deleted values"))
+            }
+            _ => {
+                println!("---->{:?}", res);
+                Ok(HttpResponse::InternalServerError().finish())
+            }
+        })
         .responder()
-
 }
 
 pub struct AppState {
-    pub redis_addr: Arc<Addr<RedisActor>>
+    pub redis_addr: Arc<Addr<RedisActor>>,
 }
 
 fn main() {
@@ -87,20 +97,19 @@ fn main() {
 
     server::new(|| {
         let redis_addr = Arc::new(RedisActor::start("127.0.0.1:6379"));
-        let app_state = AppState{redis_addr};
+        let app_state = AppState { redis_addr };
 
         App::with_state(app_state)
             .middleware(middleware::Logger::default())
             .resource("/stuff", |r| {
-                            r.method(Method::POST)
-                             .with_async(cache_stuff);
-                            r.method(Method::DELETE)
-                             .with_async(del_stuff)})
-                                          
-    }).bind("0.0.0.0:8080")
-        .unwrap()
-        .workers(1)
-        .start();
+                r.method(Method::POST).with_async(cache_stuff);
+                r.method(Method::DELETE).with_async(del_stuff)
+            })
+    })
+    .bind("0.0.0.0:8080")
+    .unwrap()
+    .workers(1)
+    .start();
 
     let _ = sys.run();
 }

@@ -2,10 +2,13 @@
 name = "awc_examples"
 version = "0.1.0"
 authors = ["dowwie <dkcdkg@gmail.com>"]
+edition = "2018"
+workspace = ".."
 
 [dependencies]
-actix = "0.7"
-actix-web = { version="0.7.3", features=["rust-tls"] }
+actix-rt = "0.2"
+actix-http = { git="https://github.com/actix/actix-http.git", features=["ssl"] }
+actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0", features=["ssl"] }
 
 futures = "0.1"
 serde = "1.0.43"

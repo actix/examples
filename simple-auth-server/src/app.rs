@@ -14,8 +14,10 @@ pub struct AppState {
 /// creates and returns the app after mounting all routes/resources
 pub fn create_app(db: Addr<DbExecutor>) -> App<AppState> {
     // secret is a random minimum 32 bytes long base 64 string
-    let secret: String = std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
-    let domain: String = std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_string());
+    let secret: String =
+        std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
+    let domain: String =
+        std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_string());
 
     App::with_state(AppState { db })
         .middleware(Logger::default())

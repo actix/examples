@@ -44,13 +44,14 @@ fn main() {
         let tera =
             compile_templates!(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*"));
 
-        App::with_state(AppState{template: tera})
+        App::with_state(AppState { template: tera })
             // enable logger
             .middleware(middleware::Logger::default())
             .resource("/", |r| r.method(http::Method::GET).with(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

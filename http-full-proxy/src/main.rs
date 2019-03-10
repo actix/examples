@@ -87,25 +87,29 @@ fn main() {
                 .value_name("LISTEN ADDR")
                 .index(1)
                 .required(true),
-        ).arg(
+        )
+        .arg(
             Arg::with_name("listen_port")
                 .takes_value(true)
                 .value_name("LISTEN PORT")
                 .index(2)
                 .required(true),
-        ).arg(
+        )
+        .arg(
             Arg::with_name("forward_addr")
                 .takes_value(true)
                 .value_name("FWD ADDR")
                 .index(3)
                 .required(true),
-        ).arg(
+        )
+        .arg(
             Arg::with_name("forward_port")
                 .takes_value(true)
                 .value_name("FWD PORT")
                 .index(4)
                 .required(true),
-        ).get_matches();
+        )
+        .get_matches();
 
     let listen_addr = matches.value_of("listen_addr").unwrap();
     let listen_port = value_t!(matches, "listen_port", u16).unwrap_or_else(|e| e.exit());
@@ -121,13 +125,15 @@ fn main() {
             .unwrap()
             .next()
             .unwrap()
-    )).unwrap();
+    ))
+    .unwrap();
 
     server::new(move || {
         App::with_state(AppState::init(forward_url.clone())).default_resource(|r| {
             r.f(forward);
         })
-    }).workers(32)
+    })
+    .workers(32)
     .bind((listen_addr, listen_port))
     .expect("Cannot bind listening port")
     .system_exit()

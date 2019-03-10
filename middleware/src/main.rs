@@ -16,14 +16,17 @@ fn main() {
             .middleware(simple::SayHi)
             // .middleware(redirect::CheckLogin)
             .resource("/login", |r| {
-                r.f(|_| "You are on /login. Go to src/redirect.rs to change this behavior.")
+                r.f(|_| {
+                    "You are on /login. Go to src/redirect.rs to change this behavior."
+                })
             })
             .resource("/", |r| {
                 r.f(|_| "Hello, middleware! Check the console where the server is run.")
             })
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .unwrap()
+    .start();
 
     let _ = sys.run();
 }

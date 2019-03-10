@@ -13,15 +13,18 @@ fn main() {
 
     server::new(|| {
         App::new()
-	        // enable logger
-	        .middleware(middleware::Logger::default())
-	        .handler(
+            // enable logger
+            .middleware(middleware::Logger::default())
+            .handler(
                 "/",
-                fs::StaticFiles::new("./static/").unwrap().index_file("index.html")
+                fs::StaticFiles::new("./static/")
+                    .unwrap()
+                    .index_file("index.html"),
             )
-    }).bind("127.0.0.1:8080")
-        .expect("Can not start server on given IP/Port")
-        .start();
+    })
+    .bind("127.0.0.1:8080")
+    .expect("Can not start server on given IP/Port")
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();
