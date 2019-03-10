@@ -30,7 +30,7 @@ fn index(req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
         .from_err()  // convert all errors into `Error`
         .and_then(|val: MyObj| {
             println!("model: {:?}", val);
-            Ok(HttpResponse::Ok().json(val))  // <- send response
+            Ok(HttpResponse::Ok().json(MyObj { name: val.name, number: val.number + 1 }))  // <- send response
         })
         .responder()
 }
@@ -130,4 +130,36 @@ fn main() {
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use actix_web::Binary::Bytes;
+    use actix_web::Body::Binary;
+    use actix_web::Error;
+    use actix_web::{http, test};
+
+    #[test]
+    fn test_index() -> Result<(), Error>  {
+        let response: HttpResponse = test::TestRequest::default()
+            .header("Content-type", "application/json")
+            .method(http::Method::POST)
+            .set_payload(bytes::Bytes::from_static(r##"{"name":"my-nane","number":42}"##.as_bytes()))
+            .run(&index)?;
+        assert_eq!(response.status(), http::StatusCode::OK);
+
+        let response_body = match response.body() {
+            Binary(body) => match body {
+                Bytes(s) => String::from_utf8(s.to_vec()).unwrap(),
+                _ => panic!("AA")
+            },
+            _ => panic!("error")
+        };
+
+        assert_eq!(response_body, r##"{"name":"my-nane","number":43}"##);
+
+        Ok(())
+    }
 }
