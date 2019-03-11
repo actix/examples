@@ -77,7 +77,6 @@ fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
 
 fn main() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug");
-    env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
     let sys = actix_rt::System::new("basic-example");
 
