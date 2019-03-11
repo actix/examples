@@ -26,3 +26,35 @@ fn main() {
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();
 }
+
+
+
+#[cfg(test)]
+mod tests {
+    use actix_web::HttpResponse;
+use super::*;
+
+    use actix_web::Binary::Slice;
+    use actix_web::Body::Binary;
+    use actix_web::Error;
+    use actix_web::{http, test};
+
+    #[test]
+    fn test_index() -> Result<(), Error>  {
+        let response: HttpResponse = test::TestRequest::default()
+            .run(&index)?;
+        assert_eq!(response.status(), http::StatusCode::OK);
+
+        let response_body = match response.body() {
+            Binary(body) => match body {
+                Slice(s) => String::from_utf8(s.to_vec()).unwrap(),
+                _ => panic!("error")
+            },
+            _ => panic!("error2")
+        };
+
+        assert_eq!(response_body, r##"Hello world!"##);
+
+        Ok(())
+    }
+}
