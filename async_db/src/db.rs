@@ -1,4 +1,4 @@
-use actix_web::{blocking, Error as AWError};
+use actix_web::{web, Error as AWError};
 use failure::Error;
 use futures::Future;
 use r2d2;
@@ -27,7 +27,7 @@ pub fn execute(
     query: Queries,
 ) -> impl Future<Item = Vec<WeatherAgg>, Error = AWError> {
     let pool = pool.clone();
-    blocking::run(move || match query {
+    web::block(move || match query {
         Queries::GetTopTenHottestYears => get_hottest_years(pool.get()?),
         Queries::GetTopTenColdestYears => get_coldest_years(pool.get()?),
         Queries::GetTopTenHottestMonths => get_hottest_months(pool.get()?),
