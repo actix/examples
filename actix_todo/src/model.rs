@@ -2,7 +2,7 @@ use diesel;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 
-use schema::{
+use crate::schema::{
     tasks,
     tasks::dsl::{completed as task_completed, tasks as all_tasks},
 };
