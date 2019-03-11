@@ -8,3 +8,6 @@ edition = "2018"
 [dependencies]
 env_logger = "0.6"
 actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+
+[dev-dependencies]
+bytes = "0.4"
