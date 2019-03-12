@@ -60,6 +60,7 @@ script:
       cd static_index && cargo check && cd ..
       cd template_askama && cargo check && cd ..
       cd template_tera && cargo check && cd ..
+      cd template_yarte && cargo check && cd ..
       cd tls && cargo check && cd ..
       cd rustls && cargo check && cd ..
       cd unix-socket && cargo check && cd ..

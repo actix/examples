@@ -1,0 +1,17 @@
+[package]
+name = "example"
+version = "0.0.1"
+authors = ["Rust-iendo Barcelona <riendocontributions@gmail.com>"]
+publish = false
+edition = "2018"
+
+workspace = ".."
+
+[dependencies]
+env_logger = "0.6"
+
+yarte = "0.1"
+actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+
+[build-dependencies]
+yarte = "0.1"
