@@ -27,6 +27,7 @@ members = [
   "static_index",
   "template_askama",
   "template_tera",
+  "template_yarte",
   "tls",
   "rustls",
   "unix-socket",
