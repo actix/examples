@@ -25,27 +25,38 @@ mod tests {
     use super::*;
 
     use actix_web::dev::Body::Bytes;
-    use actix_web::dev::ResponseBody::{Other};
-    use actix_web::HttpResponse;
+    use actix_web::dev::ResponseBody::{Body};
     use actix_web::Error;
     use actix_web::{http, test};
+    use actix_web::http::{Method};
 
      #[test]
     fn test_index() -> Result<(), Error>  {
-        let response: HttpResponse = test::TestRequest::default()
-            .run(&index)?;
+        let mut srv = test::init_service(
+            App::new()
+                // enable logger
+                .middleware(middleware::Logger::default())
+                .service(web::resource("/index.html").to(|| "Hello world!"))
+                .service(web::resource("/").to(index)
+            ));
+
+        let req = test::TestRequest::with_uri("/")
+            .method(Method::GET)
+            .to_request();
+        let response = test::call_success(&mut srv, req);
+
         assert_eq!(response.status(), http::StatusCode::OK);
 
-         let response_body = match response.body() {
-            Other(body) => match body {
+        let response_body = match response.body() {
+            Body(body) => match body {
                 Bytes(bytes) => String::from_utf8(bytes.to_vec()).unwrap(),
                 _ => panic!("Unknow body type: #1")
             },
             _ => panic!("Unknow body type: #2")
         };
 
-         assert_eq!(response_body, r##"Hello world!"##);
+        assert_eq!(response_body, r##"Hello world!"##);
 
-         Ok(())
+        Ok(())
     }
 }
