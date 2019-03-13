@@ -3,6 +3,7 @@
 A curated list of examples related to actix.
 
 ## from community
+* [RutHub](https://www.ruthub.com/): A service for sharing read list powered by actix-web + diesel, [repo](https://github.com/danloh/rut-server-rust).
 * [Rust-webapp-starter
 ](https://github.com/rustlang-cn/Rust-webapp-starter) : Rust single page webapp written in actix-web with vuejs. 
 * [Rust中文社区](http://47.104.146.58/) : A CN online community forum written in Actix-web with vuejs [source](https://github.com/rustlang-cn/ruster).
