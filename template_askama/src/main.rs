@@ -7,6 +7,7 @@ use std::collections::HashMap;
 
 use actix_web::{http, server, App, HttpResponse, Query, Result};
 use askama::Template;
+use askama::actix_web::TemplateIntoResponse;
 
 #[derive(Template)]
 #[template(path = "user.html")]
@@ -20,16 +21,14 @@ struct UserTemplate<'a> {
 struct Index;
 
 fn index(query: Query<HashMap<String, String>>) -> Result<HttpResponse> {
-    let s = if let Some(name) = query.get("name") {
+    if let Some(name) = query.get("name") {
         UserTemplate {
             name: name,
             text: "Welcome!",
-        }.render()
-            .unwrap()
+        }.into_response()
     } else {
-        Index.render().unwrap()
-    };
-    Ok(HttpResponse::Ok().content_type("text/html").body(s))
+        Index.into_response()
+    }
 }
 
 fn main() {
