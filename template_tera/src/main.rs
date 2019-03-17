@@ -7,7 +7,7 @@ use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
 
 // store tera template in application state
 fn index(
-    tmpl: web::State<tera::Tera>,
+    tmpl: web::Data<tera::Tera>,
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, Error> {
     let s = if let Some(name) = query.get("name") {

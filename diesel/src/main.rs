@@ -24,7 +24,7 @@ type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 /// Diesel query
 fn query(
     nm: String,
-    pool: web::State<Pool>,
+    pool: web::Data<Pool>,
 ) -> Result<models::User, diesel::result::Error> {
     use self::schema::users::dsl::*;
 
@@ -44,7 +44,7 @@ fn query(
 /// Async request handler
 fn add(
     name: web::Path<String>,
-    pool: web::State<Pool>,
+    pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     // run diesel blocking code
     web::block(move || query(name.into_inner(), pool)).then(|res| match res {
@@ -63,7 +63,7 @@ const MAX_SIZE: usize = 262_144; // max payload size is 256k
 /// This handler manually load request payload and parse json object
 fn index_add<P>(
     pl: web::Payload<P>,
-    pool: web::State<Pool>,
+    pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = Error>
 where
     P: Stream<Item = Bytes, Error = error::PayloadError>,
@@ -110,7 +110,7 @@ where
 
 fn add2(
     item: web::Json<MyUser>,
-    pool: web::State<Pool>,
+    pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     // run diesel blocking code
     web::block(move || query(item.into_inner().name, pool)).then(|res| match res {

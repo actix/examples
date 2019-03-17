@@ -21,7 +21,7 @@ use db::{Pool, Queries, WeatherAgg};
 
 /// Version 1: Calls 4 queries in sequential order, as an asynchronous handler
 fn asyncio_weather(
-    db: web::State<Pool>,
+    db: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = AWError> {
     let mut result: Vec<Vec<WeatherAgg>> = vec![];
 
@@ -52,7 +52,7 @@ fn asyncio_weather(
 /// Version 2: Calls 4 queries in parallel, as an asynchronous handler
 /// Returning Error types turn into None values in the response
 fn parallel_weather(
-    db: web::State<Pool>,
+    db: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = AWError> {
     let fut_result = vec![
         Box::new(db::execute(&db, Queries::GetTopTenHottestYears)),

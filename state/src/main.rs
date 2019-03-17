@@ -1,12 +1,12 @@
 #![cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
-//! Application may have multiple states that are shared across
-//! all handlers within same Application. State could be added
-//! with `App::state()` method, multiple different states could be added.
+//! Application may have multiple data objects that are shared across
+//! all handlers within same Application. Data could be added
+//! with `App::data()` method, multiple different data objects could be added.
 //!
 //! > **Note**: http server accepts an application factory rather than an
 //! application > instance. Http server constructs an application instance for
-//! each thread, > thus application state
-//! > must be constructed multiple times. If you want to share state between
+//! each thread, > thus application data
+//! > must be constructed multiple times. If you want to share data between
 //! different > threads, a shared object should be used, e.g. `Arc`.
 //!
 //! Check [user guide](https://actix.rs/book/actix-web/sec-2-application.html) for more info.
@@ -17,7 +17,7 @@ use std::sync::{Arc, Mutex};
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 
 /// simple handle
-fn index(state: web::State<Arc<Mutex<usize>>>, req: HttpRequest) -> HttpResponse {
+fn index(state: web::Data<Arc<Mutex<usize>>>, req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
     *(state.lock().unwrap()) += 1;
 
@@ -33,7 +33,7 @@ fn main() -> io::Result<()> {
     //move is necessary to give closure below ownership of counter
     HttpServer::new(move || {
         App::new()
-            .state(counter.clone()) // <- create app with shared state
+            .data(counter.clone()) // <- create app with shared state
             // enable logger
             .middleware(middleware::Logger::default())
             // register simple handler, handle all methods

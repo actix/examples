@@ -24,7 +24,7 @@ fn graphiql() -> HttpResponse {
 }
 
 fn graphql(
-    st: web::State<Arc<Schema>>,
+    st: web::Data<Arc<Schema>>,
     data: web::Json<GraphQLRequest>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     web::block(move || {

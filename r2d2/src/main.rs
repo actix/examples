@@ -10,7 +10,7 @@ use uuid;
 /// Async request handler. Ddb pool is stored in application state.
 fn index(
     path: web::Path<String>,
-    db: web::State<Pool<SqliteConnectionManager>>,
+    db: web::Data<Pool<SqliteConnectionManager>>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     // execute sync code in threadpool
     web::block(move || {

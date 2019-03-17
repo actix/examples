@@ -9,8 +9,8 @@ use crate::db;
 use crate::session::{self, FlashMessage};
 
 pub fn index(
-    pool: web::State<db::PgPool>,
-    tmpl: web::State<Tera>,
+    pool: web::Data<db::PgPool>,
+    tmpl: web::Data<Tera>,
     session: Session,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     web::block(move || db::get_all_tasks(&pool))
@@ -45,7 +45,7 @@ pub struct CreateForm {
 
 pub fn create(
     params: web::Form<CreateForm>,
-    pool: web::State<db::PgPool>,
+    pool: web::Data<db::PgPool>,
     session: Session,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     if params.description.is_empty() {
@@ -86,7 +86,7 @@ pub struct UpdateForm {
 }
 
 pub fn update(
-    db: web::State<db::PgPool>,
+    db: web::Data<db::PgPool>,
     params: web::Path<UpdateParams>,
     form: web::Form<UpdateForm>,
     session: Session,
@@ -102,7 +102,7 @@ pub fn update(
 }
 
 fn toggle(
-    pool: web::State<db::PgPool>,
+    pool: web::Data<db::PgPool>,
     params: web::Path<UpdateParams>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     web::block(move || db::toggle_task(params.id, &pool))
@@ -114,7 +114,7 @@ fn toggle(
 }
 
 fn delete(
-    pool: web::State<db::PgPool>,
+    pool: web::Data<db::PgPool>,
     params: web::Path<UpdateParams>,
     session: Session,
 ) -> impl Future<Item = HttpResponse, Error = Error> {

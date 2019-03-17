@@ -45,7 +45,7 @@ fn handle_post_1(params: web::Form<MyParams>) -> Result<HttpResponse> {
 
 /// State and POST Params
 fn handle_post_2(
-    state: web::State<AppState>,
+    state: web::Data<AppState>,
     params: web::Form<MyParams>,
 ) -> HttpResponse {
     HttpResponse::Ok().content_type("text/plain").body(format!(
