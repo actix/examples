@@ -3,17 +3,16 @@
 //! or [python console client](https://github.com/actix/examples/blob/master/websocket/websocket-client.py)
 //! could be used for testing.
 
-#![allow(unused_variables)]
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
-
 use std::time::{Duration, Instant};
 
 use actix::prelude::*;
+use actix_files as fs;
 use actix_web::{
-    fs, http, middleware, server, ws, App, Error, HttpRequest, HttpResponse,
+    error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
 };
+use actix_web_actors::ws;
+use bytes::Bytes;
+use futures::Stream;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -21,8 +20,14 @@ const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// do websocket handshake and start `MyWebSocket` actor
-fn ws_index(r: &HttpRequest) -> Result<HttpResponse, Error> {
-    ws::start(r, MyWebSocket::new())
+fn ws_index<S>(r: HttpRequest, stream: web::Payload<S>) -> Result<HttpResponse, Error>
+where
+    S: Stream<Item = Bytes, Error = error::PayloadError> + 'static,
+{
+    println!("{:?}", r);
+    let res = ws::start(MyWebSocket::new(), &r, stream);
+    println!("{:?}", res.as_ref().unwrap());
+    res
 }
 
 /// websocket connection is long running connection, it easier
@@ -91,30 +96,20 @@ impl MyWebSocket {
     }
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     env_logger::init();
-    let sys = actix::System::new("ws-example");
 
-    server::new(|| {
+    HttpServer::new(|| {
         App::new()
             // enable logger
             .middleware(middleware::Logger::default())
             // websocket route
-            .resource("/ws/", |r| r.method(http::Method::GET).f(ws_index))
+            .service(web::resource("/ws/").route(web::get().to(ws_index)))
             // static files
-            .handler(
-                "/",
-                fs::StaticFiles::new("static/")
-                    .unwrap()
-                    .index_file("index.html"),
-            )
+            .service(fs::Files::new("/", "static/").index_file("index.html"))
     })
     // start http server on 127.0.0.1:8080
-    .bind("127.0.0.1:8080")
-    .unwrap()
-    .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+    .bind("127.0.0.1:8080")?
+    .run()
 }

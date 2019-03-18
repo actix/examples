@@ -2,19 +2,22 @@
 name = "websocket"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+edition = "2018"
+workspace = ".."
 
 [[bin]]
 name = "websocket-server"
 path = "src/main.rs"
 
-[[bin]]
-name = "websocket-client"
-path = "src/client.rs"
+#[[bin]]
+#name = "websocket-client"
+#path = "src/client.rs"
 
 [dependencies]
-env_logger = "*"
+actix = { git="https://github.com/actix/actix.git" }
+actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+actix-web-actors = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+actix-files = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+env_logger = "0.6"
 futures = "0.1"
-
-actix = "0.7"
-actix-web = "0.7"
+bytes = "0.4"
