@@ -9,5 +9,5 @@ edition = "2018"
 futures = "0.1"
 env_logger = "0.5"
 
-actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
-actix-files = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+actix-web = { git="https://github.com/actix/actix-web.git" }
+actix-files = { git="https://github.com/actix/actix-web.git" }
