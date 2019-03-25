@@ -45,8 +45,8 @@ fn main() -> io::Result<()> {
     // start http server
     HttpServer::new(move || {
         App::new()
-            .state(pool.clone()) // <- store db pool in app state
-            .middleware(middleware::Logger::default())
+            .data(pool.clone()) // <- store db pool in app state
+            .wrap(middleware::Logger::default())
             .route("/{name}", web::get().to_async(index))
     })
     .bind("127.0.0.1:8080")?
