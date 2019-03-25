@@ -54,7 +54,7 @@ struct HttpBinResponse {
 // -----------------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v1(data: SomeData) -> Box<Future<Item=SomeData, Error=Error>> {
+fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
     let mut connector = client::Connector::new().service();
 
     Box::new(
@@ -71,7 +71,8 @@ fn step_x_v1(data: SomeData) -> Box<Future<Item=SomeData, Error=Error>> {
                         Ok::<_, Error>(acc)
                     })
                     .map(|body| {
-                        let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+                        let body: HttpBinResponse =
+                            serde_json::from_slice(&body).unwrap();
                         body.json
                     })
             }),
@@ -80,7 +81,7 @@ fn step_x_v1(data: SomeData) -> Box<Future<Item=SomeData, Error=Error>> {
 
 fn create_something_v1(
     some_data: web::Json<SomeData>,
-) -> Box<Future<Item=HttpResponse, Error=Error>> {
+) -> Box<Future<Item = HttpResponse, Error = Error>> {
     Box::new(step_x_v1(some_data.into_inner()).and_then(|some_data_2| {
         step_x_v1(some_data_2).and_then(|some_data_3| {
             step_x_v1(some_data_3).and_then(|d| {
@@ -98,7 +99,7 @@ fn create_something_v1(
 // ---------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v2(data: SomeData) -> impl Future<Item=SomeData, Error=Error> {
+fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
     let mut connector = client::Connector::new().service();
 
     client::ClientRequest::post("https://httpbin.org/post")
@@ -121,7 +122,7 @@ fn step_x_v2(data: SomeData) -> impl Future<Item=SomeData, Error=Error> {
 
 fn create_something_v2(
     some_data: web::Json<SomeData>,
-) -> impl Future<Item=HttpResponse, Error=Error> {
+) -> impl Future<Item = HttpResponse, Error = Error> {
     step_x_v2(some_data.into_inner()).and_then(|some_data_2| {
         step_x_v2(some_data_2).and_then(|some_data_3| {
             step_x_v2(some_data_3).and_then(|d| {
@@ -149,6 +150,6 @@ fn main() -> io::Result<()> {
                     .route(web::post().to_async(create_something_v2)),
             )
     })
-        .bind("127.0.0.1:8088")?
-        .run()
+    .bind("127.0.0.1:8088")?
+    .run()
 }
