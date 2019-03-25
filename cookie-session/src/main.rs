@@ -32,9 +32,9 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            .middleware(Logger::default())
+            .wrap(Logger::default())
             // cookie session middleware
-            .middleware(CookieSession::signed(&[0; 32]).secure(false))
+            .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .service(web::resource("/").to(index))
     })
     .bind("127.0.0.1:8080")?
