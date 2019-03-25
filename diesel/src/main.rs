@@ -10,7 +10,7 @@ extern crate diesel;
 extern crate serde_derive;
 
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
-use bytes::{Bytes, BytesMut};
+use bytes::BytesMut;
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use futures::future::{err, Either};
@@ -61,13 +61,10 @@ struct MyUser {
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 /// This handler manually load request payload and parse json object
-fn index_add<P>(
-    pl: web::Payload<P>,
+fn index_add(
+    pl: web::Payload,
     pool: web::Data<Pool>,
-) -> impl Future<Item = HttpResponse, Error = Error>
-where
-    P: Stream<Item = Bytes, Error = error::PayloadError>,
-{
+) -> impl Future<Item = HttpResponse, Error = Error> {
     pl
         // `Future::from_err` acts like `?` in that it coerces the error type from
         // the future into the final error type
@@ -132,9 +129,9 @@ fn main() -> std::io::Result<()> {
     // Start http server
     HttpServer::new(move || {
         App::new()
-            .state(pool.clone())
+            .data(pool.clone())
             // enable logger
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             // This can be called with:
             // curl -S --header "Content-Type: application/json" --request POST --data '{"name":"xyz"}'  http://127.0.0.1:8080/add
             // Use of the extractors makes some post conditions simpler such
@@ -142,7 +139,18 @@ fn main() -> std::io::Result<()> {
             .service(
                 web::resource("/add2").route(
                     web::post()
-                        .config(web::JsonConfig::default().limit(4096)) // <- limit size of the payload
+                        .data(
+                            web::JsonConfig::default()
+                                .limit(4096) // <- limit size of the payload
+                                .error_handler(|err, _| {
+                                    // <- create custom error response
+                                    error::InternalError::from_response(
+                                        err,
+                                        HttpResponse::Conflict().finish(),
+                                    )
+                                    .into()
+                                }),
+                        )
                         .to_async(add2),
                 ),
             )

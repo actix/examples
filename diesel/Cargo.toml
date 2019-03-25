@@ -6,7 +6,7 @@ workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+actix-web = { git="https://github.com/actix/actix-web.git" }
 
 bytes = "0.4"
 env_logger = "0.6"
