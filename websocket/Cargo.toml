@@ -15,9 +15,9 @@ path = "src/main.rs"
 
 [dependencies]
 actix = { git="https://github.com/actix/actix.git" }
-actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
-actix-web-actors = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
-actix-files = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+actix-web = { git="https://github.com/actix/actix-web.git" }
+actix-web-actors = { git="https://github.com/actix/actix-web.git" }
+actix-files = { git="https://github.com/actix/actix-web.git" }
 env_logger = "0.6"
 futures = "0.1"
 bytes = "0.4"
