@@ -12,7 +12,7 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             .service(web::resource("/index.html").to(|| "Hello world!"))
             .service(web::resource("/").to(index))
     })
