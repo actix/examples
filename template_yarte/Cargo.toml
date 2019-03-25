@@ -11,7 +11,7 @@ workspace = ".."
 env_logger = "0.6"
 
 yarte = "0.1"
-actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+actix-web = { git="https://github.com/actix/actix-web.git" }
 
 [build-dependencies]
 yarte = "0.1"
