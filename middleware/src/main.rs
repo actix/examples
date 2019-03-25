@@ -11,8 +11,8 @@ fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .middleware(redirect::CheckLogin)
-            .middleware(simple::SayHi)
+            .wrap(redirect::CheckLogin)
+            .wrap(simple::SayHi)
             .service(web::resource("/login").to(|| {
                 "You are on /login. Go to src/redirect.rs to change this behavior."
             }))
