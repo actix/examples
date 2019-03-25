@@ -12,10 +12,10 @@ struct AppState {
 fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .state(AppState {
+            .data(AppState {
                 foo: "bar".to_string(),
             })
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             .service(web::resource("/").route(web::get().to(index)))
             .service(web::resource("/post1").route(web::post().to(handle_post_1)))
             .service(web::resource("/post2").route(web::post().to(handle_post_2)))
