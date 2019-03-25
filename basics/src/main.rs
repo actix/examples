@@ -83,9 +83,9 @@ fn main() -> io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             // cookie session middleware
-            .middleware(CookieSession::signed(&[0; 32]).secure(false))
+            .wrap(CookieSession::signed(&[0; 32]).secure(false))
             // register favicon
             .service(favicon)
             // register simple route, handle all methods
