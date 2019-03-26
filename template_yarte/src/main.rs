@@ -1,7 +1,31 @@
-use actix_web::{middleware, web, App, HttpServer};
+#[macro_use]
+extern crate actix_web;
 
-#[path = "lib.rs"]
-mod template;
+use std::collections::HashMap;
+
+use actix_web::{
+    error::ErrorInternalServerError, middleware, web::Query, App, HttpResponse,
+    HttpServer, Result,
+};
+use yarte::Template;
+
+#[derive(Template)]
+#[template(path = "index.hbs")]
+struct IndexTemplate {
+    query: Query<HashMap<String, String>>,
+}
+
+#[get("/")]
+pub fn index(query: Query<HashMap<String, String>>) -> Result<HttpResponse> {
+    IndexTemplate { query }
+        .call()
+        .map(|s| {
+            HttpResponse::Ok()
+                .content_type(IndexTemplate::mime())
+                .body(s)
+        })
+        .map_err(|_| ErrorInternalServerError("Template parsing error"))
+}
 
 fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
@@ -11,8 +35,8 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            .middleware(middleware::Logger::default())
-            .service(web::resource("/").to(template::index))
+            .wrap(middleware::Logger::default())
+            .service(index)
     })
     .bind("127.0.0.1:8080")?
     .run()

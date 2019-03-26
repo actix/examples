@@ -78,8 +78,8 @@ fn main() -> io::Result<()> {
     // Start http server
     HttpServer::new(move || {
         App::new()
-            .state(pool.clone())
-            .middleware(middleware::Logger::default())
+            .data(pool.clone())
+            .wrap(middleware::Logger::default())
             .service(
                 web::resource("/asyncio_weather")
                     .route(web::get().to_async(asyncio_weather)),

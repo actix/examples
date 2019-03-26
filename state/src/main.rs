@@ -35,7 +35,7 @@ fn main() -> io::Result<()> {
         App::new()
             .data(counter.clone()) // <- create app with shared state
             // enable logger
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             // register simple handler, handle all methods
             .service(web::resource("/").to(index))
     })

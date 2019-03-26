@@ -22,8 +22,8 @@ fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .middleware(middleware::Logger::default())
-            .middleware(IdentityService::new(
+            .wrap(middleware::Logger::default())
+            .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])
                     .name("auth-example")
                     .secure(false),

@@ -27,7 +27,7 @@ fn main() -> io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             // register simple handler, handle all methods
             .service(web::resource("/index.html").to(index))
             // with path parameters

@@ -11,7 +11,7 @@ use std::{env, io};
 
 use actix_files as fs;
 use actix_session::CookieSession;
-use actix_web::middleware::{ErrorHandlers, Logger};
+use actix_web::middleware::{errhandlers::ErrorHandlers, Logger};
 use actix_web::{http, web, App, HttpServer};
 use dotenv::dotenv;
 use tera::Tera;
@@ -49,11 +49,11 @@ fn main() -> io::Result<()> {
             .handler(http::StatusCode::NOT_FOUND, api::not_found);
 
         App::new()
-            .state(templates)
-            .state(pool.clone())
-            .middleware(Logger::default())
-            .middleware(session_store)
-            .middleware(error_handlers)
+            .data(templates)
+            .data(pool.clone())
+            .wrap(Logger::default())
+            .wrap(session_store)
+            .wrap(error_handlers)
             .service(web::resource("/").route(web::get().to_async(api::index)))
             .service(web::resource("/todo").route(web::post().to_async(api::create)))
             .service(

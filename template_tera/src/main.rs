@@ -33,8 +33,8 @@ fn main() -> std::io::Result<()> {
             compile_templates!(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*"));
 
         App::new()
-            .state(tera)
-            .middleware(middleware::Logger::default()) // enable logger
+            .data(tera)
+            .wrap(middleware::Logger::default()) // enable logger
             .service(web::resource("/").route(web::get().to(index)))
     })
     .bind("127.0.0.1:8080")?

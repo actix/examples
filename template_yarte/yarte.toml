@@ -1,14 +1,7 @@
 # root dir of templates
 [main]
 dir = "templates"
-debug = "code"
 
 # Alias for partials. In call, change the start of partial path with one of this, if exist.
 [partials]
 alias = "./deep/more/deep"
-
-[debug]
-# prettyprint themes, put anything for options
-theme = "zenburn"
-number_line = true
-grid = true

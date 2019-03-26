@@ -49,8 +49,8 @@ fn main() -> io::Result<()> {
     // Start http server
     HttpServer::new(move || {
         App::new()
-            .state(schema.clone())
-            .middleware(middleware::Logger::default())
+            .data(schema.clone())
+            .wrap(middleware::Logger::default())
             .service(web::resource("/graphql").route(web::post().to_async(graphql)))
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
     })

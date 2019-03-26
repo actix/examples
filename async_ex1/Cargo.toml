@@ -8,7 +8,7 @@ workspace = ".."
 [dependencies]
 actix-rt = "0.2"
 actix-http = { git="https://github.com/actix/actix-http.git", features=["ssl"] }
-actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0", features=["ssl"] }
+actix-web = { git="https://github.com/actix/actix-web.git", features=["ssl"] }
 
 futures = "0.1"
 serde = "1.0.43"

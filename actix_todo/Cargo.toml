@@ -6,9 +6,9 @@ workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-web = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
-actix-files = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
-actix-session = { git="https://github.com/actix/actix-web.git", branch = "1.0" }
+actix-web = { git="https://github.com/actix/actix-web.git" }
+actix-files = { git="https://github.com/actix/actix-web.git" }
+actix-session = { git="https://github.com/actix/actix-web.git" }
 dotenv = "0.13.0"
 env_logger = "0.5.10"
 futures = "0.1.22"

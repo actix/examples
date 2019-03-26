@@ -7,12 +7,8 @@ use std::time::{Duration, Instant};
 
 use actix::prelude::*;
 use actix_files as fs;
-use actix_web::{
-    error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
-};
+use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_actors::ws;
-use bytes::Bytes;
-use futures::Stream;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -20,10 +16,7 @@ const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// do websocket handshake and start `MyWebSocket` actor
-fn ws_index<S>(r: HttpRequest, stream: web::Payload<S>) -> Result<HttpResponse, Error>
-where
-    S: Stream<Item = Bytes, Error = error::PayloadError> + 'static,
-{
+fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
     println!("{:?}", r);
     let res = ws::start(MyWebSocket::new(), &r, stream);
     println!("{:?}", res.as_ref().unwrap());
@@ -103,7 +96,7 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             // websocket route
             .service(web::resource("/ws/").route(web::get().to(ws_index)))
             // static files

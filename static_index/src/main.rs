@@ -8,7 +8,7 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             // enable logger
-            .middleware(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             .service(
                 // static files
                 fs::Files::new("/", "./static/").index_file("index.html"),

@@ -24,8 +24,9 @@ use std::collections::HashMap;
 use std::io;
 
 use actix_http::client;
-use actix_web::{web, App, Error, HttpMessage, HttpResponse, HttpServer};
-use futures::future::{ok, Future};
+use actix_web::web::BytesMut;
+use actix_web::{web, App, Error, HttpResponse, HttpServer};
+use futures::{Future, Stream};
 use validator::Validate;
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
@@ -54,7 +55,7 @@ struct HttpBinResponse {
 
 /// post json to httpbin, get it back in the response body, return deserialized
 fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
-    let mut connector = client::Connector::default().service();
+    let mut connector = client::Connector::new().service();
 
     Box::new(
         client::ClientRequest::post("https://httpbin.org/post")
@@ -62,13 +63,17 @@ fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
             .unwrap()
             .send(&mut connector)
             .map_err(Error::from) // <- convert SendRequestError to an Error
-            .and_then(|mut resp| {
-                resp.body() // <- this is MessageBody type, resolves to complete body
+            .and_then(|resp| {
+                resp // <- this is MessageBody type, resolves to complete body
                     .from_err() // <- convert PayloadError to an Error
-                    .and_then(|body| {
-                        let resp: HttpBinResponse =
+                    .fold(BytesMut::new(), |mut acc, chunk| {
+                        acc.extend_from_slice(&chunk);
+                        Ok::<_, Error>(acc)
+                    })
+                    .map(|body| {
+                        let body: HttpBinResponse =
                             serde_json::from_slice(&body).unwrap();
-                        ok(resp.json)
+                        body.json
                     })
             }),
     )
@@ -95,19 +100,22 @@ fn create_something_v1(
 
 /// post json to httpbin, get it back in the response body, return deserialized
 fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
-    let mut connector = client::Connector::default().service();
+    let mut connector = client::Connector::new().service();
 
     client::ClientRequest::post("https://httpbin.org/post")
         .json(data)
         .unwrap()
         .send(&mut connector)
         .map_err(Error::from) // <- convert SendRequestError to an Error
-        .and_then(|mut resp| {
-            resp.body() // <- this is MessageBody type, resolves to complete body
-                .from_err() // <- convert PayloadError to an Error
-                .and_then(|body| {
-                    let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
-                    ok(resp.json)
+        .and_then(|resp| {
+            resp.from_err()
+                .fold(BytesMut::new(), |mut acc, chunk| {
+                    acc.extend_from_slice(&chunk);
+                    Ok::<_, Error>(acc)
+                })
+                .map(|body| {
+                    let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+                    body.json
                 })
         })
 }
