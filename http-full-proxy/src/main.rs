@@ -1,85 +1,53 @@
-#![deny(warnings)]
-extern crate actix;
-extern crate actix_web;
-extern crate clap;
-extern crate failure;
-extern crate futures;
-extern crate url;
-
-use actix_web::{
-    client, http, server, App, AsyncResponder, Error, HttpMessage, HttpRequest,
-    HttpResponse,
-};
+use actix_web::client::Client;
+use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use clap::{value_t, Arg};
-use futures::{future, Future};
+use futures::Future;
 use std::net::ToSocketAddrs;
 use url::Url;
 
-struct AppState {
-    forward_url: Url,
-}
-
-impl AppState {
-    pub fn init(forward_url: Url) -> AppState {
-        AppState { forward_url }
-    }
-}
-
 fn forward(
-    req: &HttpRequest<AppState>,
-) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    let mut new_url = req.state().forward_url.clone();
+    req: HttpRequest,
+    payload: web::Payload,
+    url: web::Data<Url>,
+    client: web::Data<Client>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+    let mut new_url = url.get_ref().clone();
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
 
-    let mut forwarded_req = client::ClientRequest::build_from(req)
-        .no_default_headers()
-        .uri(new_url)
-        .streaming(req.payload())
-        .unwrap();
+    let forwarded_req = client
+        .request_from(new_url.as_str(), &req)
+        .no_default_headers();
 
-    if let Some(addr) = req.peer_addr() {
-        match forwarded_req.headers_mut().entry("x-forwarded-for") {
-            Ok(http::header::Entry::Vacant(entry)) => {
-                let addr = format!("{}", addr.ip());
-                entry.insert(addr.parse().unwrap());
-            }
-            Ok(http::header::Entry::Occupied(mut entry)) => {
-                let addr = format!("{}, {}", entry.get().to_str().unwrap(), addr.ip());
-                entry.insert(addr.parse().unwrap());
-            }
-            _ => unreachable!(),
-        }
-    }
+    // if let Some(addr) = req.peer_addr() {
+    //     match forwarded_req.headers_mut().entry("x-forwarded-for") {
+    //         Ok(http::header::Entry::Vacant(entry)) => {
+    //             let addr = format!("{}", addr.ip());
+    //             entry.insert(addr.parse().unwrap());
+    //         }
+    //         Ok(http::header::Entry::Occupied(mut entry)) => {
+    //             let addr = format!("{}, {}", entry.get().to_str().unwrap(), addr.ip());
+    //             entry.insert(addr.parse().unwrap());
+    //         }
+    //         _ => unreachable!(),
+    //     }
+    // }
 
     forwarded_req
-        .send()
+        .send_stream(payload)
         .map_err(Error::from)
-        .and_then(construct_response)
-        .responder()
+        .map(|res| {
+            let mut client_resp = HttpResponse::build(res.status());
+            for (header_name, header_value) in
+                res.headers().iter().filter(|(h, _)| *h != "connection")
+            {
+                client_resp.header(header_name.clone(), header_value.clone());
+            }
+            client_resp.streaming(res)
+        })
 }
 
-fn construct_response(
-    resp: client::ClientResponse,
-) -> Box<dyn Future<Item = HttpResponse, Error = Error>> {
-    let mut client_resp = HttpResponse::build(resp.status());
-    for (header_name, header_value) in
-        resp.headers().iter().filter(|(h, _)| *h != "connection")
-    {
-        client_resp.header(header_name.clone(), header_value.clone());
-    }
-    if resp.chunked().unwrap_or(false) {
-        Box::new(future::ok(client_resp.streaming(resp.payload())))
-    } else {
-        Box::new(
-            resp.body()
-                .from_err()
-                .and_then(move |body| Ok(client_resp.body(body))),
-        )
-    }
-}
-
-fn main() {
+fn main() -> std::io::Result<()> {
     let matches = clap::App::new("HTTP Proxy")
         .arg(
             Arg::with_name("listen_addr")
@@ -128,14 +96,13 @@ fn main() {
     ))
     .unwrap();
 
-    server::new(move || {
-        App::with_state(AppState::init(forward_url.clone())).default_resource(|r| {
-            r.f(forward);
-        })
+    HttpServer::new(move || {
+        App::new()
+            .data(forward_url.clone())
+            .wrap(middleware::Logger::default())
+            .default_resource(|r| r.to_async(forward))
     })
-    .workers(32)
-    .bind((listen_addr, listen_port))
-    .expect("Cannot bind listening port")
+    .bind((listen_addr, listen_port))?
     .system_exit()
-    .run();
+    .run()
 }

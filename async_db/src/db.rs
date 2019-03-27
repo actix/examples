@@ -3,6 +3,7 @@ use failure::Error;
 use futures::Future;
 use r2d2;
 use r2d2_sqlite;
+use rusqlite::NO_PARAMS;
 use serde_derive::{Deserialize, Serialize};
 use std::{thread::sleep, time::Duration};
 
@@ -47,7 +48,7 @@ fn get_hottest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::AnnualAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::AnnualAgg {
             year: row.get(0),
             total: row.get(1),
         })
@@ -73,7 +74,7 @@ fn get_coldest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::AnnualAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::AnnualAgg {
             year: row.get(0),
             total: row.get(1),
         })
@@ -99,7 +100,7 @@ fn get_hottest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::MonthAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::MonthAgg {
             year: row.get(0),
             month: row.get(1),
             total: row.get(2),
@@ -125,7 +126,7 @@ fn get_coldest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::MonthAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::MonthAgg {
             year: row.get(0),
             month: row.get(1),
             total: row.get(2),

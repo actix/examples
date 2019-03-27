@@ -23,7 +23,7 @@ extern crate serde_derive;
 use std::collections::HashMap;
 use std::io;
 
-use actix_http::client;
+use actix_web::client::Client;
 use actix_web::web::BytesMut;
 use actix_web::{web, App, Error, HttpResponse, HttpServer};
 use futures::{Future, Stream};
@@ -54,14 +54,14 @@ struct HttpBinResponse {
 // -----------------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
-    let mut connector = client::Connector::new().service();
-
+fn step_x_v1(
+    data: SomeData,
+    client: &Client,
+) -> Box<Future<Item = SomeData, Error = Error>> {
     Box::new(
-        client::ClientRequest::post("https://httpbin.org/post")
-            .json(data)
-            .unwrap()
-            .send(&mut connector)
+        client
+            .post("https://httpbin.org/post")
+            .send_json(data)
             .map_err(Error::from) // <- convert SendRequestError to an Error
             .and_then(|resp| {
                 resp // <- this is MessageBody type, resolves to complete body
@@ -81,17 +81,20 @@ fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
 
 fn create_something_v1(
     some_data: web::Json<SomeData>,
+    client: web::Data<Client>,
 ) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    Box::new(step_x_v1(some_data.into_inner()).and_then(|some_data_2| {
-        step_x_v1(some_data_2).and_then(|some_data_3| {
-            step_x_v1(some_data_3).and_then(|d| {
-                Ok(HttpResponse::Ok()
-                    .content_type("application/json")
-                    .body(serde_json::to_string(&d).unwrap())
-                    .into())
+    Box::new(
+        step_x_v1(some_data.into_inner(), &client).and_then(move |some_data_2| {
+            step_x_v1(some_data_2, &client).and_then(move |some_data_3| {
+                step_x_v1(some_data_3, &client).and_then(|d| {
+                    Ok(HttpResponse::Ok()
+                        .content_type("application/json")
+                        .body(serde_json::to_string(&d).unwrap())
+                        .into())
+                })
             })
-        })
-    }))
+        }),
+    )
 }
 
 // ---------------------------------------------------------------
@@ -99,13 +102,13 @@ fn create_something_v1(
 // ---------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
-    let mut connector = client::Connector::new().service();
-
-    client::ClientRequest::post("https://httpbin.org/post")
-        .json(data)
-        .unwrap()
-        .send(&mut connector)
+fn step_x_v2(
+    data: SomeData,
+    client: &Client,
+) -> impl Future<Item = SomeData, Error = Error> {
+    client
+        .post("https://httpbin.org/post")
+        .send_json(data)
         .map_err(Error::from) // <- convert SendRequestError to an Error
         .and_then(|resp| {
             resp.from_err()
@@ -122,10 +125,11 @@ fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
 
 fn create_something_v2(
     some_data: web::Json<SomeData>,
+    client: web::Data<Client>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
-    step_x_v2(some_data.into_inner()).and_then(|some_data_2| {
-        step_x_v2(some_data_2).and_then(|some_data_3| {
-            step_x_v2(some_data_3).and_then(|d| {
+    step_x_v2(some_data.into_inner(), &client).and_then(move |some_data_2| {
+        step_x_v2(some_data_2, &client).and_then(move |some_data_3| {
+            step_x_v2(some_data_3, &client).and_then(|d| {
                 Ok(HttpResponse::Ok()
                     .content_type("application/json")
                     .body(serde_json::to_string(&d).unwrap())
@@ -141,6 +145,7 @@ fn main() -> io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+            .data(Client::default())
             .service(
                 web::resource("/something_v1")
                     .route(web::post().to(create_something_v1)),
