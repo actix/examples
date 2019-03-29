@@ -1,16 +1,14 @@
-use actix::prelude::*;
+use actix_web::{web, Error as AWError};
 use failure::Error;
+use futures::Future;
 use r2d2;
 use r2d2_sqlite;
+use rusqlite::NO_PARAMS;
+use serde_derive::{Deserialize, Serialize};
 use std::{thread::sleep, time::Duration};
 
 pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;
 pub type Connection = r2d2::PooledConnection<r2d2_sqlite::SqliteConnectionManager>;
-
-pub struct DbExecutor(pub Pool);
-impl Actor for DbExecutor {
-    type Context = SyncContext<Self>;
-}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum WeatherAgg {
@@ -25,29 +23,24 @@ pub enum Queries {
     GetTopTenColdestMonths,
 }
 
-//pub struct GetTopTenHottestYears;
-impl Message for Queries {
-    type Result = Result<Vec<WeatherAgg>, Error>;
-}
-impl Handler<Queries> for DbExecutor {
-    type Result = Result<Vec<WeatherAgg>, Error>;
-
-    fn handle(&mut self, msg: Queries, _: &mut Self::Context) -> Self::Result {
-        let conn: Connection = self.0.get()?;
-
-        match msg {
-            Queries::GetTopTenHottestYears => get_hottest_years(conn),
-            Queries::GetTopTenColdestYears => get_coldest_years(conn),
-            Queries::GetTopTenHottestMonths => get_hottest_months(conn),
-            Queries::GetTopTenColdestMonths => get_coldest_months(conn),
-        }
-    }
+pub fn execute(
+    pool: &Pool,
+    query: Queries,
+) -> impl Future<Item = Vec<WeatherAgg>, Error = AWError> {
+    let pool = pool.clone();
+    web::block(move || match query {
+        Queries::GetTopTenHottestYears => get_hottest_years(pool.get()?),
+        Queries::GetTopTenColdestYears => get_coldest_years(pool.get()?),
+        Queries::GetTopTenHottestMonths => get_hottest_months(pool.get()?),
+        Queries::GetTopTenColdestMonths => get_coldest_months(pool.get()?),
+    })
+    .from_err()
 }
 
 fn get_hottest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
     let stmt = "
     SELECT cast(strftime('%Y', date) as int) as theyear,
-            sum(tmax) as total 
+            sum(tmax) as total
         FROM nyc_weather
         WHERE tmax <> 'TMAX'
         GROUP BY theyear
@@ -55,7 +48,7 @@ fn get_hottest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::AnnualAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::AnnualAgg {
             year: row.get(0),
             total: row.get(1),
         })
@@ -73,7 +66,7 @@ fn get_hottest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 fn get_coldest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
     let stmt = "
         SELECT cast(strftime('%Y', date) as int) as theyear,
-                sum(tmax) as total 
+                sum(tmax) as total
         FROM nyc_weather
         WHERE tmax <> 'TMAX'
         GROUP BY theyear
@@ -81,7 +74,7 @@ fn get_coldest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::AnnualAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::AnnualAgg {
             year: row.get(0),
             total: row.get(1),
         })
@@ -98,8 +91,8 @@ fn get_coldest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
 fn get_hottest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
     let stmt = "SELECT cast(strftime('%Y', date) as int) as theyear,
-                cast(strftime('%m', date) as int) as themonth, 
-                sum(tmax) as total 
+                cast(strftime('%m', date) as int) as themonth,
+                sum(tmax) as total
         FROM nyc_weather
         WHERE tmax <> 'TMAX'
         GROUP BY theyear, themonth
@@ -107,7 +100,7 @@ fn get_hottest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::MonthAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::MonthAgg {
             year: row.get(0),
             month: row.get(1),
             total: row.get(2),
@@ -124,8 +117,8 @@ fn get_hottest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
 fn get_coldest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
     let stmt = "SELECT cast(strftime('%Y', date) as int) as theyear,
-                cast(strftime('%m', date) as int) as themonth, 
-                sum(tmax) as total 
+                cast(strftime('%m', date) as int) as themonth,
+                sum(tmax) as total
         FROM nyc_weather
         WHERE tmax <> 'TMAX'
         GROUP BY theyear, themonth
@@ -133,7 +126,7 @@ fn get_coldest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(&[], |row| WeatherAgg::MonthAgg {
+        .query_map(NO_PARAMS, |row| WeatherAgg::MonthAgg {
             year: row.get(0),
             month: row.get(1),
             total: row.get(2),

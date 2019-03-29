@@ -52,7 +52,8 @@ impl WsChatSession {
                 }
 
                 fut::ok(())
-            }).spawn(ctx);
+            })
+            .spawn(ctx);
     }
 
     fn list_rooms(&mut self, ctx: &mut ws::WebsocketContext<Self>) {
@@ -66,7 +67,8 @@ impl WsChatSession {
                     }
                 }
                 fut::ok(())
-            }).spawn(ctx);
+            })
+            .spawn(ctx);
     }
 
     fn send_msg(&self, msg: &str) {
@@ -158,7 +160,8 @@ fn main() {
                     .unwrap()
                     .index_file("index.html"),
             )
-    }).bind("127.0.0.1:8080")
+    })
+    .bind("127.0.0.1:8080")
     .unwrap()
     .start();
 

@@ -40,7 +40,6 @@ script:
       cd actix_todo && cargo check && cd ..
       cd basics && cargo check && cd ..
       cd cookie-auth && cargo check && cd ..
-      cd cookie-auth-full && cargo check && cd ..
       cd cookie-session && cargo check && cd ..
       cd diesel && cargo check && cd ..
       cd error_handling && cargo check && cd ..
@@ -55,11 +54,11 @@ script:
       cd protobuf && cargo check && cd ..
       cd r2d2 && cargo check && cd ..
       cd redis-session && cargo check && cd ..
-      cd simple-auth-sarver && cargo check && cd ..
       cd state && cargo check && cd ..
       cd static_index && cargo check && cd ..
       cd template_askama && cargo check && cd ..
       cd template_tera && cargo check && cd ..
+      cd template_yarte && cargo check && cd ..
       cd tls && cargo check && cd ..
       cd rustls && cargo check && cd ..
       cd unix-socket && cargo check && cd ..

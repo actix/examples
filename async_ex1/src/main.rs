@@ -15,25 +15,18 @@
 // There are 2 versions in this example, one that uses Boxed Futures and the
 // other that uses Impl Future, available since rustc v1.26.
 
-extern crate actix;
-extern crate actix_web;
-extern crate serde;
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_json;
 #[macro_use]
 extern crate validator_derive;
-extern crate env_logger;
-extern crate futures;
-extern crate validator;
+#[macro_use]
+extern crate serde_derive;
 
-use actix_web::{
-    client, http::Method, server, App, AsyncResponder, Error, HttpMessage, HttpResponse,
-    Json, error::ErrorBadRequest,
-};
-use futures::{future::ok as fut_ok, future::result as fut_result, Future};
 use std::collections::HashMap;
-use std::time::Duration;
+use std::io;
+
+use actix_web::client::Client;
+use actix_web::web::BytesMut;
+use actix_web::{web, App, Error, HttpResponse, HttpServer};
+use futures::{Future, Stream};
 use validator::Validate;
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
@@ -61,43 +54,47 @@ struct HttpBinResponse {
 // -----------------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
+fn step_x_v1(
+    data: SomeData,
+    client: &Client,
+) -> Box<Future<Item = SomeData, Error = Error>> {
     Box::new(
-        fut_result(data.validate()) // <- call .validate() on data to validate the parameters
-            .map_err(ErrorBadRequest) // - convert ValidationErrors to an Error
-            .and_then(|_| {
-                client::ClientRequest::post("https://httpbin.org/post")
-                    .json(data).unwrap()
-                    .send()
-                    .conn_timeout(Duration::from_secs(10))
-                    .map_err(Error::from)   // <- convert SendRequestError to an Error
-                    .and_then(
-                        |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                            .from_err()            // <- convert PayloadError to an Error
-                            .and_then(|body| {
-                                let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
-                                fut_ok(resp.json)
-                            })
-                    )
-            })
+        client
+            .post("https://httpbin.org/post")
+            .send_json(data)
+            .map_err(Error::from) // <- convert SendRequestError to an Error
+            .and_then(|resp| {
+                resp // <- this is MessageBody type, resolves to complete body
+                    .from_err() // <- convert PayloadError to an Error
+                    .fold(BytesMut::new(), |mut acc, chunk| {
+                        acc.extend_from_slice(&chunk);
+                        Ok::<_, Error>(acc)
+                    })
+                    .map(|body| {
+                        let body: HttpBinResponse =
+                            serde_json::from_slice(&body).unwrap();
+                        body.json
+                    })
+            }),
     )
 }
 
 fn create_something_v1(
-    some_data: Json<SomeData>,
+    some_data: web::Json<SomeData>,
+    client: web::Data<Client>,
 ) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    step_x_v1(some_data.into_inner())
-        .and_then(|some_data_2| {
-            step_x_v1(some_data_2).and_then(|some_data_3| {
-                step_x_v1(some_data_3).and_then(|d| {
+    Box::new(
+        step_x_v1(some_data.into_inner(), &client).and_then(move |some_data_2| {
+            step_x_v1(some_data_2, &client).and_then(move |some_data_3| {
+                step_x_v1(some_data_3, &client).and_then(|d| {
                     Ok(HttpResponse::Ok()
                         .content_type("application/json")
                         .body(serde_json::to_string(&d).unwrap())
                         .into())
                 })
             })
-        })
-        .responder()
+        }),
+    )
 }
 
 // ---------------------------------------------------------------
@@ -105,32 +102,34 @@ fn create_something_v1(
 // ---------------------------------------------------------------
 
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
-    fut_result(data.validate()) // <- call .validate() on data to validate the parameters
-        .map_err(ErrorBadRequest) // - convert ValidationErrors to an Error
-        .and_then(|_| {
-            client::ClientRequest::post("https://httpbin.org/post")
-                .json(data).unwrap()
-                .send()
-                .conn_timeout(Duration::from_secs(10))
-                .map_err(Error::from)   // <- convert SendRequestError to an Error
-                .and_then(
-                    |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                        .from_err()            // <- convert PayloadError to an Error
-                        .and_then(|body| {
-                            let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
-                            fut_ok(resp.json)
-                        })
-                )
+fn step_x_v2(
+    data: SomeData,
+    client: &Client,
+) -> impl Future<Item = SomeData, Error = Error> {
+    client
+        .post("https://httpbin.org/post")
+        .send_json(data)
+        .map_err(Error::from) // <- convert SendRequestError to an Error
+        .and_then(|resp| {
+            resp.from_err()
+                .fold(BytesMut::new(), |mut acc, chunk| {
+                    acc.extend_from_slice(&chunk);
+                    Ok::<_, Error>(acc)
+                })
+                .map(|body| {
+                    let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+                    body.json
+                })
         })
 }
 
 fn create_something_v2(
-    some_data: Json<SomeData>,
+    some_data: web::Json<SomeData>,
+    client: web::Data<Client>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
-    step_x_v2(some_data.into_inner()).and_then(|some_data_2| {
-        step_x_v2(some_data_2).and_then(|some_data_3| {
-            step_x_v2(some_data_3).and_then(|d| {
+    step_x_v2(some_data.into_inner(), &client).and_then(move |some_data_2| {
+        step_x_v2(some_data_2, &client).and_then(move |some_data_3| {
+            step_x_v2(some_data_3, &client).and_then(|d| {
                 Ok(HttpResponse::Ok()
                     .content_type("application/json")
                     .body(serde_json::to_string(&d).unwrap())
@@ -140,23 +139,22 @@ fn create_something_v2(
     })
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+fn main() -> io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
-    let sys = actix::System::new("asyncio_example");
 
-    server::new(move || {
+    HttpServer::new(|| {
         App::new()
-            .resource("/something_v1", |r| {
-                r.method(Method::POST).with(create_something_v1)
-            })
-            .resource("/something_v2", |r| {
-                r.method(Method::POST).with_async(create_something_v2)
-            })
-    }).bind("127.0.0.1:8088")
-        .unwrap()
-        .start();
-
-    println!("Started http server: 127.0.0.1:8088");
-    let _ = sys.run();
+            .data(Client::default())
+            .service(
+                web::resource("/something_v1")
+                    .route(web::post().to(create_something_v1)),
+            )
+            .service(
+                web::resource("/something_v2")
+                    .route(web::post().to_async(create_something_v2)),
+            )
+    })
+    .bind("127.0.0.1:8088")?
+    .run()
 }

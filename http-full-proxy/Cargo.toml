@@ -2,10 +2,13 @@
 name = "http-full-proxy"
 version = "0.1.0"
 authors = ["Rotem Yaari"]
+workspace = ".."
+edition = "2018"
 
 [dependencies]
-actix = "0.7.5"
-actix-web = "0.7.13"
+actix-rt = "0.2"
+actix-web = "1.0.0-alpha.1"
+
 clap = "2.32.0"
 futures = "0.1.25"
 failure = "0.1.3"

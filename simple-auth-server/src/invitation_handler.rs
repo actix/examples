@@ -1,9 +1,10 @@
 use actix::{Handler, Message};
 use chrono::{Duration, Local};
 use diesel::{self, prelude::*};
-use errors::ServiceError;
-use models::{DbExecutor, Invitation};
 use uuid::Uuid;
+
+use crate::errors::ServiceError;
+use crate::models::{DbExecutor, Invitation};
 
 #[derive(Deserialize)]
 pub struct CreateInvitation {
@@ -18,7 +19,7 @@ impl Handler<CreateInvitation> for DbExecutor {
     type Result = Result<Invitation, ServiceError>;
 
     fn handle(&mut self, msg: CreateInvitation, _: &mut Self::Context) -> Self::Result {
-        use schema::invitations::dsl::*;
+        use crate::schema::invitations::dsl::*;
         let conn: &PgConnection = &self.0.get().unwrap();
 
         // creating a new Invitation object with expired at time that is 24 hours from now
@@ -35,5 +36,3 @@ impl Handler<CreateInvitation> for DbExecutor {
         Ok(inserted_invitation)
     }
 }
-
-

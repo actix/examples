@@ -2,7 +2,8 @@
 name = "websocket-tcp-example"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [[bin]]
 name = "websocket-tcp-server"
@@ -13,18 +14,19 @@ name = "websocket-tcp-client"
 path = "src/client.rs"
 
 [dependencies]
-rand = "*"
+actix = "0.8.0-alpha.2"
+actix-web = "1.0.0-alpha.1"
+actix-web-actors = "1.0.0-alpha.1"
+actix-files = "0.1.0-alpha.1"
+
+rand = "0.6"
 bytes = "0.4"
 byteorder = "1.1"
 futures = "0.1"
 tokio-io = "0.1"
 tokio-tcp = "0.1"
 tokio-codec = "0.1"
-env_logger = "*"
-
+env_logger = "0.6"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
-
-actix = "0.7"
-actix-web = "0.7"

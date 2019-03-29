@@ -2,7 +2,8 @@
 name = "http-proxy"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+edition = "2018"
+workspace = ".."
 
 [[bin]]
 name = "proxy"
@@ -13,8 +14,8 @@ name = "proxy-example-server"
 path = "src/server.rs"
 
 [dependencies]
+actix-rt = "0.2"
+actix-web = "1.0.0-alpha.1"
+
 env_logger = "0.5"
 futures = "0.1"
-
-actix = "0.7"
-actix-web = "^0.7"

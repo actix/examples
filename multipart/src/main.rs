@@ -1,44 +1,30 @@
-#![allow(unused_variables)]
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
-extern crate futures;
-
 use std::cell::Cell;
 use std::fs;
 use std::io::Write;
 
-use actix_web::{
-    dev, error, http, middleware, multipart, server, App, Error, FutureResponse,
-    HttpMessage, HttpRequest, HttpResponse,
-};
-
-use futures::future;
+use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
+use futures::future::{err, Either};
 use futures::{Future, Stream};
 
 pub struct AppState {
     pub counter: Cell<usize>,
 }
 
-pub fn save_file(
-    field: multipart::Field<dev::Payload>,
-) -> Box<Future<Item = i64, Error = Error>> {
+pub fn save_file(field: web::MultipartField) -> impl Future<Item = i64, Error = Error> {
     let file_path_string = "upload.png";
     let mut file = match fs::File::create(file_path_string) {
         Ok(file) => file,
-        Err(e) => return Box::new(future::err(error::ErrorInternalServerError(e))),
+        Err(e) => return Either::A(err(error::ErrorInternalServerError(e))),
     };
-    Box::new(
+    Either::B(
         field
             .fold(0i64, move |acc, bytes| {
-                let rt = file
-                    .write_all(bytes.as_ref())
+                file.write_all(bytes.as_ref())
                     .map(|_| acc + bytes.len() as i64)
                     .map_err(|e| {
                         println!("file.write_all failed: {:?}", e);
                         error::MultipartError::Payload(error::PayloadError::Io(e))
-                    });
-                future::result(rt)
+                    })
             })
             .map_err(|e| {
                 println!("save_file failed, {:?}", e);
@@ -48,13 +34,11 @@ pub fn save_file(
 }
 
 pub fn handle_multipart_item(
-    item: multipart::MultipartItem<dev::Payload>,
+    item: web::MultipartItem,
 ) -> Box<Stream<Item = i64, Error = Error>> {
     match item {
-        multipart::MultipartItem::Field(field) => {
-            Box::new(save_file(field).into_stream())
-        }
-        multipart::MultipartItem::Nested(mp) => Box::new(
+        web::MultipartItem::Field(field) => Box::new(save_file(field).into_stream()),
+        web::MultipartItem::Nested(mp) => Box::new(
             mp.map_err(error::ErrorInternalServerError)
                 .map(handle_multipart_item)
                 .flatten(),
@@ -62,24 +46,26 @@ pub fn handle_multipart_item(
     }
 }
 
-pub fn upload(req: HttpRequest<AppState>) -> FutureResponse<HttpResponse> {
-    req.state().counter.set(req.state().counter.get() + 1);
-    println!("{:?}", req.state().counter.get());
-    Box::new(
-        req.multipart()
-            .map_err(error::ErrorInternalServerError)
-            .map(handle_multipart_item)
-            .flatten()
-            .collect()
-            .map(|sizes| HttpResponse::Ok().json(sizes))
-            .map_err(|e| {
-                println!("failed: {}", e);
-                e
-            }),
-    )
+pub fn upload(
+    multipart: web::Multipart,
+    counter: web::Data<Cell<usize>>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+    counter.set(counter.get() + 1);
+    println!("{:?}", counter.get());
+
+    multipart
+        .map_err(error::ErrorInternalServerError)
+        .map(handle_multipart_item)
+        .flatten()
+        .collect()
+        .map(|sizes| HttpResponse::Ok().json(sizes))
+        .map_err(|e| {
+            println!("failed: {}", e);
+            e
+        })
 }
 
-fn index(_req: HttpRequest<AppState>) -> Result<HttpResponse, error::Error> {
+fn index() -> HttpResponse {
     let html = r#"<html>
         <head><title>Upload Test</title></head>
         <body>
@@ -90,26 +76,23 @@ fn index(_req: HttpRequest<AppState>) -> Result<HttpResponse, error::Error> {
         </body>
     </html>"#;
 
-    Ok(HttpResponse::Ok().body(html))
+    HttpResponse::Ok().body(html)
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     env_logger::init();
-    let sys = actix::System::new("multipart-example");
 
-    server::new(|| {
-        App::with_state(AppState {
-            counter: Cell::new(0),
-        }).middleware(middleware::Logger::default())
-            .resource("/", |r| {
-                r.method(http::Method::GET).with(index);
-                r.method(http::Method::POST).with(upload);
-            })
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
-
-    println!("Starting http server: 127.0.0.1:8080");
-    let _ = sys.run();
+    HttpServer::new(|| {
+        App::new()
+            .data(Cell::new(0usize))
+            .wrap(middleware::Logger::default())
+            .service(
+                web::resource("/")
+                    .route(web::get().to(index))
+                    .route(web::post().to_async(upload)),
+            )
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
 }

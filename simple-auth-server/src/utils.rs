@@ -1,14 +1,13 @@
 use bcrypt::{hash, DEFAULT_COST};
 use chrono::{Duration, Local};
-use errors::ServiceError;
-use jwt::{decode, encode, Header, Validation};
-use models::SlimUser;
-use std::convert::From;
-use std::env;
+use jsonwebtoken::{decode, encode, Header, Validation};
+
+use crate::errors::ServiceError;
+use crate::models::SlimUser;
 
 pub fn hash_password(plain: &str) -> Result<String, ServiceError> {
     // get the hashing cost from the env variable or use default
-    let hashing_cost: u32 = match env::var("HASH_ROUNDS") {
+    let hashing_cost: u32 = match std::env::var("HASH_ROUNDS") {
         Ok(cost) => cost.parse().unwrap_or(DEFAULT_COST),
         _ => DEFAULT_COST,
     };
@@ -64,5 +63,5 @@ pub fn decode_token(token: &str) -> Result<SlimUser, ServiceError> {
 }
 
 fn get_secret() -> String {
-    env::var("JWT_SECRET").unwrap_or_else(|_| "my secret".into())
+    std::env::var("JWT_SECRET").unwrap_or_else(|_| "my secret".into())
 }

@@ -23,7 +23,8 @@ fn main() {
             .middleware(middleware::Logger::default())
             .resource("/index.html", |r| r.f(|_| "Hello world!"))
             .resource("/", |r| r.f(index))
-    }).start_incoming(listener.incoming(), false);
+    })
+    .start_incoming(listener.incoming(), false);
 
     println!("Started http server: /tmp/actix-uds.socket");
     let _ = sys.run();

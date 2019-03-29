@@ -1,68 +1,56 @@
 //! Actix web r2d2 example
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
-extern crate futures;
-extern crate r2d2;
-extern crate r2d2_sqlite;
-extern crate rusqlite;
-extern crate serde;
-extern crate serde_json;
-extern crate uuid;
+use std::io;
 
-use actix::prelude::*;
-use actix_web::{
-    http, middleware, server, App, AsyncResponder, Error, HttpRequest, HttpResponse,
-};
-use futures::future::Future;
+use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
+use futures::Future;
+use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
+use uuid;
 
-mod db;
-use db::{CreateUser, DbExecutor};
+/// Async request handler. Ddb pool is stored in application state.
+fn index(
+    path: web::Path<String>,
+    db: web::Data<Pool<SqliteConnectionManager>>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+    // execute sync code in threadpool
+    web::block(move || {
+        let conn = db.get().unwrap();
 
-/// State with DbExecutor address
-struct State {
-    db: Addr<DbExecutor>,
+        let uuid = format!("{}", uuid::Uuid::new_v4());
+        conn.execute(
+            "INSERT INTO users (id, name) VALUES ($1, $2)",
+            &[&uuid, &path.into_inner()],
+        )
+        .unwrap();
+
+        conn.query_row("SELECT name FROM users WHERE id=$1", &[&uuid], |row| {
+            row.get::<_, String>(0)
+        })
+    })
+    .then(|res| match res {
+        Ok(user) => Ok(HttpResponse::Ok().json(user)),
+        Err(_) => Ok(HttpResponse::InternalServerError().into()),
+    })
 }
 
-/// Async request handler
-fn index(req: &HttpRequest<State>) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    let name = &req.match_info()["name"];
-
-    req.state()
-        .db
-        .send(CreateUser {
-            name: name.to_owned(),
-        })
-        .from_err()
-        .and_then(|res| match res {
-            Ok(user) => Ok(HttpResponse::Ok().json(user)),
-            Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        })
-        .responder()
-}
-
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=debug");
+fn main() -> io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=debug");
     env_logger::init();
-    let sys = actix::System::new("r2d2-example");
+    let sys = actix_rt::System::new("r2d2-example");
 
     // r2d2 pool
     let manager = SqliteConnectionManager::file("test.db");
     let pool = r2d2::Pool::new(manager).unwrap();
 
-    // Start db executor actors
-    let addr = SyncArbiter::start(3, move || DbExecutor(pool.clone()));
+    // start http server
+    HttpServer::new(move || {
+        App::new()
+            .data(pool.clone()) // <- store db pool in app state
+            .wrap(middleware::Logger::default())
+            .route("/{name}", web::get().to_async(index))
+    })
+    .bind("127.0.0.1:8080")?
+    .start();
 
-    // Start http server
-    server::new(move || {
-        App::with_state(State{db: addr.clone()})
-            // enable logger
-            .middleware(middleware::Logger::default())
-            .resource("/{name}", |r| r.method(http::Method::GET).a(index))
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
-
-    let _ = sys.run();
+    sys.run()
 }

@@ -1,13 +1,16 @@
 [package]
 name = "basics"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [dependencies]
-actix = "0.7"
-actix-web = "0.7"
+actix-rt = "0.2"
+actix-web = "1.0.0-alpha.1"
+actix-files = "0.1.0-alpha.1"
+actix-session = "0.1.0-alpha.1"
 
-futures = "0.1"
+futures = "0.1.25"
 env_logger = "0.5"
 bytes = "0.4"
