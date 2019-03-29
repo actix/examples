@@ -2,7 +2,7 @@
 name = "basics"
 version = "1.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
 edition = "2018"
 
 [dependencies]

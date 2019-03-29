@@ -11,8 +11,8 @@ use tokio_tcp::{TcpListener, TcpStream};
 
 use actix::prelude::*;
 
-use codec::{ChatCodec, ChatRequest, ChatResponse};
-use server::{self, ChatServer};
+use crate::codec::{ChatCodec, ChatRequest, ChatResponse};
+use crate::server::{self, ChatServer};
 
 /// Chat server sends this messages to session
 #[derive(Message)]
@@ -62,7 +62,7 @@ impl Actor for ChatSession {
             .wait(ctx);
     }
 
-    fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
+    fn stopping(&mut self, _: &mut Self::Context) -> Running {
         // notify chat server
         self.addr.do_send(server::Disconnect { id: self.id });
         Running::Stop
@@ -82,7 +82,7 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
                 self.addr
                     .send(server::ListRooms)
                     .into_actor(self)
-                    .then(|res, act, ctx| {
+                    .then(|res, act, _| {
                         match res {
                             Ok(rooms) => {
                                 act.framed.write(ChatResponse::Rooms(rooms));
@@ -124,7 +124,7 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
 impl Handler<Message> for ChatSession {
     type Result = ();
 
-    fn handle(&mut self, msg: Message, ctx: &mut Context<Self>) {
+    fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
         // send message to peer
         self.framed.write(ChatResponse::Message(msg.0));
     }
@@ -175,7 +175,7 @@ pub struct TcpServer {
 }
 
 impl TcpServer {
-    pub fn new(s: &str, chat: Addr<ChatServer>) {
+    pub fn new(_s: &str, chat: Addr<ChatServer>) {
         // Create server listener
         let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
         let listener = TcpListener::bind(&addr).unwrap();
