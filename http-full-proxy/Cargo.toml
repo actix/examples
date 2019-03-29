@@ -7,7 +7,7 @@ edition = "2018"
 
 [dependencies]
 actix-rt = "0.2"
-actix-web = { git="https://github.com/actix/actix-web.git" }
+actix-web = "1.0.0-alpha.1"
 
 clap = "2.32.0"
 futures = "0.1.25"

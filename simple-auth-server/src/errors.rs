@@ -1,17 +1,18 @@
 use actix_web::{error::ResponseError, HttpResponse};
+use derive_more::Display;
 use diesel::result::{DatabaseErrorKind, Error};
 use std::convert::From;
 use uuid::ParseError;
 
-#[derive(Fail, Debug)]
+#[derive(Debug, Display)]
 pub enum ServiceError {
-    #[fail(display = "Internal Server Error")]
+    #[display(fmt = "Internal Server Error")]
     InternalServerError,
 
-    #[fail(display = "BadRequest: {}", _0)]
+    #[display(fmt = "BadRequest: {}", _0)]
     BadRequest(String),
 
-    #[fail(display = "Unauthorized")]
+    #[display(fmt = "Unauthorized")]
     Unauthorized,
 }
 

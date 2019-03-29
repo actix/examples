@@ -7,6 +7,6 @@ workspace = ".."
 
 [dependencies]
 actix-service = "0.3.3"
-actix-web = { git="https://github.com/actix/actix-web.git" }
+actix-web = "1.0.0-alpha.1"
 futures = "0.1.25"
 env_logger = "0.6"

@@ -2,15 +2,16 @@
 name = "multipart-example"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [[bin]]
 name = "multipart"
 path = "src/main.rs"
 
 [dependencies]
-env_logger = "*"
-futures = "0.1"
+#actix-web = "1.0.0-alpha.1"
+actix-web = { git="https://github.com/actix/actix-web.git" }
 
-actix = "0.7"
-actix-web = "0.7"
+env_logger = "0.6"
+futures = "0.1.25"

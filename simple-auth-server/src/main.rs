@@ -1,26 +1,21 @@
-// to avoid the warning from diesel macros
-#![allow(proc_macro_derive_resolution_fallback)]
+#![allow(unused_imports)]
 
-extern crate actix;
-extern crate actix_web;
-extern crate bcrypt;
-extern crate chrono;
-extern crate dotenv;
-extern crate env_logger;
-extern crate futures;
-extern crate jsonwebtoken as jwt;
-extern crate r2d2;
-extern crate serde;
-extern crate sparkpost;
-extern crate uuid;
 #[macro_use]
 extern crate diesel;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
-extern crate failure;
 
-mod app;
+use actix::prelude::*;
+use actix_files as fs;
+use actix_web::middleware::{
+    identity::{CookieIdentityPolicy, IdentityService},
+    Logger,
+};
+use actix_web::{web, App, HttpServer};
+use chrono::Duration;
+use diesel::{r2d2::ConnectionManager, PgConnection};
+use dotenv::dotenv;
+
 mod auth_handler;
 mod auth_routes;
 mod email_service;
@@ -33,20 +28,17 @@ mod register_routes;
 mod schema;
 mod utils;
 
-use actix::prelude::*;
-use actix_web::server;
-use diesel::{r2d2::ConnectionManager, PgConnection};
-use dotenv::dotenv;
-use models::DbExecutor;
-use std::env;
+use crate::models::DbExecutor;
 
-fn main() {
+fn main() -> std::io::Result<()> {
     dotenv().ok();
-    std::env::set_var("RUST_LOG", "simple-auth-server=debug,actix_web=info");
-    std::env::set_var("RUST_BACKTRACE", "1");
+    std::env::set_var(
+        "RUST_LOG",
+        "simple-auth-server=debug,actix_web=info,actix_server=info",
+    );
     env_logger::init();
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let sys = actix::System::new("Actix_Tutorial");
+
+    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
     // create db connection pool
     let manager = ConnectionManager::<PgConnection>::new(database_url);
@@ -57,10 +49,49 @@ fn main() {
     let address: Addr<DbExecutor> =
         SyncArbiter::start(4, move || DbExecutor(pool.clone()));
 
-    server::new(move || app::create_app(address.clone()))
-        .bind("127.0.0.1:3000")
-        .expect("Can not bind to '127.0.0.1:3000'")
-        .start();
+    HttpServer::new(move || {
+        // secret is a random minimum 32 bytes long base 64 string
+        let secret: String =
+            std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
+        let domain: String =
+            std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_string());
 
-    sys.run();
+        App::new()
+            .data(address.clone())
+            .wrap(Logger::default())
+            .wrap(IdentityService::new(
+                CookieIdentityPolicy::new(secret.as_bytes())
+                    .name("auth")
+                    .path("/")
+                    .domain(domain.as_str())
+                    .max_age(Duration::days(1))
+                    .secure(false), // this can only be true if you have https
+            ))
+            // everything under '/api/' route
+            .service(
+                web::scope("/api")
+                    // routes for authentication
+                    .service(
+                        web::resource("/auth")
+                            .route(web::post().to_async(auth_routes::login))
+                            .route(web::delete().to(auth_routes::logout))
+                            .route(web::get().to_async(auth_routes::get_me)),
+                    )
+                    // routes to invitation
+                    .service(
+                        web::resource("/invitation").route(
+                            web::post().to_async(invitation_routes::register_email),
+                        ),
+                    )
+                    // routes to register as a user after the
+                    .service(
+                        web::resource("/register/{invitation_id}")
+                            .route(web::post().to_async(register_routes::register_user)),
+                    ),
+            )
+            // serve static files
+            .service(fs::Files::new("/", "./static/").index_file("index.html"))
+    })
+    .bind("127.0.0.1:3000")?
+    .run()
 }

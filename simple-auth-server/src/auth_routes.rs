@@ -1,34 +1,32 @@
-use actix_web::middleware::identity::RequestIdentity;
-use actix_web::{
-    AsyncResponder, FutureResponse, HttpRequest, HttpResponse, Json, ResponseError,
-};
-use futures::future::Future;
-use utils::create_token;
+use actix::Addr;
+use actix_web::middleware::identity::Identity;
+use actix_web::{web, Error, HttpRequest, HttpResponse, Responder, ResponseError};
+use futures::Future;
 
-use app::AppState;
-use auth_handler::{AuthData, LoggedUser};
+use crate::auth_handler::{AuthData, LoggedUser};
+use crate::models::DbExecutor;
+use crate::utils::create_token;
 
 pub fn login(
-    (auth_data, req): (Json<AuthData>, HttpRequest<AppState>),
-) -> FutureResponse<HttpResponse> {
-    req.state()
-        .db
-        .send(auth_data.into_inner())
+    auth_data: web::Json<AuthData>,
+    id: Identity,
+    db: web::Data<Addr<DbExecutor>>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+    db.send(auth_data.into_inner())
         .from_err()
         .and_then(move |res| match res {
             Ok(user) => {
                 let token = create_token(&user)?;
-                req.remember(token);
+                id.remember(token);
                 Ok(HttpResponse::Ok().into())
             }
             Err(err) => Ok(err.error_response()),
         })
-        .responder()
 }
 
-pub fn logout(req: HttpRequest<AppState>) -> HttpResponse {
-    req.forget();
-    HttpResponse::Ok().into()
+pub fn logout(id: Identity) -> impl Responder {
+    id.forget();
+    HttpResponse::Ok()
 }
 
 pub fn get_me(logged_user: LoggedUser) -> HttpResponse {

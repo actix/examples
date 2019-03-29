@@ -5,7 +5,7 @@ use diesel::r2d2::{ConnectionManager, Pool};
 use std::convert::From;
 use uuid::Uuid;
 
-use schema::{invitations, users};
+use crate::schema::{invitations, users};
 
 /// This is db executor actor. can be run in parallel
 pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);

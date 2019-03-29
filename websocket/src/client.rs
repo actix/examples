@@ -1,16 +1,9 @@
 //! Simple websocket client.
-
-#![allow(unused_variables)]
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
-extern crate futures;
-
 use std::time::Duration;
 use std::{io, thread};
 
 use actix::*;
-use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};
+use actix_web::client::{Client, ClientWriter, Message, ProtocolError};
 use futures::Future;
 
 fn main() {

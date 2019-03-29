@@ -14,10 +14,10 @@ path = "src/main.rs"
 #path = "src/client.rs"
 
 [dependencies]
-actix = { git="https://github.com/actix/actix.git" }
-actix-web = { git="https://github.com/actix/actix-web.git" }
-actix-web-actors = { git="https://github.com/actix/actix-web.git" }
-actix-files = { git="https://github.com/actix/actix-web.git" }
+actix = "0.8.0-alpha.1"
+actix-web = "1.0.0-alpha.1"
+actix-web-actors = "1.0.0-alpha.1"
+actix-files = "0.1.0-alpha.1"
 env_logger = "0.6"
 futures = "0.1"
 bytes = "0.4"

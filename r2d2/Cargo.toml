@@ -3,11 +3,11 @@ name = "r2d2-example"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2018"
-workspace = "../"
+workspace = ".."
 
 [dependencies]
 actix-rt = "0.2"
-actix-web = { git="https://github.com/actix/actix-web.git" }
+actix-web = "1.0.0-alpha.1"
 
 futures = "0.1"
 env_logger = "0.6"

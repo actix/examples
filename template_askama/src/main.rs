@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate askama;
-
 use std::collections::HashMap;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Result};

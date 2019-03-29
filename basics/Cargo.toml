@@ -7,9 +7,9 @@ edition = "2018"
 
 [dependencies]
 actix-rt = "0.2"
-actix-web = { git="https://github.com/actix/actix-web.git" }
-actix-files = { git="https://github.com/actix/actix-web.git" }
-actix-session = { git="https://github.com/actix/actix-web.git" }
+actix-web = "1.0.0-alpha.1"
+actix-files = "0.1.0-alpha.1"
+actix-session = "0.1.0-alpha.1"
 
 futures = "0.1.25"
 env_logger = "0.5"
