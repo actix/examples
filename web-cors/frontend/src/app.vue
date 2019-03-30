@@ -22,45 +22,50 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   name: 'app',
   data () {
-    return {
-      Username: '',
-      Email: '',
-      Password: '',
-      ConfirmPassword: '',
+                return {
+                    Username: '',
+                    Email: '',
+                    Password: '',
+                    ConfirmPassword: '',
 
-      email: '',
-      username: '',
-      password: ''
-    }
-  },
-  methods: {
-    signup () {
-      var username = this.Username
-      var email = this.Email
-      var password = this.Password
-      var confirm_password = this.ConfirmPassword
-      console.log(email)
-      axios.post('http://localhost:8000/user/info', {
-          username: username,
-          email: email,
-          password: password,
-          confirm_password: confirm_password
-      })
-      .then(response => {
-            console.log(response.data)
-            this.email =  response.data.email
-            this.username =  response.data.username
-            this.password =  response.data.password
-      })
-      .catch(e => {
-        console.log(e)
-      })
-    }
-  }
+                    email: '',
+                    username: '',
+                    password: ''
+                }
+            },
+            methods: {
+                signup () {
+                    let username = this.Username
+                    let email = this.Email
+                    let password = this.Password
+                    let confirm_password = this.ConfirmPassword
+                    let data = { 
+                        username: username,
+                        email: email,
+                        password: password,
+                        confirm_password: confirm_password
+                    }
+                    fetch('http://localhost:8000/user/info', {
+                        body: JSON.stringify(data), 
+                        headers: {
+                            'content-type': 'application/json'
+                        },
+                        method: 'POST',
+                    }).then(response => response.json())
+                    .then(json => {
+                        console.log(json)
+                            this.email =  json.email
+                            this.username =  json.username
+                            this.password =  json.password
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                    })
+                }
+            }
 }
 </script>
 
@@ -95,7 +100,6 @@ input[type="password"] {
   border-radius: 2px;
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  text-transform: uppercase;
   transition: 0.1s ease;
   cursor: pointer;
 }

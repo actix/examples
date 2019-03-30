@@ -10,6 +10,6 @@ $ cargo run
 ```bash
 $ cd web-cors/frontend
 $ npm install
-$ npm run dev
+$ npm run serve
 ```
-then open browser 'http://localhost:1234/'
+then open browser 'http://localhost:8080'
