@@ -7,6 +7,6 @@ workspace = ".."
 
 [dependencies]
 actix-service = "0.3.3"
-actix-web = "1.0.0-alpha.1"
+actix-web = "1.0.0-alpha.2"
 futures = "0.1.25"
 env_logger = "0.6"

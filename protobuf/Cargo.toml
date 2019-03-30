@@ -2,16 +2,15 @@
 name = "protobuf-example"
 version = "0.1.0"
 authors = ["kingxsp <jin_hb_zh@126.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [dependencies]
 bytes = "0.4"
 futures = "0.1"
-failure = "0.1"
-env_logger = "*"
-
+env_logger = "0.6"
+derive_more = "0.14"
 prost = "0.2.0"
 prost-derive = "0.2.0"
 
-actix = "0.7"
-actix-web = "0.7"
+actix-web = "1.0.0-alpha.2"

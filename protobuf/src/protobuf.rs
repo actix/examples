@@ -1,7 +1,8 @@
 use bytes::BytesMut;
 use futures::{Future, Poll, Stream};
 
-use bytes::IntoBuf;
+use bytes::{Bytes, IntoBuf};
+use derive_more::{Display, From};
 use prost::DecodeError as ProtoBufDecodeError;
 use prost::EncodeError as ProtoBufEncodeError;
 use prost::Message;
@@ -9,25 +10,25 @@ use prost::Message;
 use actix_web::dev::HttpResponseBuilder;
 use actix_web::error::{Error, PayloadError, ResponseError};
 use actix_web::http::header::CONTENT_TYPE;
-use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder};
+use actix_web::{HttpRequest, HttpResponse, Responder};
 
-#[derive(Fail, Debug)]
+#[derive(Debug, Display, From)]
 pub enum ProtoBufPayloadError {
     /// Payload size is bigger than 256k
-    #[fail(display = "Payload size is bigger than 256k")]
+    #[display(fmt = "Payload size is bigger than 256k")]
     Overflow,
     /// Content type error
-    #[fail(display = "Content type error")]
+    #[display(fmt = "Content type error")]
     ContentType,
     /// Serialize error
-    #[fail(display = "ProtoBud serialize error: {}", _0)]
-    Serialize(#[cause] ProtoBufEncodeError),
+    #[display(fmt = "ProtoBud serialize error: {}", _0)]
+    Serialize(ProtoBufEncodeError),
     /// Deserialize error
-    #[fail(display = "ProtoBud deserialize error: {}", _0)]
-    Deserialize(#[cause] ProtoBufDecodeError),
+    #[display(fmt = "ProtoBud deserialize error: {}", _0)]
+    Deserialize(ProtoBufDecodeError),
     /// Payload error
-    #[fail(display = "Error that occur during reading payload: {}", _0)]
-    Payload(#[cause] PayloadError),
+    #[display(fmt = "Error that occur during reading payload: {}", _0)]
+    Payload(PayloadError),
 }
 
 impl ResponseError for ProtoBufPayloadError {
@@ -39,26 +40,14 @@ impl ResponseError for ProtoBufPayloadError {
     }
 }
 
-impl From<PayloadError> for ProtoBufPayloadError {
-    fn from(err: PayloadError) -> ProtoBufPayloadError {
-        ProtoBufPayloadError::Payload(err)
-    }
-}
-
-impl From<ProtoBufDecodeError> for ProtoBufPayloadError {
-    fn from(err: ProtoBufDecodeError) -> ProtoBufPayloadError {
-        ProtoBufPayloadError::Deserialize(err)
-    }
-}
-
 #[derive(Debug)]
 pub struct ProtoBuf<T: Message>(pub T);
 
 impl<T: Message> Responder for ProtoBuf<T> {
-    type Item = HttpResponse;
     type Error = Error;
+    type Future = Result<HttpResponse, Error>;
 
-    fn respond_to<S>(self, _: &HttpRequest<S>) -> Result<HttpResponse, Error> {
+    fn respond_to(self, _: &HttpRequest) -> Result<HttpResponse, Error> {
         let mut buf = Vec::new();
         self.0
             .encode(&mut buf)
@@ -78,9 +67,11 @@ pub struct ProtoBufMessage<U: Message + Default> {
 
 impl<U: Message + Default + 'static> ProtoBufMessage<U> {
     /// Create `ProtoBufMessage` for request.
-    pub fn new(req: &HttpRequest) -> Self {
-        let fut = req
-            .payload()
+    pub fn new<S>(pl: S) -> Self
+    where
+        S: Stream<Item = Bytes, Error = PayloadError> + 'static,
+    {
+        let fut = pl
             .map_err(|e| ProtoBufPayloadError::Payload(e))
             .fold(BytesMut::new(), move |mut body, chunk| {
                 body.extend_from_slice(&chunk);

@@ -7,7 +7,7 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-web = "1.0.0-alpha.1"
+actix-web = "1.0.0-alpha.2"
 env_logger = "0.6"
 yarte = "0.1"
 

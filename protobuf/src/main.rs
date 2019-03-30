@@ -1,19 +1,8 @@
-extern crate actix;
-extern crate actix_web;
-extern crate bytes;
-extern crate futures;
-#[macro_use]
-extern crate failure;
-extern crate env_logger;
-extern crate prost;
 #[macro_use]
 extern crate prost_derive;
 
-use actix_web::{
-    http, middleware, server, App, AsyncResponder, Error, HttpRequest, HttpResponse,
-};
+use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use futures::Future;
-
 mod protobuf;
 use protobuf::ProtoBufResponseBuilder;
 
@@ -26,31 +15,24 @@ pub struct MyObj {
 }
 
 /// This handler uses `ProtoBufMessage` for loading protobuf object.
-fn index(req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    protobuf::ProtoBufMessage::new(req)
+fn index(pl: web::Payload) -> impl Future<Item = HttpResponse, Error = Error> {
+    protobuf::ProtoBufMessage::new(pl)
         .from_err() // convert all errors into `Error`
         .and_then(|val: MyObj| {
             println!("model: {:?}", val);
             Ok(HttpResponse::Ok().protobuf(val)?) // <- send response
         })
-        .responder()
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info,actix_server=info");
     env_logger::init();
-    let sys = actix::System::new("protobuf-example");
 
-    server::new(|| {
+    HttpServer::new(|| {
         App::new()
-            .middleware(middleware::Logger::default())
-            .resource("/", |r| r.method(http::Method::POST).f(index))
+            .wrap(middleware::Logger::default())
+            .service(web::resource("/").route(web::post().to_async(index)))
     })
-    .bind("127.0.0.1:8080")
-    .unwrap()
-    .shutdown_timeout(1)
-    .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+    .bind("127.0.0.1:8080")?
+    .run()
 }

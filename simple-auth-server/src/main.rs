@@ -37,6 +37,7 @@ fn main() -> std::io::Result<()> {
         "simple-auth-server=debug,actix_web=info,actix_server=info",
     );
     env_logger::init();
+    let sys = actix_rt::System::new("example");
 
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
@@ -93,5 +94,7 @@ fn main() -> std::io::Result<()> {
             .service(fs::Files::new("/", "./static/").index_file("index.html"))
     })
     .bind("127.0.0.1:3000")?
-    .run()
+    .start();
+
+    sys.run()
 }

@@ -180,6 +180,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Close(_) => {
                 ctx.stop();
             }
+            ws::Message::Nop => (),
         }
     }
 }

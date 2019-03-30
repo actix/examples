@@ -6,8 +6,8 @@ workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-web = "1.0.0-alpha.1"
-actix-session = "0.1.0-alpha.1"
+actix-web = "1.0.0-alpha.2"
+actix-session = "0.1.0-alpha.2"
 
 futures = "0.1"
 time = "0.1"

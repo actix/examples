@@ -7,7 +7,7 @@ edition = "2018"
 
 [dependencies]
 actix = "0.8.0-alpha.2"
-actix-web = "1.0.0-alpha.1"
-actix-session = "0.1.0-alpha.1"
+actix-web = "1.0.0-alpha.2"
+actix-session = "0.1.0-alpha.2"
 actix-redis = { git = "https://github.com/actix/actix-redis.git", features = ["web"] }
 env_logger = "0.6"
