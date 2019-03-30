@@ -17,7 +17,7 @@ diesel = { version = "1.3.3", features = ["postgres", "uuid", "r2d2", "chrono"] 
 dotenv = "0.13.0"
 derive_more = "0.14"
 env_logger = "0.6.0"
-jsonwebtoken = "5.0"
+jsonwebtoken = { git = "https://github.com/Keats/jsonwebtoken.git", branch = "next" }
 futures = "0.1.25"
 r2d2 = "0.8.3"
 serde_derive="1.0.80"
