@@ -1,22 +1,12 @@
-<!DOCTYPE html>
+{{! Simple example !}}
+{{> doc/t ~}}
 <html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Actix web</title>
-</head>
+{{~> doc/head title = "Actix web" ~}}
 <body>
-{{~#if let Some(name) = query.get("name") ~}}
-    <h1>Hi, {{ name }}!</h1>
-    {{~> alias/welcome tag='p' ~}}
-{{~ else ~}}
-    {{~> alias/welcome tag="h1" ~}}
-    <p>
-    <h3>What is your name?</h3>
-    <form>
-        <input type="text" name="name"/><br/>
-        <p><input type="submit"></p>
-    </form>
-    </p>
-{{~/if~}}
-</body>
-</html>
+  {{~#if let Some(name) = query.get("name") }}
+      {{ let lastname = query.get("lastname").ok_or(yarte::Error)? }}
+      {{> card/hi ~}}
+  {{ else ~}}
+      {{> card/form ~}}
+  {{/if ~}}
+</body></html>

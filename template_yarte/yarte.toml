@@ -5,3 +5,5 @@ dir = "templates"
 # Alias for partials. In call, change the start of partial path with one of this, if exist.
 [partials]
 alias = "./deep/more/deep"
+doc = "./deep/more/doc"
+card = "./deep/more/card"

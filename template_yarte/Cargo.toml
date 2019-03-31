@@ -1,15 +1,23 @@
 [package]
-name = "example"
+name = "template_yarte"
 version = "0.0.1"
 authors = ["Rust-iendo Barcelona <riendocontributions@gmail.com>"]
 publish = false
 edition = "2018"
+
 workspace = ".."
 
 [dependencies]
-actix-web = "1.0.0-alpha.2"
 env_logger = "0.6"
-yarte = "0.1"
+
+yarte = { version = "0.2", features=["with-actix-web"]  }
+
+actix-web = "1.0.0-alpha"
 
 [build-dependencies]
-yarte = "0.1"
+yarte = { version = "0.2", features=["with-actix-web"]  }
+
+[dev-dependencies]
+bytes = "0.4"
+actix-http-test = "0.1.0-alpha"
+actix-http = "0.1.0-alpha"

@@ -1,0 +1,8 @@
+{{!
+    Hi message:
+    args:
+        - lastname
+        - name
+!}}
+<h1>Hi, {{ name }} {{ lastname }}!</h1>
+{{~> alias/welcome id = "hi", tag = 'p', tail = "" }}
