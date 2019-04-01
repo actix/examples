@@ -31,7 +31,7 @@ fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpResponse> {
 fn main() -> std::io::Result<()> {
     // start http server
     HttpServer::new(move || {
-        App::new().service(web::resource("/").route(web::get()).to(index))
+        App::new().service(web::resource("/").route(web::get().to(index)))
     })
     .bind("127.0.0.1:8080")?
     .run()
