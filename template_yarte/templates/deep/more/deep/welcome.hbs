@@ -1,1 +1,8 @@
-<{{ tag }}>Welcome!</{{ tag }}>
+{{!
+    Welcome card:
+    args:
+        - tag
+        - id
+        - tail
+!}}
+<{{ tag }} id="{{ id }}" class="welcome">Welcome{{ tail }}</{{ tag }}>
