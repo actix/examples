@@ -11,9 +11,9 @@ path = "src/main.rs"
 
 [dependencies]
 actix = "0.8.0-alpha.2"
-actix-web = "1.0.0-alpha.2"
-actix-web-actors = "1.0.0-alpha.2"
-actix-files = "0.1.0-alpha.1"
+actix-web = "1.0.0-alpha.3"
+actix-web-actors = "1.0.0-alpha.3"
+actix-files = "0.1.0-alpha.2"
 
 rand = "0.6"
 bytes = "0.4"

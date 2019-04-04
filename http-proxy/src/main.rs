@@ -8,7 +8,7 @@ fn index(client: web::Data<Client>) -> impl Future<Item = HttpResponse, Error = 
         .get("http://127.0.0.1:8081/")
         .send()
         .map_err(Error::from) // <- convert SendRequestError to an Error
-        .and_then(|resp| {
+        .and_then(|mut resp| {
             resp.body() // <- this is MessageBody type, resolves to complete body
                 .from_err() // <- convert PayloadError to an Error
                 .and_then(|body| {

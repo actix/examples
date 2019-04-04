@@ -11,6 +11,6 @@ path = "src/main.rs"
 
 [dependencies]
 actix-rt = "0.2"
-actix-web = { version="1.0.0-alpha.2", features=["ssl"] }
+actix-web = { version="1.0.0-alpha.3", features=["ssl"] }
 env_logger = "0.6"
 openssl = { version="0.10" }

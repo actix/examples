@@ -19,6 +19,7 @@ pub fn save_file(field: web::MultipartField) -> impl Future<Item = i64, Error = 
     Either::B(
         field
             .fold(0i64, move |acc, bytes| {
+                println!("CHUNK: {:?}", bytes.len());
                 file.write_all(bytes.as_ref())
                     .map(|_| acc + bytes.len() as i64)
                     .map_err(|e| {
