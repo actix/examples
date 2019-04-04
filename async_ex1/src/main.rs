@@ -61,7 +61,7 @@ fn step_x_v1(
     Box::new(
         client
             .post("https://httpbin.org/post")
-            .send_json(data)
+            .send_json(&data)
             .map_err(Error::from) // <- convert SendRequestError to an Error
             .and_then(|resp| {
                 resp // <- this is MessageBody type, resolves to complete body
@@ -108,7 +108,7 @@ fn step_x_v2(
 ) -> impl Future<Item = SomeData, Error = Error> {
     client
         .post("https://httpbin.org/post")
-        .send_json(data)
+        .send_json(&data)
         .map_err(Error::from) // <- convert SendRequestError to an Error
         .and_then(|resp| {
             resp.from_err()
