@@ -39,8 +39,8 @@ mod test {
     fn test() {
         let mut srv = TestServer::new(|| HttpService::new(App::new().service(index)));
 
-        let req = srv.get();
-        let response = srv.block_on(req.send()).unwrap();
+        let req = srv.get("/");
+        let mut response = srv.block_on(req.send()).unwrap();
         assert!(response.status().is_success());
 
         assert_eq!(
@@ -67,8 +67,8 @@ mod test {
             )
         );
 
-        let req = srv.get().uri(srv.url("/?name=foo&lastname=bar"));
-        let response = srv.block_on(req.send()).unwrap();
+        let req = srv.get("/?name=foo&lastname=bar");
+        let mut response = srv.block_on(req.send()).unwrap();
         assert!(response.status().is_success());
 
         assert_eq!(
@@ -90,12 +90,12 @@ mod test {
             )
         );
 
-        let req = srv.get().uri(srv.url("/?name=foo"));
-        let response = srv.block_on(req.send()).unwrap();
+        let req = srv.get("/?name=foo");
+        let mut response = srv.block_on(req.send()).unwrap();
         assert!(response.status().is_server_error());
 
-        let req = srv.get().uri(srv.url("/?lastname=bar"));
-        let response = srv.block_on(req.send()).unwrap();
+        let req = srv.get("/?lastname=bar");
+        let mut response = srv.block_on(req.send()).unwrap();
         assert!(response.status().is_success());
 
         assert_eq!(
