@@ -1,11 +1,10 @@
 use std::cell::Cell;
-use std::fs::{self, File};
+use std::fs::{self};
 use std::io::Write;
-use std::path::Path;
 
 use actix_multipart::{Field, Item, Multipart, MultipartError};
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
-use futures::future::{err, ok, Either};
+use futures::future::{err, Either};
 use futures::{Future, Stream};
 
 pub struct AppState {
@@ -16,12 +15,11 @@ pub fn save_file(field: Field) -> impl Future<Item = i64, Error = Error> {
     let file_path_string = "upload.png";
     let mut file = match fs::File::create(file_path_string) {
         Ok(file) => file,
-        Err(e) => return Either::A(err(error::ErrorInternalServerError(e))),
+        Err(e) => return Either::A(err(error::ErrorInternalServerError(e)))
     };
     Either::B(
         field
             .fold(0i64, move |acc, bytes| {
-                println!("CHUNK: {:?}", bytes.len());
                 file.write_all(bytes.as_ref())
                     .map(|_| acc + bytes.len() as i64)
                     .map_err(|e| {
@@ -51,43 +49,18 @@ pub fn upload(
     multipart: Multipart,
     counter: web::Data<Cell<usize>>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
+    counter.set(counter.get() + 1);
+    println!("{:?}", counter.get());
+
     multipart
-        .from_err::<Error>()
-        .take(1)
+        .map_err(error::ErrorInternalServerError)
+        .map(handle_multipart_item)
+        .flatten()
         .collect()
-        .map(|v| v.into_iter().next().expect("wat"))
-        .and_then(|item| match item {
-            Item::Field(field) => {
-                if let Some(disp) = field.content_disposition() {
-                    if let Some(disp_fn) = disp.get_filename() {
-                        if let Some(ext) = Path::new(&disp_fn).extension() {
-                            let fname = format!("{}.{}", 10, ext.to_string_lossy());
-                            let pth = Path::new("./").join(&fname);
-                            if let Ok(mut ff) = File::create(&pth) {
-                                return Either::A(
-                                    field
-                                        .from_err::<Error>()
-                                        .map(move |c| ff.write_all(&c))
-                                        .fold((), |_, _| Ok::<_, Error>(()))
-                                        //.finish()
-                                        .and_then(move |_| {
-                                            ok(HttpResponse::Created().body(format!(
-                                                "{{\"path\": \"{}\"}}",
-                                                fname
-                                            )))
-                                        })
-                                        .or_else(|_| {
-                                            ok(HttpResponse::InternalServerError()
-                                                .finish())
-                                        }),
-                                );
-                            }
-                        }
-                    }
-                }
-                Either::B(ok(HttpResponse::BadRequest().finish()))
-            }
-            Item::Nested(_) => Either::B(ok(HttpResponse::BadRequest().finish())),
+        .map(|sizes| HttpResponse::Ok().json(sizes))
+        .map_err(|e| {
+            println!("failed: {}", e);
+            e
         })
 }
 
