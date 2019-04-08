@@ -6,7 +6,7 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-web = "1.0.0-alpha.3"
+actix-web = "1.0.0-alpha.4"
 
 derive_more = "0.14.0"
 futures = "0.1.23"

@@ -12,7 +12,7 @@ env_logger = "0.6"
 
 yarte = { version = "0.2", features=["with-actix-web"]  }
 
-actix-web = "1.0.0-alpha.3"
+actix-web = "1.0.0-alpha.4"
 
 [build-dependencies]
 yarte = { version = "0.2", features=["with-actix-web"]  }
@@ -20,4 +20,4 @@ yarte = { version = "0.2", features=["with-actix-web"]  }
 [dev-dependencies]
 bytes = "0.4"
 actix-http-test = "0.1.0-alpha.3"
-actix-http = "0.1.0-alpha.3"
+actix-http = "0.1.0-alpha.4"

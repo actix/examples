@@ -1,16 +1,18 @@
 use std::cell::Cell;
-use std::fs;
+use std::fs::{self, File};
 use std::io::Write;
+use std::path::Path;
 
+use actix_multipart::{Field, Item, Multipart, MultipartError};
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
-use futures::future::{err, Either};
+use futures::future::{err, ok, Either};
 use futures::{Future, Stream};
 
 pub struct AppState {
     pub counter: Cell<usize>,
 }
 
-pub fn save_file(field: web::MultipartField) -> impl Future<Item = i64, Error = Error> {
+pub fn save_file(field: Field) -> impl Future<Item = i64, Error = Error> {
     let file_path_string = "upload.png";
     let mut file = match fs::File::create(file_path_string) {
         Ok(file) => file,
@@ -24,7 +26,7 @@ pub fn save_file(field: web::MultipartField) -> impl Future<Item = i64, Error = 
                     .map(|_| acc + bytes.len() as i64)
                     .map_err(|e| {
                         println!("file.write_all failed: {:?}", e);
-                        error::MultipartError::Payload(error::PayloadError::Io(e))
+                        MultipartError::Payload(error::PayloadError::Io(e))
                     })
             })
             .map_err(|e| {
@@ -34,12 +36,10 @@ pub fn save_file(field: web::MultipartField) -> impl Future<Item = i64, Error = 
     )
 }
 
-pub fn handle_multipart_item(
-    item: web::MultipartItem,
-) -> Box<Stream<Item = i64, Error = Error>> {
+pub fn handle_multipart_item(item: Item) -> Box<Stream<Item = i64, Error = Error>> {
     match item {
-        web::MultipartItem::Field(field) => Box::new(save_file(field).into_stream()),
-        web::MultipartItem::Nested(mp) => Box::new(
+        Item::Field(field) => Box::new(save_file(field).into_stream()),
+        Item::Nested(mp) => Box::new(
             mp.map_err(error::ErrorInternalServerError)
                 .map(handle_multipart_item)
                 .flatten(),
@@ -48,21 +48,46 @@ pub fn handle_multipart_item(
 }
 
 pub fn upload(
-    multipart: web::Multipart,
+    multipart: Multipart,
     counter: web::Data<Cell<usize>>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
-    counter.set(counter.get() + 1);
-    println!("{:?}", counter.get());
-
     multipart
-        .map_err(error::ErrorInternalServerError)
-        .map(handle_multipart_item)
-        .flatten()
+        .from_err::<Error>()
+        .take(1)
         .collect()
-        .map(|sizes| HttpResponse::Ok().json(sizes))
-        .map_err(|e| {
-            println!("failed: {}", e);
-            e
+        .map(|v| v.into_iter().next().expect("wat"))
+        .and_then(|item| match item {
+            Item::Field(field) => {
+                if let Some(disp) = field.content_disposition() {
+                    if let Some(disp_fn) = disp.get_filename() {
+                        if let Some(ext) = Path::new(&disp_fn).extension() {
+                            let fname = format!("{}.{}", 10, ext.to_string_lossy());
+                            let pth = Path::new("./").join(&fname);
+                            if let Ok(mut ff) = File::create(&pth) {
+                                return Either::A(
+                                    field
+                                        .from_err::<Error>()
+                                        .map(move |c| ff.write_all(&c))
+                                        .fold((), |_, _| Ok::<_, Error>(()))
+                                        //.finish()
+                                        .and_then(move |_| {
+                                            ok(HttpResponse::Created().body(format!(
+                                                "{{\"path\": \"{}\"}}",
+                                                fname
+                                            )))
+                                        })
+                                        .or_else(|_| {
+                                            ok(HttpResponse::InternalServerError()
+                                                .finish())
+                                        }),
+                                );
+                            }
+                        }
+                    }
+                }
+                Either::B(ok(HttpResponse::BadRequest().finish()))
+            }
+            Item::Nested(_) => Either::B(ok(HttpResponse::BadRequest().finish())),
         })
 }
 

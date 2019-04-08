@@ -6,6 +6,6 @@ workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-web = "1.0.0-alpha.3"
+actix-web = "1.0.0-alpha.4"
 futures = "0.1.25"
 env_logger = "0.6"

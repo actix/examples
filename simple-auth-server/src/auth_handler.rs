@@ -1,6 +1,6 @@
 use actix::{Handler, Message};
-use actix_web::{dev::ServiceFromRequest, Error};
-use actix_web::{middleware::identity::Identity, FromRequest, HttpRequest};
+use actix_web::{dev::Payload, Error, HttpRequest};
+use actix_web::{middleware::identity::Identity, FromRequest};
 use bcrypt::verify;
 use diesel::prelude::*;
 
@@ -50,8 +50,8 @@ impl<P> FromRequest<P> for LoggedUser {
     type Error = Error;
     type Future = Result<LoggedUser, Error>;
 
-    fn from_request(req: &mut ServiceFromRequest<P>) -> Self::Future {
-        if let Some(identity) = Identity::from_request(req)?.identity() {
+    fn from_request(req: &HttpRequest, pl: &mut Payload<P>) -> Self::Future {
+        if let Some(identity) = Identity::from_request(req, pl)?.identity() {
             let user: SlimUser = decode_token(&identity)?;
             return Ok(user as LoggedUser);
         }

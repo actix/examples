@@ -6,8 +6,7 @@ workspace = ".."
 edition = "2018"
 
 [dependencies]
-#askama = { version = "0.8", features = ["with-actix-web"] }
-actix-web = "1.0.0-alpha.3"
+actix-web = "1.0.0-alpha.4"
 env_logger = "0.6"
 askama = "0.8"
 
