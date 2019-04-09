@@ -13,3 +13,5 @@ Cargo.lock
 
 # intellij files
 .idea/**
+
+.history/
