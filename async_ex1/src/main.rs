@@ -11,9 +11,7 @@
 //     2. actix-web client features:
 //           - POSTing json body
 //     3. chaining futures into a single response used by an asynch endpoint
-//
-// There are 2 versions in this example, one that uses Boxed Futures and the
-// other that uses Impl Future, available since rustc v1.26.
+
 
 #[macro_use]
 extern crate validator_derive;
@@ -49,60 +47,10 @@ struct HttpBinResponse {
     url: String,
 }
 
-// -----------------------------------------------------------------------
-// v1 uses Boxed Futures, which were the only option prior to rustc v1.26
-// -----------------------------------------------------------------------
+
 
 /// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v1(
-    data: SomeData,
-    client: &Client,
-) -> Box<Future<Item = SomeData, Error = Error>> {
-    Box::new(
-        client
-            .post("https://httpbin.org/post")
-            .send_json(&data)
-            .map_err(Error::from) // <- convert SendRequestError to an Error
-            .and_then(|resp| {
-                resp // <- this is MessageBody type, resolves to complete body
-                    .from_err() // <- convert PayloadError to an Error
-                    .fold(BytesMut::new(), |mut acc, chunk| {
-                        acc.extend_from_slice(&chunk);
-                        Ok::<_, Error>(acc)
-                    })
-                    .map(|body| {
-                        let body: HttpBinResponse =
-                            serde_json::from_slice(&body).unwrap();
-                        body.json
-                    })
-            }),
-    )
-}
-
-fn create_something_v1(
-    some_data: web::Json<SomeData>,
-    client: web::Data<Client>,
-) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    Box::new(
-        step_x_v1(some_data.into_inner(), &client).and_then(move |some_data_2| {
-            step_x_v1(some_data_2, &client).and_then(move |some_data_3| {
-                step_x_v1(some_data_3, &client).and_then(|d| {
-                    Ok(HttpResponse::Ok()
-                        .content_type("application/json")
-                        .body(serde_json::to_string(&d).unwrap())
-                        .into())
-                })
-            })
-        }),
-    )
-}
-
-// ---------------------------------------------------------------
-// v2 uses impl Future, available as of rustc v1.26
-// ---------------------------------------------------------------
-
-/// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v2(
+fn step_x(
     data: SomeData,
     client: &Client,
 ) -> impl Future<Item = SomeData, Error = Error> {
@@ -123,17 +71,16 @@ fn step_x_v2(
         })
 }
 
-fn create_something_v2(
+fn create_something(
     some_data: web::Json<SomeData>,
     client: web::Data<Client>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
-    step_x_v2(some_data.into_inner(), &client).and_then(move |some_data_2| {
-        step_x_v2(some_data_2, &client).and_then(move |some_data_3| {
-            step_x_v2(some_data_3, &client).and_then(|d| {
+    step_x(some_data.into_inner(), &client).and_then(move |some_data_2| {
+        step_x(some_data_2, &client).and_then(move |some_data_3| {
+            step_x(some_data_3, &client).and_then(|d| {
                 Ok(HttpResponse::Ok()
                     .content_type("application/json")
-                    .body(serde_json::to_string(&d).unwrap())
-                    .into())
+                    .body(serde_json::to_string(&d).unwrap()))
             })
         })
     })
@@ -142,19 +89,17 @@ fn create_something_v2(
 fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
+    let endpoint = "127.0.0.1:8080";
 
+    println!("Starting server at: {:?}", endpoint);
     HttpServer::new(|| {
         App::new()
             .data(Client::default())
             .service(
-                web::resource("/something_v1")
-                    .route(web::post().to(create_something_v1)),
-            )
-            .service(
-                web::resource("/something_v2")
-                    .route(web::post().to_async(create_something_v2)),
+                web::resource("/something")
+                    .route(web::post().to_async(create_something)),
             )
     })
-    .bind("127.0.0.1:8088")?
+    .bind(endpoint)?
     .run()
 }
