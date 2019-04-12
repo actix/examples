@@ -15,9 +15,7 @@ fn forward(
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
 
-    let forwarded_req = client
-        .request_from(new_url.as_str(), req.head())
-        .no_default_headers();
+    let forwarded_req = client.request_from(new_url.as_str(), req.head());
 
     // if let Some(addr) = req.peer_addr() {
     //     match forwarded_req.headers_mut().entry("x-forwarded-for") {

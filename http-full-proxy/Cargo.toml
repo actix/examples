@@ -7,7 +7,7 @@ edition = "2018"
 
 [dependencies]
 actix-rt = "0.2"
-actix-web = "1.0.0-alpha.4"
+actix-web = "1.0.0-alpha.5"
 
 clap = "2.32.0"
 futures = "0.1.25"
