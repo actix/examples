@@ -6,12 +6,12 @@ use futures::Poll;
 
 pub struct CheckLogin;
 
-impl<S, P, B> Transform<S> for CheckLogin
+impl<S, B> Transform<S> for CheckLogin
 where
-    S: Service<Request = ServiceRequest<P>, Response = ServiceResponse<B>>,
+    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>>,
     S::Future: 'static,
 {
-    type Request = ServiceRequest<P>;
+    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = S::Error;
     type InitError = ();
@@ -26,12 +26,12 @@ pub struct CheckLoginMiddleware<S> {
     service: S,
 }
 
-impl<S, P, B> Service for CheckLoginMiddleware<S>
+impl<S, B> Service for CheckLoginMiddleware<S>
 where
-    S: Service<Request = ServiceRequest<P>, Response = ServiceResponse<B>>,
+    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>>,
     S::Future: 'static,
 {
-    type Request = ServiceRequest<P>;
+    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = S::Error;
     type Future = Either<S::Future, FutureResult<Self::Response, Self::Error>>;
@@ -40,7 +40,7 @@ where
         self.service.poll_ready()
     }
 
-    fn call(&mut self, req: ServiceRequest<P>) -> Self::Future {
+    fn call(&mut self, req: ServiceRequest) -> Self::Future {
         // We only need to hook into the `start` for this middleware.
 
         let is_logged_in = false; // Change this to see the change in outcome in the browser

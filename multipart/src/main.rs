@@ -1,8 +1,8 @@
 use std::cell::Cell;
-use std::fs::{self};
+use std::fs;
 use std::io::Write;
 
-use actix_multipart::{Field, Item, Multipart, MultipartError};
+use actix_multipart::{Field, Multipart, MultipartError};
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
 use futures::future::{err, Either};
 use futures::{Future, Stream};
@@ -15,7 +15,7 @@ pub fn save_file(field: Field) -> impl Future<Item = i64, Error = Error> {
     let file_path_string = "upload.png";
     let mut file = match fs::File::create(file_path_string) {
         Ok(file) => file,
-        Err(e) => return Either::A(err(error::ErrorInternalServerError(e)))
+        Err(e) => return Either::A(err(error::ErrorInternalServerError(e))),
     };
     Either::B(
         field
@@ -34,17 +34,6 @@ pub fn save_file(field: Field) -> impl Future<Item = i64, Error = Error> {
     )
 }
 
-pub fn handle_multipart_item(item: Item) -> Box<Stream<Item = i64, Error = Error>> {
-    match item {
-        Item::Field(field) => Box::new(save_file(field).into_stream()),
-        Item::Nested(mp) => Box::new(
-            mp.map_err(error::ErrorInternalServerError)
-                .map(handle_multipart_item)
-                .flatten(),
-        ),
-    }
-}
-
 pub fn upload(
     multipart: Multipart,
     counter: web::Data<Cell<usize>>,
@@ -54,7 +43,7 @@ pub fn upload(
 
     multipart
         .map_err(error::ErrorInternalServerError)
-        .map(handle_multipart_item)
+        .map(|field| save_file(field).into_stream())
         .flatten()
         .collect()
         .map(|sizes| HttpResponse::Ok().json(sizes))

@@ -98,7 +98,7 @@ fn main() -> std::io::Result<()> {
         App::new()
             .data(forward_url.clone())
             .wrap(middleware::Logger::default())
-            .default_resource(|r| r.to_async(forward))
+            .default_service(web::route().to_async(forward))
     })
     .bind((listen_addr, listen_port))?
     .system_exit()

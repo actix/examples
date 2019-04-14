@@ -124,16 +124,17 @@ fn main() -> io::Result<()> {
                     .finish()
             })))
             // default
-            .default_resource(|r| {
+            .default_service(
                 // 404 for GET request
-                r.route(web::get().to(p404))
+                web::resource("")
+                    .route(web::get().to(p404))
                     // all requests that are not `GET`
                     .route(
                         web::route()
                             .guard(guard::Not(guard::Get()))
                             .to(|| HttpResponse::MethodNotAllowed()),
-                    )
-            })
+                    ),
+            )
     })
     .bind("127.0.0.1:8080")?
     .start();

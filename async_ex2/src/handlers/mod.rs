@@ -1,3 +1,2 @@
-pub mod products;
 pub mod parts;
-
+pub mod products;

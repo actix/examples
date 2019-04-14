@@ -12,7 +12,6 @@
 //           - POSTing json body
 //     3. chaining futures into a single response used by an asynch endpoint
 
-
 #[macro_use]
 extern crate validator_derive;
 #[macro_use]
@@ -46,8 +45,6 @@ struct HttpBinResponse {
     origin: String,
     url: String,
 }
-
-
 
 /// post json to httpbin, get it back in the response body, return deserialized
 fn step_x(
@@ -93,12 +90,9 @@ fn main() -> io::Result<()> {
 
     println!("Starting server at: {:?}", endpoint);
     HttpServer::new(|| {
-        App::new()
-            .data(Client::default())
-            .service(
-                web::resource("/something")
-                    .route(web::post().to_async(create_something)),
-            )
+        App::new().data(Client::default()).service(
+            web::resource("/something").route(web::post().to_async(create_something)),
+        )
     })
     .bind(endpoint)?
     .run()

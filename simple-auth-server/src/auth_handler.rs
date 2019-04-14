@@ -46,11 +46,12 @@ impl Handler<AuthData> for DbExecutor {
 // simple aliasing makes the intentions clear and its more readable
 pub type LoggedUser = SlimUser;
 
-impl<P> FromRequest<P> for LoggedUser {
+impl FromRequest for LoggedUser {
+    type Config = ();
     type Error = Error;
     type Future = Result<LoggedUser, Error>;
 
-    fn from_request(req: &HttpRequest, pl: &mut Payload<P>) -> Self::Future {
+    fn from_request(req: &HttpRequest, pl: &mut Payload) -> Self::Future {
         if let Some(identity) = Identity::from_request(req, pl)?.identity() {
             let user: SlimUser = decode_token(&identity)?;
             return Ok(user as LoggedUser);
