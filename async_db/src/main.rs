@@ -8,6 +8,8 @@ This project illustrates two examples:
     2. An asynchronous handler that executes 4 queries in *parallel*,
        collecting the results and returning them as a single serialized json object
 
+    Note: The use of sleep(Duration::from_secs(2)); in db.rs is to make performance 
+          improvement with parallelism more obvious.
  */
 use std::io;
 
