@@ -36,7 +36,7 @@ fn rpc_handler(
         let mut result = convention::Response::default();
         result.id = reqjson.id.clone();
 
-        match rpc_select(&app_state, reqjson.method.as_str()) {
+        match rpc_select(&app_state, reqjson.method.as_str(), reqjson.params) {
             Ok(ok) => result.result = ok,
             Err(e) => result.error = Some(e),
         }
@@ -47,16 +47,31 @@ fn rpc_handler(
     })
 }
 
-fn rpc_select(app_state: &AppState, method: &str) -> Result<Value, convention::ErrorData> {
+fn rpc_select(
+    app_state: &AppState,
+    method: &str,
+    params: Vec<Value>,
+) -> Result<Value, convention::ErrorData> {
     match method {
         "ping" => {
             let r = app_state.network.read().unwrap().ping();
             Ok(Value::from(r))
         }
-        "wait" => match app_state.network.read().unwrap().wait(4).wait() {
-            Ok(ok) => Ok(Value::from(ok)),
-            Err(e) => Err(convention::ErrorData::new(500, &format!("{:?}", e)[..])),
-        },
+        "wait" => {
+            if params.len() != 1 || !params[0].is_u64() {
+                return Err(convention::ErrorData::std(-32602));
+            }
+            match app_state
+                .network
+                .read()
+                .unwrap()
+                .wait(params[0].as_u64().unwrap())
+                .wait()
+            {
+                Ok(ok) => Ok(Value::from(ok)),
+                Err(e) => Err(convention::ErrorData::new(500, &format!("{:?}", e)[..])),
+            }
+        }
         "get" => {
             let r = app_state.network.read().unwrap().get();
             Ok(Value::from(r))
