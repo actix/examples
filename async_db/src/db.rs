@@ -58,7 +58,7 @@ fn get_hottest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
                 .collect::<Vec<WeatherAgg>>())
         })?;
 
-    sleep(Duration::from_secs(2));
+    sleep(Duration::from_secs(2)); //see comments at top of main.rs
 
     Ok(annuals)
 }
@@ -84,7 +84,7 @@ fn get_coldest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
                 .collect::<Vec<WeatherAgg>>())
         })?;
 
-    sleep(Duration::from_secs(2));
+    sleep(Duration::from_secs(2)); //see comments at top of main.rs
 
     Ok(annuals)
 }
@@ -111,7 +111,7 @@ fn get_hottest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
                 .collect::<Vec<WeatherAgg>>())
         })?;
 
-    sleep(Duration::from_secs(2));
+    sleep(Duration::from_secs(2)); //see comments at top of main.rs
     Ok(annuals)
 }
 
@@ -137,6 +137,6 @@ fn get_coldest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
                 .collect::<Vec<WeatherAgg>>())
         })?;
 
-    sleep(Duration::from_secs(2));
+    sleep(Duration::from_secs(2)); //see comments at top of main.rs
     Ok(annuals)
 }
