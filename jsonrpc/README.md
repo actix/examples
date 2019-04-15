@@ -27,7 +27,7 @@ $ python tests\test_client.py
 # Methods
 
 - `ping`: Pong immeditely
-- `pong`: Wait `n` seconds, and then pong
+- `wait`: Wait `n` seconds, and then pong
 - `get`: Get global count
 - `inc`: Increment global count
 
