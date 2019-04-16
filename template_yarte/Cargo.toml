@@ -19,5 +19,5 @@ yarte = { version = "0.2", features=["with-actix-web"]  }
 
 [dev-dependencies]
 bytes = "0.4"
-actix-http-test = "0.1.0-alpha.3"
-actix-http = "0.1.0-alpha.4"
+actix-http-test = "0.1.0"
+actix-http = "0.1.0"

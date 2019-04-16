@@ -16,20 +16,11 @@ fn forward(
     new_url.set_query(req.uri().query());
 
     let forwarded_req = client.request_from(new_url.as_str(), req.head());
-
-    // if let Some(addr) = req.peer_addr() {
-    //     match forwarded_req.headers_mut().entry("x-forwarded-for") {
-    //         Ok(http::header::Entry::Vacant(entry)) => {
-    //             let addr = format!("{}", addr.ip());
-    //             entry.insert(addr.parse().unwrap());
-    //         }
-    //         Ok(http::header::Entry::Occupied(mut entry)) => {
-    //             let addr = format!("{}, {}", entry.get().to_str().unwrap(), addr.ip());
-    //             entry.insert(addr.parse().unwrap());
-    //         }
-    //         _ => unreachable!(),
-    //     }
-    // }
+    let forwarded_req = if let Some(addr) = req.head().peer_addr {
+        forwarded_req.header("x-forwarded-for", format!("{}", addr.ip()))
+    } else {
+        forwarded_req
+    };
 
     forwarded_req
         .send_stream(payload)
