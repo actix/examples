@@ -2,7 +2,7 @@ use actix_web::{error, web};
 
 use crate::handlers::{parts, products};
 
-pub fn config_app(cfg: &mut web::RouterConfig) {
+pub fn config_app(cfg: &mut web::ServiceConfig) {
     // domain includes: /products/{product_id}/parts/{part_id}
     cfg.service(
         web::scope("/products")

@@ -7,7 +7,7 @@ workspace = ".."
 
 [dependencies]
 actix-rt = "0.2.2"
-actix-web = { version="1.0.0-alpha.4", features=["ssl"] }
+actix-web = { version="1.0.0-beta.1", features=["ssl"] }
 actix-multipart = { git="https://github.com/actix/actix-web.git" }
 bytes = "0.4.12"
 env_logger = "0.6.1"

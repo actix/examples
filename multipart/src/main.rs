@@ -13,20 +13,33 @@ pub struct AppState {
 
 pub fn save_file(field: Field) -> impl Future<Item = i64, Error = Error> {
     let file_path_string = "upload.png";
-    let mut file = match fs::File::create(file_path_string) {
+    let file = match fs::File::create(file_path_string) {
         Ok(file) => file,
         Err(e) => return Either::A(err(error::ErrorInternalServerError(e))),
     };
     Either::B(
         field
-            .fold(0i64, move |acc, bytes| {
-                file.write_all(bytes.as_ref())
-                    .map(|_| acc + bytes.len() as i64)
-                    .map_err(|e| {
-                        println!("file.write_all failed: {:?}", e);
-                        MultipartError::Payload(error::PayloadError::Io(e))
-                    })
+            .fold((file, 0i64), move |(mut file, mut acc), bytes| {
+                // fs operations are blocking, we have to execute writes
+                // on threadpool
+                web::block(move || {
+                    acc += file
+                        .write_all(bytes.as_ref())
+                        .map(|_| acc + bytes.len() as i64)
+                        .map_err(|e| {
+                            println!("file.write_all failed: {:?}", e);
+                            MultipartError::Payload(error::PayloadError::Io(e))
+                        })?;
+                    Ok((file, acc))
+                })
+                .map_err(|e: error::BlockingError<MultipartError>| {
+                    match e {
+                        error::BlockingError::Error(e) => e,
+                        error::BlockingError::Canceled => MultipartError::Incomplete,
+                    }
+                })
             })
+            .map(|(_, acc)| acc)
             .map_err(|e| {
                 println!("save_file failed, {:?}", e);
                 error::ErrorInternalServerError(e)
