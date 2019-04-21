@@ -65,7 +65,7 @@ fn main() -> std::io::Result<()> {
                     .name("auth")
                     .path("/")
                     .domain(domain.as_str())
-                    .max_age(Duration::days(1))
+                    .max_age_time(Duration::days(1))
                     .secure(false), // this can only be true if you have https
             ))
             // everything under '/api/' route
