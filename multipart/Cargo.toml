@@ -10,8 +10,8 @@ name = "multipart"
 path = "src/main.rs"
 
 [dependencies]
-actix-web = "1.0.0-alpha.4"
-actix-multipart = { git="https://github.com/actix/actix-web.git" }
+actix-web = "1.0.0-beta.1"
+actix-multipart = "0.1.0-beta.1"
 
 env_logger = "0.6"
 futures = "0.1.25"
