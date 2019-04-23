@@ -6,10 +6,10 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix = { version = "0.8.0-alpha.2", features = ["http"] }
+actix = { version = "0.8.1", features = ["http"] }
 actix-rt = "0.2.2"
-actix-web = "1.0.0-alpha.4"
-actix-files = "0.1.0-alpha.4"
+actix-web = "1.0.0-beta.1"
+actix-files = "0.1.0-beta.1"
 
 bcrypt = "0.2.1"
 chrono = { version = "0.4.6", features = ["serde"] }
@@ -17,7 +17,7 @@ diesel = { version = "1.3.3", features = ["postgres", "uuid", "r2d2", "chrono"] 
 dotenv = "0.13.0"
 derive_more = "0.14"
 env_logger = "0.6.0"
-jsonwebtoken = { git = "https://github.com/Keats/jsonwebtoken.git", branch = "next" }
+jsonwebtoken = "6.0.0"
 futures = "0.1.25"
 r2d2 = "0.8.3"
 serde_derive="1.0.80"
