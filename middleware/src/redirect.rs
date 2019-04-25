@@ -1,6 +1,6 @@
 use actix_service::{Service, Transform};
 use actix_web::dev::{ServiceRequest, ServiceResponse};
-use actix_web::{http, HttpResponse};
+use actix_web::{http, Error, HttpResponse};
 use futures::future::{ok, Either, FutureResult};
 use futures::Poll;
 
@@ -8,12 +8,12 @@ pub struct CheckLogin;
 
 impl<S, B> Transform<S> for CheckLogin
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>>,
+    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
 {
     type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
-    type Error = S::Error;
+    type Error = Error;
     type InitError = ();
     type Transform = CheckLoginMiddleware<S>;
     type Future = FutureResult<Self::Transform, Self::InitError>;
@@ -28,12 +28,12 @@ pub struct CheckLoginMiddleware<S> {
 
 impl<S, B> Service for CheckLoginMiddleware<S>
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>>,
+    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
 {
     type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
-    type Error = S::Error;
+    type Error = Error;
     type Future = Either<S::Future, FutureResult<Self::Response, Self::Error>>;
 
     fn poll_ready(&mut self) -> Poll<(), Self::Error> {
