@@ -15,7 +15,7 @@ path = "src/server.rs"
 
 [dependencies]
 actix-rt = "0.2"
-actix-web = "1.0.0-alpha.4"
+actix-web = "1.0.0-beta.3"
 
 env_logger = "0.5"
 futures = "0.1"

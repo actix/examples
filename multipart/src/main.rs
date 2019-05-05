@@ -23,11 +23,10 @@ pub fn save_file(field: Field) -> impl Future<Item = i64, Error = Error> {
                 // fs operations are blocking, we have to execute writes
                 // on threadpool
                 web::block(move || {
-                    file.write_all(bytes.as_ref())
-                        .map_err(|e| {
-                            println!("file.write_all failed: {:?}", e);
-                            MultipartError::Payload(error::PayloadError::Io(e))
-                        })?;
+                    file.write_all(bytes.as_ref()).map_err(|e| {
+                        println!("file.write_all failed: {:?}", e);
+                        MultipartError::Payload(error::PayloadError::Io(e))
+                    })?;
                     acc += bytes.len() as i64;
                     Ok((file, acc))
                 })

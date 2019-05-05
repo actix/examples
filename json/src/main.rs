@@ -83,19 +83,12 @@ fn main() -> std::io::Result<()> {
         App::new()
             // enable logger
             .wrap(middleware::Logger::default())
+            .data(web::JsonConfig::default().limit(4096)) // <- limit size of the payload (global configuration)
+            .service(web::resource("/extractor").route(web::post().to(index)))
             .service(
-                web::resource("/extractor").route(
-                    web::post()
-                        .data(web::JsonConfig::default().limit(4096)) // <- limit size of the payload
-                        .to(index),
-                ),
-            )
-            .service(
-                web::resource("/extractor2").route(
-                    web::post()
-                        .data(web::JsonConfig::default().limit(4096)) // <- limit size of the payload
-                        .to_async(extract_item),
-                ),
+                web::resource("/extractor2")
+                    .data(web::JsonConfig::default().limit(1024)) // <- limit size of the payload (resource level)
+                    .route(web::post().to_async(extract_item)),
             )
             .service(web::resource("/manual").route(web::post().to_async(index_manual)))
             .service(

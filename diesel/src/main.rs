@@ -137,22 +137,20 @@ fn main() -> std::io::Result<()> {
             // Use of the extractors makes some post conditions simpler such
             // as size limit protections and built in json validation.
             .service(
-                web::resource("/add2").route(
-                    web::post()
-                        .data(
-                            web::JsonConfig::default()
-                                .limit(4096) // <- limit size of the payload
-                                .error_handler(|err, _| {
-                                    // <- create custom error response
-                                    error::InternalError::from_response(
-                                        err,
-                                        HttpResponse::Conflict().finish(),
-                                    )
-                                    .into()
-                                }),
-                        )
-                        .to_async(add2),
-                ),
+                web::resource("/add2")
+                    .data(
+                        web::JsonConfig::default()
+                            .limit(4096) // <- limit size of the payload
+                            .error_handler(|err, _| {
+                                // <- create custom error response
+                                error::InternalError::from_response(
+                                    err,
+                                    HttpResponse::Conflict().finish(),
+                                )
+                                .into()
+                            }),
+                    )
+                    .route(web::post().to_async(add2)),
             )
             //  Manual parsing would allow custom error construction, use of
             //  other parsers *beside* json (for example CBOR, protobuf, xml), and allows
