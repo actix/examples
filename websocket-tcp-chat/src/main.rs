@@ -1,5 +1,3 @@
-use serde::{Deserialize, Serialize};
-
 use std::time::{Duration, Instant};
 
 use actix::*;
@@ -229,10 +227,7 @@ async fn main() -> std::io::Result<()> {
 
     // Start tcp server in separate thread
     let srv = server.clone();
-    Arbiter::new().exec(move || {
-        session::tcp_server("127.0.0.1:12345", srv);
-        Ok::<_, ()>(())
-    });
+    session::tcp_server("127.0.0.1:12345", srv);
 
     println!("Started http server: 127.0.0.1:8080");
 
