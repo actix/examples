@@ -15,9 +15,9 @@ path = "src/client.rs"
 
 [dependencies]
 actix = "0.8.1"
-actix-web = "1.0.0-beta.3"
-actix-web-actors = "1.0.0-alpha.3"
-actix-files = "0.1.0-beta.1"
+actix-web = "1.0.0-beta.4"
+actix-web-actors = "1.0.0-beta.4"
+actix-files = "0.1.0-beta.4"
 
 rand = "0.6"
 bytes = "0.4"

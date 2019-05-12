@@ -6,7 +6,7 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-web = "1.0.0-beta.3"
+actix-web = "1.0.0-beta.4"
 
 serde = "1.0"
 serde_derive = "1.0"

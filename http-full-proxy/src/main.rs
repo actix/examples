@@ -87,6 +87,7 @@ fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .data(Client::new())
             .data(forward_url.clone())
             .wrap(middleware::Logger::default())
             .default_service(web::route().to_async(forward))
