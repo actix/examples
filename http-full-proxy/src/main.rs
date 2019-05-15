@@ -32,7 +32,7 @@ fn forward(
             {
                 client_resp.header(header_name.clone(), header_value.clone());
             }
-            HttpResponse::Ok().streaming(res)
+            client_resp.streaming(res)
         })
 }
 
