@@ -28,7 +28,7 @@ fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
-    let counter = Arc::new(Mutex::new(0));
+    let counter = Arc::new(Mutex::new(0usize));
 
     //move is necessary to give closure below ownership of counter
     HttpServer::new(move || {
