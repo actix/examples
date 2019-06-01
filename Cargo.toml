@@ -3,6 +3,7 @@ members = [
   "./",
   "actix_redis",
   "actix_todo",
+  "async_await",
   "async_db",
   "async_ex1",
   "async_ex2",
