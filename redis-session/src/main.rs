@@ -26,10 +26,10 @@ fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            // enable logger
-            .wrap(middleware::Logger::default())
             // redis session middleware
             .wrap(RedisSession::new("127.0.0.1:6379", &[0; 32]))
+            // enable logger
+            .wrap(middleware::Logger::default())
             // register simple route, handle all methods
             .service(web::resource("/").to(index))
     })

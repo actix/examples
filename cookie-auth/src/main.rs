@@ -22,12 +22,12 @@ fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .wrap(middleware::Logger::default())
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])
                     .name("auth-example")
                     .secure(false),
             ))
+            .wrap(middleware::Logger::default())
             .service(web::resource("/login").route(web::post().to(login)))
             .service(web::resource("/logout").to(logout))
             .service(web::resource("/").route(web::get().to(index)))
