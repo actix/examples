@@ -10,7 +10,7 @@
 //     2. validating user-submitted parameters using the 'validator' crate
 //     2. actix-web client features:
 //           - POSTing json body
-//     3. chaining futures into a single response used by an asynch endpoint
+//     3. chaining futures into a single response used by an async endpoint
 
 #[macro_use]
 extern crate validator_derive;
@@ -20,9 +20,12 @@ extern crate serde_derive;
 use std::collections::HashMap;
 use std::io;
 
-use actix_web::client::Client;
-use actix_web::web::BytesMut;
-use actix_web::{web, App, Error, HttpResponse, HttpServer};
+use actix_web::{
+    client::Client,
+    web::{self, BytesMut},
+    error::ErrorBadRequest,
+    App, Error, HttpResponse, HttpServer,
+};
 use futures::{Future, Stream};
 use validator::Validate;
 
@@ -46,12 +49,13 @@ struct HttpBinResponse {
     url: String,
 }
 
-/// post json to httpbin, get it back in the response body, return deserialized
+/// validate data, post json to httpbin, get it back in the response body, return deserialized
 fn step_x(
     data: SomeData,
     client: &Client,
 ) -> impl Future<Item = SomeData, Error = Error> {
-    client
+    let validation = futures::future::result(data.validate()).map_err(ErrorBadRequest);
+    let post_response = client
         .post("https://httpbin.org/post")
         .send_json(&data)
         .map_err(Error::from) // <- convert SendRequestError to an Error
@@ -65,7 +69,9 @@ fn step_x(
                     let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
                     body.json
                 })
-        })
+        });
+
+    validation.and_then(|_| post_response)
 }
 
 fn create_something(
