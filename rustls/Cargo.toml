@@ -12,5 +12,5 @@ path = "src/main.rs"
 [dependencies]
 env_logger = "0.5"
 rustls = "0.15"
-actix-web = { version = "1.0.0-beta.4", features=["rust-tls"] }
-actix-files = "0.1.0-beta.4"
+actix-web = { version = "1.0.0", features=["rust-tls"] }
+actix-files = "0.1.0"

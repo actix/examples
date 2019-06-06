@@ -6,8 +6,8 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-rt = "0.2"
-actix-web = { version="1.0.0-alpha.4", features=["ssl"] }
+actix-rt = "0.2.2"
+actix-web = { version="1.0.0", features=["ssl"] }
 
 futures = "0.1"
 serde = "1.0.43"

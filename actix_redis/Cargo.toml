@@ -6,8 +6,8 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix = "0.8.1"
-actix-web = "1.0.0-beta.4"
+actix = "0.8.2"
+actix-web = "1.0.0"
 actix-redis = { git="https://github.com/actix/actix-redis.git" }
 futures = "0.1.23"
 redis-async = "0.4.0"

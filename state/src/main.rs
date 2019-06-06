@@ -12,12 +12,12 @@
 //! Check [user guide](https://actix.rs/book/actix-web/sec-2-application.html) for more info.
 
 use std::io;
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 
 /// simple handle
-fn index(state: web::Data<Arc<Mutex<usize>>>, req: HttpRequest) -> HttpResponse {
+fn index(state: web::Data<Mutex<usize>>, req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
     *(state.lock().unwrap()) += 1;
 
@@ -28,12 +28,12 @@ fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
-    let counter = Arc::new(Mutex::new(0usize));
+    let counter = web::Data::new(Mutex::new(0usize));
 
     //move is necessary to give closure below ownership of counter
     HttpServer::new(move || {
         App::new()
-            .data(counter.clone()) // <- create app with shared state
+            .register_data(counter.clone()) // <- create app with shared state
             // enable logger
             .wrap(middleware::Logger::default())
             // register simple handler, handle all methods

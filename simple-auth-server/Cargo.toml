@@ -6,10 +6,10 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix = { version = "0.8.1", features = ["http"] }
+actix = "0.8.2"
 actix-rt = "0.2.2"
-actix-web = "1.0.0-beta.4"
-actix-files = "0.1.0-beta.4"
+actix-web = "1.0.0"
+actix-files = "0.1.1"
 
 bcrypt = "0.2.1"
 chrono = { version = "0.4.6", features = ["serde"] }

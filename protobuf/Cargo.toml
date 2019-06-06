@@ -13,6 +13,6 @@ derive_more = "0.14"
 prost = "0.4.0"
 prost-derive = "0.4.0"
 
-actix = "0.8.1"
-actix-web = "1.0.0-rc"
+actix = "0.8.2"
+actix-web = "1.0.0"
 actix-protobuf = "0.4.0"
