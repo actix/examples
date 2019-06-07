@@ -22,8 +22,8 @@ use std::io;
 
 use actix_web::{
     client::Client,
-    web::{self, BytesMut},
     error::ErrorBadRequest,
+    web::{self, BytesMut},
     App, Error, HttpResponse, HttpServer,
 };
 use futures::{Future, Stream};
