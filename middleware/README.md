@@ -1,7 +1,7 @@
 ## Middleware example
 
 ```bash
-cd form
+cd middleware
 cargo run
 # Started http server: 127.0.0.1:8080
 ```

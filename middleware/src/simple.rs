@@ -3,10 +3,10 @@ use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error};
 use futures::future::{ok, FutureResult};
 use futures::{Future, Poll};
 
-// There are two step in middleware processing.
-// 1. Middleware initialization, middleware factory get called with
+// There are two steps in middleware processing.
+// 1. Middleware initialization, middleware factory gets called with
 //    next service in chain as parameter.
-// 2. Middleware's call method get called with normal request.
+// 2. Middleware's call method gets called with normal request.
 pub struct SayHi;
 
 // Middleware factory is `Transform` trait from actix-service crate
