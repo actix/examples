@@ -30,6 +30,7 @@ members = [
   "template_askama",
   "template_tera",
   "template_yarte",
+  "template_handlebars",
   "tls",
   #"unix-socket",
   "web-cors/backend",
