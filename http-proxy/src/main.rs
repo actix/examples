@@ -24,7 +24,7 @@ fn streaming(
 ) -> impl Future<Item = HttpResponse, Error = impl Into<Error>> {
     // send client request
     client
-        .get("https://www.rust-lang.org/en-US/")
+        .get("https://www.rust-lang.org/")
         .send() // <- connect to host and send request
         .map_err(Error::from) // <- convert SendRequestError to an Error
         .and_then(|resp| {
