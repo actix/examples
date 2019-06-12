@@ -13,6 +13,7 @@ use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
 use bytes::BytesMut;
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
+use dotenv;
 use futures::future::{err, Either};
 use futures::{Future, Stream};
 
@@ -120,8 +121,10 @@ fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
-    // Start 3 db executor actors
-    let manager = ConnectionManager::<SqliteConnection>::new("test.db");
+    dotenv::dotenv().ok();
+
+    let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
+    let manager = ConnectionManager::<SqliteConnection>::new(connspec);
     let pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
