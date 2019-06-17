@@ -1,5 +1,5 @@
-use actix_web::middleware::identity::Identity;
-use actix_web::middleware::identity::{CookieIdentityPolicy, IdentityService};
+use actix_identity::Identity;
+use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer};
 
 fn index(id: Identity) -> String {

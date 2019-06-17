@@ -1,9 +1,8 @@
 #[macro_use]
 extern crate serde_derive;
 
-use actix_web::{
-    http::header, middleware::cors::Cors, middleware::Logger, web, App, HttpServer,
-};
+use actix_cors::Cors;
+use actix_web::{http::header, middleware::Logger, web, App, HttpServer};
 
 mod user;
 

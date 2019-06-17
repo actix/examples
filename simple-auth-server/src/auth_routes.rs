@@ -1,5 +1,5 @@
 use actix::Addr;
-use actix_web::middleware::identity::Identity;
+use actix_identity::Identity;
 use actix_web::{web, Error, HttpRequest, HttpResponse, Responder, ResponseError};
 use futures::Future;
 

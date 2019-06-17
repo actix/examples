@@ -7,10 +7,8 @@ extern crate serde_derive;
 
 use actix::prelude::*;
 use actix_files as fs;
-use actix_web::middleware::{
-    identity::{CookieIdentityPolicy, IdentityService},
-    Logger,
-};
+use actix_identity::{CookieIdentityPolicy, IdentityService};
+use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use chrono::Duration;
 use diesel::{r2d2::ConnectionManager, PgConnection};
