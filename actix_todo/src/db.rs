@@ -14,7 +14,7 @@ pub fn init_pool(database_url: &str) -> Result<PgPool, PoolError> {
 }
 
 fn get_conn(pool: &PgPool) -> Result<PgPooledConnection, &'static str> {
-    pool.get().map_err(|_| "can get connection")
+    pool.get().map_err(|_| "Can't get connection")
 }
 
 pub fn get_all_tasks(pool: &PgPool) -> Result<Vec<Task>, &'static str> {
