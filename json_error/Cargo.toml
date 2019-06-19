@@ -1,0 +1,13 @@
+[package]
+name = "json_error"
+version = "0.1.0"
+authors = ["Kai Yao <kai.b.yao@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+actix = "0.8"
+actix-web = "1.0"
+failure = "0.1"
+futures = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
