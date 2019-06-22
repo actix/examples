@@ -16,6 +16,7 @@ members = [
   "http-proxy",
   "http-full-proxy",
   "json",
+  "json_error",
   "jsonrpc",
   "juniper",
   "middleware",
