@@ -9,13 +9,11 @@ use actix_web::{App, HttpResponse, HttpServer};
 
 use handlebars::Handlebars;
 
-use std::sync::Arc;
-
 use std::io;
 
 // Macro documentation can be found in the actix_web_codegen crate
 #[get("/")]
-fn index(hb: web::Data<Arc<Handlebars>>) -> HttpResponse {
+fn index(hb: web::Data<Handlebars>) -> HttpResponse {
     let data = json!({
         "name": "Handlebars"
     });
@@ -26,7 +24,7 @@ fn index(hb: web::Data<Arc<Handlebars>>) -> HttpResponse {
 
 #[get("/{user}/{data}")]
 fn user(
-    hb: web::Data<Arc<Handlebars>>,
+    hb: web::Data<Handlebars>,
     info: web::Path<(String, String)>,
 ) -> HttpResponse {
     let data = json!({
@@ -46,7 +44,7 @@ fn main() -> io::Result<()> {
     handlebars
         .register_templates_directory(".html", "./static/templates")
         .unwrap();
-    let handlebars_ref = web::Data::new(Arc::new(handlebars));
+    let handlebars_ref = web::Data::new(handlebars);
 
     HttpServer::new(move || {
         App::new()
