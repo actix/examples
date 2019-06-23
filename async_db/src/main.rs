@@ -1,6 +1,7 @@
 /* Actix-Web Asynchronous Database Example
 
-This project illustrates two examples:
+This project illustrates expensive and blocking database requests that runs
+in a thread-pool using `web::block` with two examples:
 
     1. An asynchronous handler that executes 4 queries in *sequential order*,
        collecting the results and returning them as a single serialized json object
