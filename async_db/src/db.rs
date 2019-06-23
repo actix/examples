@@ -48,10 +48,10 @@ fn get_hottest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(NO_PARAMS, |row| WeatherAgg::AnnualAgg {
-            year: row.get(0),
-            total: row.get(1),
-        })
+        .query_map(NO_PARAMS, |row| Ok(WeatherAgg::AnnualAgg {
+            year: row.get(0)?,
+            total: row.get(1)?,
+        }))
         .and_then(|mapped_rows| {
             Ok(mapped_rows
                 .map(|row| row.unwrap())
@@ -74,10 +74,10 @@ fn get_coldest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(NO_PARAMS, |row| WeatherAgg::AnnualAgg {
-            year: row.get(0),
-            total: row.get(1),
-        })
+        .query_map(NO_PARAMS, |row| Ok(WeatherAgg::AnnualAgg {
+            year: row.get(0)?,
+            total: row.get(1)?,
+        }))
         .and_then(|mapped_rows| {
             Ok(mapped_rows
                 .map(|row| row.unwrap())
@@ -100,11 +100,11 @@ fn get_hottest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(NO_PARAMS, |row| WeatherAgg::MonthAgg {
-            year: row.get(0),
-            month: row.get(1),
-            total: row.get(2),
-        })
+        .query_map(NO_PARAMS, |row| Ok(WeatherAgg::MonthAgg {
+            year: row.get(0)?,
+            month: row.get(1)?,
+            total: row.get(2)?,
+        }))
         .and_then(|mapped_rows| {
             Ok(mapped_rows
                 .map(|row| row.unwrap())
@@ -126,11 +126,11 @@ fn get_coldest_months(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {
 
     let mut prep_stmt = conn.prepare(stmt)?;
     let annuals = prep_stmt
-        .query_map(NO_PARAMS, |row| WeatherAgg::MonthAgg {
-            year: row.get(0),
-            month: row.get(1),
-            total: row.get(2),
-        })
+        .query_map(NO_PARAMS, |row| Ok(WeatherAgg::MonthAgg {
+            year: row.get(0)?,
+            month: row.get(1)?,
+            total: row.get(2)?,
+        }))
         .and_then(|mapped_rows| {
             Ok(mapped_rows
                 .map(|row| row.unwrap())
