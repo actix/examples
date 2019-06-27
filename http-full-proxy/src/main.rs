@@ -15,7 +15,7 @@ fn forward(
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
 
-    let forwarded_req = client.request_from(new_url.as_str(), req.head());
+    let forwarded_req = client.request_from(new_url.as_str(), req.head()).no_decompress();
     let forwarded_req = if let Some(addr) = req.head().peer_addr {
         forwarded_req.header("x-forwarded-for", format!("{}", addr.ip()))
     } else {
