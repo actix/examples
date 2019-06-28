@@ -28,7 +28,7 @@ fn forward(
         .map(|res| {
             let mut client_resp = HttpResponse::build(res.status());
             for (header_name, header_value) in
-                res.headers().iter().filter(|(h, _)| *h != "connection")
+                res.headers().iter().filter(|(h, _)| *h != "connection" && *h != "content-length")
             {
                 client_resp.header(header_name.clone(), header_value.clone());
             }
