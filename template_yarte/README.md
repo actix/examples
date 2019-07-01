@@ -1,6 +1,6 @@
 # yarte
 
-Example of composition with partials and `with-actix-web` feature
+Minimal example of using template [yarte](https://gitlab.com/r-iendo/yarte) that displays a form.
 
 ```bash
 cargo test

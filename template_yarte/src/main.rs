@@ -30,25 +30,24 @@ fn main() -> std::io::Result<()> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use actix_http::HttpService;
-    use actix_http_test::TestServer;
-    use actix_web::{http, App};
+    use actix_web::{http, test as atest};
     use bytes::Bytes;
 
     #[test]
     fn test() {
-        let mut srv = TestServer::new(|| HttpService::new(App::new().service(index)));
+        let mut app = atest::init_service(App::new().service(index));
 
-        let req = srv.get("/");
-        let mut response = srv.block_on(req.send()).unwrap();
-        assert!(response.status().is_success());
+        let req = atest::TestRequest::with_uri("/").to_request();
+        let resp = atest::call_service(&mut app, req);
+
+        assert!(resp.status().is_success());
 
         assert_eq!(
-            response.headers().get(http::header::CONTENT_TYPE).unwrap(),
+            resp.headers().get(http::header::CONTENT_TYPE).unwrap(),
             "text/html"
         );
 
-        let bytes = srv.block_on(response.body()).unwrap();
+        let bytes = atest::read_body(resp);
         assert_eq!(
             bytes,
             Bytes::from_static(
@@ -67,16 +66,17 @@ mod test {
             )
         );
 
-        let req = srv.get("/?name=foo&lastname=bar");
-        let mut response = srv.block_on(req.send()).unwrap();
-        assert!(response.status().is_success());
+        let req = atest::TestRequest::with_uri("/?name=foo&lastname=bar").to_request();
+        let resp = atest::call_service(&mut app, req);
+
+        assert!(resp.status().is_success());
 
         assert_eq!(
-            response.headers().get(http::header::CONTENT_TYPE).unwrap(),
+            resp.headers().get(http::header::CONTENT_TYPE).unwrap(),
             "text/html"
         );
 
-        let bytes = srv.block_on(response.body()).unwrap();
+        let bytes = atest::read_body(resp);
         assert_eq!(
             bytes,
             Bytes::from_static(
@@ -90,20 +90,22 @@ mod test {
             )
         );
 
-        let req = srv.get("/?name=foo");
-        let mut response = srv.block_on(req.send()).unwrap();
-        assert!(response.status().is_server_error());
+        let req = atest::TestRequest::with_uri("/?name=foo").to_request();
+        let resp = atest::call_service(&mut app, req);
 
-        let req = srv.get("/?lastname=bar");
-        let mut response = srv.block_on(req.send()).unwrap();
-        assert!(response.status().is_success());
+        assert!(resp.status().is_server_error());
+
+        let req = atest::TestRequest::with_uri("/?lastname=bar").to_request();
+        let resp = atest::call_service(&mut app, req);
+
+        assert!(resp.status().is_success());
 
         assert_eq!(
-            response.headers().get(http::header::CONTENT_TYPE).unwrap(),
+            resp.headers().get(http::header::CONTENT_TYPE).unwrap(),
             "text/html"
         );
 
-        let bytes = srv.block_on(response.body()).unwrap();
+        let bytes = atest::read_body(resp);
         assert_eq!(
             bytes,
             Bytes::from_static(

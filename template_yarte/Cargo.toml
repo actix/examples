@@ -1,7 +1,7 @@
 [package]
 name = "template_yarte"
 version = "0.0.1"
-authors = ["Rust-iendo Barcelona <riendocontributions@gmail.com>"]
+authors = ["Rust-iendo <riendocontributions@gmail.com>"]
 publish = false
 edition = "2018"
 
@@ -12,12 +12,10 @@ env_logger = "0.6"
 
 yarte = { version = "0.2", features=["with-actix-web"]  }
 
-actix-web = "1.0.0"
+actix-web = "1.0"
 
 [build-dependencies]
 yarte = { version = "0.2", features=["with-actix-web"]  }
 
 [dev-dependencies]
 bytes = "0.4"
-actix-http-test = "0.2.0"
-actix-http = "0.2.3"
