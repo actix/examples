@@ -15,7 +15,9 @@ fn forward(
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
 
-    let forwarded_req = client.request_from(new_url.as_str(), req.head()).no_decompress();
+    let forwarded_req = client
+        .request_from(new_url.as_str(), req.head())
+        .no_decompress();
     let forwarded_req = if let Some(addr) = req.head().peer_addr {
         forwarded_req.header("x-forwarded-for", format!("{}", addr.ip()))
     } else {
@@ -27,8 +29,10 @@ fn forward(
         .map_err(Error::from)
         .map(|res| {
             let mut client_resp = HttpResponse::build(res.status());
-            for (header_name, header_value) in
-                res.headers().iter().filter(|(h, _)| *h != "connection")
+            for (header_name, header_value) in res
+                .headers()
+                .iter()
+                .filter(|(h, _)| *h != "connection" && *h != "content-length")
             {
                 client_resp.header(header_name.clone(), header_value.clone());
             }
