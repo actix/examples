@@ -3,7 +3,7 @@
 //!
 //! [Redis session example](https://github.com/actix/examples/tree/master/redis-session)
 //!
-//! [User guide](https://actix.rs/book/actix-web/sec-9-middlewares.html#user-sessions)
+//! [User guide](https://actix.rs/docs/middleware/#user-sessions)
 
 use actix_session::{CookieSession, Session};
 use actix_web::{middleware::Logger, web, App, HttpRequest, HttpServer, Result};
