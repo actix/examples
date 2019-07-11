@@ -9,15 +9,17 @@ workspace = ".."
 name = "websocket-server"
 path = "src/main.rs"
 
-#[[bin]]
-#name = "websocket-client"
-#path = "src/client.rs"
+[[bin]]
+name = "websocket-client"
+path = "src/client.rs"
 
 [dependencies]
 actix = "0.8.2"
+actix-codec = "0.1.2"
 actix-web = "1.0.0"
 actix-web-actors = "1.0.0"
 actix-files = "0.1.1"
+awc = "0.2.1"
 env_logger = "0.6"
 futures = "0.1"
 bytes = "0.4"
