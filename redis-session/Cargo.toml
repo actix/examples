@@ -1,5 +1,5 @@
 [package]
-name = "redis_session_test"
+name = "redis_session"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = ".."
