@@ -28,7 +28,7 @@ fn main() -> std::io::Result<()> {
         App::new()
             // redis session middleware
             .wrap(RedisSession::new("127.0.0.1:6379", &[0; 32]))
-            // enable logger - always register actix-web Logger middleware last 
+            // enable logger - always register actix-web Logger middleware last
             .wrap(middleware::Logger::default())
             // register simple route, handle all methods
             .service(web::resource("/").to(index))

@@ -32,7 +32,8 @@ fn main() {
         App::new()
             .wrap(middleware::Logger::default())
             .service(web::resource("/").route(web::post().to(index)))
-    }).bind("127.0.0.1:8081")
+    })
+    .bind("127.0.0.1:8081")
     .unwrap()
     .shutdown_timeout(1)
     .start();

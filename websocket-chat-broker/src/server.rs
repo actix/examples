@@ -81,8 +81,8 @@ impl Actor for WsChatServer {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        self.subscribe_async::<LeaveRoom>(ctx);
-        self.subscribe_async::<SendMessage>(ctx);
+        self.subscribe_system_async::<LeaveRoom>(ctx);
+        self.subscribe_system_async::<SendMessage>(ctx);
     }
 }
 

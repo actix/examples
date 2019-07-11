@@ -1,6 +1,6 @@
 use actix::{Handler, Message};
-use actix_web::{dev::Payload, Error, HttpRequest, FromRequest};
 use actix_identity::Identity;
+use actix_web::{dev::Payload, Error, FromRequest, HttpRequest};
 use bcrypt::verify;
 use diesel::prelude::*;
 
