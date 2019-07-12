@@ -9,7 +9,7 @@ table! {
 table! {
     users (email) {
         email -> Varchar,
-        password -> Varchar,
+        hash -> Varchar,
         created_at -> Timestamp,
     }
 }

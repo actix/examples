@@ -1,37 +1,23 @@
-use actix::{Actor, SyncContext};
-use chrono::{Local, NaiveDateTime};
-use diesel::pg::PgConnection;
-use diesel::r2d2::{ConnectionManager, Pool};
-use std::convert::From;
-use uuid::Uuid;
+use super::schema::*;
+use diesel::{r2d2::ConnectionManager, PgConnection};
 
-use crate::schema::{invitations, users};
-
-/// This is db executor actor. can be run in parallel
-pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);
-
-// Actors communicate exclusively by exchanging messages.
-// The sending actor can optionally wait for the response.
-// Actors are not referenced directly, but by means of addresses.
-// Any rust type can be an actor, it only needs to implement the Actor trait.
-impl Actor for DbExecutor {
-    type Context = SyncContext<Self>;
-}
+// type alias to use in multiple places
+pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
 #[table_name = "users"]
 pub struct User {
     pub email: String,
-    pub password: String,
-    pub created_at: NaiveDateTime,
+    pub hash: String,
+    pub created_at: chrono::NaiveDateTime,
 }
 
 impl User {
-    pub fn with_details(email: String, password: String) -> Self {
+    pub fn from_details<S: Into<String>, T: Into<String>>(email: S, pwd: T) -> Self {
         User {
-            email,
-            password,
-            created_at: Local::now().naive_local(),
+            email: email.into(),
+            hash: pwd.into(),
+            created_at: chrono::Local::now().naive_local(),
         }
     }
 }
@@ -39,9 +25,21 @@ impl User {
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
 #[table_name = "invitations"]
 pub struct Invitation {
-    pub id: Uuid,
+    pub id: uuid::Uuid,
     pub email: String,
-    pub expires_at: NaiveDateTime,
+    pub expires_at: chrono::NaiveDateTime,
+}
+
+// any type that implements Into<String> can be used to create Invitation
+impl<T> From<T> for Invitation where
+    T: Into<String> {
+    fn from(email: T) -> Self {
+        Invitation {
+            id: uuid::Uuid::new_v4(),
+            email: email.into(),
+            expires_at: chrono::Local::now().naive_local() + chrono::Duration::hours(24),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
