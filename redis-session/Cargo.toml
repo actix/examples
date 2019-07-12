@@ -1,13 +1,18 @@
 [package]
-name = "redis-session"
+name = "redis_session"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix = "0.8.2"
-actix-web = "1.0.0"
-actix-session = "0.1.0"
-actix-redis = { git = "https://github.com/actix/actix-redis.git", features = ["web"] }
+actix-web = "1.0.3"
+actix-session = "0.2.0"
+actix-redis = { version = "0.6.0", features = ["web"] }
 env_logger = "0.6"
+serde = { version = "^1.0", features = ["derive"] }
+actix-service = "0.4.1"
+actix-http-test = "0.2.2"
+actix-http = "0.2.5"
+serde_json = "1.0.40"
+time = "0.1.42"

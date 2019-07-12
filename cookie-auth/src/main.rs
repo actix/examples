@@ -27,7 +27,7 @@ fn main() -> std::io::Result<()> {
                     .name("auth-example")
                     .secure(false),
             ))
-            // enable logger - always register actix-web Logger middleware last 
+            // enable logger - always register actix-web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(web::resource("/login").route(web::post().to(login)))
             .service(web::resource("/logout").to(logout))

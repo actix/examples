@@ -23,10 +23,7 @@ fn index(hb: web::Data<Handlebars>) -> HttpResponse {
 }
 
 #[get("/{user}/{data}")]
-fn user(
-    hb: web::Data<Handlebars>,
-    info: web::Path<(String, String)>,
-) -> HttpResponse {
+fn user(hb: web::Data<Handlebars>, info: web::Path<(String, String)>) -> HttpResponse {
     let data = json!({
         "user": info.0,
         "data": info.1
