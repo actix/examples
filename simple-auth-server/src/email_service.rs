@@ -1,16 +1,18 @@
+// email_service.rs
+use crate::errors::ServiceError;
 use crate::models::Invitation;
 use sparkpost::transmission::{
     EmailAddress, Message, Options, Recipient, Transmission, TransmissionResponse,
 };
 
-fn get_api_key() -> String {
-    std::env::var("SPARKPOST_API_KEY").expect("SPARKPOST_API_KEY must be set")
+lazy_static::lazy_static! {
+static ref API_KEY: String = std::env::var("SPARKPOST_API_KEY").expect("SPARKPOST_API_KEY must be set");
 }
 
-pub fn send_invitation(invitation: &Invitation) {
-    let tm = Transmission::new_eu(get_api_key());
-    let sending_email = std::env::var("SENDING_EMAIL_ADDRESS")
-        .expect("SENDING_EMAIL_ADDRESS must be set");
+pub fn send_invitation(invitation: &Invitation) -> Result<(), ServiceError> {
+    let tm = Transmission::new_eu(API_KEY.as_str());
+    let sending_email =
+        std::env::var("SENDING_EMAIL_ADDRESS").expect("SENDING_EMAIL_ADDRESS must be set");
     // new email message with sender name and email
     let mut email = Message::new(EmailAddress::new(sending_email, "Let's Organise"));
 
@@ -53,13 +55,16 @@ pub fn send_invitation(invitation: &Invitation) {
         Ok(res) => match res {
             TransmissionResponse::ApiResponse(api_res) => {
                 println!("API Response: \n {:#?}", api_res);
+                Ok(())
             }
             TransmissionResponse::ApiError(errors) => {
                 println!("Response Errors: \n {:#?}", &errors);
+                Err(ServiceError::InternalServerError)
             }
         },
         Err(error) => {
-            println!("error \n {:#?}", error);
+            println!("Send Email Error: \n {:#?}", error);
+            Err(ServiceError::InternalServerError)
         }
     }
 }
