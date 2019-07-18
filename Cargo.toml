@@ -33,7 +33,7 @@ members = [
   "template_yarte",
   "template_handlebars",
   "tls",
-  #"unix-socket",
+  "unix-socket",
   "web-cors/backend",
   "websocket",
   "websocket-chat",

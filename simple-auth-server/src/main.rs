@@ -31,7 +31,8 @@ fn main() -> std::io::Result<()> {
     let pool: models::Pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
-    let domain: String = std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_string());
+    let domain: String =
+        std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_string());
 
     // Start http server
     HttpServer::new(move || {
@@ -51,13 +52,13 @@ fn main() -> std::io::Result<()> {
             // everything under '/api/' route
             .service(
                 web::scope("/api")
+                    .service(web::resource("/invitation").route(
+                        web::post().to_async(invitation_handler::post_invitation),
+                    ))
                     .service(
-                        web::resource("/invitation")
-                            .route(web::post().to_async(invitation_handler::post_invitation)),
-                    )
-                    .service(
-                        web::resource("/register/{invitation_id}")
-                            .route(web::post().to_async(register_handler::register_user)),
+                        web::resource("/register/{invitation_id}").route(
+                            web::post().to_async(register_handler::register_user),
+                        ),
                     )
                     .service(
                         web::resource("/auth")

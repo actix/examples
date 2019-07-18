@@ -1,6 +1,7 @@
 use actix_identity::Identity;
 use actix_web::{
-    dev::Payload, error::BlockingError, web, Error, FromRequest, HttpRequest, HttpResponse,
+    dev::Payload, error::BlockingError, web, Error, FromRequest, HttpRequest,
+    HttpResponse,
 };
 use diesel::prelude::*;
 use diesel::PgConnection;
