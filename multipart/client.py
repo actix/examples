@@ -12,7 +12,7 @@ async def req1():
         writer.append_json({'passed': True})
 
     resp = await aiohttp.ClientSession().request(
-        "post", 'http://localhost:8080/multipart',
+        "post", 'http://localhost:8080/',
         data=writer, headers=writer.headers)
     print(resp)
     assert 200 == resp.status
@@ -25,7 +25,7 @@ async def req2():
         writer.append(open('src/main.rs'))
 
     resp = await aiohttp.ClientSession().request(
-        "post", 'http://localhost:8080/multipart',
+        "post", 'http://localhost:8080/',
         data=writer, headers=writer.headers)
     print(resp)
     assert 200 == resp.status
