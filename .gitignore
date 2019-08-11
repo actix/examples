@@ -15,3 +15,6 @@ Cargo.lock
 .idea/**
 
 .history/
+
+# For multipart example
+upload.png
