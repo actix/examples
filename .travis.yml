@@ -3,8 +3,13 @@ sudo: false
 dist: trusty
 
 cache:
-  cargo: true
   apt: true
+  directories:
+    - $HOME/.cargo
+    - $HOME/.rustup
+
+before_cache:
+  -rm -rf $HOME/.cargo/registry
 
 matrix:
   include:
