@@ -33,9 +33,13 @@ before_install:
 before_script:
   - |
     if [[ "$TRAVIS_RUST_VERSION" == "nightly" ]]; then
-        ( ( rustup component add clippy --toolchain=nightly && export CLIPPY=true ) || export CLIPPY=false );
+      rustup component add clippy --toolchain=nightly
     fi
   - export PATH=$PATH:~/.cargo/bin
 
 script:
   - cargo check --all
+  - |
+    if [[ "$TRAVIS_RUST_VERSION" == "nightly" ]]; then
+      cargo clippy
+    fi
