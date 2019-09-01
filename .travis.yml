@@ -9,7 +9,7 @@ cache:
     - $HOME/.rustup
 
 before_cache:
-  -rm -rf $HOME/.cargo/registry
+  - rm -rf $HOME/.cargo/registry
 
 matrix:
   include:
