@@ -171,7 +171,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                     // send message to chat server
                     self.addr.do_send(server::Message {
                         id: self.id,
-                        msg: msg,
+                        msg,
                         room: self.room.clone(),
                     })
                 }
@@ -212,7 +212,7 @@ impl WsChatSession {
 }
 
 fn main() -> std::io::Result<()> {
-    let _ = env_logger::init();
+    env_logger::init();
     let sys = actix::System::new("websocket-example");
 
     // Start chat server actor

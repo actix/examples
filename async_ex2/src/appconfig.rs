@@ -1,4 +1,4 @@
-use actix_web::{error, web};
+use actix_web::web;
 
 use crate::handlers::{parts, products};
 

@@ -132,7 +132,7 @@ fn main() -> io::Result<()> {
                     .route(
                         web::route()
                             .guard(guard::Not(guard::Get()))
-                            .to(|| HttpResponse::MethodNotAllowed()),
+                            .to(HttpResponse::MethodNotAllowed),
                     ),
             )
     })

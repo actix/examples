@@ -1,9 +1,5 @@
-use actix_multipart::{Field, Multipart, MultipartError};
-use actix_web::{error, web, Error, HttpResponse};
-use futures::{
-    future::{err as fut_err, ok as fut_ok, Either},
-    Future, Stream,
-};
+use actix_web::{web, Error, HttpResponse};
+use futures::{future::ok as fut_ok, Future};
 
 use crate::common::{Part, Product};
 

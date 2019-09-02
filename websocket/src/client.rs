@@ -18,7 +18,7 @@ use futures::{
 
 fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
-    let _ = env_logger::init();
+    env_logger::init();
     let sys = actix::System::new("ws-example");
 
     Arbiter::spawn(lazy(|| {
@@ -27,7 +27,6 @@ fn main() {
             .connect()
             .map_err(|e| {
                 println!("Error: {}", e);
-                ()
             })
             .map(|(response, framed)| {
                 println!("{:?}", response);
@@ -46,8 +45,6 @@ fn main() {
                     }
                     addr.do_send(ClientCommand(cmd));
                 });
-
-                ()
             })
     }));
 
@@ -113,9 +110,8 @@ where
     T: AsyncRead + AsyncWrite,
 {
     fn handle(&mut self, msg: Frame, _ctx: &mut Context<Self>) {
-        match msg {
-            Frame::Text(txt) => println!("Server: {:?}", txt),
-            _ => (),
+        if let Frame::Text(txt) = msg {
+            println!("Server: {:?}", txt)
         }
     }
 

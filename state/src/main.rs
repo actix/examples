@@ -1,4 +1,4 @@
-#![cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
+#![allow(clippy::needless_pass_by_value)]
 //! Application may have multiple data objects that are shared across
 //! all handlers within same Application. Data could be added
 //! with `App::data()` method, multiple different data objects could be added.
