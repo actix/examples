@@ -86,7 +86,10 @@ fn rpc_select(
 
 pub trait ImplNetwork {
     fn ping(&self) -> String;
-    fn wait(&self, d: u64) -> Box<Future<Item = String, Error = Box<error::Error>>>;
+    fn wait(
+        &self,
+        d: u64,
+    ) -> Box<dyn Future<Item = String, Error = Box<dyn error::Error>>>;
 
     fn get(&self) -> u32;
     fn inc(&mut self);
@@ -107,9 +110,12 @@ impl ImplNetwork for ObjNetwork {
         String::from("pong")
     }
 
-    fn wait(&self, d: u64) -> Box<Future<Item = String, Error = Box<error::Error>>> {
+    fn wait(
+        &self,
+        d: u64,
+    ) -> Box<dyn Future<Item = String, Error = Box<dyn error::Error>>> {
         if let Err(e) = Delay::new(Duration::from_secs(d)).wait() {
-            let e: Box<error::Error> = Box::new(e);
+            let e: Box<dyn error::Error> = Box::new(e);
             return Box::new(future::err(e));
         };
         Box::new(future::ok(String::from("pong")))
@@ -126,11 +132,11 @@ impl ImplNetwork for ObjNetwork {
 
 #[derive(Clone)]
 pub struct AppState {
-    network: Arc<RwLock<ImplNetwork>>,
+    network: Arc<RwLock<dyn ImplNetwork>>,
 }
 
 impl AppState {
-    pub fn new(network: Arc<RwLock<ImplNetwork>>) -> Self {
+    pub fn new(network: Arc<RwLock<dyn ImplNetwork>>) -> Self {
         Self { network }
     }
 }

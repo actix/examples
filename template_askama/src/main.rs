@@ -17,7 +17,7 @@ struct Index;
 fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpResponse> {
     let s = if let Some(name) = query.get("name") {
         UserTemplate {
-            name: name,
+            name,
             text: "Welcome!",
         }
         .render()

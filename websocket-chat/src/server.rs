@@ -68,7 +68,7 @@ impl Default for ChatServer {
 
         ChatServer {
             sessions: HashMap::new(),
-            rooms: rooms,
+            rooms,
             rng: rand::thread_rng(),
         }
     }

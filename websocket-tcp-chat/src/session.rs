@@ -138,10 +138,10 @@ impl ChatSession {
     ) -> ChatSession {
         ChatSession {
             id: 0,
-            addr: addr,
+            addr,
             hb: Instant::now(),
             room: "Main".to_owned(),
-            framed: framed,
+            framed,
         }
     }
 
@@ -187,10 +187,8 @@ impl TcpServer {
         // implement stream handler `StreamHandler<(TcpStream,
         // net::SocketAddr), io::Error>`
         TcpServer::create(|ctx| {
-            ctx.add_message_stream(
-                listener.incoming().map_err(|_| ()).map(|s| TcpConnect(s)),
-            );
-            TcpServer { chat: chat }
+            ctx.add_message_stream(listener.incoming().map_err(|_| ()).map(TcpConnect));
+            TcpServer { chat }
         });
     }
 }

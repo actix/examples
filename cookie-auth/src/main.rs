@@ -3,7 +3,10 @@ use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer};
 
 fn index(id: Identity) -> String {
-    format!("Hello {}", id.identity().unwrap_or("Anonymous".to_owned()))
+    format!(
+        "Hello {}",
+        id.identity().unwrap_or_else(|| "Anonymous".to_owned())
+    )
 }
 
 fn login(id: Identity) -> HttpResponse {
