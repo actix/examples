@@ -5,6 +5,8 @@ use futures::future::Future;
 #[allow(dead_code)]
 mod redirect;
 #[allow(dead_code)]
+mod read_body;
+#[allow(dead_code)]
 mod simple;
 
 fn main() -> std::io::Result<()> {
@@ -14,6 +16,7 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(redirect::CheckLogin)
+            .wrap(read_body::Logging)
             .wrap(simple::SayHi)
             .wrap_fn(|req, srv| {
                 println!("Hi from start. You requested: {}", req.path());
