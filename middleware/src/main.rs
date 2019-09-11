@@ -1,4 +1,6 @@
 use actix_web::{web, App, HttpServer};
+use actix_service::Service;
+use futures::future::Future;
 
 #[allow(dead_code)]
 mod redirect;
@@ -13,6 +15,14 @@ fn main() -> std::io::Result<()> {
         App::new()
             .wrap(redirect::CheckLogin)
             .wrap(simple::SayHi)
+            .wrap_fn(|req, srv| {
+                println!("Hi from start. You requested: {}", req.path());
+
+                srv.call(req).map(|res| {
+                    println!("Hi from response");
+                    res
+                })
+            })
             .service(web::resource("/login").to(|| {
                 "You are on /login. Go to src/redirect.rs to change this behavior."
             }))
