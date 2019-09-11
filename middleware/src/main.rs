@@ -3,6 +3,8 @@ use actix_web::{web, App, HttpServer};
 #[allow(dead_code)]
 mod redirect;
 #[allow(dead_code)]
+mod read_body;
+#[allow(dead_code)]
 mod simple;
 
 fn main() -> std::io::Result<()> {
@@ -12,6 +14,7 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(redirect::CheckLogin)
+            .wrap(read_body::Logging)
             .wrap(simple::SayHi)
             .service(web::resource("/login").to(|| {
                 "You are on /login. Go to src/redirect.rs to change this behavior."

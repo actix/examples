@@ -8,4 +8,3 @@ cargo run
 
 Look in `src/main.rs` and comment the different middlewares in/out to see how
 they function.
-
