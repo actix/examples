@@ -1,4 +1,8 @@
-## Middleware example
+# middleware examples
+
+This example showcases a bunch of different uses of middlewares. See also the [Middleware guide](https://actix.rs/docs/middleware/)..
+
+## Usage
 
 ```bash
 cd middleware
@@ -8,3 +12,18 @@ cargo run
 
 Look in `src/main.rs` and comment the different middlewares in/out to see how
 they function.
+
+## Middlewares
+
+### redirect::CheckLogin
+
+A middleware implementing a request guard which sketches a rough approximation of what a login could look like.
+
+### read_body::Logging
+
+A middleware demonstrating how to read out the incoming request body.
+
+### simple::SayHi
+
+A minimal middleware demonstrating the sequence of operations in an actix middleware.
+There is a second version of the same middleware using `wrap_fn` which shows how easily a middleware can be implemented in actix.
