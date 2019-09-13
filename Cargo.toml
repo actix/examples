@@ -19,6 +19,7 @@ members = [
   "jsonrpc",
   "juniper",
   "middleware",
+  "middleware-complex",
   "multipart",
   "protobuf",
   "r2d2",

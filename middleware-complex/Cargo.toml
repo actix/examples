@@ -1,0 +1,11 @@
+[package]
+name = "middleware-complex-example"
+version = "0.1.0"
+authors = ["Keishi Kawada <megumish@exploitouri.st>"]
+edition = "2018"
+workspace = ".."
+
+[dependencies]
+actix-web = "1.0.7"
+env_logger = "0.6.2"
+futures = "0.1.29"
