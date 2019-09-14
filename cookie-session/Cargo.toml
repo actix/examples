@@ -8,6 +8,7 @@ edition = "2018"
 [dependencies]
 actix-web = "1.0.0"
 actix-session = "0.2.0"
+actix-rt = "0.2.5"
 
 futures = "0.1"
 time = "0.1"
