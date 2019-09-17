@@ -1,0 +1,17 @@
+[package]
+name = "jsonrpc-example"
+version = "0.1.0"
+authors = ["mohanson <mohanson@outlook.com>"]
+edition = "2018"
+workspace = ".."
+
+[dependencies]
+actix = "0.8.2"
+actix-web = "1.0.0"
+env_logger = "0.6"
+futures = "0.1.23"
+futures-timer = "0.1"
+log = "0.4"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"

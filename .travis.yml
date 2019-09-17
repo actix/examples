@@ -3,8 +3,13 @@ sudo: false
 dist: trusty
 
 cache:
-  cargo: true
   apt: true
+  directories:
+    - $HOME/.cargo
+    - $HOME/.rustup
+
+before_cache:
+  - rm -rf $HOME/.cargo/registry
 
 matrix:
   include:
@@ -28,44 +33,13 @@ before_install:
 before_script:
   - |
     if [[ "$TRAVIS_RUST_VERSION" == "nightly" ]]; then
-        ( ( cargo install clippy && export CLIPPY=true ) || export CLIPPY=false );
+      rustup component add clippy --toolchain=nightly
     fi
   - export PATH=$PATH:~/.cargo/bin
 
 script:
+  - cargo check --all
   - |
-      cd async_db && cargo check && cd ..
-      cd async_ex1 && cargo check && cd ..
-      cd actix_redis && cargo check && cd ..
-      cd actix_todo && cargo check && cd ..
-      cd basics && cargo check && cd ..
-      cd cookie-auth && cargo check && cd ..
-      cd cookie-auth-full && cargo check && cd ..
-      cd cookie-session && cargo check && cd ..
-      cd diesel && cargo check && cd ..
-      cd error_handling && cargo check && cd ..
-      cd form && cargo check && cd ..
-      cd hello-world && cargo check && cd ..
-      cd http-proxy && cargo check && cd ..
-      cd http-full-proxy && cargo check && cd ..
-      cd json && cargo check && cd ..
-      cd juniper && cargo check && cd ..
-      cd middleware && cargo check && cd ..
-      cd multipart && cargo check && cd ..
-      cd protobuf && cargo check && cd ..
-      cd r2d2 && cargo check && cd ..
-      cd redis-session && cargo check && cd ..
-      cd simple-auth-sarver && cargo check && cd ..
-      cd state && cargo check && cd ..
-      cd static_index && cargo check && cd ..
-      cd template_askama && cargo check && cd ..
-      cd template_tera && cargo check && cd ..
-      cd tls && cargo check && cd ..
-      cd rustls && cargo check && cd ..
-      cd udp-echo && cargo check && cd ..
-      cd unix-socket && cargo check && cd ..
-      cd web-cors/backend && cargo check && cd ../..
-      cd websocket && cargo check && cd ..
-      cd websocket-chat && cargo check && cd ..
-      cd websocket-chat-broker && cargo check && cd ..
-      cd websocket-tcp-chat && cargo check && cd ..
+    if [[ "$TRAVIS_RUST_VERSION" == "nightly" ]]; then
+      cargo clippy
+    fi

@@ -154,7 +154,7 @@ impl StreamHandler<codec::ChatResponse, io::Error> for ChatClient {
                 for room in rooms {
                     println!("{}", room);
                 }
-                println!("");
+                println!();
             }
             _ => (),
         }

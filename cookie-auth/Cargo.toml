@@ -2,9 +2,10 @@
 name = "cookie-auth"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+edition = "2018"
+workspace = ".."
 
 [dependencies]
-actix = "0.7"
-actix-web = "0.7"
-env_logger = "0.5"
+actix-web = "1.0.0"
+actix-identity = "0.1.0"
+env_logger = "0.6"

@@ -2,7 +2,12 @@
 name = "middleware-example"
 version = "0.1.0"
 authors = ["Gorm Casper <gcasper@gmail.com>"]
+edition = "2018"
+workspace = ".."
 
 [dependencies]
-actix = "0.7"
-actix-web = "0.7"
+actix-service = "0.4.1"
+actix-web = "1.0.0"
+futures = "0.1.25"
+env_logger = "0.6"
+bytes = "0.4"

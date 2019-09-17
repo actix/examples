@@ -13,3 +13,8 @@ Cargo.lock
 
 # intellij files
 .idea/**
+
+.history/
+
+# For multipart example
+upload.png

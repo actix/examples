@@ -1,25 +1,60 @@
-extern crate actix_web;
+use actix_service::{Service, Transform};
+use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error};
+use futures::future::{ok, FutureResult};
+use futures::{Future, Poll};
 
-use actix_web::middleware::{Finished, Middleware, Response, Started};
-use actix_web::{HttpRequest, HttpResponse, Result};
-
-// Middleware can get called at three stages during the request/response handling. Below is a
-// struct that implements all three of them.
+// There are two steps in middleware processing.
+// 1. Middleware initialization, middleware factory gets called with
+//    next service in chain as parameter.
+// 2. Middleware's call method gets called with normal request.
 pub struct SayHi;
 
-impl<S> Middleware<S> for SayHi {
-    fn start(&self, req: &HttpRequest<S>) -> Result<Started> {
+// Middleware factory is `Transform` trait from actix-service crate
+// `S` - type of the next service
+// `B` - type of response's body
+impl<S, B> Transform<S> for SayHi
+where
+    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
+{
+    type Request = ServiceRequest;
+    type Response = ServiceResponse<B>;
+    type Error = Error;
+    type InitError = ();
+    type Transform = SayHiMiddleware<S>;
+    type Future = FutureResult<Self::Transform, Self::InitError>;
+
+    fn new_transform(&self, service: S) -> Self::Future {
+        ok(SayHiMiddleware { service })
+    }
+}
+
+pub struct SayHiMiddleware<S> {
+    service: S,
+}
+
+impl<S, B> Service for SayHiMiddleware<S>
+where
+    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
+{
+    type Request = ServiceRequest;
+    type Response = ServiceResponse<B>;
+    type Error = Error;
+    type Future = Box<dyn Future<Item = Self::Response, Error = Self::Error>>;
+
+    fn poll_ready(&mut self) -> Poll<(), Self::Error> {
+        self.service.poll_ready()
+    }
+
+    fn call(&mut self, req: ServiceRequest) -> Self::Future {
         println!("Hi from start. You requested: {}", req.path());
-        Ok(Started::Done)
-    }
 
-    fn response(&self, _req: &HttpRequest<S>, resp: HttpResponse) -> Result<Response> {
-        println!("Hi from response");
-        Ok(Response::Done(resp))
-    }
-
-    fn finish(&self, _req: &HttpRequest<S>, _resp: &HttpResponse) -> Finished {
-        println!("Hi from finish");
-        Finished::Done
+        Box::new(self.service.call(req).and_then(|res| {
+            println!("Hi from response");
+            Ok(res)
+        }))
     }
 }

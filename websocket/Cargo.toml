@@ -2,7 +2,8 @@
 name = "websocket"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+edition = "2018"
+workspace = ".."
 
 [[bin]]
 name = "websocket-server"
@@ -13,8 +14,12 @@ name = "websocket-client"
 path = "src/client.rs"
 
 [dependencies]
-env_logger = "*"
+actix = "0.8.2"
+actix-codec = "0.1.2"
+actix-web = "1.0.0"
+actix-web-actors = "1.0.0"
+actix-files = "0.1.1"
+awc = "0.2.1"
+env_logger = "0.6"
 futures = "0.1"
-
-actix = "0.7"
-actix-web = "0.7"
+bytes = "0.4"

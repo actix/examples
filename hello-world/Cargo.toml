@@ -2,10 +2,9 @@
 name = "hello-world"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [dependencies]
-env_logger = "0.5"
-
-actix = "0.7"
-actix-web = "^0.7"
+actix-web = "1.0.0"
+env_logger = "0.6"

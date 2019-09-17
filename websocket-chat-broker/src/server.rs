@@ -42,7 +42,7 @@ impl WsChatServer {
         id: Option<usize>,
         client: Client,
     ) -> usize {
-        let mut id = id.unwrap_or_else(|| rand::random::<usize>());
+        let mut id = id.unwrap_or_else(rand::random::<usize>);
         if let Some(room) = self.rooms.get_mut(room_name) {
             loop {
                 if room.contains_key(&id) {
@@ -81,8 +81,8 @@ impl Actor for WsChatServer {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        self.subscribe_async::<LeaveRoom>(ctx);
-        self.subscribe_async::<SendMessage>(ctx);
+        self.subscribe_system_async::<LeaveRoom>(ctx);
+        self.subscribe_system_async::<SendMessage>(ctx);
     }
 }
 
@@ -94,7 +94,7 @@ impl Handler<JoinRoom> for WsChatServer {
         let id = self.add_client_to_room(&room_name, None, client);
         let join_msg = format!(
             "{} joined {}",
-            client_name.unwrap_or("anon".to_string()),
+            client_name.unwrap_or_else(|| "anon".to_string()),
             room_name
         );
         self.send_chat_message(&room_name, &join_msg, id);

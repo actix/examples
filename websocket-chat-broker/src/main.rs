@@ -1,24 +1,18 @@
 #[macro_use]
-extern crate actix;
-extern crate actix_broker;
-extern crate actix_web;
-extern crate futures;
-extern crate rand;
-#[macro_use]
 extern crate log;
-extern crate simple_logger;
 
 use actix::fut;
 use actix::prelude::*;
 use actix_broker::BrokerIssue;
-use actix_web::server::HttpServer;
-use actix_web::{fs, ws, App, Error, HttpRequest, HttpResponse};
+use actix_files::Files;
+use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web_actors::ws;
 
 mod server;
 use server::*;
 
-fn chat_route(req: &HttpRequest<()>) -> Result<HttpResponse, Error> {
-    ws::start(req, WsChatSession::default())
+fn chat_route(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
+    ws::start(WsChatSession::default(), &req, stream)
 }
 
 #[derive(Default)]
@@ -34,7 +28,7 @@ impl WsChatSession {
         // First send a leave message for the current room
         let leave_msg = LeaveRoom(self.room.clone(), self.id);
         // issue_sync comes from having the `BrokerIssue` trait in scope.
-        self.issue_sync(leave_msg, ctx);
+        self.issue_system_sync(leave_msg, ctx);
         // Then send a join message for the new room
         let join_msg = JoinRoom(
             room_name.to_owned(),
@@ -52,7 +46,8 @@ impl WsChatSession {
                 }
 
                 fut::ok(())
-            }).spawn(ctx);
+            })
+            .spawn(ctx);
     }
 
     fn list_rooms(&mut self, ctx: &mut ws::WebsocketContext<Self>) {
@@ -66,18 +61,19 @@ impl WsChatSession {
                     }
                 }
                 fut::ok(())
-            }).spawn(ctx);
+            })
+            .spawn(ctx);
     }
 
     fn send_msg(&self, msg: &str) {
         let content = format!(
             "{}: {}",
-            self.name.clone().unwrap_or("anon".to_string()),
+            self.name.clone().unwrap_or_else(|| "anon".to_string()),
             msg
         );
         let msg = SendMessage(self.room.clone(), self.id, content);
         // issue_async comes from having the `BrokerIssue` trait in scope.
-        self.issue_async(msg);
+        self.issue_system_async(msg);
     }
 }
 
@@ -91,7 +87,7 @@ impl Actor for WsChatSession {
     fn stopped(&mut self, _ctx: &mut Self::Context) {
         info!(
             "WsChatSession closed for {}({}) in room {}",
-            self.name.clone().unwrap_or("anon".to_string()),
+            self.name.clone().unwrap_or_else(|| "anon".to_string()),
             self.id,
             self.room
         );
@@ -145,23 +141,19 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
     }
 }
 
-fn main() {
+fn main() -> std::io::Result<()> {
     let sys = actix::System::new("websocket-broker-example");
     simple_logger::init_with_level(log::Level::Info).unwrap();
 
     HttpServer::new(move || {
         App::new()
-            .resource("/ws/", |r| r.route().f(chat_route))
-            .handler(
-                "/",
-                fs::StaticFiles::new("./static/")
-                    .unwrap()
-                    .index_file("index.html"),
-            )
-    }).bind("127.0.0.1:8080")
+            .service(web::resource("/ws/").to(chat_route))
+            .service(Files::new("/", "./static/").index_file("index.html"))
+    })
+    .bind("127.0.0.1:8080")
     .unwrap()
     .start();
 
     info!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+    sys.run()
 }

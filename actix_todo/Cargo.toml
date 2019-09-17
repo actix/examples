@@ -2,10 +2,13 @@
 authors = ["Dan Munckton <dangit@munckfish.net>"]
 name = "actix-todo"
 version = "0.1.0"
+workspace = ".."
+edition = "2018"
 
 [dependencies]
-actix = "0.7.3"
-actix-web = "0.7.4"
+actix-web = "1.0.0"
+actix-files = "0.1.1"
+actix-session = "0.2.0"
 dotenv = "0.13.0"
 env_logger = "0.5.10"
 futures = "0.1.22"

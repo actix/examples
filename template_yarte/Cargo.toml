@@ -1,0 +1,21 @@
+[package]
+name = "template_yarte"
+version = "0.0.1"
+authors = ["Rust-iendo <riendocontributions@gmail.com>"]
+publish = false
+edition = "2018"
+
+workspace = ".."
+
+[dependencies]
+env_logger = "0.6"
+
+yarte = { version = "0.3", features=["with-actix-web"]  }
+
+actix-web = "1.0"
+
+[build-dependencies]
+yarte = { version = "0.3", features=["with-actix-web"]  }
+
+[dev-dependencies]
+bytes = "0.4"
