@@ -19,9 +19,13 @@ they function.
 
 A middleware implementing a request guard which sketches a rough approximation of what a login could look like.
 
-### read_body::Logging
+### read_request_body::Logging
 
 A middleware demonstrating how to read out the incoming request body.
+
+### read_response_body::Logging
+
+A middleware demonstrating how to read out the outgoing response body.
 
 ### simple::SayHi
 
