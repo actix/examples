@@ -1,13 +1,10 @@
-## Http proxy example
+## HTTP Full proxy example
 
-To start proxy server:
+This is a relatively simple HTTP proxy, forwarding HTTP requests to another HTTP server, including
+request body, headers, and streaming uploads.
 
-```sh
-cargo run --bin proxy
-```
+To start:
 
-To start local backend server:
-
-```sh
-cargo run --bin proxy-example-server
+``` shell
+cargo run <listen addr> <listen port> <forward addr> <forward port>
 ```

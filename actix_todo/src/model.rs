@@ -2,8 +2,9 @@ use diesel;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 
-use schema::{
-    tasks, tasks::dsl::{completed as task_completed, tasks as all_tasks},
+use crate::schema::{
+    tasks,
+    tasks::dsl::{completed as task_completed, tasks as all_tasks},
 };
 
 #[derive(Debug, Insertable)]

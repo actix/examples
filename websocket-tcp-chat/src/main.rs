@@ -1,25 +1,14 @@
-#![allow(unused_variables)]
-extern crate byteorder;
-extern crate bytes;
-extern crate env_logger;
-extern crate futures;
-extern crate rand;
-extern crate serde;
-extern crate serde_json;
-extern crate tokio_codec;
-extern crate tokio_io;
-extern crate tokio_tcp;
 #[macro_use]
 extern crate serde_derive;
-
 #[macro_use]
 extern crate actix;
-extern crate actix_web;
+
+use std::time::{Duration, Instant};
 
 use actix::*;
-use actix_web::server::HttpServer;
-use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
-use std::time::{Instant, Duration};
+use actix_files as fs;
+use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web_actors::ws;
 
 mod codec;
 mod server;
@@ -30,22 +19,22 @@ const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 /// How long before lack of client response causes a timeout
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
-/// This is our websocket route state, this state is shared with all route
-/// instances via `HttpContext::state()`
-struct WsChatSessionState {
-    addr: Addr<server::ChatServer>,
-}
-
 /// Entry point for our route
-fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Error> {
+fn chat_route(
+    req: HttpRequest,
+    stream: web::Payload,
+    srv: web::Data<Addr<server::ChatServer>>,
+) -> Result<HttpResponse, Error> {
     ws::start(
-        req,
         WsChatSession {
             id: 0,
             hb: Instant::now(),
             room: "Main".to_owned(),
             name: None,
+            addr: srv.get_ref().clone(),
         },
+        &req,
+        stream,
     )
 }
 
@@ -59,26 +48,26 @@ struct WsChatSession {
     room: String,
     /// peer name
     name: Option<String>,
+    /// Chat server
+    addr: Addr<server::ChatServer>,
 }
 
 impl Actor for WsChatSession {
-    type Context = ws::WebsocketContext<Self, WsChatSessionState>;
+    type Context = ws::WebsocketContext<Self>;
 
     /// Method is called on actor start.
     /// We register ws session with ChatServer
     fn started(&mut self, ctx: &mut Self::Context) {
+        // we'll start heartbeat process on session start.
+        self.hb(ctx);
+
         // register self in chat server. `AsyncContext::wait` register
         // future within context, but context waits until this future resolves
         // before processing any other events.
         // HttpContext::state() is instance of WsChatSessionState, state is shared
         // across all routes within application
-
-        // we'll start heartbeat process on session start.
-        self.hb(ctx);
-
         let addr = ctx.address();
-        ctx.state()
-            .addr
+        self.addr
             .send(server::Connect {
                 addr: addr.recipient(),
             })
@@ -94,9 +83,9 @@ impl Actor for WsChatSession {
             .wait(ctx);
     }
 
-    fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
+    fn stopping(&mut self, _: &mut Self::Context) -> Running {
         // notify chat server
-        ctx.state().addr.do_send(server::Disconnect { id: self.id });
+        self.addr.do_send(server::Disconnect { id: self.id });
         Running::Stop
     }
 }
@@ -132,8 +121,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                             // Send ListRooms message to chat server and wait for
                             // response
                             println!("List rooms");
-                            ctx.state()
-                                .addr
+                            self.addr
                                 .send(server::ListRooms)
                                 .into_actor(self)
                                 .then(|res, _, ctx| {
@@ -155,7 +143,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                         "/join" => {
                             if v.len() == 2 {
                                 self.room = v[1].to_owned();
-                                ctx.state().addr.do_send(server::Join {
+                                self.addr.do_send(server::Join {
                                     id: self.id,
                                     name: self.room.clone(),
                                 });
@@ -181,17 +169,18 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                         m.to_owned()
                     };
                     // send message to chat server
-                    ctx.state().addr.do_send(server::Message {
+                    self.addr.do_send(server::Message {
                         id: self.id,
-                        msg: msg,
+                        msg,
                         room: self.room.clone(),
                     })
                 }
             }
-            ws::Message::Binary(bin) => println!("Unexpected binary"),
+            ws::Message::Binary(_) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
                 ctx.stop();
-            },
+            }
+            ws::Message::Nop => (),
         }
     }
 }
@@ -200,7 +189,7 @@ impl WsChatSession {
     /// helper method that sends ping to client every second.
     ///
     /// also this method checks heartbeats from client
-    fn hb(&self, ctx: &mut ws::WebsocketContext<Self, WsChatSessionState>) {
+    fn hb(&self, ctx: &mut ws::WebsocketContext<Self>) {
         ctx.run_interval(HEARTBEAT_INTERVAL, |act, ctx| {
             // check client heartbeats
             if Instant::now().duration_since(act.hb) > CLIENT_TIMEOUT {
@@ -208,9 +197,7 @@ impl WsChatSession {
                 println!("Websocket Client heartbeat failed, disconnecting!");
 
                 // notify chat server
-                ctx.state()
-                    .addr
-                    .do_send(server::Disconnect { id: act.id });
+                act.addr.do_send(server::Disconnect { id: act.id });
 
                 // stop actor
                 ctx.stop();
@@ -224,42 +211,38 @@ impl WsChatSession {
     }
 }
 
-fn main() {
-    let _ = env_logger::init();
+fn main() -> std::io::Result<()> {
+    env_logger::init();
     let sys = actix::System::new("websocket-example");
 
-    // Start chat server actor in separate thread
-    let server = Arbiter::start(|_| server::ChatServer::default());
+    // Start chat server actor
+    let server = server::ChatServer::default().start();
 
     // Start tcp server in separate thread
     let srv = server.clone();
-    Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
+    Arbiter::new().exec(move || {
         session::TcpServer::new("127.0.0.1:12345", srv);
-        Ok(())
-    }));
+        Ok::<_, ()>(())
+    });
 
     // Create Http server with websocket support
     HttpServer::new(move || {
-        // Websocket sessions state
-        let state = WsChatSessionState {
-            addr: server.clone(),
-        };
-
-        App::with_state(state)
+        App::new()
+            .data(server.clone())
             // redirect to websocket.html
-            .resource("/", |r| r.method(http::Method::GET).f(|_| {
+            .service(web::resource("/").route(web::get().to(|| {
                 HttpResponse::Found()
                     .header("LOCATION", "/static/websocket.html")
                     .finish()
-            }))
+            })))
             // websocket
-            .resource("/ws/", |r| r.route().f(chat_route))
+            .service(web::resource("/ws/").to(chat_route))
             // static resources
-            .handler("/static/", fs::StaticFiles::new("static/").unwrap())
-    }).bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
+            .service(fs::Files::new("/static/", "static/"))
+    })
+    .bind("127.0.0.1:8080")?
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+    sys.run()
 }

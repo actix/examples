@@ -10,30 +10,23 @@
 //     2. validating user-submitted parameters using the 'validator' crate
 //     2. actix-web client features:
 //           - POSTing json body
-//     3. chaining futures into a single response used by an asynch endpoint
-//
-// There are 2 versions in this example, one that uses Boxed Futures and the
-// other that uses Impl Future, available since rustc v1.26.
+//     3. chaining futures into a single response used by an async endpoint
 
-extern crate actix;
-extern crate actix_web;
-extern crate serde;
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_json;
 #[macro_use]
 extern crate validator_derive;
-extern crate env_logger;
-extern crate futures;
-extern crate validator;
+#[macro_use]
+extern crate serde_derive;
+
+use std::collections::HashMap;
+use std::io;
 
 use actix_web::{
-    client, http::Method, server, App, AsyncResponder, Error, HttpMessage, HttpResponse,
-    Json,
+    client::Client,
+    error::ErrorBadRequest,
+    web::{self, BytesMut},
+    App, Error, HttpResponse, HttpServer,
 };
-use futures::{future::ok as fut_ok, Future};
-use std::collections::HashMap;
-use std::time::Duration;
+use futures::{Future, Stream};
 use validator::Validate;
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
@@ -56,99 +49,57 @@ struct HttpBinResponse {
     url: String,
 }
 
-// -----------------------------------------------------------------------
-// v1 uses Boxed Futures, which were the only option prior to rustc v1.26
-// -----------------------------------------------------------------------
-
-/// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v1(data: SomeData) -> Box<Future<Item = SomeData, Error = Error>> {
-    Box::new(
-        client::ClientRequest::post("https://httpbin.org/post")
-            .json(data).unwrap()
-            .send()
-            .conn_timeout(Duration::from_secs(10))
-            .map_err(Error::from)   // <- convert SendRequestError to an Error
-            .and_then(
-                |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                    .from_err()            // <- convert PayloadError to an Error
-                    .and_then(|body| {
-                        let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
-                        fut_ok(resp.json)
-                    })
-            ),
-    )
-}
-
-fn create_something_v1(
-    some_data: Json<SomeData>,
-) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    step_x_v1(some_data.into_inner())
-        .and_then(|some_data_2| {
-            step_x_v1(some_data_2).and_then(|some_data_3| {
-                step_x_v1(some_data_3).and_then(|d| {
-                    Ok(HttpResponse::Ok()
-                        .content_type("application/json")
-                        .body(serde_json::to_string(&d).unwrap())
-                        .into())
+/// validate data, post json to httpbin, get it back in the response body, return deserialized
+fn step_x(
+    data: SomeData,
+    client: &Client,
+) -> impl Future<Item = SomeData, Error = Error> {
+    let validation = futures::future::result(data.validate()).map_err(ErrorBadRequest);
+    let post_response = client
+        .post("https://httpbin.org/post")
+        .send_json(&data)
+        .map_err(Error::from) // <- convert SendRequestError to an Error
+        .and_then(|resp| {
+            resp.from_err()
+                .fold(BytesMut::new(), |mut acc, chunk| {
+                    acc.extend_from_slice(&chunk);
+                    Ok::<_, Error>(acc)
                 })
-            })
-        })
-        .responder()
-}
-
-// ---------------------------------------------------------------
-// v2 uses impl Future, available as of rustc v1.26
-// ---------------------------------------------------------------
-
-/// post json to httpbin, get it back in the response body, return deserialized
-fn step_x_v2(data: SomeData) -> impl Future<Item = SomeData, Error = Error> {
-    client::ClientRequest::post("https://httpbin.org/post")
-        .json(data).unwrap()
-        .send()
-        .conn_timeout(Duration::from_secs(10))
-        .map_err(Error::from)   // <- convert SendRequestError to an Error
-        .and_then(
-            |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                .from_err()            // <- convert PayloadError to an Error
-                .and_then(|body| {
-                    let resp: HttpBinResponse = serde_json::from_slice(&body).unwrap();
-                    fut_ok(resp.json)
+                .map(|body| {
+                    let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+                    body.json
                 })
-        )
+        });
+
+    validation.and_then(|_| post_response)
 }
 
-fn create_something_v2(
-    some_data: Json<SomeData>,
+fn create_something(
+    some_data: web::Json<SomeData>,
+    client: web::Data<Client>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
-    step_x_v2(some_data.into_inner()).and_then(|some_data_2| {
-        step_x_v2(some_data_2).and_then(|some_data_3| {
-            step_x_v2(some_data_3).and_then(|d| {
+    step_x(some_data.into_inner(), &client).and_then(move |some_data_2| {
+        step_x(some_data_2, &client).and_then(move |some_data_3| {
+            step_x(some_data_3, &client).and_then(|d| {
                 Ok(HttpResponse::Ok()
                     .content_type("application/json")
-                    .body(serde_json::to_string(&d).unwrap())
-                    .into())
+                    .body(serde_json::to_string(&d).unwrap()))
             })
         })
     })
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+fn main() -> io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
-    let sys = actix::System::new("asyncio_example");
+    let endpoint = "127.0.0.1:8080";
 
-    server::new(move || {
-        App::new()
-            .resource("/something_v1", |r| {
-                r.method(Method::POST).with(create_something_v1)
-            })
-            .resource("/something_v2", |r| {
-                r.method(Method::POST).with_async(create_something_v2)
-            })
-    }).bind("127.0.0.1:8088")
-        .unwrap()
-        .start();
-
-    println!("Started http server: 127.0.0.1:8088");
-    let _ = sys.run();
+    println!("Starting server at: {:?}", endpoint);
+    HttpServer::new(|| {
+        App::new().data(Client::default()).service(
+            web::resource("/something").route(web::post().to_async(create_something)),
+        )
+    })
+    .bind(endpoint)?
+    .run()
 }

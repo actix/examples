@@ -6,7 +6,7 @@ use actix::prelude::*;
 use rand::{self, rngs::ThreadRng, Rng};
 use std::collections::{HashMap, HashSet};
 
-use session;
+use crate::session;
 
 /// Message for chat server communications
 
@@ -66,7 +66,7 @@ impl Default for ChatServer {
 
         ChatServer {
             sessions: HashMap::new(),
-            rooms: rooms,
+            rooms,
             rng: rand::thread_rng(),
         }
     }

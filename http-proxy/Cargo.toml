@@ -1,20 +1,14 @@
 [package]
 name = "http-proxy"
 version = "0.1.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
-
-[[bin]]
-name = "proxy"
-path = "src/main.rs"
-
-[[bin]]
-name = "proxy-example-server"
-path = "src/server.rs"
+authors = ["Nikolay Kim <fafhrd91@gmail.com>", "Rotem Yaari <vmalloc@gmail.com>"]
+workspace = ".."
+edition = "2018"
 
 [dependencies]
-env_logger = "0.5"
-futures = "0.1"
-
-actix = "0.7"
-actix-web = "^0.7"
+actix-rt = "0.2"
+actix-web = { version = "1.0.0", features=["ssl"] }
+clap = "2.32.0"
+futures = "0.1.25"
+failure = "0.1.3"
+url = "1.7.1"

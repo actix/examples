@@ -2,13 +2,15 @@
 name = "actix_redis"
 version = "0.1.0"
 authors = ["dowwie <dkcdkg@gmail.com>"]
+edition = "2018"
+workspace = ".."
 
 [dependencies]
-actix = "0.7.3"
-actix-web = "0.7.3"
-actix-redis = "0.5.1"
+actix = "0.8.2"
+actix-web = "1.0.3"
+actix-redis = "0.6"
 futures = "0.1.23"
 redis-async = "0.4.0"
 serde = "1.0.71"
 serde_derive = "1.0.71"
-env_logger = "0.5.12"
+env_logger = "0.6"

@@ -1,60 +1,102 @@
-extern crate actix;
-extern crate actix_web;
-extern crate env_logger;
-extern crate futures;
+use actix_web::client::Client;
+use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use clap::{value_t, Arg};
+use futures::Future;
+use std::net::ToSocketAddrs;
+use url::Url;
 
-use actix_web::{
-    client, middleware, server, App, AsyncResponder, Body, Error, HttpMessage,
-    HttpRequest, HttpResponse,
-};
-use futures::{Future, Stream};
+fn forward(
+    req: HttpRequest,
+    payload: web::Payload,
+    url: web::Data<Url>,
+    client: web::Data<Client>,
+) -> impl Future<Item = HttpResponse, Error = Error> {
+    let mut new_url = url.get_ref().clone();
+    new_url.set_path(req.uri().path());
+    new_url.set_query(req.uri().query());
 
-/// Stream client request response and then send body to a server response
-fn index(_req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    client::ClientRequest::get("http://127.0.0.1:8081/")
-        .finish().unwrap()
-        .send()
-        .map_err(Error::from)          // <- convert SendRequestError to an Error
-        .and_then(
-            |resp| resp.body()         // <- this is MessageBody type, resolves to complete body
-                .from_err()            // <- convert PayloadError to an Error
-                .and_then(|body| {     // <- we got complete body, now send as server response
-                    Ok(HttpResponse::Ok().body(body))
-                }))
-        .responder()
-}
+    let forwarded_req = client
+        .request_from(new_url.as_str(), req.head())
+        .no_decompress();
+    let forwarded_req = if let Some(addr) = req.head().peer_addr {
+        forwarded_req.header("x-forwarded-for", format!("{}", addr.ip()))
+    } else {
+        forwarded_req
+    };
 
-/// streaming client request to a streaming server response
-fn streaming(_req: &HttpRequest) -> Box<Future<Item = HttpResponse, Error = Error>> {
-    // send client request
-    client::ClientRequest::get("https://www.rust-lang.org/en-US/")
-        .finish().unwrap()
-        .send()                         // <- connect to host and send request
-        .map_err(Error::from)           // <- convert SendRequestError to an Error
-        .and_then(|resp| {              // <- we received client response
-            Ok(HttpResponse::Ok()
-               // read one chunk from client response and send this chunk to a server response
-               // .from_err() converts PayloadError to an Error
-               .body(Body::Streaming(Box::new(resp.payload().from_err()))))
+    forwarded_req
+        .send_stream(payload)
+        .map_err(Error::from)
+        .map(|res| {
+            let mut client_resp = HttpResponse::build(res.status());
+            for (header_name, header_value) in res
+                .headers()
+                .iter()
+                .filter(|(h, _)| *h != "connection" && *h != "content-length")
+            {
+                client_resp.header(header_name.clone(), header_value.clone());
+            }
+            client_resp.streaming(res)
         })
-        .responder()
 }
 
-fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
-    let sys = actix::System::new("http-proxy");
+fn main() -> std::io::Result<()> {
+    let matches = clap::App::new("HTTP Proxy")
+        .arg(
+            Arg::with_name("listen_addr")
+                .takes_value(true)
+                .value_name("LISTEN ADDR")
+                .index(1)
+                .required(true),
+        )
+        .arg(
+            Arg::with_name("listen_port")
+                .takes_value(true)
+                .value_name("LISTEN PORT")
+                .index(2)
+                .required(true),
+        )
+        .arg(
+            Arg::with_name("forward_addr")
+                .takes_value(true)
+                .value_name("FWD ADDR")
+                .index(3)
+                .required(true),
+        )
+        .arg(
+            Arg::with_name("forward_port")
+                .takes_value(true)
+                .value_name("FWD PORT")
+                .index(4)
+                .required(true),
+        )
+        .get_matches();
 
-    server::new(|| {
+    let listen_addr = matches.value_of("listen_addr").unwrap();
+    let listen_port = value_t!(matches, "listen_port", u16).unwrap_or_else(|e| e.exit());
+
+    let forwarded_addr = matches.value_of("forward_addr").unwrap();
+    let forwarded_port =
+        value_t!(matches, "forward_port", u16).unwrap_or_else(|e| e.exit());
+
+    let forward_url = Url::parse(&format!(
+        "http://{}",
+        (forwarded_addr, forwarded_port)
+            .to_socket_addrs()
+            .unwrap()
+            .next()
+            .unwrap()
+    ))
+    .unwrap();
+
+    HttpServer::new(move || {
         App::new()
-            .middleware(middleware::Logger::default())
-            .resource("/streaming", |r| r.f(streaming))
-            .resource("/", |r| r.f(index))
-    }).workers(1)
-        .bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+            .data(Client::new())
+            .data(forward_url.clone())
+            .wrap(middleware::Logger::default())
+            .default_service(web::route().to_async(forward))
+    })
+    .bind((listen_addr, listen_port))?
+    .system_exit()
+    .run()
 }

@@ -1,4 +1,4 @@
-use actix_web::{Json, Result};
+use actix_web::web;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Info {
@@ -8,12 +8,12 @@ pub struct Info {
     confirm_password: String,
 }
 
-pub fn info(info: Json<Info>) -> Result<Json<Info>> {
+pub fn info(info: web::Json<Info>) -> web::Json<Info> {
     println!("=========={:?}=========", info);
-    Ok(Json(Info {
+    web::Json(Info {
         username: info.username.clone(),
         email: info.email.clone(),
         password: info.password.clone(),
         confirm_password: info.confirm_password.clone(),
-    }))
+    })
 }

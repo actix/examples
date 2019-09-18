@@ -2,7 +2,8 @@
 name = "rustls-example"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [[bin]]
 name = "rustls-server"
@@ -10,6 +11,6 @@ path = "src/main.rs"
 
 [dependencies]
 env_logger = "0.5"
-rustls = "0.14"
-actix = "0.7"
-actix-web = { version = "0.7", features=["rust-tls"] }
+rustls = "0.15"
+actix-web = { version = "1.0.0", features=["rust-tls"] }
+actix-files = "0.1.0"

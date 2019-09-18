@@ -2,12 +2,14 @@
 name = "cookie-session"
 version = "0.1.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = "../"
+workspace = ".."
+edition = "2018"
 
 [dependencies]
-actix = "0.7"
-actix-web = "^0.7"
+actix-web = "1.0.0"
+actix-session = "0.2.0"
+actix-rt = "0.2.5"
 
 futures = "0.1"
 time = "0.1"
-env_logger = "0.5"
+env_logger = "0.6"
