@@ -32,6 +32,7 @@ members = [
   "template_yarte",
   "template_handlebars",
   "tls",
+  "udp-echo",
   "unix-socket",
   "web-cors/backend",
   "websocket",

@@ -1,0 +1,11 @@
+[package]
+name = "udp-echo"
+version = "0.1.0"
+authors = ["Anton Patrushev <apatrushev@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+actix = "0.7"
+tokio = "0.1"
+futures = "0.1"
+bytes = "0.4"
