@@ -86,7 +86,7 @@ impl Broadcaster {
     fn remove_stale_clients(&mut self) {
         let mut ok_clients = Vec::new();
         for client in self.clients.iter() {
-            let result = client.clone().try_send(Bytes::from("data: ping"));
+            let result = client.clone().try_send(Bytes::from("data: ping\n\n"));
 
             if let Ok(()) = result {
                 ok_clients.push(client.clone());
