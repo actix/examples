@@ -1,14 +1,19 @@
+use actix_rt::Arbiter;
 use actix_web::error::ErrorInternalServerError;
 use actix_web::web::{Bytes, Data, Path};
 use actix_web::{web, App, Error, HttpResponse, HttpServer, Responder};
 
+use env_logger;
 use tokio::prelude::*;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
+use tokio::timer::Interval;
 
 use std::sync::Mutex;
+use std::time::{Duration, Instant};
 
 fn main() {
-    let data = Data::new(Mutex::new(Broadcaster::new()));
+    env_logger::init();
+    let data = Broadcaster::create();
 
     HttpServer::new(move || {
         App::new()
@@ -51,10 +56,43 @@ struct Broadcaster {
 }
 
 impl Broadcaster {
+    fn create() -> Data<Mutex<Self>> {
+        // Data ≃ Arc
+        let me = Data::new(Mutex::new(Broadcaster::new()));
+
+        // ping clients every 10 seconds to see if they are alive
+        Broadcaster::spawn_ping(me.clone());
+
+        me
+    }
+
     fn new() -> Self {
         Broadcaster {
             clients: Vec::new(),
         }
+    }
+
+    fn spawn_ping(me: Data<Mutex<Self>>) {
+        let task = Interval::new(Instant::now(), Duration::from_secs(10))
+            .for_each(move |_| {
+                me.lock().unwrap().remove_stale_clients();
+                Ok(())
+            })
+            .map_err(|e| panic!("interval errored; err={:?}", e));
+
+        Arbiter::spawn(task);
+    }
+
+    fn remove_stale_clients(&mut self) {
+        let mut ok_clients = Vec::new();
+        for client in self.clients.iter() {
+            let result = client.clone().try_send(Bytes::from("data: ping"));
+
+            if let Ok(()) = result {
+                ok_clients.push(client.clone());
+            }
+        }
+        self.clients = ok_clients;
     }
 
     fn new_client(&mut self) -> Client {
@@ -68,19 +106,12 @@ impl Broadcaster {
         Client(rx)
     }
 
-    fn send(&mut self, msg: &str) {
+    fn send(&self, msg: &str) {
         let msg = Bytes::from(["data: ", msg, "\n\n"].concat());
 
-        let mut ok_clients = Vec::new();
         for client in self.clients.iter() {
-            let result = client.clone().try_send(msg.clone());
-
-            if let Ok(()) = result {
-                ok_clients.push(client.clone());
-            }
+            client.clone().try_send(msg.clone()).unwrap_or(());
         }
-
-        self.clients = ok_clients;
     }
 }
 

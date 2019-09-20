@@ -1,7 +1,6 @@
 # actix-sse
-Example of server-sent events, also known as [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource).
+Example of server-sent events, aka `EventSource`, with actix web.
 
-## Running
 ```sh
 cargo run
 ```
@@ -30,3 +29,12 @@ You may be limited to a maximal number of connections (open file descriptors). S
 ```sh
 ulimit -n 2048
 ```
+
+Test maximum number of open connections with [drain.js](drain.js):
+
+```sh
+$ node drain.js
+Connections dropped: 5957, accepting connections: false^C⏎
+```
+
+_Accepting connections_ indicates wheter resources for the server have been exhausted.
