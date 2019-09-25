@@ -1,0 +1,27 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Server-sent events</title>
+    <style>
+        p {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        let root = document.getElementById("root");
+        let events = new EventSource("/events");
+        events.onmessage = (event) => {
+            let data = document.createElement("p");
+            let time = new Date().toLocaleTimeString();
+            data.innerText = time + ": " + event.data;
+            root.appendChild(data);
+        }
+    </script>
+</body>
+</html>

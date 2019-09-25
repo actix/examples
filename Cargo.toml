@@ -24,6 +24,7 @@ members = [
   "r2d2",
   "redis-session",
   "rustls",
+  "server-sent-events",
   "simple-auth-server",
   "state",
   "static_index",
