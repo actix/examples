@@ -44,7 +44,7 @@ mod test {
 
         assert_eq!(
             resp.headers().get(http::header::CONTENT_TYPE).unwrap(),
-            "text/html"
+            "text/html; charset=utf-8"
         );
 
         let bytes = atest::read_body(resp);
@@ -73,7 +73,7 @@ mod test {
 
         assert_eq!(
             resp.headers().get(http::header::CONTENT_TYPE).unwrap(),
-            "text/html"
+            "text/html; charset=utf-8"
         );
 
         let bytes = atest::read_body(resp);
@@ -102,7 +102,7 @@ mod test {
 
         assert_eq!(
             resp.headers().get(http::header::CONTENT_TYPE).unwrap(),
-            "text/html"
+            "text/html; charset=utf-8"
         );
 
         let bytes = atest::read_body(resp);
