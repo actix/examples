@@ -2,6 +2,9 @@ language: rust
 sudo: false
 dist: trusty
 
+services:
+  - redis-server
+
 cache:
   apt: true
   directories:
