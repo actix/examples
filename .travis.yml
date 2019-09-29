@@ -42,7 +42,7 @@ before_script:
 
 script:
   - cargo check --all
-  - cargo test --all
+  - cargo test --all --no-fail-fast
   - |
     if [[ "$TRAVIS_RUST_VERSION" == "nightly" ]]; then
       cargo clippy
