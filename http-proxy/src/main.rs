@@ -7,7 +7,7 @@ use url::Url;
 
 fn forward(
     req: HttpRequest,
-    payload: web::Payload,
+    body: web::Bytes,
     url: web::Data<Url>,
     client: web::Data<Client>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
@@ -25,14 +25,16 @@ fn forward(
     };
 
     forwarded_req
-        .send_stream(payload)
+        .send_body(body)
         .map_err(Error::from)
         .map(|res| {
             let mut client_resp = HttpResponse::build(res.status());
+            // Remove `Connection` as per
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection#Directives
             for (header_name, header_value) in res
                 .headers()
                 .iter()
-                .filter(|(h, _)| *h != "connection" && *h != "content-length")
+                .filter(|(h, _)| *h != "connection")
             {
                 client_resp.header(header_name.clone(), header_value.clone());
             }
