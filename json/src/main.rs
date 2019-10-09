@@ -1,5 +1,3 @@
-extern crate json;
-
 use actix_web::{
     error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
 };
