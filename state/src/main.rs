@@ -9,7 +9,7 @@
 //! > must be constructed multiple times. If you want to share data between
 //! different > threads, a shared object should be used, e.g. `Arc`.
 //!
-//! Check [user guide](https://actix.rs/book/actix-web/sec-2-application.html) for more info.
+//! Check [user guide](https://actix.rs/docs/application/#state) for more info.
 
 use std::io;
 use std::sync::Mutex;
