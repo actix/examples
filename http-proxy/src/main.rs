@@ -1,13 +1,14 @@
 use actix_web::client::Client;
 use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use clap::{value_t, Arg};
+use futures::stream::Stream;
 use futures::Future;
 use std::net::ToSocketAddrs;
 use url::Url;
 
 fn forward(
     req: HttpRequest,
-    payload: web::Payload,
+    body: web::Bytes,
     url: web::Data<Url>,
     client: web::Data<Client>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
@@ -15,6 +16,8 @@ fn forward(
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
 
+    // TODO: This forwarded implementation is incomplete as it only handles the inofficial
+    // X-Forwarded-For header but not the official Forwarded one.
     let forwarded_req = client
         .request_from(new_url.as_str(), req.head())
         .no_decompress();
@@ -25,19 +28,24 @@ fn forward(
     };
 
     forwarded_req
-        .send_stream(payload)
+        .send_body(body)
         .map_err(Error::from)
-        .map(|res| {
+        .map(|mut res| {
             let mut client_resp = HttpResponse::build(res.status());
-            for (header_name, header_value) in res
-                .headers()
-                .iter()
-                .filter(|(h, _)| *h != "connection" && *h != "content-length")
+            // Remove `Connection` as per
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection#Directives
+            for (header_name, header_value) in
+                res.headers().iter().filter(|(h, _)| *h != "connection")
             {
                 client_resp.header(header_name.clone(), header_value.clone());
             }
-            client_resp.streaming(res)
+            res.body()
+                .into_stream()
+                .concat2()
+                .map(move |b| client_resp.body(b))
+                .map_err(|e| e.into())
         })
+        .flatten()
 }
 
 fn main() -> std::io::Result<()> {
