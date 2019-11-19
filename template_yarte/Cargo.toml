@@ -1,14 +1,14 @@
 [package]
 name = "template_yarte"
 version = "0.0.1"
-authors = ["Rust-iendo <riendocontributions@gmail.com>"]
+authors = ["Juan Aguilar Santillana <mhpoin@gmail.com>"]
 publish = false
 edition = "2018"
 
 workspace = ".."
 
 [dependencies]
-env_logger = "0.6"
+env_logger = "0.7"
 
 yarte = { version = "0.3", features=["with-actix-web"]  }
 
