@@ -1,67 +1,45 @@
-use std::cell::Cell;
-use std::fs;
-use std::io::Write;
+extern crate actix_web;
+extern crate actix_multipart;
+extern crate serde;
 
-use actix_multipart::{Field, Multipart, MultipartError};
-use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
-use futures::future::{err, Either};
-use futures::{Future, Stream};
+#[macro_use(concat_string)]
+extern crate concat_string;
+
+use std::io::Write;
+use actix_multipart::Multipart;
+use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
+use futures::{StreamExt};
+use std::cell::Cell;
+use serde::Deserialize;
 
 pub struct AppState {
     pub counter: Cell<usize>,
 }
 
-pub fn save_file(field: Field) -> impl Future<Item = i64, Error = Error> {
-    let file_path_string = "upload.png";
-    let file = match fs::File::create(file_path_string) {
-        Ok(file) => file,
-        Err(e) => return Either::A(err(error::ErrorInternalServerError(e))),
-    };
-    Either::B(
-        field
-            .fold((file, 0i64), move |(mut file, mut acc), bytes| {
-                // fs operations are blocking, we have to execute writes
-                // on threadpool
-                web::block(move || {
-                    file.write_all(bytes.as_ref()).map_err(|e| {
-                        println!("file.write_all failed: {:?}", e);
-                        MultipartError::Payload(error::PayloadError::Io(e))
-                    })?;
-                    acc += bytes.len() as i64;
-                    Ok((file, acc))
-                })
-                .map_err(|e: error::BlockingError<MultipartError>| {
-                    match e {
-                        error::BlockingError::Error(e) => e,
-                        error::BlockingError::Canceled => MultipartError::Incomplete,
-                    }
-                })
-            })
-            .map(|(_, acc)| acc)
-            .map_err(|e| {
-                println!("save_file failed, {:?}", e);
-                error::ErrorInternalServerError(e)
-            }),
-    )
+#[derive(Deserialize, Debug)]
+struct Config {
+  port: String
 }
 
-pub fn upload(
-    multipart: Multipart,
-    counter: web::Data<Cell<usize>>,
-) -> impl Future<Item = HttpResponse, Error = Error> {
-    counter.set(counter.get() + 1);
-    println!("{:?}", counter.get());
-
-    multipart
-        .map_err(error::ErrorInternalServerError)
-        .map(|field| save_file(field).into_stream())
-        .flatten()
-        .collect()
-        .map(|sizes| HttpResponse::Ok().json(sizes))
-        .map_err(|e| {
-            println!("failed: {}", e);
-            e
-        })
+async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
+    // iterate over multipart stream
+    while let Some(item) = payload.next().await {
+        let mut field = item?;
+        let content_type = field.content_disposition().unwrap();
+        let filename = content_type.get_filename().unwrap();
+        let filepath = format!("./tmp/{}", filename);
+        let mut f = std::fs::File::create(filepath).unwrap();
+        // Field in turn is stream of *Bytes* object
+        while let Some(chunk) = field.next().await {
+            let data = chunk.unwrap();
+            let mut pos = 0;
+            while pos < data.len() {
+                let bytes_written = f.write(&data[pos..])?;
+                pos += bytes_written;
+            }
+        }
+    }
+    Ok(HttpResponse::Ok().into())
 }
 
 fn index() -> HttpResponse {
@@ -69,7 +47,7 @@ fn index() -> HttpResponse {
         <head><title>Upload Test</title></head>
         <body>
             <form target="/" method="post" enctype="multipart/form-data">
-                <input type="file" name="file"/>
+                <input type="file" multiple name="file"/>
                 <input type="submit" value="Submit"></button>
             </form>
         </body>
@@ -80,18 +58,20 @@ fn index() -> HttpResponse {
 
 fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
-    env_logger::init();
-
+    std::fs::create_dir_all("./tmp").unwrap();
+    let config = envy::from_env::<Config>().unwrap();
+    let p =  config.port;
+    let port = concat_string!("0.0.0.0:", p);
     HttpServer::new(|| {
-        App::new()
-            .data(Cell::new(0usize))
-            .wrap(middleware::Logger::default())
-            .service(
-                web::resource("/")
-                    .route(web::get().to(index))
-                    .route(web::post().to_async(upload)),
-            )
+    App::new()
+    .data(Cell::new(0usize))
+    .wrap(middleware::Logger::default())
+    .service(
+        web::resource("/")
+            .route(web::get().to(index))
+            .route(web::post().to(save_file)),
+        )
     })
-    .bind("127.0.0.1:8080")?
+    .bind(port)?
     .run()
 }
