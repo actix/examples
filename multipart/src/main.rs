@@ -1,7 +1,3 @@
-extern crate actix_web;
-extern crate actix_multipart;
-extern crate serde;
-
 #[macro_use(concat_string)]
 extern crate concat_string;
 
@@ -9,12 +5,7 @@ use std::io::Write;
 use actix_multipart::Multipart;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use futures::{StreamExt};
-use std::cell::Cell;
 use serde::Deserialize;
-
-pub struct AppState {
-    pub counter: Cell<usize>,
-}
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -64,7 +55,6 @@ fn main() -> std::io::Result<()> {
     let port = concat_string!("0.0.0.0:", p);
     HttpServer::new(|| {
     App::new()
-    .data(Cell::new(0usize))
     .wrap(middleware::Logger::default())
     .service(
         web::resource("/")
