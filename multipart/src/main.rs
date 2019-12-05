@@ -1,16 +1,7 @@
-#[macro_use(concat_string)]
-extern crate concat_string;
-
 use std::io::Write;
 use actix_multipart::Multipart;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use futures::{StreamExt};
-use serde::Deserialize;
-
-#[derive(Deserialize, Debug)]
-struct Config {
-  port: String
-}
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
@@ -50,9 +41,7 @@ fn index() -> HttpResponse {
 fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();
-    let config = envy::from_env::<Config>().unwrap();
-    let p =  config.port;
-    let port = concat_string!("0.0.0.0:", p);
+    let ip = "0.0.0.0:3000";
     HttpServer::new(|| {
     App::new()
     .wrap(middleware::Logger::default())
@@ -62,6 +51,6 @@ fn main() -> std::io::Result<()> {
             .route(web::post().to(save_file)),
         )
     })
-    .bind(port)?
+    .bind(ip)?
     .run()
 }
