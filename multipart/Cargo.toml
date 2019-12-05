@@ -1,12 +1,12 @@
 [package]
-name = "actix-web-upload-example"
-version = "0.0.2"
+name = "multipart-example"
+version = "0.3.0"
 authors = ["Bevan Hunt <bevan@bevanhunt.com>"]
 edition = "2018"
 license = "MIT"
 description = "Simple file uploader in Actix Web with Async/Await"
 keywords = ["actix", "actix-web", "multipart"]
-repository = "https://github.com/bevanhunt/actix-web-upload-example"
+repository = "https://github.com/actix/examples"
 readme = "README.md"
 
 [dependencies]
