@@ -1,11 +1,12 @@
 use actix_web::{middleware, web, App, HttpRequest, HttpServer};
 
-fn index(req: HttpRequest) -> &'static str {
+async fn index(req: HttpRequest) -> &'static str {
     println!("REQ: {:?}", req);
     "Hello world!"
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
@@ -13,28 +14,27 @@ fn main() -> std::io::Result<()> {
         App::new()
             // enable logger
             .wrap(middleware::Logger::default())
-            .service(web::resource("/index.html").to(|| "Hello world!"))
+            .service(web::resource("/index.html").to(|| async { "Hello world!" }))
             .service(web::resource("/").to(index))
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use actix_web::dev::Service;
-    use actix_web::{test, web, App, http, Error};
+    use actix_web::{http, test, web, App, Error};
 
-    #[test]
-    fn test_index() -> Result<(), Error>  {
+    #[actix_rt::test]
+    async fn test_index() -> Result<(), Error> {
         let app = App::new().route("/", web::get().to(index));
-        let mut app = test::init_service(app);
+        let mut app = test::init_service(app).await;
 
-        let req = test::TestRequest::get()
-            .uri("/")
-            .to_request();
-        let resp = test::block_on(app.call(req)).unwrap();
+        let req = test::TestRequest::get().uri("/").to_request();
+        let resp = app.call(req).await.unwrap();
 
         assert_eq!(resp.status(), http::StatusCode::OK);
 

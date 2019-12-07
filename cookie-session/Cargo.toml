@@ -1,15 +1,15 @@
 [package]
 name = "cookie-session"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-web = "1.0.0"
-actix-session = "0.2.0"
-actix-rt = "0.2.5"
+actix-web = "2.0.0-alpha.3"
+actix-session = "0.3.0-alpha.3"
+actix-rt = "1.0.0-alpha.3"
 
-futures = "0.1"
+futures = "0.3.1"
 time = "0.1"
 env_logger = "0.6"

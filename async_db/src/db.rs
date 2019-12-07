@@ -1,6 +1,6 @@
 use actix_web::{web, Error as AWError};
 use failure::Error;
-use futures::Future;
+use futures::{Future, TryFutureExt};
 use r2d2;
 use r2d2_sqlite;
 use rusqlite::NO_PARAMS;
@@ -26,7 +26,7 @@ pub enum Queries {
 pub fn execute(
     pool: &Pool,
     query: Queries,
-) -> impl Future<Item = Vec<WeatherAgg>, Error = AWError> {
+) -> impl Future<Output = Result<Vec<WeatherAgg>, AWError>> {
     let pool = pool.clone();
     web::block(move || match query {
         Queries::GetTopTenHottestYears => get_hottest_years(pool.get()?),
@@ -34,7 +34,7 @@ pub fn execute(
         Queries::GetTopTenHottestMonths => get_hottest_months(pool.get()?),
         Queries::GetTopTenColdestMonths => get_coldest_months(pool.get()?),
     })
-    .from_err()
+    .map_err(AWError::from)
 }
 
 fn get_hottest_years(conn: Connection) -> Result<Vec<WeatherAgg>, Error> {

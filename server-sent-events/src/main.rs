@@ -1,17 +1,17 @@
-use actix_rt::Arbiter;
-use actix_web::error::ErrorInternalServerError;
+use std::pin::Pin;
+use std::sync::Mutex;
+use std::task::{Context, Poll};
+use std::time::Duration;
+
 use actix_web::web::{Bytes, Data, Path};
 use actix_web::{web, App, Error, HttpResponse, HttpServer, Responder};
-
 use env_logger;
-use tokio::prelude::*;
+use futures::{Stream, StreamExt};
 use tokio::sync::mpsc::{channel, Receiver, Sender};
-use tokio::timer::Interval;
+use tokio::time::{interval_at, Instant};
 
-use std::sync::Mutex;
-use std::time::{Duration, Instant};
-
-fn main() {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     env_logger::init();
     let data = Broadcaster::create();
 
@@ -22,13 +22,12 @@ fn main() {
             .route("/events", web::get().to(new_client))
             .route("/broadcast/{msg}", web::get().to(broadcast))
     })
-    .bind("127.0.0.1:8080")
-    .expect("Unable to bind port")
-    .run()
-    .unwrap();
+    .bind("127.0.0.1:8080")?
+    .start()
+    .await
 }
 
-fn index() -> impl Responder {
+async fn index() -> impl Responder {
     let content = include_str!("index.html");
 
     HttpResponse::Ok()
@@ -36,7 +35,7 @@ fn index() -> impl Responder {
         .body(content)
 }
 
-fn new_client(broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
+async fn new_client(broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
     let rx = broadcaster.lock().unwrap().new_client();
 
     HttpResponse::Ok()
@@ -45,7 +44,10 @@ fn new_client(broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
         .streaming(rx)
 }
 
-fn broadcast(msg: Path<String>, broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
+async fn broadcast(
+    msg: Path<String>,
+    broadcaster: Data<Mutex<Broadcaster>>,
+) -> impl Responder {
     broadcaster.lock().unwrap().send(&msg.into_inner());
 
     HttpResponse::Ok().body("msg sent")
@@ -73,14 +75,12 @@ impl Broadcaster {
     }
 
     fn spawn_ping(me: Data<Mutex<Self>>) {
-        let task = Interval::new(Instant::now(), Duration::from_secs(10))
-            .for_each(move |_| {
+        actix_rt::spawn(async move {
+            let mut task = interval_at(Instant::now(), Duration::from_secs(10));
+            while let Some(_) = task.next().await {
                 me.lock().unwrap().remove_stale_clients();
-                Ok(())
-            })
-            .map_err(|e| panic!("interval errored; err={:?}", e));
-
-        Arbiter::spawn(task);
+            }
+        })
     }
 
     fn remove_stale_clients(&mut self) {
@@ -119,10 +119,16 @@ impl Broadcaster {
 struct Client(Receiver<Bytes>);
 
 impl Stream for Client {
-    type Item = Bytes;
-    type Error = Error;
+    type Item = Result<Bytes, Error>;
 
-    fn poll(&mut self) -> Poll<Option<Self::Item>, Self::Error> {
-        self.0.poll().map_err(ErrorInternalServerError)
+    fn poll_next(
+        mut self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Self::Item>> {
+        match Pin::new(&mut self.0).poll_next(cx) {
+            Poll::Ready(Some(v)) => Poll::Ready(Some(Ok(v))),
+            Poll::Ready(None) => Poll::Ready(None),
+            Poll::Pending => Poll::Pending,
+        }
     }
 }

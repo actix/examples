@@ -24,7 +24,8 @@ mod session;
 
 static SESSION_SIGNING_KEY: &[u8] = &[0; 32];
 
-fn main() -> io::Result<()> {
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
     dotenv().ok();
 
     env::set_var("RUST_LOG", "actix_todo=debug,actix_web=info");
@@ -54,14 +55,12 @@ fn main() -> io::Result<()> {
             .wrap(Logger::default())
             .wrap(session_store)
             .wrap(error_handlers)
-            .service(web::resource("/").route(web::get().to_async(api::index)))
-            .service(web::resource("/todo").route(web::post().to_async(api::create)))
-            .service(
-                web::resource("/todo/{id}").route(web::post().to_async(api::update)),
-            )
+            .service(web::resource("/").route(web::get().to(api::index)))
+            .service(web::resource("/todo").route(web::post().to(api::create)))
+            .service(web::resource("/todo/{id}").route(web::post().to(api::update)))
             .service(fs::Files::new("/static", "static/"))
     };
 
     debug!("Starting server");
-    HttpServer::new(app).bind("localhost:8088")?.run()
+    HttpServer::new(app).bind("localhost:8088")?.start().await
 }

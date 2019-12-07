@@ -1,6 +1,6 @@
 [package]
 name = "template-tera"
-version = "0.1.0"
+version = "2.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 workspace = ".."
 edition = "2018"
@@ -8,4 +8,5 @@ edition = "2018"
 [dependencies]
 env_logger = "0.6"
 tera = "0.11"
-actix-web = "1.0.0"
+actix-web = "2.0.0-alpha.3"
+actix-rt = "1.0.0-alpha.3"

@@ -1,12 +1,11 @@
 [package]
 name = "unix-socket"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Messense Lv <messense@icloud.com>"]
 workspace = ".."
 edition = "2018"
 
 [dependencies]
-env_logger = "0.5"
-tokio-uds = "0.2"
-
-actix-web = { version = "1.0.5", features = ["uds"] }
+env_logger = "0.6"
+actix-web = "2.0.0-alpha.3"
+actix-rt = "1.0.0-alpha.3"

@@ -2,18 +2,17 @@
 use std::io;
 
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
-use futures::Future;
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 use uuid;
 
 /// Async request handler. Ddb pool is stored in application state.
-fn index(
+async fn index(
     path: web::Path<String>,
     db: web::Data<Pool<SqliteConnectionManager>>,
-) -> impl Future<Item = HttpResponse, Error = Error> {
+) -> Result<HttpResponse, Error> {
     // execute sync code in threadpool
-    web::block(move || {
+    let res = web::block(move || {
         let conn = db.get().unwrap();
 
         let uuid = format!("{}", uuid::Uuid::new_v4());
@@ -27,16 +26,16 @@ fn index(
             row.get::<_, String>(0)
         })
     })
-    .then(|res| match res {
-        Ok(user) => Ok(HttpResponse::Ok().json(user)),
-        Err(_) => Ok(HttpResponse::InternalServerError().into()),
-    })
+    .await
+    .map(|user| HttpResponse::Ok().json(user))
+    .map_err(|_| HttpResponse::InternalServerError())?;
+    Ok(res)
 }
 
-fn main() -> io::Result<()> {
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=debug");
     env_logger::init();
-    let sys = actix_rt::System::new("r2d2-example");
 
     // r2d2 pool
     let manager = SqliteConnectionManager::file("test.db");
@@ -47,10 +46,9 @@ fn main() -> io::Result<()> {
         App::new()
             .data(pool.clone()) // <- store db pool in app state
             .wrap(middleware::Logger::default())
-            .route("/{name}", web::get().to_async(index))
+            .route("/{name}", web::get().to(index))
     })
     .bind("127.0.0.1:8080")?
-    .start();
-
-    sys.run()
+    .start()
+    .await
 }

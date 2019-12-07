@@ -1,15 +1,11 @@
 // This example is meant to show how to automatically generate a json error response when something goes wrong.
-
-use actix::System;
-use actix_web::http::StatusCode;
-use actix_web::web::{get, resource, HttpRequest, HttpResponse};
-use actix_web::{App, HttpServer, ResponseError};
-use futures::future::err;
-use futures::Future;
-use serde::Serialize;
-use serde_json::{json, to_string_pretty};
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::io;
+
+use actix_web::http::StatusCode;
+use actix_web::{web, App, HttpServer, ResponseError};
+use serde::Serialize;
+use serde_json::{json, to_string_pretty};
 
 #[derive(Debug, Serialize)]
 struct Error {
@@ -25,29 +21,30 @@ impl Display for Error {
 
 impl ResponseError for Error {
     // builds the actual response to send back when an error occurs
-    fn render_response(&self) -> HttpResponse {
+    fn error_response(&self) -> web::HttpResponse {
         let err_json = json!({ "error": self.msg });
-        HttpResponse::build(StatusCode::from_u16(self.status).unwrap()).json(err_json)
+        web::HttpResponse::build(StatusCode::from_u16(self.status).unwrap())
+            .json(err_json)
     }
 }
 
-fn index(_: HttpRequest) -> impl Future<Item = HttpResponse, Error = Error> {
-    err(Error {
+async fn index() -> Result<web::HttpResponse, Error> {
+    Err(Error {
         msg: "an example error message".to_string(),
         status: 400,
     })
 }
 
-fn main() -> io::Result<()> {
-    let sys = System::new("json_error_example");
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
     let ip_address = "127.0.0.1:8000";
-
-    HttpServer::new(|| App::new().service(resource("/").route(get().to_async(index))))
-        .bind(ip_address)
-        .expect("Can not bind to port 8000")
-        .start();
-
     println!("Running server on {}", ip_address);
 
-    sys.run()
+    HttpServer::new(|| {
+        App::new().service(web::resource("/").route(web::get().to(index)))
+    })
+    .bind(ip_address)
+    .expect("Can not bind to port 8000")
+    .start()
+    .await
 }

@@ -1,17 +1,16 @@
+use std::net::ToSocketAddrs;
+
 use actix_web::client::Client;
 use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use clap::{value_t, Arg};
-use futures::stream::Stream;
-use futures::Future;
-use std::net::ToSocketAddrs;
 use url::Url;
 
-fn forward(
+async fn forward(
     req: HttpRequest,
     body: web::Bytes,
     url: web::Data<Url>,
     client: web::Data<Client>,
-) -> impl Future<Item = HttpResponse, Error = Error> {
+) -> Result<HttpResponse, Error> {
     let mut new_url = url.get_ref().clone();
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
@@ -27,28 +26,22 @@ fn forward(
         forwarded_req
     };
 
-    forwarded_req
-        .send_body(body)
-        .map_err(Error::from)
-        .map(|mut res| {
-            let mut client_resp = HttpResponse::build(res.status());
-            // Remove `Connection` as per
-            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection#Directives
-            for (header_name, header_value) in
-                res.headers().iter().filter(|(h, _)| *h != "connection")
-            {
-                client_resp.header(header_name.clone(), header_value.clone());
-            }
-            res.body()
-                .into_stream()
-                .concat2()
-                .map(move |b| client_resp.body(b))
-                .map_err(|e| e.into())
-        })
-        .flatten()
+    let mut res = forwarded_req.send_body(body).await.map_err(Error::from)?;
+
+    let mut client_resp = HttpResponse::build(res.status());
+    // Remove `Connection` as per
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection#Directives
+    for (header_name, header_value) in
+        res.headers().iter().filter(|(h, _)| *h != "connection")
+    {
+        client_resp.header(header_name.clone(), header_value.clone());
+    }
+
+    Ok(client_resp.body(res.body().await?))
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     let matches = clap::App::new("HTTP Proxy")
         .arg(
             Arg::with_name("listen_addr")
@@ -102,9 +95,10 @@ fn main() -> std::io::Result<()> {
             .data(Client::new())
             .data(forward_url.clone())
             .wrap(middleware::Logger::default())
-            .default_service(web::route().to_async(forward))
+            .default_service(web::route().to(forward))
     })
     .bind((listen_addr, listen_port))?
     .system_exit()
-    .run()
+    .start()
+    .await
 }

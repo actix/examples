@@ -1,3 +1,5 @@
+use std::pin::Pin;
+
 use actix_identity::Identity;
 use actix_web::{
     dev::Payload, error::BlockingError, web, Error, FromRequest, HttpRequest,
@@ -5,7 +7,7 @@ use actix_web::{
 };
 use diesel::prelude::*;
 use diesel::PgConnection;
-use futures::Future;
+use futures::future::Future;
 
 use crate::errors::ServiceError;
 use crate::models::{Pool, SlimUser, User};
@@ -24,43 +26,47 @@ pub type LoggedUser = SlimUser;
 impl FromRequest for LoggedUser {
     type Config = ();
     type Error = Error;
-    type Future = Result<LoggedUser, Error>;
+    type Future = Pin<Box<dyn Future<Output = Result<LoggedUser, Error>>>>;
 
     fn from_request(req: &HttpRequest, pl: &mut Payload) -> Self::Future {
-        if let Some(identity) = Identity::from_request(req, pl)?.identity() {
-            let user: LoggedUser = serde_json::from_str(&identity)?;
-            return Ok(user);
-        }
-        Err(ServiceError::Unauthorized.into())
+        let fut = Identity::from_request(req, pl);
+
+        Box::pin(async move {
+            if let Some(identity) = fut.await?.identity() {
+                let user: LoggedUser = serde_json::from_str(&identity)?;
+                return Ok(user);
+            };
+            Err(ServiceError::Unauthorized.into())
+        })
     }
 }
 
-pub fn logout(id: Identity) -> HttpResponse {
+pub async fn logout(id: Identity) -> HttpResponse {
     id.forget();
     HttpResponse::Ok().finish()
 }
 
-pub fn login(
+pub async fn login(
     auth_data: web::Json<AuthData>,
     id: Identity,
     pool: web::Data<Pool>,
-) -> impl Future<Item = HttpResponse, Error = ServiceError> {
-    web::block(move || query(auth_data.into_inner(), pool)).then(
-        move |res: Result<SlimUser, BlockingError<ServiceError>>| match res {
-            Ok(user) => {
-                let user_string = serde_json::to_string(&user).unwrap();
-                id.remember(user_string);
-                Ok(HttpResponse::Ok().finish())
-            }
-            Err(err) => match err {
-                BlockingError::Error(service_error) => Err(service_error),
-                BlockingError::Canceled => Err(ServiceError::InternalServerError),
-            },
+) -> Result<HttpResponse, ServiceError> {
+    let res = web::block(move || query(auth_data.into_inner(), pool)).await;
+
+    match res {
+        Ok(user) => {
+            let user_string = serde_json::to_string(&user).unwrap();
+            id.remember(user_string);
+            Ok(HttpResponse::Ok().finish())
+        }
+        Err(err) => match err {
+            BlockingError::Error(service_error) => Err(service_error),
+            BlockingError::Canceled => Err(ServiceError::InternalServerError),
         },
-    )
+    }
 }
 
-pub fn get_me(logged_user: LoggedUser) -> HttpResponse {
+pub async fn get_me(logged_user: LoggedUser) -> HttpResponse {
     HttpResponse::Ok().json(logged_user)
 }
 /// Diesel query

@@ -1,7 +1,7 @@
-use std::io::Write;
 use actix_multipart::Multipart;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
-use futures::{StreamExt};
+use futures::StreamExt;
+use std::io::Write;
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
@@ -38,19 +38,21 @@ fn index() -> HttpResponse {
     HttpResponse::Ok().body(html)
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();
+
     let ip = "0.0.0.0:3000";
+
     HttpServer::new(|| {
-    App::new()
-    .wrap(middleware::Logger::default())
-    .service(
-        web::resource("/")
-            .route(web::get().to(index))
-            .route(web::post().to(save_file)),
+        App::new().wrap(middleware::Logger::default()).service(
+            web::resource("/")
+                .route(web::get().to(index))
+                .route(web::post().to(save_file)),
         )
     })
     .bind(ip)?
-    .run()
+    .start()
+    .await
 }

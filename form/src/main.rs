@@ -9,14 +9,16 @@ struct AppState {
     foo: String,
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Logger::default())
             .configure(app_config)
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }
 
 fn app_config(config: &mut web::ServiceConfig) {
@@ -28,11 +30,11 @@ fn app_config(config: &mut web::ServiceConfig) {
             .service(web::resource("/").route(web::get().to(index)))
             .service(web::resource("/post1").route(web::post().to(handle_post_1)))
             .service(web::resource("/post2").route(web::post().to(handle_post_2)))
-            .service(web::resource("/post3").route(web::post().to(handle_post_3)))
+            .service(web::resource("/post3").route(web::post().to(handle_post_3))),
     );
 }
 
-fn index() -> Result<HttpResponse> {
+async fn index() -> Result<HttpResponse> {
     Ok(HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .body(include_str!("../static/form.html")))
@@ -44,14 +46,14 @@ pub struct MyParams {
 }
 
 /// Simple handle POST request
-fn handle_post_1(params: web::Form<MyParams>) -> Result<HttpResponse> {
+async fn handle_post_1(params: web::Form<MyParams>) -> Result<HttpResponse> {
     Ok(HttpResponse::Ok()
         .content_type("text/plain")
         .body(format!("Your name is {}", params.name)))
 }
 
 /// State and POST Params
-fn handle_post_2(
+async fn handle_post_2(
     state: web::Data<AppState>,
     params: web::Form<MyParams>,
 ) -> HttpResponse {
@@ -62,7 +64,7 @@ fn handle_post_2(
 }
 
 /// Request and POST Params
-fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Responder {
+async fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Responder {
     println!("Handling POST request: {:?}", req);
 
     HttpResponse::Ok()
@@ -74,10 +76,10 @@ fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Responde
 mod tests {
     use super::*;
 
-    use actix_web::body::{Body , ResponseBody};
+    use actix_web::body::{Body, ResponseBody};
     use actix_web::dev::{HttpResponseBuilder, Service, ServiceResponse};
     use actix_web::http::{header::CONTENT_TYPE, HeaderValue, StatusCode};
-    use actix_web::test::{self, block_on, TestRequest};
+    use actix_web::test::{self, TestRequest};
     use actix_web::web::Form;
 
     trait BodyTest {
@@ -99,47 +101,42 @@ mod tests {
         }
     }
 
-    #[test]
-    fn handle_post_1_unit_test() {
+    #[actix_rt::test]
+    async fn handle_post_1_unit_test() {
         let params = Form(MyParams {
             name: "John".to_string(),
         });
-        let result = handle_post_1(params);
-        let resp = block_on(result).unwrap();
+        let resp = handle_post_1(params).await.unwrap();
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(
-            resp.body().as_str(),
-            "Your name is John"
-        );
+        assert_eq!(resp.body().as_str(), "Your name is John");
     }
 
-    #[test]
-    fn handle_post_1_integration_test() {
-        let mut app = test::init_service(App::new().configure(app_config));
+    #[actix_rt::test]
+    async fn handle_post_1_integration_test() {
+        let mut app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post1")
-            .set_form(&MyParams {name: "John".to_string()})
+            .set_form(&MyParams {
+                name: "John".to_string(),
+            })
             .to_request();
-        let resp: ServiceResponse = block_on(app.call(req)).unwrap();
+        let resp: ServiceResponse = app.call(req).await.unwrap();
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(
-            resp.response().body().as_str(),
-            "Your name is John"
-        );
+        assert_eq!(resp.response().body().as_str(), "Your name is John");
     }
 
-    #[test]
-    fn handle_post_2_unit_test() {
+    #[actix_rt::test]
+    async fn handle_post_2_unit_test() {
         let state = TestRequest::default()
             .data(AppState {
                 foo: "bar".to_string(),
@@ -150,8 +147,7 @@ mod tests {
         let params = Form(MyParams {
             name: "John".to_string(),
         });
-        let result = handle_post_2(state, params);
-        let resp = block_on(result).unwrap();
+        let resp = handle_post_2(state, params).await;
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
@@ -164,14 +160,16 @@ mod tests {
         );
     }
 
-    #[test]
-    fn handle_post_2_integration_test() {
-        let mut app = test::init_service(App::new().configure(app_config));
+    #[actix_rt::test]
+    async fn handle_post_2_integration_test() {
+        let mut app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post2")
-            .set_form(&MyParams {name: "John".to_string()})
+            .set_form(&MyParams {
+                name: "John".to_string(),
+            })
             .to_request();
-        let resp: ServiceResponse = block_on(app.call(req)).unwrap();
+        let resp: ServiceResponse = app.call(req).await.unwrap();
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
@@ -184,16 +182,18 @@ mod tests {
         );
     }
 
-    #[test]
-    fn handle_post_3_unit_test() {
+    #[actix_rt::test]
+    async fn handle_post_3_unit_test() {
         let req = TestRequest::default().to_http_request();
         let params = Form(MyParams {
             name: "John".to_string(),
         });
-        let result = handle_post_3(req.clone(), params);
-        let resp = match block_on(result.respond_to(&req)) {
+        let result = handle_post_3(req.clone(), params).await;
+        let resp = match result.respond_to(&req).await {
             Ok(t) => t,
-            Err(_) => HttpResponseBuilder::new(StatusCode::INTERNAL_SERVER_ERROR).finish(),
+            Err(_) => {
+                HttpResponseBuilder::new(StatusCode::INTERNAL_SERVER_ERROR).finish()
+            }
         };
 
         assert_eq!(resp.status(), StatusCode::OK);
@@ -201,29 +201,25 @@ mod tests {
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(
-            resp.body().as_str(),
-            "Your name is John"
-        );
+        assert_eq!(resp.body().as_str(), "Your name is John");
     }
 
-    #[test]
-    fn handle_post_3_integration_test() {
-        let mut app = test::init_service(App::new().configure(app_config));
+    #[actix_rt::test]
+    async fn handle_post_3_integration_test() {
+        let mut app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post3")
-            .set_form(&MyParams {name: "John".to_string()})
+            .set_form(&MyParams {
+                name: "John".to_string(),
+            })
             .to_request();
-        let resp: ServiceResponse = block_on(app.call(req)).unwrap();
+        let resp: ServiceResponse = app.call(req).await.unwrap();
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(
-            resp.response().body().as_str(),
-            "Your name is John"
-        );
+        assert_eq!(resp.response().body().as_str(), "Your name is John");
     }
 }

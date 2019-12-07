@@ -4,18 +4,19 @@ use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServ
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 /// simple handle
-fn index(req: HttpRequest) -> Result<HttpResponse, Error> {
+async fn index(req: HttpRequest) -> Result<HttpResponse, Error> {
     println!("{:?}", req);
     Ok(HttpResponse::Ok()
         .content_type("text/plain")
         .body("Welcome!"))
 }
 
-fn main() -> io::Result<()> {
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=debug");
     env_logger::init();
 
-    let sys = actix_rt::System::new("tls-example");
+    println!("Started http server: 127.0.0.1:8443");
 
     // load ssl keys
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
@@ -37,9 +38,7 @@ fn main() -> io::Result<()> {
                     .finish()
             })))
     })
-    .bind_ssl("127.0.0.1:8443", builder)?
-    .start();
-
-    println!("Started http server: 127.0.0.1:8443");
-    sys.run()
+    .bind_openssl("127.0.0.1:8443", builder)?
+    .start()
+    .await
 }

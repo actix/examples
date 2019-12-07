@@ -13,7 +13,7 @@ use std::io;
 
 // Macro documentation can be found in the actix_web_codegen crate
 #[get("/")]
-fn index(hb: web::Data<Handlebars>) -> HttpResponse {
+async fn index(hb: web::Data<Handlebars>) -> HttpResponse {
     let data = json!({
         "name": "Handlebars"
     });
@@ -23,7 +23,10 @@ fn index(hb: web::Data<Handlebars>) -> HttpResponse {
 }
 
 #[get("/{user}/{data}")]
-fn user(hb: web::Data<Handlebars>, info: web::Path<(String, String)>) -> HttpResponse {
+async fn user(
+    hb: web::Data<Handlebars>,
+    info: web::Path<(String, String)>,
+) -> HttpResponse {
     let data = json!({
         "user": info.0,
         "data": info.1
@@ -33,7 +36,8 @@ fn user(hb: web::Data<Handlebars>, info: web::Path<(String, String)>) -> HttpRes
     HttpResponse::Ok().body(body)
 }
 
-fn main() -> io::Result<()> {
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
     // Handlebars uses a repository for the compiled templates. This object must be
     // shared between the application threads, and is therefore passed to the
     // Application Builder as an atomic reference-counted pointer.
@@ -50,5 +54,6 @@ fn main() -> io::Result<()> {
             .service(user)
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }

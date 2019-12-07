@@ -1,5 +1,5 @@
 use juniper;
-use mysql::{Error as DBError, from_row, params, Row};
+use mysql::{from_row, params, Error as DBError, Row};
 
 use crate::schemas::root::Context;
 use crate::schemas::user::User;
@@ -36,7 +36,7 @@ impl Product {
         );
         if let Err(err) = user {
             None
-        }else{
+        } else {
             let (id, name, email) = from_row(user.unwrap().unwrap());
             Some(User { id, name, email })
         }

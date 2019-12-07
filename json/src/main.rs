@@ -1,8 +1,8 @@
 use actix_web::{
     error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
 };
-use bytes::BytesMut;
-use futures::{Future, Stream};
+use bytes::{Bytes, BytesMut};
+use futures::StreamExt;
 use json::JsonValue;
 use serde_derive::{Deserialize, Serialize};
 
@@ -13,13 +13,13 @@ struct MyObj {
 }
 
 /// This handler uses json extractor
-fn index(item: web::Json<MyObj>) -> HttpResponse {
+async fn index(item: web::Json<MyObj>) -> HttpResponse {
     println!("model: {:?}", &item);
     HttpResponse::Ok().json(item.0) // <- send response
 }
 
 /// This handler uses json extractor with limit
-fn extract_item(item: web::Json<MyObj>, req: HttpRequest) -> HttpResponse {
+async fn extract_item(item: web::Json<MyObj>, req: HttpRequest) -> HttpResponse {
     println!("request: {:?}", req);
     println!("model: {:?}", item);
 
@@ -29,50 +29,38 @@ fn extract_item(item: web::Json<MyObj>, req: HttpRequest) -> HttpResponse {
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
 /// This handler manually load request payload and parse json object
-fn index_manual(
-    payload: web::Payload,
-) -> impl Future<Item = HttpResponse, Error = Error> {
+async fn index_manual(mut payload: web::Payload) -> Result<HttpResponse, Error> {
     // payload is a stream of Bytes objects
-    payload
-        // `Future::from_err` acts like `?` in that it coerces the error type from
-        // the future into the final error type
-        .from_err()
-        // `fold` will asynchronously read each chunk of the request body and
-        // call supplied closure, then it resolves to result of closure
-        .fold(BytesMut::new(), move |mut body, chunk| {
-            // limit max size of in-memory payload
-            if (body.len() + chunk.len()) > MAX_SIZE {
-                Err(error::ErrorBadRequest("overflow"))
-            } else {
-                body.extend_from_slice(&chunk);
-                Ok(body)
-            }
-        })
-        // `Future::and_then` can be used to merge an asynchronous workflow with a
-        // synchronous workflow
-        .and_then(|body| {
-            // body is loaded, now we can deserialize serde-json
-            let obj = serde_json::from_slice::<MyObj>(&body)?;
-            Ok(HttpResponse::Ok().json(obj)) // <- send response
-        })
+    let mut body = BytesMut::new();
+    while let Some(chunk) = payload.next().await {
+        let chunk = chunk?;
+        // limit max size of in-memory payload
+        if (body.len() + chunk.len()) > MAX_SIZE {
+            return Err(error::ErrorBadRequest("overflow"));
+        }
+        body.extend_from_slice(&chunk);
+    }
+
+    // body is loaded, now we can deserialize serde-json
+    let obj = serde_json::from_slice::<MyObj>(&body)?;
+    Ok(HttpResponse::Ok().json(obj)) // <- send response
 }
 
 /// This handler manually load request payload and parse json-rust
-fn index_mjsonrust(pl: web::Payload) -> impl Future<Item = HttpResponse, Error = Error> {
-    pl.concat2().from_err().and_then(|body| {
-        // body is loaded, now we can deserialize json-rust
-        let result = json::parse(std::str::from_utf8(&body).unwrap()); // return Result
-        let injson: JsonValue = match result {
-            Ok(v) => v,
-            Err(e) => json::object! {"err" => e.to_string() },
-        };
-        Ok(HttpResponse::Ok()
-            .content_type("application/json")
-            .body(injson.dump()))
-    })
+async fn index_mjsonrust(body: Bytes) -> Result<HttpResponse, Error> {
+    // body is loaded, now we can deserialize json-rust
+    let result = json::parse(std::str::from_utf8(&body).unwrap()); // return Result
+    let injson: JsonValue = match result {
+        Ok(v) => v,
+        Err(e) => json::object! {"err" => e.to_string() },
+    };
+    Ok(HttpResponse::Ok()
+        .content_type("application/json")
+        .body(injson.dump()))
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
@@ -85,32 +73,34 @@ fn main() -> std::io::Result<()> {
             .service(
                 web::resource("/extractor2")
                     .data(web::JsonConfig::default().limit(1024)) // <- limit size of the payload (resource level)
-                    .route(web::post().to_async(extract_item)),
+                    .route(web::post().to(extract_item)),
             )
-            .service(web::resource("/manual").route(web::post().to_async(index_manual)))
-            .service(
-                web::resource("/mjsonrust").route(web::post().to_async(index_mjsonrust)),
-            )
+            .service(web::resource("/manual").route(web::post().to(index_manual)))
+            .service(web::resource("/mjsonrust").route(web::post().to(index_mjsonrust)))
             .service(web::resource("/").route(web::post().to(index)))
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use actix_web::dev::Service;
-    use actix_web::{test, web, App, http};
+    use actix_web::{http, test, web, App};
 
     #[test]
-    fn test_index() -> Result<(), Error>  {
+    fn test_index() -> Result<(), Error> {
         let app = App::new().route("/", web::post().to(index));
         let mut app = test::init_service(app);
 
         let req = test::TestRequest::post()
             .uri("/")
-            .set_json(&MyObj { name: "my-name".to_owned(), number: 43 })
+            .set_json(&MyObj {
+                name: "my-name".to_owned(),
+                number: 43,
+            })
             .to_request();
         let resp = test::block_on(app.call(req)).unwrap();
 

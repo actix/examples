@@ -1,13 +1,15 @@
 [package]
 name = "middleware-example"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Gorm Casper <gcasper@gmail.com>", "Sven-Hendrik Haase <svenstaro@gmail.com>"]
 edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-service = "0.4.1"
-actix-web = "1.0.0"
-futures = "0.1.25"
+actix-service = "1.0.0-alpha.3"
+actix-rt = "1.0.0-alpha.3"
+actix-web = "2.0.0-alpha.3"
+futures = "0.3.1"
 env_logger = "0.6"
-bytes = "0.4"
+bytes = "0.5"
+pin-project = "0.4.6"

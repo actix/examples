@@ -1,7 +1,10 @@
+use std::pin::Pin;
+use std::task::{Context, Poll};
+
 use actix_service::{Service, Transform};
 use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error};
-use futures::future::{ok, FutureResult};
-use futures::{Future, Poll};
+use futures::future::{ok, Ready};
+use futures::Future;
 
 // There are two steps in middleware processing.
 // 1. Middleware initialization, middleware factory gets called with
@@ -23,7 +26,7 @@ where
     type Error = Error;
     type InitError = ();
     type Transform = SayHiMiddleware<S>;
-    type Future = FutureResult<Self::Transform, Self::InitError>;
+    type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
         ok(SayHiMiddleware { service })
@@ -43,18 +46,22 @@ where
     type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = Error;
-    type Future = Box<dyn Future<Item = Self::Response, Error = Self::Error>>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 
-    fn poll_ready(&mut self) -> Poll<(), Self::Error> {
-        self.service.poll_ready()
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.service.poll_ready(cx)
     }
 
     fn call(&mut self, req: ServiceRequest) -> Self::Future {
         println!("Hi from start. You requested: {}", req.path());
 
-        Box::new(self.service.call(req).and_then(|res| {
+        let fut = self.service.call(req);
+
+        Box::pin(async move {
+            let res = fut.await?;
+
             println!("Hi from response");
             Ok(res)
-        }))
+        })
     }
 }

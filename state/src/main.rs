@@ -17,14 +17,15 @@ use std::sync::Mutex;
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 
 /// simple handle
-fn index(state: web::Data<Mutex<usize>>, req: HttpRequest) -> HttpResponse {
+async fn index(state: web::Data<Mutex<usize>>, req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
     *(state.lock().unwrap()) += 1;
 
     HttpResponse::Ok().body(format!("Num of requests: {}", state.lock().unwrap()))
 }
 
-fn main() -> io::Result<()> {
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
@@ -40,5 +41,6 @@ fn main() -> io::Result<()> {
             .service(web::resource("/").to(index))
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }

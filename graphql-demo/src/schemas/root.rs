@@ -1,6 +1,6 @@
-use juniper::{FieldError, FieldResult, RootNode};
 use juniper;
-use mysql::{Error as DBError, from_row, params, Row};
+use juniper::{FieldError, FieldResult, RootNode};
+use mysql::{from_row, params, Error as DBError, Row};
 
 use crate::db::Pool;
 
@@ -8,7 +8,7 @@ use super::product::{Product, ProductInput};
 use super::user::{User, UserInput};
 
 pub struct Context {
-    pub dbpool: Pool
+    pub dbpool: Pool,
 }
 
 impl juniper::Context for Context {}
@@ -20,13 +20,18 @@ impl QueryRoot {
     #[graphql(description = "List of all users")]
     fn users(context: &Context) -> FieldResult<Vec<User>> {
         let mut conn = context.dbpool.get().unwrap();
-        let users = conn.prep_exec("select * from user", ())
+        let users = conn
+            .prep_exec("select * from user", ())
             .map(|result| {
-                result.map(|x| x.unwrap()).map(|mut row| {
-                    let (id, name, email) = from_row(row);
-                    User { id, name, email }
-                }).collect()
-            }).unwrap();
+                result
+                    .map(|x| x.unwrap())
+                    .map(|mut row| {
+                        let (id, name, email) = from_row(row);
+                        User { id, name, email }
+                    })
+                    .collect()
+            })
+            .unwrap();
         Ok(users)
     }
 
@@ -34,10 +39,8 @@ impl QueryRoot {
     fn user(context: &Context, id: String) -> FieldResult<User> {
         let mut conn = context.dbpool.get().unwrap();
 
-        let user: Result<Option<Row>, DBError> = conn.first_exec(
-            "SELECT * FROM user WHERE id=:id",
-            params! {"id" => id},
-        );
+        let user: Result<Option<Row>, DBError> =
+            conn.first_exec("SELECT * FROM user WHERE id=:id", params! {"id" => id});
 
         if let Err(err) = user {
             return Err(FieldError::new(
@@ -53,23 +56,31 @@ impl QueryRoot {
     #[graphql(description = "List of all users")]
     fn products(context: &Context) -> FieldResult<Vec<Product>> {
         let mut conn = context.dbpool.get().unwrap();
-        let products = conn.prep_exec("select * from product", ())
+        let products = conn
+            .prep_exec("select * from product", ())
             .map(|result| {
-                result.map(|x| x.unwrap()).map(|mut row| {
-                    let (id, user_id, name, price) = from_row(row);
-                    Product { id, user_id, name, price }
-                }).collect()
-            }).unwrap();
+                result
+                    .map(|x| x.unwrap())
+                    .map(|mut row| {
+                        let (id, user_id, name, price) = from_row(row);
+                        Product {
+                            id,
+                            user_id,
+                            name,
+                            price,
+                        }
+                    })
+                    .collect()
+            })
+            .unwrap();
         Ok(products)
     }
 
     #[graphql(description = "Get Single user reference by user ID")]
     fn product(context: &Context, id: String) -> FieldResult<Product> {
         let mut conn = context.dbpool.get().unwrap();
-        let product: Result<Option<Row>, DBError> = conn.first_exec(
-            "SELECT * FROM user WHERE id=:id",
-            params! {"id" => id},
-        );
+        let product: Result<Option<Row>, DBError> =
+            conn.first_exec("SELECT * FROM user WHERE id=:id", params! {"id" => id});
         if let Err(err) = product {
             return Err(FieldError::new(
                 "Product Not Found",
@@ -78,10 +89,14 @@ impl QueryRoot {
         }
 
         let (id, user_id, name, price) = from_row(product.unwrap().unwrap());
-        Ok(Product { id, user_id, name, price })
+        Ok(Product {
+            id,
+            user_id,
+            name,
+            price,
+        })
     }
 }
-
 
 pub struct MutationRoot;
 
@@ -101,17 +116,15 @@ impl MutationRoot {
         );
 
         match insert {
-            Ok(opt_row) => {
-                Ok(User {
-                    id: new_id,
-                    name: user.name,
-                    email: user.email,
-                })
-            }
+            Ok(opt_row) => Ok(User {
+                id: new_id,
+                name: user.name,
+                email: user.email,
+            }),
             Err(err) => {
                 let msg = match err {
                     DBError::MySqlError(err) => err.message,
-                    _ => "internal error".to_owned()
+                    _ => "internal error".to_owned(),
                 };
                 Err(FieldError::new(
                     "Failed to create new user",
@@ -136,18 +149,16 @@ impl MutationRoot {
         );
 
         match insert {
-            Ok(opt_row) => {
-                Ok(Product {
-                    id: new_id,
-                    user_id: product.user_id,
-                    name: product.name,
-                    price: product.price,
-                })
-            }
+            Ok(opt_row) => Ok(Product {
+                id: new_id,
+                user_id: product.user_id,
+                name: product.name,
+                price: product.price,
+            }),
             Err(err) => {
                 let msg = match err {
                     DBError::MySqlError(err) => err.message,
-                    _ => "internal error".to_owned()
+                    _ => "internal error".to_owned(),
                 };
                 Err(FieldError::new(
                     "Failed to create new product",

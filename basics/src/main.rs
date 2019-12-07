@@ -5,24 +5,23 @@ use std::{env, io};
 
 use actix_files as fs;
 use actix_session::{CookieSession, Session};
+use actix_utils::mpsc;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
     error, guard, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
     Result,
 };
 use bytes::Bytes;
-use futures::unsync::mpsc;
-use futures::{future::ok, Future, Stream};
 
 /// favicon handler
 #[get("/favicon")]
-fn favicon() -> Result<fs::NamedFile> {
+async fn favicon() -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("static/favicon.ico")?)
 }
 
 /// simple index handler
 #[get("/welcome")]
-fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
+async fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
     println!("{:?}", req);
 
     // session
@@ -42,32 +41,22 @@ fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
 }
 
 /// 404 handler
-fn p404() -> Result<fs::NamedFile> {
+async fn p404() -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("static/404.html")?.set_status_code(StatusCode::NOT_FOUND))
 }
 
-/// async handler
-fn index_async(req: HttpRequest) -> impl Future<Item = HttpResponse, Error = Error> {
-    println!("{:?}", req);
-
-    ok(HttpResponse::Ok()
-        .content_type("text/html")
-        .body(format!("Hello {}!", req.match_info().get("name").unwrap())))
-}
-
-/// async body
-fn index_async_body(path: web::Path<String>) -> HttpResponse {
+/// response body
+async fn response_body(path: web::Path<String>) -> HttpResponse {
     let text = format!("Hello {}!", *path);
 
-    let (tx, rx_body) = mpsc::unbounded();
-    let _ = tx.unbounded_send(Bytes::from(text.as_bytes()));
+    let (tx, rx_body) = mpsc::channel();
+    let _ = tx.send(Ok::<_, Error>(Bytes::from(text)));
 
-    HttpResponse::Ok()
-        .streaming(rx_body.map_err(|_| error::ErrorBadRequest("bad request")))
+    HttpResponse::Ok().streaming(rx_body)
 }
 
 /// handler with path parameters like `/user/{name}/`
-fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
+async fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
@@ -75,10 +64,10 @@ fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
         .body(format!("Hello {}!", path.0))
 }
 
-fn main() -> io::Result<()> {
-    env::set_var("RUST_LOG", "actix_web=debug");
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
+    env::set_var("RUST_LOG", "actix_web=debug;actix_server=info");
     env_logger::init();
-    let sys = actix_rt::System::new("basic-example");
 
     HttpServer::new(|| {
         App::new()
@@ -92,14 +81,9 @@ fn main() -> io::Result<()> {
             .service(welcome)
             // with path parameters
             .service(web::resource("/user/{name}").route(web::get().to(with_param)))
-            // async handler
+            // async response body
             .service(
-                web::resource("/async/{name}").route(web::get().to_async(index_async)),
-            )
-            // async handler
-            .service(
-                web::resource("/async-body/{name}")
-                    .route(web::get().to(index_async_body)),
+                web::resource("/async-body/{name}").route(web::get().to(response_body)),
             )
             .service(
                 web::resource("/test").to(|req: HttpRequest| match *req.method() {
@@ -109,10 +93,12 @@ fn main() -> io::Result<()> {
                 }),
             )
             .service(web::resource("/error").to(|| {
-                error::InternalError::new(
-                    io::Error::new(io::ErrorKind::Other, "test"),
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                )
+                async {
+                    error::InternalError::new(
+                        io::Error::new(io::ErrorKind::Other, "test"),
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                    )
+                }
             }))
             // static files
             .service(fs::Files::new("/static", "static").show_files_listing())
@@ -137,8 +123,6 @@ fn main() -> io::Result<()> {
             )
     })
     .bind("127.0.0.1:8080")?
-    .start();
-
-    println!("Starting http server: 127.0.0.1:8080");
-    sys.run()
+    .start()
+    .await
 }

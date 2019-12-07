@@ -9,7 +9,7 @@ use actix_session::{CookieSession, Session};
 use actix_web::{middleware::Logger, web, App, HttpRequest, HttpServer, Result};
 
 /// simple index handler with session
-fn index(session: Session, req: HttpRequest) -> Result<&'static str> {
+async fn index(session: Session, req: HttpRequest) -> Result<&'static str> {
     println!("{:?}", req);
 
     // RequestSession trait is used for session access
@@ -25,10 +25,11 @@ fn index(session: Session, req: HttpRequest) -> Result<&'static str> {
     Ok("welcome!")
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
-    let sys = actix_rt::System::new("cookie-session");
+    println!("Starting http server: 127.0.0.1:8080");
 
     HttpServer::new(|| {
         App::new()
@@ -39,8 +40,6 @@ fn main() -> std::io::Result<()> {
             .service(web::resource("/").to(index))
     })
     .bind("127.0.0.1:8080")?
-    .start();
-
-    println!("Starting http server: 127.0.0.1:8080");
-    sys.run()
+    .start()
+    .await
 }

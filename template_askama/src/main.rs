@@ -14,7 +14,7 @@ struct UserTemplate<'a> {
 #[template(path = "index.html")]
 struct Index;
 
-fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpResponse> {
+async fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpResponse> {
     let s = if let Some(name) = query.get("name") {
         UserTemplate {
             name,
@@ -28,11 +28,13 @@ fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     // start http server
     HttpServer::new(move || {
         App::new().service(web::resource("/").route(web::get().to(index)))
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }

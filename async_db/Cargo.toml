@@ -1,18 +1,18 @@
 [package]
 name = "async_db"
-version = "0.1.0"
+version = "2.0.0"
 authors = ["Darin Gordon <dkcdkg@gmail.com>"]
 edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-rt = "0.2.2"
-actix-web = "1.0.0"
+actix-rt = "1.0.0-alpha.3"
+actix-web = "2.0.0-alpha.3"
 
 dotenv = "0.10"
-env_logger = "0.5"
+env_logger = "0.6"
 failure = "0.1.1"
-futures = "0.1"
+futures = "0.3.1"
 num_cpus = "1.10.0"
 r2d2 = "0.8.2"
 r2d2_sqlite = "0.8.0"

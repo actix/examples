@@ -19,27 +19,42 @@ pub struct UserInput {
     pub email: String,
 }
 
-
 #[juniper::object(Context = Context)]
 impl User {
-    fn id(&self) -> &str { &self.id }
+    fn id(&self) -> &str {
+        &self.id
+    }
     fn name(&self) -> &str {
         &self.name
     }
-    fn email(&self) -> &str { &self.email }
+    fn email(&self) -> &str {
+        &self.email
+    }
 
     fn products(&self, context: &Context) -> Vec<Product> {
         let mut conn = context.dbpool.get().unwrap();
-        let products = conn.prep_exec(
-            "select * from product where user_id=:user_id", params! {
-            "user_id" => &self.id
-        })
+        let products = conn
+            .prep_exec(
+                "select * from product where user_id=:user_id",
+                params! {
+                    "user_id" => &self.id
+                },
+            )
             .map(|result| {
-                result.map(|x| x.unwrap()).map(|mut row| {
-                    let (id, user_id, name, price) = from_row(row);
-                    Product { id, user_id, name, price }
-                }).collect()
-            }).unwrap();
+                result
+                    .map(|x| x.unwrap())
+                    .map(|mut row| {
+                        let (id, user_id, name, price) = from_row(row);
+                        Product {
+                            id,
+                            user_id,
+                            name,
+                            price,
+                        }
+                    })
+                    .collect()
+            })
+            .unwrap();
         products
     }
 }

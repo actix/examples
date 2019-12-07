@@ -2,19 +2,20 @@ use std::fs::File;
 use std::io::BufReader;
 
 use actix_files::Files;
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 use rustls::internal::pemfile::{certs, rsa_private_keys};
 use rustls::{NoClientAuth, ServerConfig};
 
 /// simple handle
-fn index(req: HttpRequest) -> Result<HttpResponse, Error> {
+async fn index(req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
-    Ok(HttpResponse::Ok()
+    HttpResponse::Ok()
         .content_type("text/plain")
-        .body("Welcome!"))
+        .body("Welcome!")
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     if std::env::var("RUST_LOG").is_err() {
         std::env::set_var("RUST_LOG", "actix_web=info");
     }
@@ -43,5 +44,6 @@ fn main() -> std::io::Result<()> {
             .service(Files::new("/static", "static"))
     })
     .bind_rustls("127.0.0.1:8443", config)?
-    .run()
+    .start()
+    .await
 }

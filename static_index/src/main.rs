@@ -1,7 +1,8 @@
 use actix_files as fs;
 use actix_web::{middleware, App, HttpServer};
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
@@ -15,5 +16,6 @@ fn main() -> std::io::Result<()> {
             )
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }

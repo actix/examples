@@ -1,14 +1,14 @@
 [package]
 name = "error_handling"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-web = "1.0.0"
-
-derive_more = "0.14.0"
-futures = "0.1.23"
+actix-web = "2.0.0-alpha.3"
+actix-rt = "1.0.0-alpha.3"
+derive_more = "0.99.2"
+futures = "0.3.1"
 rand = "0.5.4"
 env_logger = "0.6"

@@ -17,7 +17,8 @@ mod register_handler;
 mod schema;
 mod utils;
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     std::env::set_var(
         "RUST_LOG",
@@ -52,22 +53,23 @@ fn main() -> std::io::Result<()> {
             // everything under '/api/' route
             .service(
                 web::scope("/api")
-                    .service(web::resource("/invitation").route(
-                        web::post().to_async(invitation_handler::post_invitation),
-                    ))
                     .service(
-                        web::resource("/register/{invitation_id}").route(
-                            web::post().to_async(register_handler::register_user),
-                        ),
+                        web::resource("/invitation")
+                            .route(web::post().to(invitation_handler::post_invitation)),
+                    )
+                    .service(
+                        web::resource("/register/{invitation_id}")
+                            .route(web::post().to(register_handler::register_user)),
                     )
                     .service(
                         web::resource("/auth")
-                            .route(web::post().to_async(auth_handler::login))
+                            .route(web::post().to(auth_handler::login))
                             .route(web::delete().to(auth_handler::logout))
                             .route(web::get().to(auth_handler::get_me)),
                     ),
             )
     })
     .bind("127.0.0.1:3000")?
-    .run()
+    .start()
+    .await
 }

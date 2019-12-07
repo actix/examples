@@ -1,6 +1,5 @@
 use actix_web::{error::BlockingError, web, HttpResponse};
 use diesel::{prelude::*, PgConnection};
-use futures::Future;
 
 use crate::email_service::send_invitation;
 use crate::errors::ServiceError;
@@ -11,20 +10,22 @@ pub struct InvitationData {
     pub email: String,
 }
 
-pub fn post_invitation(
+pub async fn post_invitation(
     invitation_data: web::Json<InvitationData>,
     pool: web::Data<Pool>,
-) -> impl Future<Item = HttpResponse, Error = ServiceError> {
+) -> Result<HttpResponse, ServiceError> {
     // run diesel blocking code
-    web::block(move || create_invitation(invitation_data.into_inner().email, pool)).then(
-        |res| match res {
-            Ok(_) => Ok(HttpResponse::Ok().finish()),
-            Err(err) => match err {
-                BlockingError::Error(service_error) => Err(service_error),
-                BlockingError::Canceled => Err(ServiceError::InternalServerError),
-            },
+    let res =
+        web::block(move || create_invitation(invitation_data.into_inner().email, pool))
+            .await;
+
+    match res {
+        Ok(_) => Ok(HttpResponse::Ok().finish()),
+        Err(err) => match err {
+            BlockingError::Error(service_error) => Err(service_error),
+            BlockingError::Canceled => Err(ServiceError::InternalServerError),
         },
-    )
+    }
 }
 
 fn create_invitation(

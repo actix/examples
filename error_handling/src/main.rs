@@ -14,7 +14,6 @@ http errors will be chosen, each with an equal chance of being selected:
 
 use actix_web::{web, App, Error, HttpResponse, HttpServer, ResponseError};
 use derive_more::Display; // naming it clearly for illustration purposes
-use futures::future::{err, ok, Future};
 use rand::{
     distributions::{Distribution, Standard},
     thread_rng, Rng,
@@ -71,32 +70,33 @@ impl ResponseError for CustomError {
 }
 
 /// randomly returns either () or one of the 4 CustomError variants
-fn do_something_random() -> impl Future<Item = (), Error = CustomError> {
+async fn do_something_random() -> Result<(), CustomError> {
     let mut rng = thread_rng();
 
     // 20% chance that () will be returned by this function
     if rng.gen_bool(2.0 / 10.0) {
-        ok(())
+        Ok(())
     } else {
-        err(rand::random::<CustomError>())
+        Err(rand::random::<CustomError>())
     }
 }
 
-fn do_something() -> impl Future<Item = HttpResponse, Error = Error> {
-    do_something_random().from_err().and_then(|_| {
-        HttpResponse::Ok().body("Nothing interesting happened.  Try again.")
-    })
+async fn do_something() -> Result<HttpResponse, Error> {
+    do_something_random().await?;
+
+    Ok(HttpResponse::Ok().body("Nothing interesting happened. Try again."))
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
     HttpServer::new(move || {
-        App::new().service(
-            web::resource("/something").route(web::get().to_async(do_something)),
-        )
+        App::new()
+            .service(web::resource("/something").route(web::get().to(do_something)))
     })
     .bind("127.0.0.1:8088")?
-    .run()
+    .start()
+    .await
 }

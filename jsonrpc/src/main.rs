@@ -1,11 +1,12 @@
 use std::error;
-use std::sync::Arc;
-use std::sync::RwLock;
+use std::pin::Pin;
+use std::sync::{Arc, RwLock};
 use std::time::Duration;
 
+use actix_rt::time::delay_for;
 use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
-use futures::{future, Future, Stream};
-use futures_timer::Delay;
+use bytes::Bytes;
+use futures::{Future, FutureExt};
 use serde_json;
 use serde_json::Value;
 
@@ -13,41 +14,36 @@ use serde_json::Value;
 mod convention;
 
 /// The main handler for JSONRPC server.
-fn rpc_handler(
-    req: HttpRequest,
-    payload: web::Payload,
-) -> impl Future<Item = HttpResponse, Error = Error> {
-    payload.concat2().from_err().and_then(move |body| {
-        let reqjson: convention::Request = match serde_json::from_slice(body.as_ref()) {
-            Ok(ok) => ok,
-            Err(_) => {
-                let r = convention::Response {
-                    jsonrpc: String::from(convention::JSONRPC_VERSION),
-                    result: Value::Null,
-                    error: Some(convention::ErrorData::std(-32700)),
-                    id: Value::Null,
-                };
-                return Ok(HttpResponse::Ok()
-                    .content_type("application/json")
-                    .body(r.dump()));
-            }
-        };
-        let app_state = req.app_data().unwrap();
-        let mut result = convention::Response::default();
-        result.id = reqjson.id.clone();
-
-        match rpc_select(&app_state, reqjson.method.as_str(), reqjson.params) {
-            Ok(ok) => result.result = ok,
-            Err(e) => result.error = Some(e),
+async fn rpc_handler(req: HttpRequest, body: Bytes) -> Result<HttpResponse, Error> {
+    let reqjson: convention::Request = match serde_json::from_slice(body.as_ref()) {
+        Ok(ok) => ok,
+        Err(_) => {
+            let r = convention::Response {
+                jsonrpc: String::from(convention::JSONRPC_VERSION),
+                result: Value::Null,
+                error: Some(convention::ErrorData::std(-32700)),
+                id: Value::Null,
+            };
+            return Ok(HttpResponse::Ok()
+                .content_type("application/json")
+                .body(r.dump()));
         }
+    };
+    let app_state = req.app_data().unwrap();
+    let mut result = convention::Response::default();
+    result.id = reqjson.id.clone();
 
-        Ok(HttpResponse::Ok()
-            .content_type("application/json")
-            .body(result.dump()))
-    })
+    match rpc_select(&app_state, reqjson.method.as_str(), reqjson.params).await {
+        Ok(ok) => result.result = ok,
+        Err(e) => result.error = Some(e),
+    }
+
+    Ok(HttpResponse::Ok()
+        .content_type("application/json")
+        .body(result.dump()))
 }
 
-fn rpc_select(
+async fn rpc_select(
     app_state: &AppState,
     method: &str,
     params: Vec<Value>,
@@ -66,7 +62,7 @@ fn rpc_select(
                 .read()
                 .unwrap()
                 .wait(params[0].as_u64().unwrap())
-                .wait()
+                .await
             {
                 Ok(ok) => Ok(Value::from(ok)),
                 Err(e) => Err(convention::ErrorData::new(500, &format!("{:?}", e)[..])),
@@ -89,7 +85,7 @@ pub trait ImplNetwork {
     fn wait(
         &self,
         d: u64,
-    ) -> Box<dyn Future<Item = String, Error = Box<dyn error::Error>>>;
+    ) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>>;
 
     fn get(&self) -> u32;
     fn inc(&mut self);
@@ -113,12 +109,12 @@ impl ImplNetwork for ObjNetwork {
     fn wait(
         &self,
         d: u64,
-    ) -> Box<dyn Future<Item = String, Error = Box<dyn error::Error>>> {
-        if let Err(e) = Delay::new(Duration::from_secs(d)).wait() {
-            let e: Box<dyn error::Error> = Box::new(e);
-            return Box::new(future::err(e));
-        };
-        Box::new(future::ok(String::from("pong")))
+    ) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>> {
+        async move {
+            delay_for(Duration::from_secs(d)).await;
+            Ok(String::from("pong"))
+        }
+            .boxed_local()
     }
 
     fn get(&self) -> u32 {
@@ -141,24 +137,22 @@ impl AppState {
     }
 }
 
-fn main() {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();
 
     let network = Arc::new(RwLock::new(ObjNetwork::new()));
 
-    let sys = actix::System::new("actix_jrpc");
     HttpServer::new(move || {
         let app_state = AppState::new(network.clone());
         App::new()
             .data(app_state)
             .wrap(middleware::Logger::default())
-            .service(web::resource("/").route(web::post().to_async(rpc_handler)))
+            .service(web::resource("/").route(web::post().to(rpc_handler)))
     })
     .bind("127.0.0.1:8080")
     .unwrap()
-    .workers(1)
-    .start();
-
-    let _ = sys.run();
+    .start()
+    .await
 }
