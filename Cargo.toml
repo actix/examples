@@ -1,7 +1,6 @@
 [workspace]
 members = [
   "./",
-  "actix-graphql-demo",
   "actix_redis",
   "actix_todo",
   "async_db",
@@ -13,6 +12,7 @@ members = [
   "diesel",
   "error_handling",
   "form",
+  "graphql-demo",
   "hello-world",
   "http-proxy",
   "json",
