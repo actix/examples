@@ -1,17 +1,15 @@
 [package]
 name = "multipart-example"
-version = "0.1.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = ".."
+version = "0.3.0"
+authors = ["Bevan Hunt <bevan@bevanhunt.com>"]
 edition = "2018"
-
-[[bin]]
-name = "multipart"
-path = "src/main.rs"
+license = "MIT"
+description = "Simple file uploader in Actix Web with Async/Await"
+keywords = ["actix", "actix-web", "multipart"]
+repository = "https://github.com/actix/examples"
+readme = "README.md"
 
 [dependencies]
-actix-web = "1.0.0"
-actix-multipart = "0.1.1"
-
-env_logger = "0.6"
-futures = "0.1.25"
+futures = "0.3.1"
+actix-multipart = "0.2.0-alpha.3"
+actix-web = "2.0.0-alpha.3"
