@@ -15,41 +15,44 @@ mod schema;
 
 use crate::schema::{create_schema, Schema};
 
-fn graphiql() -> HttpResponse {
-  let html = graphiql_source("http://127.0.0.1:8080/graphql");
-  HttpResponse::Ok()
-    .content_type("text/html; charset=utf-8")
-    .body(html)
-}
-
-fn graphql(
-  st: web::Data<Arc<Schema>>,
-  data: web::Json<GraphQLRequest>,
-) -> Result<HttpResponse, Error> {
-  let res = data.execute(&st, &());
-  let user = serde_json::to_string(&res)?;
-  Ok(
+async fn graphiql() -> HttpResponse {
+    let html = graphiql_source("http://127.0.0.1:8080/graphql");
     HttpResponse::Ok()
-      .content_type("application/json")
-      .body(user)
-  )
+        .content_type("text/html; charset=utf-8")
+        .body(html)
 }
 
-fn main() -> io::Result<()> {
-  std::env::set_var("RUST_LOG", "actix_web=info");
-  env_logger::init();
+async fn graphql(
+    st: web::Data<Arc<Schema>>,
+    data: web::Json<GraphQLRequest>,
+) -> Result<HttpResponse, Error> {
+    let user = web::block(move || {
+        let res = data.execute(&st, &());
+        Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
+    })
+    .await?;
+    Ok(HttpResponse::Ok()
+        .content_type("application/json")
+        .body(user))
+}
 
-  // Create Juniper schema
-  let schema = std::sync::Arc::new(create_schema());
+#[actix_rt::main]
+async fn main() -> io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info");
+    env_logger::init();
 
-  // Start http server
-  HttpServer::new(move || {
-    App::new()
-      .data(schema.clone())
-      .wrap(middleware::Logger::default())
-      .service(web::resource("/graphql").route(web::post().to_async(graphql)))
-      .service(web::resource("/graphiql").route(web::get().to(graphiql)))
-  })
-  .bind("127.0.0.1:8080")?
-  .run()
+    // Create Juniper schema
+    let schema = std::sync::Arc::new(create_schema());
+
+    // Start http server
+    HttpServer::new(move || {
+        App::new()
+            .data(schema.clone())
+            .wrap(middleware::Logger::default())
+            .service(web::resource("/graphql").route(web::post().to(graphql)))
+            .service(web::resource("/graphiql").route(web::get().to(graphiql)))
+    })
+    .bind("127.0.0.1:8080")?
+    .start()
+    .await
 }
