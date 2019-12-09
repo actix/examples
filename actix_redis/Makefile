@@ -1,2 +1,0 @@
-build:
-	docker-compose up
