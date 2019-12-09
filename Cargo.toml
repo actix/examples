@@ -13,7 +13,7 @@ members = [
    "graphql-demo",
    "hello-world",
    "http-proxy",
-   "json",
+   # "json",
    "json_error",
    "jsonrpc",
    "juniper",
