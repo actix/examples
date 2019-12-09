@@ -7,6 +7,6 @@ edition = "2018"
 
 [dependencies]
 env_logger = "0.6"
-tera = "0.11"
+tera = "1.0.0"
 actix-web = "2.0.0-alpha.3"
 actix-rt = "1.0.0-alpha.3"
