@@ -1,15 +1,9 @@
-This project illustrates how to send multiple cache requests to redis in bulk, asynchronously.
-This asyncio approach resembles traditional redis pipelining.  Details about how this
-is so can be read at https://github.com/benashford/redis-async-rs/issues/19#issuecomment-412208018
+# Actix Web Redis ASync Writer
 
+## Run
 
+- make sure docker with docker-compose and make is installed
 
-To test the demo, POST a json object containing three strings to the /stuff endpoint:
-	{"one": "first entry",
-	 "two": "second entry",
-	 "three": "third entry" }
+- run the Makefile - ``` make ```
 
-
-These three entries will cache to redis, keyed accordingly.
-
-to delete these, simply issue a DELETE http request to /stuff endpoint
+- then open browser to localhost:5001 and type in {hostname: redis, port: 6379, database_id: 0} for the fields for rebrow then click on Keys to view entries

@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+    - "3000:3000"
+    volumes:
+    - .:/code
+    - logvolume01:/var/log
+    links:
+      - redis
+  rebrow:
+    image: marian/rebrow
+    ports:
+    - "5001:5001"
+    links:
+      - redis
+  redis:
+    image: redis
+    ports:
+    - "6379:6379"
+volumes:
+  logvolume01: {}

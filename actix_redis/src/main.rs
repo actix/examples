@@ -1,93 +1,51 @@
-#[macro_use]
-extern crate redis_async;
-#[macro_use]
-extern crate serde_derive;
+use actix_web::{middleware, web, App, HttpServer, Error, HttpResponse};
+use futures::future::{join_all};
+use redis_async::{client, resp_array};
+use std::net::{ToSocketAddrs};
 
-use actix::prelude::*;
-use actix_redis::{Command, Error as ARError, RedisActor};
-use actix_web::{middleware, web, App, Error as AWError, HttpResponse, HttpServer};
-use futures::future::{join_all, Future};
-use redis_async::resp::RespValue;
+async fn write_stuff() -> Result<HttpResponse, Error> {
+    let server_details = "redis:6379";
+    let server: Vec<_> = server_details
+        .to_socket_addrs()
+        .expect("Unable to resolve domain")
+        .collect();
+    let connection = client::paired_connect(&server[0])
+    .await
+    .expect("Cannot open connection");
 
-#[derive(Deserialize)]
-pub struct CacheInfo {
-    one: String,
-    two: String,
-    three: String,
+    let test_data: Vec<_> = (0..100).map(|x| (x, x.to_string())).collect();
+
+    let futures = test_data.into_iter().map(|data| {
+        let connection_inner = connection.clone();
+        let incr_f = connection.send(resp_array!["INCR", "realistic_test_ctr"]);
+        async move {
+            let ctr: String = incr_f.await.expect("Cannot increment");
+
+            let key = format!("rt_{}", ctr);
+            let d_val = data.0.to_string();
+            connection_inner.send_and_forget(resp_array!["SET", &key, d_val]);
+            connection_inner
+                .send(resp_array!["SET", data.1, key])
+                .await
+                .expect("Cannot set")
+        }
+    });
+    let _result: Vec<String> = join_all(futures).await;
+
+    Ok(HttpResponse::Ok().into())
 }
 
-fn cache_stuff(
-    info: web::Json<CacheInfo>,
-    redis: web::Data<Addr<RedisActor>>,
-) -> impl Future<Item = HttpResponse, Error = AWError> {
-    let info = info.into_inner();
-
-    let one = redis.send(Command(resp_array!["SET", "mydomain:one", info.one]));
-    let two = redis.send(Command(resp_array!["SET", "mydomain:two", info.two]));
-    let three = redis.send(Command(resp_array!["SET", "mydomain:three", info.three]));
-
-    // Creates a future which represents a collection of the results of the futures
-    // given. The returned future will drive execution for all of its underlying futures,
-    // collecting the results into a destination `Vec<RespValue>` in the same order as they
-    // were provided. If any future returns an error then all other futures will be
-    // canceled and an error will be returned immediately. If all futures complete
-    // successfully, however, then the returned future will succeed with a `Vec` of
-    // all the successful results.
-    let info_set = join_all(vec![one, two, three].into_iter());
-
-    info_set
-        .map_err(AWError::from)
-        .and_then(|res: Vec<Result<RespValue, ARError>>|
-                  // successful operations return "OK", so confirm that all returned as so
-                  if !res.iter().all(|res| match res {
-                      Ok(RespValue::SimpleString(x)) if x=="OK" => true,
-                      _ => false
-                  }) {
-                      Ok(HttpResponse::InternalServerError().finish())
-                  } else {
-                      Ok(HttpResponse::Ok().body("successfully cached values"))
-                  }
-        )
-}
-
-fn del_stuff(
-    redis: web::Data<Addr<RedisActor>>,
-) -> impl Future<Item = HttpResponse, Error = AWError> {
-    redis
-        .send(Command(resp_array![
-            "DEL",
-            "mydomain:one",
-            "mydomain:two",
-            "mydomain:three"
-        ]))
-        .map_err(AWError::from)
-        .and_then(|res: Result<RespValue, ARError>| match &res {
-            Ok(RespValue::Integer(x)) if x == &3 => {
-                Ok(HttpResponse::Ok().body("successfully deleted values"))
-            }
-            _ => {
-                println!("---->{:?}", res);
-                Ok(HttpResponse::InternalServerError().finish())
-            }
-        })
-}
-
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info,actix_redis=info");
-    env_logger::init();
 
     HttpServer::new(|| {
-        let redis_addr = RedisActor::start("127.0.0.1:6379");
-
-        App::new()
-            .data(redis_addr)
-            .wrap(middleware::Logger::default())
-            .service(
-                web::resource("/stuff")
-                    .route(web::post().to_async(cache_stuff))
-                    .route(web::delete().to_async(del_stuff)),
-            )
+        App::new().wrap(middleware::Logger::default()).service(
+            web::resource("/")
+                .route(web::get().to(write_stuff))
+        )
     })
-    .bind("0.0.0.0:8080")?
-    .run()
+    .bind("0.0.0.0:3000")?
+    .start()
+    .await
 }
