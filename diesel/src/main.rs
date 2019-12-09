@@ -21,6 +21,11 @@ mod schema;
 
 type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
+#[derive(Debug, Serialize, Deserialize)]
+struct MyUser {
+    name: String,
+}
+
 /// Diesel query
 fn query(
     nm: String,
@@ -53,33 +58,11 @@ async fn add(
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-struct MyUser {
-    name: String,
-}
-
-const MAX_SIZE: usize = 262_144; // max payload size is 256k
-
-/// This handler manually load request payload and parse json object
-async fn index_add(
-    mut pl: web::Payload,
-    pool: web::Data<Pool>,
-) -> Result<HttpResponse, Error> {
+/// This handler manually parse json object. Bytes object supports FromRequest trait (extractor)
+/// and could be loaded from request payload automatically
+async fn index_add(body: Bytes, pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
     let mut body = BytesMut::new();
-    // pl.next() gets next item from asynchronous stream of byte chunks
-    // it resolves to `Option<Result<Bytes, Error>>` object
-    // `None` - indicaets end of stream
-    while let Some(chunk) = pl.next().await {
-        let chunk = chunk?;
-
-        // limit max size of in-memory payload
-        if (body.len() + chunk.len()) > MAX_SIZE {
-            return Err(error::ErrorBadRequest("overflow"));
-        }
-        body.extend_from_slice(&chunk);
-    }
-
-    // body is loaded, now we can deserialize serde-json
+    // body is loaded, now we can deserialize id with serde-json
     let r_obj = serde_json::from_slice::<MyUser>(&body);
 
     // Send to the db for create return response to peer
@@ -94,6 +77,7 @@ async fn index_add(
     }
 }
 
+/// This handler offloads json deserialization to actix-web's Json extrator
 async fn add2(
     item: web::Json<MyUser>,
     pool: web::Data<Pool>,
