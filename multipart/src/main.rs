@@ -43,9 +43,6 @@ fn index() -> HttpResponse {
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();
-
-    let ip = "0.0.0.0:3000";
-
     HttpServer::new(|| {
         App::new().wrap(middleware::Logger::default()).service(
             web::resource("/")
@@ -53,7 +50,7 @@ async fn main() -> std::io::Result<()> {
                 .route(web::post().to(save_file)),
         )
     })
-    .bind(ip)?
+    .bind("0.0.0.0:3000")?
     .start()
     .await
 }
