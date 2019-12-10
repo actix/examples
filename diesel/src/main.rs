@@ -60,8 +60,7 @@ async fn add(
 
 /// This handler manually parse json object. Bytes object supports FromRequest trait (extractor)
 /// and could be loaded from request payload automatically
-async fn index_add(body: Bytes, pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
-    let mut body = BytesMut::new();
+async fn index_add(body: web::Bytes, pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
     // body is loaded, now we can deserialize id with serde-json
     let r_obj = serde_json::from_slice::<MyUser>(&body);
 
