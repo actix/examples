@@ -1,17 +1,16 @@
 [package]
 name = "actix_redis"
-version = "0.3.0"
-authors = ["Bevan Hunt <bevan@bevanhunt.com>"]
+version = "0.1.0"
+authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"
-license = "MIT"
-description = "Actix Redis Async Example"
-keywords = ["actix", "actix-web", "redis"]
-repository = "https://github.com/actix/examples"
-readme = "README.md"
+workspace = ".."
 
 [dependencies]
-futures = "0.3.1"
-actix-multipart = "0.2.0-alpha.3"
-actix-web = "2.0.0-alpha.3"
-actix-rt = "1.0.0-alpha.3"
-redis-async = "0.6.1"
+actix = "0.8.2"
+actix-web = "1.0.3"
+actix-redis = "0.6"
+futures = "0.1.23"
+redis-async = "0.4.0"
+serde = "1.0.71"
+serde_derive = "1.0.71"
+env_logger = "0.6"

@@ -1,0 +1,17 @@
+[package]
+name = "actix_redis"
+version = "0.3.0"
+authors = ["Bevan Hunt <bevan@bevanhunt.com>"]
+edition = "2018"
+license = "MIT"
+description = "Actix Redis Async Example"
+keywords = ["actix", "actix-web", "redis"]
+repository = "https://github.com/actix/examples"
+readme = "README.md"
+
+[dependencies]
+futures = "0.3.1"
+actix-multipart = "0.2.0-alpha.3"
+actix-web = "2.0.0-alpha.3"
+actix-rt = "1.0.0-alpha.3"
+redis-async = "0.6.1"

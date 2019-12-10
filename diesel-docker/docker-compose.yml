@@ -1,0 +1,31 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+    - "3000:3000"
+    volumes:
+    - .:/code
+    - logvolume01:/var/log
+    links:
+    - postgres
+    environment:
+    - DATABASE_URL=postgresql://postgres:secret@postgres:5432
+  pgadmin4:
+    image: dpage/pgadmin4
+    ports:
+    - "5001:80"
+    links:
+    - postgres
+    environment:
+    - PGADMIN_DEFAULT_EMAIL=test@test.com
+    - PGADMIN_DEFAULT_PASSWORD=test
+  postgres:
+    image: postgres
+    ports:
+    - "5432:5432"
+    environment:
+    - POSTGRES_PASSWORD=secret
+volumes:
+  logvolume01: {}
+  
