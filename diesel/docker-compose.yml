@@ -8,19 +8,24 @@ services:
     - .:/code
     - logvolume01:/var/log
     links:
-      - redis
+    - postgres
+    environment:
+    - DATABASE_URL=postgresql://postgres:secret@postgres:5432
   pgadmin4:
     image: dpage/pgadmin4
     ports:
-    - "5001:5001"
+    - "5001:80"
     links:
-      - postgres
+    - postgres
     environment:
-    - PG_LISTEN_PORT=5001
+    - PGADMIN_DEFAULT_EMAIL=test@test.com
+    - PGADMIN_DEFAULT_PASSWORD=test
   postgres:
     image: postgres
     ports:
     - "5432:5432"
+    environment:
+    - POSTGRES_PASSWORD=secret
 volumes:
   logvolume01: {}
   
