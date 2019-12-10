@@ -135,7 +135,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/add").route(web::post().to(index_add)))
             .service(web::resource("/add/{name}").route(web::get().to(add)))
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:3000")?
     .start()
     .await
 }

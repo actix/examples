@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+    - "3000:3000"
+    volumes:
+    - .:/code
+    - logvolume01:/var/log
+    links:
+      - redis
+  pgadmin4:
+    image: dpage/pgadmin4
+    ports:
+    - "5001:5001"
+    links:
+      - postgres
+    environment:
+    - PG_LISTEN_PORT=5001
+  postgres:
+    image: postgres
+    ports:
+    - "5432:5432"
+volumes:
+  logvolume01: {}
+  
