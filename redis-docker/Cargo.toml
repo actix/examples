@@ -1,5 +1,5 @@
 [package]
-name = "actix_redis"
+name = "redis-docker"
 version = "0.3.0"
 authors = ["Bevan Hunt <bevan@bevanhunt.com>"]
 edition = "2018"
