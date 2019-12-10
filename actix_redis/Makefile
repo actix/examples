@@ -1,0 +1,3 @@
+build:
+	docker-compose up
+	

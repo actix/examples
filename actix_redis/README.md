@@ -2,9 +2,9 @@
 
 ## Run
 
-- make sure docker with docker-compose and is installed
+- make sure docker & docker-compose & make is installed
 
-- run ``` docker-compose up ``` from the command line
+- ``` make ```
 
 - then open browser to [localhost:3000](http://localhost:3000) that will insert records into redis
 
