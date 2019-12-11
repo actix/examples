@@ -26,7 +26,7 @@ pub async fn index(
 
     let rendered = tmpl
         .render("index.html.tera", &context)
-        .map_err(|e| error::ErrorInternalServerError(e.description().to_owned()))?;
+        .map_err(|e| error::ErrorInternalServerError(e))?;
 
     Ok(HttpResponse::Ok().body(rendered))
 }

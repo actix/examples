@@ -1,9 +1,7 @@
-#[macro_use]
-extern crate tera;
-
 use std::collections::HashMap;
 
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
+use tera::Tera;
 
 // store tera template in application state
 async fn index(
@@ -31,7 +29,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         let tera =
-            compile_templates!(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*"));
+            Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();
 
         App::new()
             .data(tera)
