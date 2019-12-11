@@ -90,10 +90,12 @@ mod tests {
     use actix_web::dev::Service;
     use actix_web::{http, test, web, App};
 
-    #[test]
-    fn test_index() -> Result<(), Error> {
-        let app = App::new().route("/", web::post().to(index));
-        let mut app = test::init_service(app);
+    #[actix_rt::test]
+    async fn test_index() -> Result<(), Error> {
+        let mut app = test::init_service(
+            App::new().service(web::resource("/").route(web::post().to(index))),
+        )
+        .await;
 
         let req = test::TestRequest::post()
             .uri("/")
@@ -102,7 +104,7 @@ mod tests {
                 number: 43,
             })
             .to_request();
-        let resp = test::block_on(app.call(req)).unwrap();
+        let resp = app.call(req).await.unwrap();
 
         assert_eq!(resp.status(), http::StatusCode::OK);
 
