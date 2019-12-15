@@ -10,11 +10,9 @@ extern crate diesel;
 extern crate serde_derive;
 
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
-use bytes::BytesMut;
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 use dotenv;
-use futures::StreamExt;
 
 mod models;
 mod schema;

@@ -12,6 +12,6 @@ path = "src/main.rs"
 [dependencies]
 env_logger = "0.5"
 rustls = "0.16"
-actix-web = { version = "2.0.0-alpha.3", features=["rustls"] }
+actix-web = { version = "2.0.0-alpha.6", features=["rustls"] }
 actix-files = "0.2.0-alpha.3"
-actix-rt = "1.0.0-alpha.3"
+actix-rt = "1.0.0"
