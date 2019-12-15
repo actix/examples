@@ -10,12 +10,13 @@ workspace = ".."
 [dependencies]
 env_logger = "0.7"
 
-yarte = { version = "0.3", features=["with-actix-web"]  }
+yarte = { git = "https://github.com/botika/yarte", features = ["with-actix-web"]  }
 
-actix-web = "1.0"
+actix-rt = "1.0"
+actix-web = "2.0.0-alpha"
 
 [build-dependencies]
-yarte = { version = "0.3", features=["with-actix-web"]  }
+yarte = { git = "https://github.com/botika/yarte", features = ["with-actix-web"]  }
 
 [dev-dependencies]
 bytes = "0.4"
