@@ -13,7 +13,7 @@ const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// Entry point for our route
-fn chat_route(
+async fn chat_route(
     req: HttpRequest,
     stream: web::Payload,
     srv: web::Data<Addr<server::ChatServer>>,
@@ -71,7 +71,7 @@ impl Actor for WsChatSession {
                     // something is wrong with chat server
                     _ => ctx.stop(),
                 }
-                fut::ok(())
+                fut::ready(())
             })
             .wait(ctx);
     }
@@ -93,8 +93,20 @@ impl Handler<server::Message> for WsChatSession {
 }
 
 /// WebSocket message handler
-impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
-    fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
+impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
+    fn handle(
+        &mut self,
+        msg: Result<ws::Message, ws::ProtocolError>,
+        ctx: &mut Self::Context,
+    ) {
+        let msg = match msg {
+            Err(_) => {
+                ctx.stop();
+                return;
+            }
+            Ok(msg) => msg,
+        };
+
         println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
             ws::Message::Ping(msg) => {
@@ -126,7 +138,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                                         }
                                         _ => println!("Something is wrong"),
                                     }
-                                    fut::ok(())
+                                    fut::ready(())
                                 })
                                 .wait(ctx)
                             // .wait(ctx) pauses all events in context,
@@ -173,6 +185,9 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Close(_) => {
                 ctx.stop();
             }
+            ws::Message::Continuation(_) => {
+                ctx.stop();
+            }
             ws::Message::Nop => (),
         }
     }
@@ -199,14 +214,14 @@ impl WsChatSession {
                 return;
             }
 
-            ctx.ping("");
+            ctx.ping(b"");
         });
     }
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     env_logger::init();
-    let sys = System::new("ws-example");
 
     // Start chat server actor
     let server = server::ChatServer::default().start();
@@ -227,7 +242,6 @@ fn main() -> std::io::Result<()> {
             .service(fs::Files::new("/static/", "static/"))
     })
     .bind("127.0.0.1:8080")?
-    .start();
-
-    sys.run()
+    .start()
+    .await
 }

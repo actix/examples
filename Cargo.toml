@@ -37,10 +37,7 @@ members = [
    "unix-socket",
 #   "web-cors/backend",
 #   "websocket",
-#   "websocket-chat",
+   "websocket-chat",
 #   "websocket-chat-broker",
 #   "websocket-tcp-chat",
 ]
-
-[patch.crates-io]
-actix-http = { git = "https://github.com/actix/actix-web.git" }

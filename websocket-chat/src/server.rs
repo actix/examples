@@ -8,6 +8,7 @@ use std::collections::{HashMap, HashSet};
 
 /// Chat server sends this messages to session
 #[derive(Message)]
+#[rtype(result = "()")]
 pub struct Message(pub String);
 
 /// Message for chat server communications
@@ -21,12 +22,14 @@ pub struct Connect {
 
 /// Session is disconnected
 #[derive(Message)]
+#[rtype(result = "()")]
 pub struct Disconnect {
     pub id: usize,
 }
 
 /// Send message to specific room
 #[derive(Message)]
+#[rtype(result = "()")]
 pub struct ClientMessage {
     /// Id of the client session
     pub id: usize,
@@ -45,6 +48,7 @@ impl actix::Message for ListRooms {
 
 /// Join room, if room does not exists create new one.
 #[derive(Message)]
+#[rtype(result = "()")]
 pub struct Join {
     /// Client id
     pub id: usize,
