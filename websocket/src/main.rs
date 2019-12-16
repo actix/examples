@@ -16,10 +16,10 @@ const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// do websocket handshake and start `MyWebSocket` actor
-fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
+async fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
     println!("{:?}", r);
     let res = ws::start(MyWebSocket::new(), &r, stream);
-    println!("{:?}", res.as_ref().unwrap());
+    println!("{:?}", res);
     res
 }
 
@@ -41,24 +41,28 @@ impl Actor for MyWebSocket {
 }
 
 /// Handler for `ws::Message`
-impl StreamHandler<ws::Message, ws::ProtocolError> for MyWebSocket {
-    fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
+impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for MyWebSocket {
+    fn handle(
+        &mut self,
+        msg: Result<ws::Message, ws::ProtocolError>,
+        ctx: &mut Self::Context,
+    ) {
         // process websocket messages
         println!("WS: {:?}", msg);
         match msg {
-            ws::Message::Ping(msg) => {
+            Ok(ws::Message::Ping(msg)) => {
                 self.hb = Instant::now();
                 ctx.pong(&msg);
             }
-            ws::Message::Pong(_) => {
+            Ok(ws::Message::Pong(_)) => {
                 self.hb = Instant::now();
             }
-            ws::Message::Text(text) => ctx.text(text),
-            ws::Message::Binary(bin) => ctx.binary(bin),
-            ws::Message::Close(_) => {
+            Ok(ws::Message::Text(text)) => ctx.text(text),
+            Ok(ws::Message::Binary(bin)) => ctx.binary(bin),
+            Ok(ws::Message::Close(_)) => {
                 ctx.stop();
             }
-            ws::Message::Nop => (),
+            _ => ctx.stop(),
         }
     }
 }
@@ -85,12 +89,13 @@ impl MyWebSocket {
                 return;
             }
 
-            ctx.ping("");
+            ctx.ping(b"");
         });
     }
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     env_logger::init();
 
@@ -105,5 +110,6 @@ fn main() -> std::io::Result<()> {
     })
     // start http server on 127.0.0.1:8080
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }

@@ -19,7 +19,7 @@ pub struct IndexResponse {
     counter: i32,
 }
 
-fn index(session: Session) -> Result<HttpResponse> {
+async fn index(session: Session) -> Result<HttpResponse> {
     let user_id: Option<String> = session.get::<String>("user_id").unwrap();
     let counter: i32 = session
         .get::<i32>("counter")
@@ -29,7 +29,7 @@ fn index(session: Session) -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().json(IndexResponse { user_id, counter }))
 }
 
-fn do_something(session: Session) -> Result<HttpResponse> {
+async fn do_something(session: Session) -> Result<HttpResponse> {
     let user_id: Option<String> = session.get::<String>("user_id").unwrap();
     let counter: i32 = session
         .get::<i32>("counter")
@@ -44,7 +44,8 @@ fn do_something(session: Session) -> Result<HttpResponse> {
 struct Identity {
     user_id: String,
 }
-fn login(user_id: web::Json<Identity>, session: Session) -> Result<HttpResponse> {
+
+async fn login(user_id: web::Json<Identity>, session: Session) -> Result<HttpResponse> {
     let id = user_id.into_inner().user_id;
     session.set("user_id", &id)?;
     session.renew();
@@ -60,7 +61,7 @@ fn login(user_id: web::Json<Identity>, session: Session) -> Result<HttpResponse>
     }))
 }
 
-fn logout(session: Session) -> Result<HttpResponse> {
+async fn logout(session: Session) -> Result<HttpResponse> {
     let id: Option<String> = session.get("user_id")?;
     if let Some(x) = id {
         session.purge();
@@ -70,7 +71,8 @@ fn logout(session: Session) -> Result<HttpResponse> {
     }
 }
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info,actix_redis=info");
     env_logger::init();
 
@@ -86,24 +88,24 @@ fn main() -> std::io::Result<()> {
             .service(resource("/logout").route(post().to(logout)))
     })
     .bind("127.0.0.1:8080")?
-    .run()
+    .start()
+    .await
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use actix_http::{httpmessage::HttpMessage, HttpService};
-    use actix_http_test::{block_on, TestServer};
+    use actix_http::httpmessage::HttpMessage;
     use actix_web::{
-        middleware,
+        middleware, test,
         web::{get, post, resource},
         App,
     };
     use serde_json::json;
     use time;
 
-    #[test]
-    fn test_workflow() {
+    #[actix_rt::test]
+    async fn test_workflow() {
         // Step 1:  GET index
         //   - set-cookie actix-session will be in response (session cookie #1)
         //   - response should be: {"counter": 0, "user_id": None}
@@ -134,26 +136,24 @@ mod test {
         //   - set-cookie actix-session will be in response (session cookie #3)
         //   - response should be: {"counter": 0, "user_id": None}
 
-        let mut srv = TestServer::new(|| {
-            HttpService::new(
-                App::new()
-                    .wrap(
-                        RedisSession::new("127.0.0.1:6379", &[0; 32])
-                            .cookie_name("test-session"),
-                    )
-                    .wrap(middleware::Logger::default())
-                    .service(resource("/").route(get().to(index)))
-                    .service(resource("/do_something").route(post().to(do_something)))
-                    .service(resource("/login").route(post().to(login)))
-                    .service(resource("/logout").route(post().to(logout))),
-            )
+        let srv = test::start(|| {
+            App::new()
+                .wrap(
+                    RedisSession::new("127.0.0.1:6379", &[0; 32])
+                        .cookie_name("test-session"),
+                )
+                .wrap(middleware::Logger::default())
+                .service(resource("/").route(get().to(index)))
+                .service(resource("/do_something").route(post().to(do_something)))
+                .service(resource("/login").route(post().to(login)))
+                .service(resource("/logout").route(post().to(logout)))
         });
 
         // Step 1:  GET index
         //   - set-cookie actix-session will be in response (session cookie #1)
         //   - response should be: {"counter": 0, "user_id": None}
         let req_1a = srv.get("/").send();
-        let mut resp_1 = srv.block_on(req_1a).unwrap();
+        let mut resp_1 = req_1a.await.unwrap();
         let cookie_1 = resp_1
             .cookies()
             .unwrap()
@@ -161,7 +161,7 @@ mod test {
             .into_iter()
             .find(|c| c.name() == "test-session")
             .unwrap();
-        let result_1 = block_on(resp_1.json::<IndexResponse>()).unwrap();
+        let result_1 = resp_1.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_1,
             IndexResponse {
@@ -174,7 +174,7 @@ mod test {
         //   - set-cookie will *not* be in response
         //   - response should be: {"counter": 0, "user_id": None}
         let req_2 = srv.get("/").cookie(cookie_1.clone()).send();
-        let resp_2 = srv.block_on(req_2).unwrap();
+        let resp_2 = req_2.await.unwrap();
         let cookie_2 = resp_2
             .cookies()
             .unwrap()
@@ -187,8 +187,8 @@ mod test {
         //   - adds new session state in redis:  {"counter": 1}
         //   - response should be: {"counter": 1, "user_id": None}
         let req_3 = srv.post("/do_something").cookie(cookie_1.clone()).send();
-        let mut resp_3 = srv.block_on(req_3).unwrap();
-        let result_3 = block_on(resp_3.json::<IndexResponse>()).unwrap();
+        let mut resp_3 = req_3.await.unwrap();
+        let result_3 = resp_3.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_3,
             IndexResponse {
@@ -201,8 +201,8 @@ mod test {
         //   - updates session state in redis:  {"counter": 2}
         //   - response should be: {"counter": 2, "user_id": None}
         let req_4 = srv.post("/do_something").cookie(cookie_1.clone()).send();
-        let mut resp_4 = srv.block_on(req_4).unwrap();
-        let result_4 = block_on(resp_4.json::<IndexResponse>()).unwrap();
+        let mut resp_4 = req_4.await.unwrap();
+        let result_4 = resp_4.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_4,
             IndexResponse {
@@ -218,7 +218,7 @@ mod test {
             .post("/login")
             .cookie(cookie_1.clone())
             .send_json(&json!({"user_id": "ferris"}));
-        let mut resp_5 = srv.block_on(req_5).unwrap();
+        let mut resp_5 = req_5.await.unwrap();
         let cookie_2 = resp_5
             .cookies()
             .unwrap()
@@ -231,7 +231,7 @@ mod test {
             cookie_1.value().to_string() != cookie_2.value().to_string()
         );
 
-        let result_5 = block_on(resp_5.json::<IndexResponse>()).unwrap();
+        let result_5 = resp_5.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_5,
             IndexResponse {
@@ -243,8 +243,8 @@ mod test {
         // Step 6: GET index, including session cookie #2 in request
         //   - response should be: {"counter": 2, "user_id": "ferris"}
         let req_6 = srv.get("/").cookie(cookie_2.clone()).send();
-        let mut resp_6 = srv.block_on(req_6).unwrap();
-        let result_6 = block_on(resp_6.json::<IndexResponse>()).unwrap();
+        let mut resp_6 = req_6.await.unwrap();
+        let result_6 = resp_6.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_6,
             IndexResponse {
@@ -257,8 +257,8 @@ mod test {
         //   - updates session state in redis: {"counter": 3, "user_id": "ferris"}
         //   - response should be: {"counter": 2, "user_id": None}
         let req_7 = srv.post("/do_something").cookie(cookie_2.clone()).send();
-        let mut resp_7 = srv.block_on(req_7).unwrap();
-        let result_7 = block_on(resp_7.json::<IndexResponse>()).unwrap();
+        let mut resp_7 = req_7.await.unwrap();
+        let result_7 = resp_7.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_7,
             IndexResponse {
@@ -271,7 +271,7 @@ mod test {
         //   - set-cookie actix-session will be in response (session cookie #3)
         //   - response should be: {"counter": 0, "user_id": None}
         let req_8 = srv.get("/").cookie(cookie_1.clone()).send();
-        let mut resp_8 = srv.block_on(req_8).unwrap();
+        let mut resp_8 = req_8.await.unwrap();
         let cookie_3 = resp_8
             .cookies()
             .unwrap()
@@ -279,7 +279,7 @@ mod test {
             .into_iter()
             .find(|c| c.name() == "test-session")
             .unwrap();
-        let result_8 = block_on(resp_8.json::<IndexResponse>()).unwrap();
+        let result_8 = resp_8.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_8,
             IndexResponse {
@@ -293,7 +293,7 @@ mod test {
         //   - set-cookie actix-session will be in response with session cookie #2
         //     invalidation logic
         let req_9 = srv.post("/logout").cookie(cookie_2.clone()).send();
-        let resp_9 = srv.block_on(req_9).unwrap();
+        let resp_9 = req_9.await.unwrap();
         let cookie_4 = resp_9
             .cookies()
             .unwrap()
@@ -307,8 +307,8 @@ mod test {
         //   - set-cookie actix-session will be in response (session cookie #3)
         //   - response should be: {"counter": 0, "user_id": None}
         let req_10 = srv.get("/").cookie(cookie_2.clone()).send();
-        let mut resp_10 = srv.block_on(req_10).unwrap();
-        let result_10 = block_on(resp_10.json::<IndexResponse>()).unwrap();
+        let mut resp_10 = req_10.await.unwrap();
+        let result_10 = resp_10.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_10,
             IndexResponse {

@@ -4,9 +4,9 @@ extern crate redis_async;
 extern crate serde_derive;
 
 use actix::prelude::*;
-use actix_redis::{Command, Error as ARError, RedisActor};
+use actix_redis::{Command, RedisActor};
 use actix_web::{middleware, web, App, Error as AWError, HttpResponse, HttpServer};
-use futures::future::{join_all, Future};
+use futures::future::join_all;
 use redis_async::resp::RespValue;
 
 #[derive(Deserialize)]
@@ -16,10 +16,10 @@ pub struct CacheInfo {
     three: String,
 }
 
-fn cache_stuff(
+async fn cache_stuff(
     info: web::Json<CacheInfo>,
     redis: web::Data<Addr<RedisActor>>,
-) -> impl Future<Item = HttpResponse, Error = AWError> {
+) -> Result<HttpResponse, AWError> {
     let info = info.into_inner();
 
     let one = redis.send(Command(resp_array!["SET", "mydomain:one", info.one]));
@@ -33,47 +33,51 @@ fn cache_stuff(
     // canceled and an error will be returned immediately. If all futures complete
     // successfully, however, then the returned future will succeed with a `Vec` of
     // all the successful results.
-    let info_set = join_all(vec![one, two, three].into_iter());
+    let res: Vec<Result<RespValue, AWError>> =
+        join_all(vec![one, two, three].into_iter())
+            .await
+            .into_iter()
+            .map(|item| {
+                item.map_err(AWError::from)
+                    .and_then(|res| res.map_err(AWError::from))
+            })
+            .collect();
 
-    info_set
-        .map_err(AWError::from)
-        .and_then(|res: Vec<Result<RespValue, ARError>>|
-                  // successful operations return "OK", so confirm that all returned as so
-                  if !res.iter().all(|res| match res {
-                      Ok(RespValue::SimpleString(x)) if x=="OK" => true,
-                      _ => false
-                  }) {
-                      Ok(HttpResponse::InternalServerError().finish())
-                  } else {
-                      Ok(HttpResponse::Ok().body("successfully cached values"))
-                  }
-        )
+    // successful operations return "OK", so confirm that all returned as so
+    if !res.iter().all(|res| match res {
+        Ok(RespValue::SimpleString(x)) if x == "OK" => true,
+        _ => false,
+    }) {
+        Ok(HttpResponse::InternalServerError().finish())
+    } else {
+        Ok(HttpResponse::Ok().body("successfully cached values"))
+    }
 }
 
-fn del_stuff(
-    redis: web::Data<Addr<RedisActor>>,
-) -> impl Future<Item = HttpResponse, Error = AWError> {
-    redis
+async fn del_stuff(redis: web::Data<Addr<RedisActor>>) -> Result<HttpResponse, AWError> {
+    let res = redis
         .send(Command(resp_array![
             "DEL",
             "mydomain:one",
             "mydomain:two",
             "mydomain:three"
         ]))
-        .map_err(AWError::from)
-        .and_then(|res: Result<RespValue, ARError>| match &res {
-            Ok(RespValue::Integer(x)) if x == &3 => {
-                Ok(HttpResponse::Ok().body("successfully deleted values"))
-            }
-            _ => {
-                println!("---->{:?}", res);
-                Ok(HttpResponse::InternalServerError().finish())
-            }
-        })
+        .await?;
+
+    match res {
+        Ok(RespValue::Integer(x)) if x == 3 => {
+            Ok(HttpResponse::Ok().body("successfully deleted values"))
+        }
+        _ => {
+            println!("---->{:?}", res);
+            Ok(HttpResponse::InternalServerError().finish())
+        }
+    }
 }
 
-fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info,actix_redis=info");
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=trace,actix_redis=trace");
     env_logger::init();
 
     HttpServer::new(|| {
@@ -84,10 +88,11 @@ fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .service(
                 web::resource("/stuff")
-                    .route(web::post().to_async(cache_stuff))
-                    .route(web::delete().to_async(del_stuff)),
+                    .route(web::post().to(cache_stuff))
+                    .route(web::delete().to(del_stuff)),
             )
     })
     .bind("0.0.0.0:8080")?
-    .run()
+    .start()
+    .await
 }

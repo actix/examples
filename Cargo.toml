@@ -1,6 +1,5 @@
 [workspace]
 members = [
-#   "actix_redis",
    "async_db",
    "async_ex1",
    "async_ex2",
@@ -22,7 +21,8 @@ members = [
    "openssl",
 #   "protobuf",
    "r2d2",
-#   "redis-session",
+   "redis",
+   "redis-session",
    "rustls",
    "server-sent-events",
    "simple-auth-server",
@@ -36,7 +36,7 @@ members = [
 #   "udp-echo",
    "unix-socket",
 #   "web-cors/backend",
-#   "websocket",
+   "websocket",
    "websocket-chat",
 #   "websocket-chat-broker",
 #   "websocket-tcp-chat",
