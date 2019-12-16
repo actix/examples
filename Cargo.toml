@@ -35,9 +35,9 @@ members = [
    "todo",
 #   "udp-echo",
    "unix-socket",
-#   "web-cors/backend",
+   "web-cors/backend",
    "websocket",
    "websocket-chat",
 #   "websocket-chat-broker",
-#   "websocket-tcp-chat",
+   "websocket-tcp-chat",
 ]

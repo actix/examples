@@ -8,7 +8,7 @@ pub struct Info {
     confirm_password: String,
 }
 
-pub fn info(info: web::Json<Info>) -> web::Json<Info> {
+pub async fn info(info: web::Json<Info>) -> web::Json<Info> {
     println!("=========={:?}=========", info);
     web::Json(Info {
         username: info.username.clone(),

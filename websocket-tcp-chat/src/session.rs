@@ -1,13 +1,13 @@
 //! `ClientSession` is an actor, it manages peer tcp connection and
 //! proxies commands from peer to `ChatServer`.
-use futures::Stream;
 use std::str::FromStr;
 use std::time::{Duration, Instant};
 use std::{io, net};
-use tokio_codec::FramedRead;
-use tokio_io::io::WriteHalf;
-use tokio_io::AsyncRead;
-use tokio_tcp::{TcpListener, TcpStream};
+
+use futures::StreamExt;
+use tokio::io::{split, WriteHalf};
+use tokio::net::{TcpListener, TcpStream};
+use tokio_util::codec::FramedRead;
 
 use actix::prelude::*;
 
@@ -16,6 +16,7 @@ use crate::server::{self, ChatServer};
 
 /// Chat server sends this messages to session
 #[derive(Message)]
+#[rtype(result = "()")]
 pub struct Message(pub String);
 
 /// `ChatSession` actor is responsible for tcp peer communications.
@@ -57,7 +58,7 @@ impl Actor for ChatSession {
                     // something is wrong with chat server
                     _ => ctx.stop(),
                 }
-                actix::fut::ok(())
+                actix::fut::ready(())
             })
             .wait(ctx);
     }
@@ -72,11 +73,11 @@ impl Actor for ChatSession {
 impl actix::io::WriteHandler<io::Error> for ChatSession {}
 
 /// To use `Framed` we have to define Io type and Codec
-impl StreamHandler<ChatRequest, io::Error> for ChatSession {
+impl StreamHandler<Result<ChatRequest, io::Error>> for ChatSession {
     /// This is main event loop for client requests
-    fn handle(&mut self, msg: ChatRequest, ctx: &mut Context<Self>) {
+    fn handle(&mut self, msg: Result<ChatRequest, io::Error>, ctx: &mut Context<Self>) {
         match msg {
-            ChatRequest::List => {
+            Ok(ChatRequest::List) => {
                 // Send ListRooms message to chat server and wait for response
                 println!("List rooms");
                 self.addr
@@ -89,13 +90,13 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
                             }
                             _ => println!("Something is wrong"),
                         }
-                        actix::fut::ok(())
+                        actix::fut::ready(())
                     })
                     .wait(ctx)
                 // .wait(ctx) pauses all events in context,
                 // so actor wont receive any new messages until it get list of rooms back
             }
-            ChatRequest::Join(name) => {
+            Ok(ChatRequest::Join(name)) => {
                 println!("Join to room: {}", name);
                 self.room = name.clone();
                 self.addr.do_send(server::Join {
@@ -104,7 +105,7 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
                 });
                 self.framed.write(ChatResponse::Joined(name));
             }
-            ChatRequest::Message(message) => {
+            Ok(ChatRequest::Message(message)) => {
                 // send message to chat server
                 println!("Peer message: {}", message);
                 self.addr.do_send(server::Message {
@@ -114,7 +115,8 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
                 })
             }
             // we update heartbeat time on ping from peer
-            ChatRequest::Ping => self.hb = Instant::now(),
+            Ok(ChatRequest::Ping) => self.hb = Instant::now(),
+            _ => ctx.stop(),
         }
     }
 }
@@ -170,50 +172,30 @@ impl ChatSession {
 
 /// Define tcp server that will accept incoming tcp connection and create
 /// chat actors.
-pub struct TcpServer {
-    chat: Addr<ChatServer>,
-}
+pub fn tcp_server(_s: &str, server: Addr<ChatServer>) {
+    // Create server listener
+    let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
 
-impl TcpServer {
-    pub fn new(_s: &str, chat: Addr<ChatServer>) {
-        // Create server listener
-        let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
-        let listener = TcpListener::bind(&addr).unwrap();
+    actix_rt::spawn(async move {
+        let server = server.clone();
+        let mut listener = TcpListener::bind(&addr).await.unwrap();
+        let mut incoming = listener.incoming();
 
-        // Our chat server `Server` is an actor, first we need to start it
-        // and then add stream on incoming tcp connections to it.
-        // TcpListener::incoming() returns stream of the (TcpStream, net::SocketAddr)
-        // items So to be able to handle this events `Server` actor has to
-        // implement stream handler `StreamHandler<(TcpStream,
-        // net::SocketAddr), io::Error>`
-        TcpServer::create(|ctx| {
-            ctx.add_message_stream(listener.incoming().map_err(|_| ()).map(TcpConnect));
-            TcpServer { chat }
-        });
-    }
-}
-
-/// Make actor from `Server`
-impl Actor for TcpServer {
-    /// Every actor has to provide execution `Context` in which it can run.
-    type Context = Context<Self>;
-}
-
-#[derive(Message)]
-struct TcpConnect(TcpStream);
-
-/// Handle stream of TcpStream's
-impl Handler<TcpConnect> for TcpServer {
-    type Result = ();
-
-    fn handle(&mut self, msg: TcpConnect, _: &mut Context<Self>) {
-        // For each incoming connection we create `ChatSession` actor
-        // with out chat server address.
-        let server = self.chat.clone();
-        ChatSession::create(|ctx| {
-            let (r, w) = msg.0.split();
-            ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
-            ChatSession::new(server, actix::io::FramedWrite::new(w, ChatCodec, ctx))
-        });
-    }
+        while let Some(stream) = incoming.next().await {
+            match stream {
+                Ok(stream) => {
+                    let server = server.clone();
+                    ChatSession::create(|ctx| {
+                        let (r, w) = split(stream);
+                        ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
+                        ChatSession::new(
+                            server,
+                            actix::io::FramedWrite::new(w, ChatCodec, ctx),
+                        )
+                    });
+                }
+                Err(_) => return,
+            }
+        }
+    });
 }

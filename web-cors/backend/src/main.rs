@@ -6,7 +6,8 @@ use actix_web::{http::header, middleware::Logger, web, App, HttpServer};
 
 mod user;
 
-fn main() -> std::io::Result<()> {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
@@ -18,11 +19,13 @@ fn main() -> std::io::Result<()> {
                     .allowed_methods(vec!["GET", "POST"])
                     .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
                     .allowed_header(header::CONTENT_TYPE)
-                    .max_age(3600),
+                    .max_age(3600)
+                    .finish(),
             )
             .wrap(Logger::default())
             .service(web::resource("/user/info").route(web::post().to(user::info)))
     })
     .bind("127.0.0.1:8000")?
-    .run()
+    .start()
+    .await
 }
