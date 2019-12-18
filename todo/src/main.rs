@@ -4,8 +4,6 @@ extern crate diesel;
 extern crate log;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
-extern crate tera;
 
 use std::{env, io};
 
@@ -37,7 +35,7 @@ async fn main() -> io::Result<()> {
     let app = move || {
         debug!("Constructing the App");
 
-        let templates: Tera = compile_templates!("templates/**/*");
+        let templates: Tera = Tera::new("/templates/**/*").unwrap();
 
         let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
 
