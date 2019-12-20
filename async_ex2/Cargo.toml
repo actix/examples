@@ -7,10 +7,10 @@ workspace = ".."
 
 [dependencies]
 actix-rt = "1.0.0"
-actix-web = { version="2.0.0-alpha.6", features=["openssl"] }
-actix-multipart = "0.2.0-alpha.2"
+actix-web = { version="2.0.0-rc", features=["openssl"] }
+actix-multipart = "0.2.0"
 actix-service = "1.0.0"
-bytes = "0.5.2"
+bytes = "0.5.3"
 env_logger = "0.6.1"
 futures = "0.3.1"
 serde = { version = "^1.0", features = ["derive"] }

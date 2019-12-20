@@ -3,12 +3,11 @@ name = "actix-graphql-demo"
 version = "2.0.0"
 authors = ["Dwi Sulfahnur <hello@dwisulfahnur.com>"]
 edition = "2018"
-workspace = ".."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = "2.0.0-alpha.6"
+actix-web = "2.0.0-rc"
 actix-rt = "1.0.0"
 futures = "0.3.1"
 

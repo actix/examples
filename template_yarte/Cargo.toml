@@ -13,7 +13,7 @@ env_logger = "0.7"
 yarte = { git = "https://github.com/botika/yarte", features = ["with-actix-web"]  }
 
 actix-rt = "1.0"
-actix-web = "2.0.0-alpha"
+actix-web = "2.0.0-rc"
 
 [build-dependencies]
 yarte = { git = "https://github.com/botika/yarte", features = ["with-actix-web"]  }

@@ -17,7 +17,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .register_data(data.clone())
+            .app_data(data.clone())
             .route("/", web::get().to(index))
             .route("/events", web::get().to(new_client))
             .route("/broadcast/{msg}", web::get().to(broadcast))

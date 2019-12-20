@@ -49,7 +49,7 @@ async fn main() -> io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .register_data(handlebars_ref.clone())
+            .app_data(handlebars_ref.clone())
             .service(index)
             .service(user)
     })

@@ -1,4 +1,3 @@
-#![allow(clippy::needless_pass_by_value)]
 //! Application may have multiple data objects that are shared across
 //! all handlers within same Application. Data could be added
 //! with `App::data()` method, multiple different data objects could be added.
@@ -34,7 +33,7 @@ async fn main() -> io::Result<()> {
     //move is necessary to give closure below ownership of counter
     HttpServer::new(move || {
         App::new()
-            .register_data(counter.clone()) // <- create app with shared state
+            .app_data(counter.clone()) // <- create app with shared state
             // enable logger
             .wrap(middleware::Logger::default())
             // register simple handler, handle all methods

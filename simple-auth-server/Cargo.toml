@@ -6,8 +6,8 @@ edition = "2018"
 workspace = ".."
 
 [dependencies]
-actix-identity = "0.2.0-alpha.1"
-actix-web = "2.0.0-alpha.6"
+actix-identity = "0.2.0"
+actix-web = "2.0.0-rc"
 actix-rt = "1.0.0"
 argonautica = "0.2.0"
 chrono = { version = "0.4.6", features = ["serde"] }

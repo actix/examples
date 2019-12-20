@@ -10,10 +10,10 @@ path = "src/main.rs"
 
 [dependencies]
 actix-rt = "1.0.0"
-actix = "0.9.0-alpha.1"
-actix-web = "2.0.0-alpha.5"
-actix-web-actors = "2.0.0-alpha.1"
-actix-files = "0.2.0-alpha.3"
+actix = "0.9.0"
+actix-web = "2.0.0-rc"
+actix-web-actors = "2.0.0"
+actix-files = "0.2.0"
 
 rand = "0.6"
 bytes = "0.5.3"

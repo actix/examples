@@ -2,11 +2,10 @@
 name = "juniper-example"
 version = "0.2.0"
 authors = ["pyros2097 <pyros2097@gmail.com>"]
-workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-web = "2.0.0-alpha.6"
+actix-web = "2.0.0-rc"
 actix-rt = "1.0.0"
 env_logger = "0.7.1"
 serde = "1.0.103"

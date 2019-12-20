@@ -3,7 +3,6 @@ name = "websocket-broker-example"
 version = "0.1.0"
 authors = ["Chris Ricketts <chris.ricketts@steribar.com>"]
 edition = "2018"
-workspace = ".."
 
 [[bin]]
 name = "server"
