@@ -141,13 +141,14 @@ mod tests {
             .data(AppState {
                 foo: "bar".to_string(),
             })
-            .to_http_request()
-            .get_app_data()
+            .to_http_request();
+        let data = state
+            .app_data::<actix_web::web::Data<AppState>>()
             .unwrap();
         let params = Form(MyParams {
             name: "John".to_string(),
         });
-        let resp = handle_post_2(state, params).await;
+        let resp = handle_post_2(data.clone(), params).await;
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
