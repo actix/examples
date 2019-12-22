@@ -4,4 +4,4 @@ This is an example of how to use Actix Web with the [Handlebars templating langu
 
 - http://localhost:8080
 - http://localhost:8080/Emma/documents
-- http://localhost:8080/Bob/passwordds
+- http://localhost:8080/Bob/passwords
