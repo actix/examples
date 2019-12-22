@@ -14,7 +14,7 @@ cargo run --bin websocket-server
 
 ### web client
 
-- [http://localhost:8080/ws/index.html](http://localhost:8080/ws/index.html)
+- [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 ### rust client
 
