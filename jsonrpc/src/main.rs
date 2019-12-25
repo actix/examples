@@ -114,7 +114,7 @@ impl ImplNetwork for ObjNetwork {
             delay_for(Duration::from_secs(d)).await;
             Ok(String::from("pong"))
         }
-            .boxed_local()
+        .boxed_local()
     }
 
     fn get(&self) -> u32 {
@@ -153,6 +153,6 @@ async fn main() -> std::io::Result<()> {
     })
     .bind("127.0.0.1:8080")
     .unwrap()
-    .start()
+    .run()
     .await
 }

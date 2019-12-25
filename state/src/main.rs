@@ -40,6 +40,6 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/").to(index))
     })
     .bind("127.0.0.1:8080")?
-    .start()
+    .run()
     .await
 }

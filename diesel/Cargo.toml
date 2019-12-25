@@ -7,7 +7,7 @@ edition = "2018"
 
 [dependencies]
 actix-rt = "1.0.0"
-actix-web = "2.0.0-rc"
+actix-web = "2.0.0"
 
 bytes = "0.4"
 env_logger = "0.6"

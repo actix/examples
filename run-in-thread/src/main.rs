@@ -21,7 +21,7 @@ fn run_app(tx: mpsc::Sender<Server>) -> std::io::Result<()> {
             .service(web::resource("/").to(index))
     })
     .bind("127.0.0.1:8080")?
-    .start();
+    .run();
 
     // send server controller to main thread
     let _ = tx.send(srv.clone());

@@ -28,6 +28,6 @@ async fn main() -> std::io::Result<()> {
             .default_service(web::to(|| async { "404" }))
     })
     .bind("127.0.0.1:8080")?
-    .start()
+    .run()
     .await
 }

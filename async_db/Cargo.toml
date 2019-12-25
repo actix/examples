@@ -7,7 +7,7 @@ workspace = ".."
 
 [dependencies]
 actix-rt = "1.0.0"
-actix-web = "2.0.0-rc"
+actix-web = "2.0.0"
 
 dotenv = "0.10"
 env_logger = "0.6"

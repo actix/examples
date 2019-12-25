@@ -60,5 +60,5 @@ async fn main() -> io::Result<()> {
     };
 
     debug!("Starting server");
-    HttpServer::new(app).bind("localhost:8088")?.start().await
+    HttpServer::new(app).bind("localhost:8088")?.run().await
 }

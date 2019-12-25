@@ -17,7 +17,7 @@ async fn main() -> std::io::Result<()> {
             .configure(app_config)
     })
     .bind("127.0.0.1:8080")?
-    .start()
+    .run()
     .await
 }
 
@@ -142,9 +142,7 @@ mod tests {
                 foo: "bar".to_string(),
             })
             .to_http_request();
-        let data = state
-            .app_data::<actix_web::web::Data<AppState>>()
-            .unwrap();
+        let data = state.app_data::<actix_web::web::Data<AppState>>().unwrap();
         let params = Form(MyParams {
             name: "John".to_string(),
         });

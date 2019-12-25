@@ -80,7 +80,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/").route(web::post().to(index)))
     })
     .bind("127.0.0.1:8080")?
-    .start()
+    .run()
     .await
 }
 

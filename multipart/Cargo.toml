@@ -12,5 +12,5 @@ readme = "README.md"
 [dependencies]
 futures = "0.3.1"
 actix-multipart = "0.2.0"
-actix-web = "2.0.0-rc"
+actix-web = "2.0.0"
 actix-rt = "1.0.0"

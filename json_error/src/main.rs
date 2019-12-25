@@ -45,6 +45,6 @@ async fn main() -> io::Result<()> {
     })
     .bind(ip_address)
     .expect("Can not bind to port 8000")
-    .start()
+    .run()
     .await
 }

@@ -44,6 +44,6 @@ async fn main() -> std::io::Result<()> {
             .service(Files::new("/static", "static"))
     })
     .bind_rustls("127.0.0.1:8443", config)?
-    .start()
+    .run()
     .await
 }

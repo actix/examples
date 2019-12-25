@@ -26,6 +26,6 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/user/info").route(web::post().to(user::info)))
     })
     .bind("127.0.0.1:8000")?
-    .start()
+    .run()
     .await
 }

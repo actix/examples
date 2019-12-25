@@ -21,7 +21,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/").to(index))
     })
     .bind_uds("/tmp/actix-uds.socket")?
-    .start()
+    .run()
     .await
 }
 

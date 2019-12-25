@@ -99,6 +99,6 @@ async fn main() -> std::io::Result<()> {
     })
     .bind((listen_addr, listen_port))?
     .system_exit()
-    .start()
+    .run()
     .await
 }

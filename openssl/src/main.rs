@@ -39,6 +39,6 @@ async fn main() -> io::Result<()> {
             })))
     })
     .bind_openssl("127.0.0.1:8443", builder)?
-    .start()
+    .run()
     .await
 }

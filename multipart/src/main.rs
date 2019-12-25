@@ -54,6 +54,6 @@ async fn main() -> std::io::Result<()> {
         )
     })
     .bind(ip)?
-    .start()
+    .run()
     .await
 }

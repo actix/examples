@@ -95,6 +95,6 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/something").route(web::post().to(create_something)))
     })
     .bind(endpoint)?
-    .start()
+    .run()
     .await
 }
