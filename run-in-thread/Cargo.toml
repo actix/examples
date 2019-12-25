@@ -1,0 +1,11 @@
+[package]
+name = "run-in-thread"
+version = "2.0.0"
+authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+edition = "2018"
+description = "Run actix-web in separate thread"
+
+[dependencies]
+actix-web = "2.0.0-rc"
+actix-rt = "1.0.0"
+env_logger = "0.6"

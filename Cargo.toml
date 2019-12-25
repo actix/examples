@@ -23,6 +23,7 @@ members = [
    "r2d2",
    "redis",
    "redis-session",
+   "run-in-thread",
    "rustls",
    "server-sent-events",
    "simple-auth-server",
