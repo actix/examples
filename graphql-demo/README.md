@@ -17,7 +17,7 @@ Create ```.env``` file on the root directory of this project and set environment
 
 ```sh
 # go to the root dir
-cd actix-graphql-demo
+cd graphql-demo
 
 # Run
 cargo run
