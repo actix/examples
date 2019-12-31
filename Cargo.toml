@@ -32,7 +32,7 @@ members = [
    "template_askama",
    "template_handlebars",
    "template_tera",
-#   "template_yarte",
+   "template_yarte",
    "todo",
 #   "udp-echo",
    "unix-socket",
