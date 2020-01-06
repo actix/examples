@@ -4,59 +4,58 @@ use std::{io, thread};
 
 use actix::io::SinkWrite;
 use actix::*;
-use actix_codec::{AsyncRead, AsyncWrite, Framed};
+use actix_codec::Framed;
 use awc::{
     error::WsProtocolError,
     ws::{Codec, Frame, Message},
-    Client,
+    BoxedSocket, Client,
 };
 use bytes::Bytes;
 use futures::stream::{SplitSink, StreamExt};
 
-#[actix_rt::main]
-async fn main() {
+fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
-    let (response, framed) = Client::new()
-        .ws("http://127.0.0.1:8080/ws/")
-        .connect()
-        .await
-        .map_err(|e| {
-            println!("Error: {}", e);
-        })
-        .unwrap();
+    let sys = System::new("websocket-client");
 
-    println!("{:?}", response);
-    let (sink, stream) = framed.split();
-    let addr = ChatClient::create(|ctx| {
-        ChatClient::add_stream(stream, ctx);
-        ChatClient(SinkWrite::new(sink, ctx))
-    });
+    Arbiter::spawn(async {
+        let (response, framed) = Client::new()
+            .ws("http://127.0.0.1:8080/ws/")
+            .connect()
+            .await
+            .map_err(|e| {
+                println!("Error: {}", e);
+            })
+            .unwrap();
 
-    // start console loop
-    thread::spawn(move || loop {
-        let mut cmd = String::new();
-        if io::stdin().read_line(&mut cmd).is_err() {
-            println!("error");
-            return;
-        }
-        addr.do_send(ClientCommand(cmd));
+        println!("{:?}", response);
+        let (sink, stream) = framed.split();
+        let addr = ChatClient::create(|ctx| {
+            ChatClient::add_stream(stream, ctx);
+            ChatClient(SinkWrite::new(sink, ctx))
+        });
+
+        // start console loop
+        thread::spawn(move || loop {
+            let mut cmd = String::new();
+            if io::stdin().read_line(&mut cmd).is_err() {
+                println!("error");
+                return;
+            }
+            addr.do_send(ClientCommand(cmd));
+        });
     });
+    sys.run().unwrap();
 }
 
-struct ChatClient<T>(SinkWrite<Message, SplitSink<Framed<T, Codec>, Message>>)
-where
-    T: AsyncRead + AsyncWrite;
+struct ChatClient(SinkWrite<Message, SplitSink<Framed<BoxedSocket, Codec>, Message>>);
 
 #[derive(Message)]
 #[rtype(result = "()")]
 struct ClientCommand(String);
 
-impl<T: 'static> Actor for ChatClient<T>
-where
-    T: AsyncRead + AsyncWrite,
-{
+impl Actor for ChatClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
@@ -72,10 +71,7 @@ where
     }
 }
 
-impl<T: 'static> ChatClient<T>
-where
-    T: AsyncRead + AsyncWrite,
-{
+impl ChatClient {
     fn hb(&self, ctx: &mut Context<Self>) {
         ctx.run_later(Duration::new(1, 0), |act, ctx| {
             act.0.write(Message::Ping(Bytes::from_static(b""))).unwrap();
@@ -88,10 +84,7 @@ where
 }
 
 /// Handle stdin commands
-impl<T: 'static> Handler<ClientCommand> for ChatClient<T>
-where
-    T: AsyncRead + AsyncWrite,
-{
+impl Handler<ClientCommand> for ChatClient {
     type Result = ();
 
     fn handle(&mut self, msg: ClientCommand, _ctx: &mut Context<Self>) {
@@ -100,10 +93,7 @@ where
 }
 
 /// Handle server websocket messages
-impl<T: 'static> StreamHandler<Result<Frame, WsProtocolError>> for ChatClient<T>
-where
-    T: AsyncRead + AsyncWrite,
-{
+impl StreamHandler<Result<Frame, WsProtocolError>> for ChatClient {
     fn handle(&mut self, msg: Result<Frame, WsProtocolError>, _: &mut Context<Self>) {
         if let Ok(Frame::Text(txt)) = msg {
             println!("Server: {:?}", txt)
@@ -120,7 +110,4 @@ where
     }
 }
 
-impl<T: 'static> actix::io::WriteHandler<WsProtocolError> for ChatClient<T> where
-    T: AsyncRead + AsyncWrite
-{
-}
+impl actix::io::WriteHandler<WsProtocolError> for ChatClient {}
