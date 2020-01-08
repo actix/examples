@@ -13,7 +13,7 @@ cargo run
 ### web client
 
 - [http://localhost:8080/](http://localhost:8080/static/index.html)
-- [http://localhost:8080/async/bob](http://localhost:8080/async-body/bob)
+- [http://localhost:8080/async-body/bob](http://localhost:8080/async-body/bob)
 - [http://localhost:8080/user/bob/](http://localhost:8080/user/bob/) text/plain download
 - [http://localhost:8080/test](http://localhost:8080/test) (return status switch GET or POST or other)
 - [http://localhost:8080/favicon](http://localhost:8080/static/favicon.htmicol)
