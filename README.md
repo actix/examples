@@ -9,6 +9,7 @@ A curated list of examples related to actix.
 * [actix-raft](https://github.com/railgun-rs/actix-raft) : An implementation of the Raft consensus protocol using the actix Actor framework.
 * [lemmy](https://github.com/dessalines/lemmy) : A federated alternative to reddit in rust.
 * [actix-realworld-example-app](https://github.com/fairingrey/actix-realworld-example-app) : Implementation of the RealWorld backend API spec in Actix.
+* [Canduma](https://github.com/clifinger/canduma) : rust authentication server boilerplate
 
 ## Contribute
 
