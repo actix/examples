@@ -10,6 +10,7 @@ A curated list of examples related to actix.
 * [lemmy](https://github.com/dessalines/lemmy) : A federated alternative to reddit in rust.
 * [actix-realworld-example-app](https://github.com/fairingrey/actix-realworld-example-app) : Implementation of the RealWorld backend API spec in Actix.
 * [Canduma](https://github.com/clifinger/canduma) : rust authentication server boilerplate
+* [Broker](https://crates.io/crates/broker) : Real-time Zero-Code API Server
 
 ## Contribute
 
