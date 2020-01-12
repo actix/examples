@@ -1,5 +1,6 @@
 use actix_session::Session;
 use actix_web::error::Result;
+use serde::{Deserialize, Serialize};
 
 const FLASH_KEY: &str = "flash";
 

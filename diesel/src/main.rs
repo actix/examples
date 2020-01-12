@@ -6,8 +6,7 @@
 //! of them can run in parallel and process messages from same queue.
 #[macro_use]
 extern crate diesel;
-#[macro_use]
-extern crate serde_derive;
+use serde::{Deserialize, Serialize};
 
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;

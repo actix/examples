@@ -14,8 +14,7 @@
 
 #[macro_use]
 extern crate validator_derive;
-#[macro_use]
-extern crate serde_derive;
+use serde::{Deserialize, Serialize};
 
 use std::collections::HashMap;
 use std::io;
