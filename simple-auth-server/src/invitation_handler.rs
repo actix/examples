@@ -1,5 +1,6 @@
 use actix_web::{error::BlockingError, web, HttpResponse};
 use diesel::{prelude::*, PgConnection};
+use serde::Deserialize;
 
 use crate::email_service::send_invitation;
 use crate::errors::ServiceError;

@@ -1,5 +1,6 @@
 use actix_web::{error::BlockingError, web, HttpResponse};
 use diesel::prelude::*;
+use serde::Deserialize;
 
 use crate::errors::ServiceError;
 use crate::models::{Invitation, Pool, SlimUser, User};

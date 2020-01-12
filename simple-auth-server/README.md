@@ -28,3 +28,11 @@
 Read the full tutorial series on [gill.net.in](https://gill.net.in)
 
 - [Auth Web Microservice with rust using Actix-Web 1.0 - Complete Tutorial](https://gill.net.in/posts/auth-microservice-rust-actix-web1.0-diesel-complete-tutorial/)
+
+## Dependencies
+
+On Ubuntu 19.10:
+
+```
+sudo apt install libclang-dev libpq-dev
+```

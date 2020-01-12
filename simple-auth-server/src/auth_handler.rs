@@ -8,6 +8,7 @@ use actix_web::{
 use diesel::prelude::*;
 use diesel::PgConnection;
 use futures::future::Future;
+use serde::Deserialize;
 
 use crate::errors::ServiceError;
 use crate::models::{Pool, SlimUser, User};
