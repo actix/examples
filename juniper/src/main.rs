@@ -4,9 +4,6 @@
 use std::io;
 use std::sync::Arc;
 
-#[macro_use]
-extern crate juniper;
-
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
