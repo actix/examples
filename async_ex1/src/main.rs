@@ -12,8 +12,6 @@
 //           - POSTing json body
 //     3. chaining futures into a single response used by an async endpoint
 
-#[macro_use]
-extern crate validator_derive;
 use serde::{Deserialize, Serialize};
 
 use std::collections::HashMap;
@@ -27,6 +25,7 @@ use actix_web::{
 };
 use futures::StreamExt;
 use validator::Validate;
+use validator_derive::Validate;
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
 struct SomeData {
