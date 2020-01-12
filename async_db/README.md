@@ -38,3 +38,10 @@ sqlite> .tables
 sqlite> select * from nyc_weather;
 ```
 
+## Dependencies
+
+On Ubuntu 19.10:
+
+```
+sudo apt install libsqlite3-dev
+```

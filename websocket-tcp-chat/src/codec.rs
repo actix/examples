@@ -5,6 +5,7 @@ use actix::prelude::*;
 use actix_codec::{Decoder, Encoder};
 use byteorder::{BigEndian, ByteOrder};
 use bytes::{BufMut, BytesMut};
+use serde::{Deserialize, Serialize};
 use serde_json as json;
 
 /// Client request

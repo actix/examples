@@ -4,7 +4,7 @@ use futures::{Future, TryFutureExt};
 use r2d2;
 use r2d2_sqlite;
 use rusqlite::NO_PARAMS;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::{thread::sleep, time::Duration};
 
 pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;

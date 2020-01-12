@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate serde_derive;
-
 use actix::prelude::*;
 use std::str::FromStr;
 use std::time::Duration;

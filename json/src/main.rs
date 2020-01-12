@@ -4,7 +4,7 @@ use actix_web::{
 use bytes::{Bytes, BytesMut};
 use futures::StreamExt;
 use json::JsonValue;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct MyObj {

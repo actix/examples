@@ -2,6 +2,7 @@ use actix_files::NamedFile;
 use actix_session::Session;
 use actix_web::middleware::errhandlers::ErrorHandlerResponse;
 use actix_web::{dev, error, http, web, Error, HttpResponse, Result};
+use serde::Deserialize;
 use tera::{Context, Tera};
 
 use crate::db;

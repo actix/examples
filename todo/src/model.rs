@@ -1,6 +1,7 @@
 use diesel;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
+use serde::Serialize;
 
 use crate::schema::{
     tasks,

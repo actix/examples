@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate serde_derive;
+use serde::{Deserialize, Serialize};
 
 use actix_web::{
     middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result,
