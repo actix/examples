@@ -10,8 +10,8 @@
 //!
 //! We retrieve our app state within our handlers with a `state: Data<...>` argument.
 //!
-//! By default, `actix-web` runs one `App` per logical cpu core
-//! When runng on <N> cores, we see that the example will increment `counter1` (global state)
+//! By default, `actix-web` runs one `App` per logical cpu core.
+//! When running on <N> cores, we see that the example will increment `counter1` (global state)
 //! each time the endpoint is called, but only appear to increment `counter2` every
 //! Nth time on average (thread-local state). This is because the workload is being shared
 //! equally among cores.
@@ -52,7 +52,7 @@ async fn main() -> io::Result<()> {
     // Create some global state prior to building the server
     let counter1 = web::Data::new(Mutex::new(0usize));
 
-    // move is necessary to give closure below ownership counter1
+    // move is necessary to give closure below ownership of counter1
     HttpServer::new(move || {
 
         // Create some thread-local state
