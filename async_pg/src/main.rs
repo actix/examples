@@ -1,3 +1,20 @@
+mod config {
+    use serde::Deserialize;
+    pub use ::config::ConfigError;
+    #[derive(Deserialize)]
+    pub struct Config {
+        pub server_addr: String,
+        pub pg: deadpool_postgres::Config,
+    }
+    impl Config {
+        pub fn from_env() -> Result<Self, ConfigError> {
+            let mut cfg = ::config::Config::new();
+            cfg.merge(::config::Environment::new())?;
+            cfg.try_into()
+        }
+    }
+}
+
 mod models {
     use serde::{Deserialize, Serialize};
     use tokio_pg_mapper_derive::PostgresMapper;
@@ -88,31 +105,25 @@ mod handlers {
 }
 
 use actix_web::{web, App, HttpServer};
-use deadpool_postgres::{Manager, Pool};
+use dotenv::dotenv;
 use handlers::add_user;
-use tokio_postgres::{Config, NoTls};
+use tokio_postgres::NoTls;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    const SERVER_ADDR: &str = "127.0.0.1:8080";
+    dotenv().ok();
 
-    let pg_config = "postgres://test_user:testing@127.0.0.1:5432/testing_db"
-        .parse::<Config>()
-        .unwrap();
-
-    let pool = Pool::new(
-        Manager::new(pg_config, NoTls),
-        16, // # of connections in pool
-    );
+    let config = crate::config::Config::from_env().unwrap();
+    let pool = config.pg.create_pool(NoTls).unwrap();
 
     let server = HttpServer::new(move || {
         App::new()
             .data(pool.clone())
             .service(web::resource("/users").route(web::post().to(add_user)))
     })
-    .bind(SERVER_ADDR)?
+    .bind(config.server_addr.clone())?
     .run();
-    println!("Server running at http://{}/", SERVER_ADDR);
+    println!("Server running at http://{}/", config.server_addr);
 
     server.await
 }
