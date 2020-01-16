@@ -1,14 +1,5 @@
-DROP DATABASE IF EXISTS testing_db;
-
-CREATE USER test_user WITH PASSWORD 'testing';
-
-CREATE DATABASE testing_db OWNER test_user;
-
-\connect testing_db;
-
 DROP SCHEMA IF EXISTS testing CASCADE;
 CREATE SCHEMA testing;
-
 
 CREATE TABLE testing.users (
 	id  BIGSERIAL PRIMARY KEY,
