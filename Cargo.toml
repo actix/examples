@@ -3,6 +3,7 @@ members = [
    "async_db",
    "async_ex1",
    "async_ex2",
+   "async_pg",
    "basics",
    "cookie-auth",
    "cookie-session",
