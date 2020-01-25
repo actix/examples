@@ -1,15 +1,14 @@
-use super::schema::users;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Queryable)]
+use crate::schema::users;
+
+#[derive(Debug, Clone, Serialize, Queryable, Insertable)]
 pub struct User {
     pub id: String,
     pub name: String,
 }
 
-#[derive(Insertable)]
-#[table_name = "users"]
-pub struct NewUser<'a> {
-    pub id: &'a str,
-    pub name: &'a str,
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NewUser {
+    pub name: String,
 }
