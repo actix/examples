@@ -1,140 +1,94 @@
-//! Actix web diesel example
+//! Actix web Diesel integration example
 //!
-//! Diesel does not support tokio, so we have to run it in separate threads.
-//! Actix supports sync actors by default, so we going to create sync actor
-//! that use diesel. Technically sync actors are worker style actors, multiple
-//! of them can run in parallel and process messages from same queue.
+//! Diesel does not support tokio, so we have to run it in separate threads using the web::block
+//! function which offloads blocking code (like Diesel's) in order to not block the server's thread.
+
 #[macro_use]
 extern crate diesel;
-use serde::{Deserialize, Serialize};
 
-use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{get, middleware, post, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
-use dotenv;
+use uuid::Uuid;
 
+mod actions;
 mod models;
 mod schema;
 
-type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
-#[derive(Debug, Serialize, Deserialize)]
-struct MyUser {
-    name: String,
-}
-
-/// Diesel query
-fn query(
-    nm: String,
-    pool: web::Data<Pool>,
-) -> Result<models::User, diesel::result::Error> {
-    use self::schema::users::dsl::*;
-
-    let uuid = format!("{}", uuid::Uuid::new_v4());
-    let new_user = models::NewUser {
-        id: &uuid,
-        name: nm.as_str(),
-    };
-    let conn: &SqliteConnection = &pool.get().unwrap();
-
-    diesel::insert_into(users).values(&new_user).execute(conn)?;
-
-    let mut items = users.filter(id.eq(&uuid)).load::<models::User>(conn)?;
-    Ok(items.pop().unwrap())
-}
-
-/// Async request handler
-async fn add(
-    name: web::Path<String>,
-    pool: web::Data<Pool>,
+/// Finds user by UID.
+#[get("/user/{user_id}")]
+async fn get_user(
+    pool: web::Data<DbPool>,
+    user_uid: web::Path<Uuid>,
 ) -> Result<HttpResponse, Error> {
-    // run diesel blocking code
-    Ok(web::block(move || query(name.into_inner(), pool))
+    let user_uid = user_uid.into_inner();
+    let conn = pool.get().expect("couldn't get db connection from pool");
+
+    // use web::block to offload blocking Diesel code without blocking server thread
+    let user = web::block(move || actions::find_user_by_uid(user_uid, &conn))
         .await
-        .map(|user| HttpResponse::Ok().json(user))
-        .map_err(|_| HttpResponse::InternalServerError())?)
-}
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })?;
 
-/// This handler manually parse json object. Bytes object supports FromRequest trait (extractor)
-/// and could be loaded from request payload automatically
-async fn index_add(
-    body: web::Bytes,
-    pool: web::Data<Pool>,
-) -> Result<HttpResponse, Error> {
-    // body is loaded, now we can deserialize id with serde-json
-    let r_obj = serde_json::from_slice::<MyUser>(&body);
-
-    // Send to the db for create return response to peer
-    match r_obj {
-        Ok(obj) => {
-            let user = web::block(move || query(obj.name, pool))
-                .await
-                .map_err(|_| Error::from(HttpResponse::InternalServerError()))?;
-            Ok(HttpResponse::Ok().json(user))
-        }
-        Err(_) => Err(error::ErrorBadRequest("Json Decode Failed")),
+    if let Some(user) = user {
+        Ok(HttpResponse::Ok().json(user))
+    } else {
+        let res = HttpResponse::NotFound()
+            .body(format!("No user found with uid: {}", user_uid));
+        Ok(res)
     }
 }
 
-/// This handler offloads json deserialization to actix-web's Json extrator
-async fn add2(
-    item: web::Json<MyUser>,
-    pool: web::Data<Pool>,
+/// Inserts new user with name defined in form.
+#[post("/user")]
+async fn add_user(
+    pool: web::Data<DbPool>,
+    form: web::Json<models::NewUser>,
 ) -> Result<HttpResponse, Error> {
-    // run diesel blocking code
-    let user = web::block(move || query(item.into_inner().name, pool))
+    let conn = pool.get().expect("couldn't get db connection from pool");
+
+    // use web::block to offload blocking Diesel code without blocking server thread
+    let user = web::block(move || actions::insert_new_user(&form.name, &conn))
         .await
-        .map_err(|_| HttpResponse::InternalServerError())?; // convert diesel error to http response
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })?;
 
     Ok(HttpResponse::Ok().json(user))
 }
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
+    std::env::set_var("RUST_LOG", "actix_web=info,diesel=debug");
     env_logger::init();
-
     dotenv::dotenv().ok();
 
+    // set up database connection pool
     let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
     let manager = ConnectionManager::<SqliteConnection>::new(connspec);
     let pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
 
-    // Start http server
+    let bind = "127.0.0.1:8080";
+
+    println!("Starting server at: {}", &bind);
+
+    // Start HTTP server
     HttpServer::new(move || {
         App::new()
+            // set up DB pool to be used with web::Data<Pool> extractor
             .data(pool.clone())
-            // enable logger
             .wrap(middleware::Logger::default())
-            // This can be called with:
-            // curl -S --header "Content-Type: application/json" --request POST --data '{"name":"xyz"}'  http://127.0.0.1:8080/add
-            // Use of the extractors makes some post conditions simpler such
-            // as size limit protections and built in json validation.
-            .service(
-                web::resource("/add2")
-                    .data(
-                        web::JsonConfig::default()
-                            .limit(4096) // <- limit size of the payload
-                            .error_handler(|err, _| {
-                                // <- create custom error response
-                                error::InternalError::from_response(
-                                    err,
-                                    HttpResponse::Conflict().finish(),
-                                )
-                                .into()
-                            }),
-                    )
-                    .route(web::post().to(add2)),
-            )
-            //  Manual parsing would allow custom error construction, use of
-            //  other parsers *beside* json (for example CBOR, protobuf, xml), and allows
-            //  an application to standardise on a single parser implementation.
-            .service(web::resource("/add").route(web::post().to(index_add)))
-            .service(web::resource("/add/{name}").route(web::get().to(add)))
+            .service(get_user)
+            .service(add_user)
     })
-    .bind("127.0.0.1:8080")?
+    .bind(&bind)?
     .run()
     .await
 }
