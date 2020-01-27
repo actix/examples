@@ -49,7 +49,7 @@ Inserts a new user into the SQLite DB.
 
 Provide a JSON payload with a name. Eg:
 ```json
-{ "name": "john" }
+{ "name": "bill" }
 ```
 
 On success, a response like the following is returned:
