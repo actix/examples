@@ -11,6 +11,7 @@ A curated list of examples related to actix.
 * [actix-realworld-example-app](https://github.com/fairingrey/actix-realworld-example-app) : Implementation of the RealWorld backend API spec in Actix.
 * [Canduma](https://github.com/clifinger/canduma) : rust authentication server boilerplate
 * [Broker](https://crates.io/crates/broker) : Real-time Zero-Code API Server
+* [Rust, Docker & GraphQL](https://github.com/jayy-lmao/rust-graphql-docker): An example of using Dataloaders, context, and a minimal docker container. 
 
 ## Contribute
 
