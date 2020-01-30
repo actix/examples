@@ -10,8 +10,10 @@ A curated list of examples related to actix.
 * [lemmy](https://github.com/dessalines/lemmy) : A federated alternative to reddit in rust.
 * [actix-realworld-example-app](https://github.com/fairingrey/actix-realworld-example-app) : Implementation of the RealWorld backend API spec in Actix.
 * [Canduma](https://github.com/clifinger/canduma) : rust authentication server boilerplate
-* [Broker](https://crates.io/crates/broker) : Real-time Zero-Code API Server
-* [Toplog](https://toplog.cc/) — A Rust Article/Event/Book Aggregator Powered by Actix-web 2.0 [source](https://github.com/danloh/toplog)
+* [Broker](https://crates.io/crates/broker) : Real-time Zero-Code API Server  
+* [Toplog](https://toplog.cc/) — A Rust Article/Event/Book Aggregator Powered by Actix-web 2.0 [source](https://github.com/danloh/toplog)  
+* [Rust, Docker & GraphQL](https://github.com/jayy-lmao/rust-graphql-docker): An example of using Dataloaders, context, and a minimal docker container. 
+
 ## Contribute
 
 Welcome to contribute !

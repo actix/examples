@@ -13,5 +13,5 @@ env_logger = "0.6"
 uuid = { version = "0.8", features = ["v4"] }
 
 r2d2 = "0.8"
-r2d2_sqlite = "0.8"
-rusqlite = "0.16"
+r2d2_sqlite = "0.10"
+rusqlite = "0.18"
