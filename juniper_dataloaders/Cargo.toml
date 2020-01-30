@@ -1,0 +1,5 @@
+# Cargo.toml
+[workspace]
+members = [
+    "api",
+]

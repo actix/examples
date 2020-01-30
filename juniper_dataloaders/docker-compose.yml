@@ -1,0 +1,41 @@
+version: "2.3"
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+    depends_on:
+      - db
+    networks:
+      - jayy_network
+    links:
+      - db
+    environment:
+      DATABASE_URI: "postgresql://jayylmao:yeetus@db:5432"
+      RUST_BACKTRACE: 1
+  db:
+    image: postgres:12
+    mem_limit: 1536MB
+    mem_reservation: 1G
+    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
+    environment:
+      POSTGRES_USER: jayylmao
+      POSTGRES_PASSWORD: yeetus
+    ports:
+      - "5432:5432"
+    networks:
+      - jayy_network
+    volumes:
+      - ./database/:/docker-entrypoint-initdb.d/
+      - db-data:/var/lib/postgresql/data
+ 
+networks:
+  jayy_network:
+    driver: bridge
+ 
+volumes:
+  db-data:
