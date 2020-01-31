@@ -1,8 +1,7 @@
-use std::{sync::mpsc, thread};
 use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer};
 use futures::executor;
+use std::{sync::mpsc, thread};
 use tokio::signal::unix::{signal, SignalKind};
-
 
 #[get("/hello")]
 async fn hello() -> &'static str {
@@ -59,7 +58,7 @@ async fn main() -> std::io::Result<()> {
             println!("\n*** SIGINT received. Stopping server, gracefully. ***\n");
             stopper.send(()).unwrap();
         }
-	});
+    });
 
     // run server
     server.await

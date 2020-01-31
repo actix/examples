@@ -30,13 +30,11 @@ async fn main() -> std::io::Result<()> {
                     res
                 })
             })
-            .service(web::resource("/login").to(|| {
-                async {
-                    "You are on /login. Go to src/redirect.rs to change this behavior."
-                }
+            .service(web::resource("/login").to(|| async {
+                "You are on /login. Go to src/redirect.rs to change this behavior."
             }))
-            .service(web::resource("/").to(|| {
-                async { "Hello, middleware! Check the console where the server is run." }
+            .service(web::resource("/").to(|| async {
+                "Hello, middleware! Check the console where the server is run."
             }))
     })
     .bind("127.0.0.1:8080")?
