@@ -1,8 +1,8 @@
 use std::{sync::mpsc, thread};
-
-use futures::executor;
-
 use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer};
+use futures::executor;
+use tokio::signal::unix::{signal, SignalKind};
+
 
 #[get("/hello")]
 async fn hello() -> &'static str {
@@ -24,6 +24,7 @@ async fn main() -> std::io::Result<()> {
 
     // create a channel
     let (tx, rx) = mpsc::channel::<()>();
+    let stopper = tx.clone();
 
     let bind = "127.0.0.1:8080";
 
@@ -50,6 +51,15 @@ async fn main() -> std::io::Result<()> {
         // stop server gracefully
         executor::block_on(srv.stop(true))
     });
+
+    let mut stream = signal(SignalKind::interrupt())?;
+    actix_rt::spawn(async move {
+        loop {
+            stream.recv().await;
+            println!("\n*** SIGINT received. Stopping server, gracefully. ***\n");
+            stopper.send(()).unwrap();
+        }
+	});
 
     // run server
     server.await
