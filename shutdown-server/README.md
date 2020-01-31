@@ -1,16 +1,19 @@
-# self-shutdown-route
+# shutdown-server
 
-> Demonstrates how to shutdown the web server using a route hosted by the server itself using channels.
+Demonstrates how to shutdown the web server in a couple of ways:
 
-This technique can be easily modified to support shutting down the server using other kinds of external events.
-Created in response to actix/actix-web#1315. 
+1. remotely, via http request
+	- Created in response to actix/actix-web#1315
+
+2. sending a SIGINT signal to the server (control-c)
+
 
 ## Usage
 
 ### Running The Server
 
 ```bash
-cargo run --bin self-shutdown-route
+cargo run --bin shutdown-server
 
 # Starting 8 workers
 # Starting "actix-web-service-127.0.0.1:8080" service on 127.0.0.1:8080

@@ -92,13 +92,11 @@ async fn main() -> io::Result<()> {
                     _ => HttpResponse::NotFound(),
                 }),
             )
-            .service(web::resource("/error").to(|| {
-                async {
-                    error::InternalError::new(
-                        io::Error::new(io::ErrorKind::Other, "test"),
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                    )
-                }
+            .service(web::resource("/error").to(|| async {
+                error::InternalError::new(
+                    io::Error::new(io::ErrorKind::Other, "test"),
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                )
             }))
             // static files
             .service(fs::Files::new("/static", "static").show_files_listing())

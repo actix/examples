@@ -43,7 +43,7 @@
     ```ini
     SERVER_ADDR=127.0.0.1:8080
     PG.USER=test_user
-    PG.PASSWD=testing
+    PG.PASSWORD=testing
     PG.HOST=127.0.0.1
     PG.PORT=5432
     PG.DBNAME=testing_db

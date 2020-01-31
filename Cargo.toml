@@ -27,7 +27,7 @@ members = [
    "redis-session",
    "run-in-thread",
    "rustls",
-   "self-shutdown-route",
+   "shutdown-server",
    "server-sent-events",
    "simple-auth-server",
    "state",
