@@ -33,7 +33,7 @@ async fn main() -> io::Result<()> {
     let app = move || {
         debug!("Constructing the App");
 
-        let templates: Tera = Tera::new("/templates/**/*").unwrap();
+        let templates: Tera = Tera::new("templates/**/*").unwrap();
 
         let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
 
