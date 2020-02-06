@@ -1,8 +1,8 @@
-{{! Simple example !}}
-{{> doc/t ~}}
-<html>
-
-{{~> doc/head title = "Actix web" }}
-{{~> body ~}}
-
-</html>
+{{#> base title = "Actix web" }}
+    {{~#if let Some(name) = query.get("name") }}
+        {{ let lastname = query.get("lastname").ok_or(yarte::Error)? }}
+        {{> card/hi ~}}
+    {{ else ~}}
+        {{> card/form ~}}
+    {{/if ~}}
+{{/base }}
