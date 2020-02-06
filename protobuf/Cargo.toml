@@ -1,18 +1,17 @@
 [package]
 name = "protobuf-example"
-version = "0.1.0"
-authors = ["kingxsp <jin_hb_zh@126.com>"]
+version = "0.2.0"
+authors = ["kingxsp <jin.hb.zh@outlook.com>, Yuki Okushi <huyuumi.dev@gmail.com>"]
 workspace = ".."
 edition = "2018"
 
 [dependencies]
-bytes = "0.4"
-futures = "0.1"
-env_logger = "0.7.0"
-derive_more = "0.15.0"
-prost = "0.5.0"
-prost-derive = "0.5.0"
+bytes = "0.5.4"
+env_logger = "0.7.1"
+prost = "0.6.1"
+prost-derive = "0.6.1"
 
-actix = "0.8.3"
-actix-web = "1.0.8"
-actix-protobuf = "0.4.1"
+actix = "0.9.0"
+actix-protobuf = "0.5.0"
+actix-rt = "1.0.0"
+actix-web = "2.0.0"
