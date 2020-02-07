@@ -19,7 +19,7 @@ members = [
    "juniper",
    "middleware",
    "multipart",
-   "multipart+s3",
+   "multipart-s3",
    "multipart-async-std",
    "openssl",
 #   "protobuf",
