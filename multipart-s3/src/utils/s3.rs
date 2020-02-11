@@ -1,5 +1,5 @@
 use crate::rusoto_s3::S3;
-use rusoto_core::{ProvideAwsCredentials, Region, RusotoError};
+use rusoto_core::{Region, RusotoError, RusotoFuture};
 use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client};
 use std::io::Read;
 use std::io::Write;
@@ -31,7 +31,7 @@ impl Client {
         )
     }
 
-    pub fn put_object(&self, localfilepath: &str, key: &str) -> String {
+    pub async fn put_object(&self, localfilepath: &str, key: &str) -> String {
         let mut file = std::fs::File::open(localfilepath).unwrap();
         let mut contents: Vec<u8> = Vec::new();
         file.read_to_end(&mut contents);
@@ -44,13 +44,13 @@ impl Client {
         let res = self
             .s3
             .put_object(put_request)
-            .sync()
+            .await
             .expect("Failed to put test object");
 
         self.url(key)
     }
 
-    pub fn delete_object(&self, key: String) {
+    pub async fn delete_object(&self, key: String) {
         let delete_object_req = DeleteObjectRequest {
             bucket: self.bucket_name.to_owned(),
             key: key.to_owned(),
@@ -60,7 +60,7 @@ impl Client {
         let res = self
             .s3
             .delete_object(delete_object_req)
-            .sync()
+            .await
             .expect("Couldn't delete object");
     }
 }
