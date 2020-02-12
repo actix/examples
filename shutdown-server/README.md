@@ -6,6 +6,7 @@ Demonstrates how to shutdown the web server in a couple of ways:
 	- Created in response to actix/actix-web#1315
 
 2. sending a SIGINT signal to the server (control-c)
+	- actix-server natively supports SIGINT
 
 
 ## Usage
