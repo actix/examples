@@ -47,15 +47,15 @@ impl Tmpfile {
         }
     }
 
-    fn s3_upload_and_tmp_remove(&mut self, s3_upload_key: String) {
-        self.s3_upload(s3_upload_key);
+    async fn s3_upload_and_tmp_remove(&mut self, s3_upload_key: String) {
+        self.s3_upload(s3_upload_key).await;
         self.tmp_remove();
     }
 
-    fn s3_upload(&mut self, s3_upload_key: String) {
+    async fn s3_upload(&mut self, s3_upload_key: String) {
         let key = format!("{}{}", &s3_upload_key, &self.name);
         self.s3_key = key.clone();
-        let url: String = Client::new().put_object(&self.tmp_path, &key.clone());
+        let url: String = Client::new().put_object(&self.tmp_path, &key.clone()).await;
         self.s3_url = url;
     }
 
@@ -107,11 +107,12 @@ pub async fn save_file(
 ) -> Result<Vec<UplodFile>, Error> {
     let mut arr: Vec<UplodFile> = Vec::new();
     let mut iter = tmp_files.iter();
-    let mut index = 0;
-    // iterate over multipart stream
+
     while let Some(item) = iter.next() {
         let mut tmp_file: Tmpfile = item.clone();
-        tmp_file.s3_upload_and_tmp_remove(s3_upload_key.clone());
+        tmp_file
+            .s3_upload_and_tmp_remove(s3_upload_key.clone())
+            .await;
         arr.push(UplodFile::from(tmp_file));
     }
     Ok(arr)
@@ -119,6 +120,6 @@ pub async fn save_file(
 
 pub async fn delete_object(mut list: Vec<String>) {
     for key in list {
-        Client::new().delete_object(key);
+        Client::new().delete_object(key).await;
     }
 }
