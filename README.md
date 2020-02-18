@@ -16,4 +16,4 @@ A curated list of examples related to actix.
 
 ## Contribute
 
-Welcome to contribute ! 
+Welcome to contribute !
