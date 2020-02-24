@@ -45,4 +45,5 @@ members = [
    "websocket-chat",
 #   "websocket-chat-broker",
    "websocket-tcp-chat",
+   "docker_sample",
 ]
