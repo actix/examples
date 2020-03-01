@@ -4,6 +4,7 @@ members = [
    "async_ex1",
    "async_ex2",
    "async_pg",
+   "awc_https",
    "basics",
    "cookie-auth",
    "cookie-session",
