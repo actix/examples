@@ -3,8 +3,7 @@ use openssl::ssl::{SslConnector, SslMethod, SslVerifyMode};
 
 
 async fn index(req: HttpRequest) -> HttpResponse {
-    let mut builder = SslConnector::builder(SslMethod::tls()).unwrap();
-    builder.set_verify(SslVerifyMode::NONE);
+	let builder = SslConnector::builder(SslMethod::tls()).unwrap();
 
     let client = Client::build()
         .connector(Connector::new().ssl(builder.build()).finish())
