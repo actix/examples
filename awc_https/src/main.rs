@@ -1,5 +1,5 @@
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, client::{Client, Connector}};
-use openssl::ssl::{SslConnector, SslMethod, SslVerifyMode};
+use openssl::ssl::{SslConnector, SslMethod};
 
 
 async fn index(req: HttpRequest) -> HttpResponse {
