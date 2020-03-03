@@ -14,7 +14,7 @@ async fn success(
     println!("{:?}", req);
     assert_eq!(vec!["data2_admin"], e.get_roles_for_user("alice", None));
 
-    HttpResponse::Ok().body(format!("Num of requests: {}", 1))
+    HttpResponse::Ok().body("Success: alice is data2_admin.")
 }
 
 async fn fail(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpResponse {
@@ -22,7 +22,7 @@ async fn fail(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpRe
     println!("{:?}", req);
     assert_eq!(vec!["data1_admin"], e.get_roles_for_user("alice", None));
 
-    HttpResponse::Ok().body(format!("Num of requests: {}", 1))
+    HttpResponse::Ok().body("Fail: alice is not data1_admin.") // In fact, it can't be displayed.
 }
 
 #[actix_rt::main]
