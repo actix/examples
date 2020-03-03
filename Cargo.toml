@@ -6,6 +6,7 @@ members = [
    "async_pg",
    "awc_https",
    "basics",
+   "casbin",
    "cookie-auth",
    "cookie-session",
    "diesel",
