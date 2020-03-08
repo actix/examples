@@ -16,7 +16,7 @@ async fn greet(name: web::Json<Info>) -> impl Responder {
 fn json_error_handler(err: error::JsonPayloadError, _req: &HttpRequest) -> error::Error {
     use actix_web::error::JsonPayloadError;
 
-    let detail = format!("{}", err);
+    let detail = err.to_string();
     let resp = match &err {
         JsonPayloadError::ContentType => {
             HttpResponse::UnsupportedMediaType().body(detail)
