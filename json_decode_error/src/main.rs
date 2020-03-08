@@ -15,8 +15,11 @@ async fn greet(name: web::Json<Info>) -> impl Responder {
 
 fn json_error_handler(err: error::JsonPayloadError, _req: &HttpRequest) -> error::Error {
     let detail = format!("{}", err);
-    error::InternalError::from_response(err, HttpResponse::UnprocessableEntity().body(detail))
-        .into()
+    error::InternalError::from_response(
+        err,
+        HttpResponse::UnprocessableEntity().body(detail),
+    )
+    .into()
 }
 
 #[actix_rt::main]
