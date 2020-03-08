@@ -3,8 +3,8 @@
 This example demonstrates how to return useful error messages to the client
 when the server receives a request with invalid JSON, or which cannot be
 deserialized to the expected model. By configuring an `error_handler` on the
-route, we set response code to `422 Unprocessable Entity`, and return the
-string representation of the error.
+route, we can set appropriate response codes and return the string
+representation of the error.
 
 ## Usage
 
@@ -34,7 +34,7 @@ ellipsis `...`.
 
   ```shell
   $ curl 127.0.0.1:8088 -id '{"name": "Bob"}'
-  HTTP/1.1 422 Unprocessable Entity
+  HTTP/1.1 415 Unsupported Media Type
   ...
 
   Content type error
@@ -44,7 +44,7 @@ ellipsis `...`.
 
   ```shell
   $ curl -i 127.0.0.1:8088 -H 'Content-Type: application/json' -d '{"name": "Eve}'
-  HTTP/1.1 422 Unprocessable Entity
+  HTTP/1.1 400 Bad Request
   ...
 
   Json deserialize error: EOF while parsing a string at line 1 column 14
