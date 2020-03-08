@@ -60,6 +60,16 @@ ellipsis `...`.
   Json deserialize error: invalid type: integer `350`, expected a string at line 1 column 12
   ```
 
+- Wrong JSON key
+
+  ```shell
+  $ curl -i 127.0.0.1:8088 -H 'Content-Type: application/json' -d '{"namn": "John"}'
+  HTTP/1.1 422 Unprocessable Entity
+  ...
+
+  Json deserialize error: missing field `name` at line 1 column 16
+  ```
+
 ## More documentation
 
 [`actix_web::web::JsonConfig`](https://docs.rs/actix-web/latest/actix_web/web/struct.JsonConfig.html)
