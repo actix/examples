@@ -33,7 +33,7 @@ ellipsis `...`.
 - Missing `Content-Type` header
 
   ```shell
-  $ curl 127.0.0.1:8088 -id '{"name": "Bob"}'
+  $ curl -i 127.0.0.1:8088 -d '{"name": "Bob"}'
   HTTP/1.1 415 Unsupported Media Type
   ...
 
