@@ -16,6 +16,7 @@ members = [
    "hello-world",
    "http-proxy",
    "json",
+   "json_decode_error",
    "json_error",
    "jsonrpc",
    "juniper",
