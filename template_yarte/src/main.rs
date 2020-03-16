@@ -4,7 +4,7 @@ use actix_web::{get, middleware::Logger, web, App, HttpServer, Responder};
 use yarte::Template;
 
 #[derive(Template)]
-#[template(path = "index.hbs", err = "Some error message")]
+#[template(path = "index.hbs", err = "Some error message", mode = "html-min")]
 struct IndexTemplate {
     query: web::Query<HashMap<String, String>>,
 }
