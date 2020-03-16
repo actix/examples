@@ -10,10 +10,10 @@ workspace = ".."
 [dependencies]
 env_logger = "0.7"
 
-yarte = { version = "0.6", features = ["with-actix-web"]  }
+yarte = { version = "0.7", features = ["with-actix-web"]  }
 
 actix-rt = "1.0"
 actix-web = "2.0.0"
 
 [build-dependencies]
-yarte = { version = "0.6", features = ["with-actix-web"]  }
+yarte = { version = "0.7", features = ["with-actix-web"]  }
