@@ -1,5 +1,5 @@
 use crate::rusoto_s3::S3;
-use rusoto_core::{Region, RusotoError, RusotoFuture};
+use rusoto_core::{Region, RusotoError};
 use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client};
 use std::io::Read;
 use std::io::Write;
