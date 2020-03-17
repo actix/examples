@@ -1,5 +1,5 @@
 use crate::rusoto_s3::S3;
-use rusoto_core::{Region};
+use rusoto_core::Region;
 use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client};
 use std::io::Read;
 
@@ -12,35 +12,35 @@ pub struct Client {
 impl Client {
     // construct S3 testing client
     pub fn new() -> Client {
-      let env_region = std::env::var("AWS_REGION").unwrap();
-      let region = match env_region.as_ref() {
-        "ap-east-1" => Region::ApEast1,
-        "ap-northeast-1" => Region::ApNortheast1,
-        "ap-northeast-2" => Region::ApNortheast2,
-        "ap-south-1" => Region::ApSouth1,
-        "ap-southeast-1" => Region::ApSoutheast1,
-        "ap-southeast-2" => Region::ApSoutheast2,
-        "ca-central-1" => Region::CaCentral1,
-        "eu-central-1" => Region::EuCentral1,
-        "eu-north-1" => Region::EuNorth1,
-        "eu-west-1" => Region::EuWest1,
-        "eu-west-2" => Region::EuWest2,
-        "eu-west-3" => Region::EuWest3,
-        "me-south-1" => Region::MeSouth1,
-        "sa-east-1" => Region::SaEast1,
-        "us-east-1" => Region::UsEast1,
-        "us-east-2" => Region::UsEast2,
-        "us-west-1" => Region::UsWest1,
-        "us-west-2" => Region::UsWest2,
-        // Default
-        _ => Region::ApNortheast2
-      };
+        let env_region = std::env::var("AWS_REGION").unwrap();
+        let region = match env_region.as_ref() {
+            "ap-east-1" => Region::ApEast1,
+            "ap-northeast-1" => Region::ApNortheast1,
+            "ap-northeast-2" => Region::ApNortheast2,
+            "ap-south-1" => Region::ApSouth1,
+            "ap-southeast-1" => Region::ApSoutheast1,
+            "ap-southeast-2" => Region::ApSoutheast2,
+            "ca-central-1" => Region::CaCentral1,
+            "eu-central-1" => Region::EuCentral1,
+            "eu-north-1" => Region::EuNorth1,
+            "eu-west-1" => Region::EuWest1,
+            "eu-west-2" => Region::EuWest2,
+            "eu-west-3" => Region::EuWest3,
+            "me-south-1" => Region::MeSouth1,
+            "sa-east-1" => Region::SaEast1,
+            "us-east-1" => Region::UsEast1,
+            "us-east-2" => Region::UsEast2,
+            "us-west-1" => Region::UsWest1,
+            "us-west-2" => Region::UsWest2,
+            // Default
+            _ => Region::default()
+        };
 
-      Client {
-          region: region.to_owned(),
-          s3: S3Client::new(region),
-          bucket_name: std::env::var("AWS_S3_BUCKET_NAME").unwrap(),
-      }
+        Client {
+            region: region.to_owned(),
+            s3: S3Client::new(region),
+            bucket_name: std::env::var("AWS_S3_BUCKET_NAME").unwrap(),
+        }
     }
 
     pub fn url(&self, key: &str) -> String {
