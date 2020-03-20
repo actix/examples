@@ -1,8 +1,7 @@
 use crate::rusoto_s3::S3;
-use rusoto_core::{Region, RusotoError};
+use rusoto_core::Region;
 use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client};
 use std::io::Read;
-use std::io::Write;
 
 pub struct Client {
     region: Region,
@@ -13,7 +12,7 @@ pub struct Client {
 impl Client {
     // construct S3 testing client
     pub fn new() -> Client {
-        let region = Region::ApNortheast2;
+        let region = Region::default();
 
         Client {
             region: region.to_owned(),
@@ -26,7 +25,7 @@ impl Client {
         format!(
             "https://{}.s3.{}.amazonaws.com/{}",
             std::env::var("AWS_S3_BUCKET_NAME").unwrap(),
-            "ap-northeast-2",
+            std::env::var("AWS_REGION").unwrap(),
             key
         )
     }
@@ -41,7 +40,7 @@ impl Client {
             body: Some(contents.into()),
             ..Default::default()
         };
-        let res = self
+        let _res = self
             .s3
             .put_object(put_request)
             .await
@@ -57,7 +56,7 @@ impl Client {
             ..Default::default()
         };
 
-        let res = self
+        let _res = self
             .s3
             .delete_object(delete_object_req)
             .await
