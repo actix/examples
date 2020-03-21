@@ -2,12 +2,11 @@ use std::io::Write;
 
 use actix_multipart::Multipart;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
-use futures::StreamExt;
+use futures::{StreamExt, TryStreamExt};
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
-    while let Some(item) = payload.next().await {
-        let mut field = item?;
+    while let Ok(Some(mut field)) = payload.try_next().await {
         let content_type = field.content_disposition().unwrap();
         let filename = content_type.get_filename().unwrap();
         let filepath = format!("./tmp/{}", filename);
