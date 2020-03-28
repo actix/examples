@@ -4,7 +4,7 @@ use std::sync::{Arc, RwLock};
 use std::time::Duration;
 
 use actix_rt::time::delay_for;
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use bytes::Bytes;
 use futures::{Future, FutureExt};
 use serde_json;
@@ -14,7 +14,10 @@ use serde_json::Value;
 mod convention;
 
 /// The main handler for JSONRPC server.
-async fn rpc_handler(req: HttpRequest, body: Bytes) -> Result<HttpResponse, Error> {
+async fn rpc_handler(
+    body: Bytes,
+    app_state: web::Data<AppState>,
+) -> Result<HttpResponse, Error> {
     let reqjson: convention::Request = match serde_json::from_slice(body.as_ref()) {
         Ok(ok) => ok,
         Err(_) => {
@@ -29,7 +32,6 @@ async fn rpc_handler(req: HttpRequest, body: Bytes) -> Result<HttpResponse, Erro
                 .body(r.dump()));
         }
     };
-    let app_state = req.app_data().unwrap();
     let mut result = convention::Response::default();
     result.id = reqjson.id.clone();
 
