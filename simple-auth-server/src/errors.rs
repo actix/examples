@@ -2,7 +2,7 @@ use actix_web::{error::ResponseError, HttpResponse};
 use derive_more::Display;
 use diesel::result::{DatabaseErrorKind, Error as DBError};
 use std::convert::From;
-use uuid::parser::ParseError;
+use uuid::Error as ParseError;
 
 #[derive(Debug, Display)]
 pub enum ServiceError {
