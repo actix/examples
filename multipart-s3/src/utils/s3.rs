@@ -1,9 +1,10 @@
-use crate::rusoto_s3::S3;
 use rusoto_core::Region;
+use rusoto_s3::S3;
 use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client};
 use std::io::Read;
 
 pub struct Client {
+    #[allow(dead_code)]
     region: Region,
     s3: S3Client,
     bucket_name: String,
@@ -33,7 +34,7 @@ impl Client {
     pub async fn put_object(&self, localfilepath: &str, key: &str) -> String {
         let mut file = std::fs::File::open(localfilepath).unwrap();
         let mut contents: Vec<u8> = Vec::new();
-        file.read_to_end(&mut contents);
+        let _ = file.read_to_end(&mut contents);
         let put_request = PutObjectRequest {
             bucket: self.bucket_name.to_owned(),
             key: key.to_owned(),

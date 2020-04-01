@@ -1,38 +1,29 @@
-use std::io::Write;
-extern crate dotenv;
 use actix_multipart::Multipart;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use dotenv::dotenv;
-use futures::StreamExt;
-mod utils;
-
+use serde::{Deserialize, Serialize};
 use std::borrow::BorrowMut;
 use std::env;
-use utils::upload::{
-    delete_object, save_file as upload_save_file, split_payload, UplodFile,
-};
-extern crate rusoto_core;
-extern crate rusoto_s3;
+use utils::upload::{save_file as upload_save_file, split_payload, UploadFile};
 
-mod model {
-    use serde::{Deserialize, Serialize};
-    #[derive(Deserialize, Serialize, Debug)]
-    pub struct InpAdd {
-        pub text: String,
-        pub number: i32,
-    }
+mod utils;
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct InpAdd {
+    pub text: String,
+    pub number: i32,
 }
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     let pl = split_payload(payload.borrow_mut()).await;
     println!("bytes={:#?}", pl.0);
-    let mut inp_info: model::InpAdd = serde_json::from_slice(&pl.0).unwrap();
+    let inp_info: InpAdd = serde_json::from_slice(&pl.0).unwrap();
     println!("converter_struct={:#?}", inp_info);
     println!("tmpfiles={:#?}", pl.1);
     //make key
     let s3_upload_key = format!("projects/{}/", "posts_id");
     //create tmp file and upload s3 and remove tmp file
-    let upload_files: Vec<UplodFile> =
+    let upload_files: Vec<UploadFile> =
         upload_save_file(pl.1, s3_upload_key).await.unwrap();
     println!("upload_files={:#?}", upload_files);
     Ok(HttpResponse::Ok().into())
@@ -84,16 +75,16 @@ fn index() -> HttpResponse {
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    let AWS_ACCESS_KEY_ID =
-        env::var("AWS_ACCESS_KEY_ID").expect("DATABASE_URL must be set");
-    let AWS_SECRET_ACCESS_KEY =
+    let aws_access_key_id =
+        env::var("AWS_ACCESS_KEY_ID").expect("AWS_ACCESS_KEY_ID must be set");
+    let aws_secret_access_key =
         env::var("AWS_SECRET_ACCESS_KEY").expect("AWS_SECRET_ACCESS_KEY must be set");
-    let AWS_S3_BUCKET_NAME =
+    let aws_s3_bucket_name =
         env::var("AWS_S3_BUCKET_NAME").expect("AWS_S3_BUCKET_NAME must be set");
 
-    println!("{}", AWS_ACCESS_KEY_ID);
-    println!("{}", AWS_SECRET_ACCESS_KEY);
-    println!("{}", AWS_S3_BUCKET_NAME);
+    println!("{}", aws_access_key_id);
+    println!("{}", aws_secret_access_key);
+    println!("{}", aws_s3_bucket_name);
 
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();
