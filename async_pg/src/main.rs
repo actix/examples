@@ -99,7 +99,7 @@ mod handlers {
         let user_info: User = user.into_inner();
 
         let client: Client =
-            db_pool.get().await.map_err(|err| MyError::PoolError(err))?;
+            db_pool.get().await.map_err(MyError::PoolError)?;
 
         let new_user = db::add_user(&client, user_info).await?;
 

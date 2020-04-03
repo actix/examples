@@ -2,7 +2,7 @@ use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, client::{Client
 use openssl::ssl::{SslConnector, SslMethod};
 
 
-async fn index(req: HttpRequest) -> HttpResponse {
+async fn index(_req: HttpRequest) -> HttpResponse {
 	let builder = SslConnector::builder(SslMethod::tls()).unwrap();
 
     let client = Client::build()

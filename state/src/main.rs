@@ -54,6 +54,7 @@ async fn main() -> io::Result<()> {
     env_logger::init();
 
     // Create some global state prior to building the server
+    #[allow(clippy::mutex_atomic)] // it's intentional.
     let counter1 = web::Data::new(Mutex::new(0usize));
     let counter3 = web::Data::new(AtomicUsize::new(0usize));
 

@@ -3,22 +3,22 @@ use actix_web::{web, Error, HttpResponse};
 use crate::common::{Part, Product};
 
 pub async fn get_products(
-    query: web::Query<Option<Part>>,
+    _query: web::Query<Option<Part>>,
 ) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().finish())
 }
 
 pub async fn add_product(
-    new_product: web::Json<Product>,
+    _new_product: web::Json<Product>,
 ) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().finish())
 }
 
-pub async fn get_product_detail(id: web::Path<String>) -> Result<HttpResponse, Error> {
+pub async fn get_product_detail(_id: web::Path<String>) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().finish())
 }
 
-pub async fn remove_product(id: web::Path<String>) -> Result<HttpResponse, Error> {
+pub async fn remove_product(_id: web::Path<String>) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().finish())
 }
 

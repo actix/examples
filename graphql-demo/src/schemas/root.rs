@@ -1,4 +1,3 @@
-use juniper;
 use juniper::{FieldError, FieldResult, RootNode};
 use mysql::{from_row, params, Error as DBError, Row};
 
@@ -109,9 +108,9 @@ impl MutationRoot {
         let insert: Result<Option<Row>, DBError> = conn.first_exec(
             "INSERT INTO user(id, name, email) VALUES(:id, :name, :email)",
             params! {
-                "id" => &new_id.to_owned(),
-                "name" => &user.name.to_owned(),
-                "email" => &user.email.to_owned(),
+                "id" => &new_id,
+                "name" => &user.name,
+                "email" => &user.email,
             },
         );
 
@@ -141,9 +140,9 @@ impl MutationRoot {
         let insert: Result<Option<Row>, DBError> = conn.first_exec(
             "INSERT INTO product(id, user_id, name, price) VALUES(:id, :user_id, :name, :price)",
             params! {
-                "id" => &new_id.to_owned(),
-                "user_id" => &product.user_id.to_owned(),
-                "name" => &product.name.to_owned(),
+                "id" => &new_id,
+                "user_id" => &product.user_id,
+                "name" => &product.name,
                 "price" => &product.price.to_owned(),
             },
         );

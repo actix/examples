@@ -1,4 +1,3 @@
-use juniper;
 use mysql::{from_row, params};
 
 use crate::schemas::product::Product;
@@ -33,7 +32,8 @@ impl User {
 
     fn products(&self, context: &Context) -> Vec<Product> {
         let mut conn = context.dbpool.get().unwrap();
-        let products = conn
+
+        conn
             .prep_exec(
                 "select * from product where user_id=:user_id",
                 params! {
@@ -54,7 +54,6 @@ impl User {
                     })
                     .collect()
             })
-            .unwrap();
-        products
+            .unwrap()
     }
 }
