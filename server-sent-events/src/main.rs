@@ -5,7 +5,6 @@ use std::time::Duration;
 
 use actix_web::web::{Bytes, Data, Path};
 use actix_web::{web, App, Error, HttpResponse, HttpServer, Responder};
-use env_logger;
 use futures::{Stream, StreamExt};
 use tokio::sync::mpsc::{channel, Receiver, Sender};
 use tokio::time::{interval_at, Instant};

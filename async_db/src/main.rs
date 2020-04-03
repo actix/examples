@@ -22,6 +22,7 @@ mod db;
 use db::{Pool, Queries};
 
 /// Version 1: Calls 4 queries in sequential order, as an asynchronous handler
+#[allow(clippy::eval_order_dependence)] // it's FP?
 async fn asyncio_weather(db: web::Data<Pool>) -> Result<HttpResponse, AWError> {
     let result = vec![
         db::execute(&db, Queries::GetTopTenHottestYears).await?,

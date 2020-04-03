@@ -2,7 +2,6 @@ use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer};
 use futures::executor;
 use std::{sync::mpsc, thread};
 
-
 #[get("/hello")]
 async fn hello() -> &'static str {
     "Hello world!"
@@ -23,7 +22,7 @@ async fn main() -> std::io::Result<()> {
 
     // create a channel
     let (tx, rx) = mpsc::channel::<()>();
-    let stopper = tx.clone();
+    let _stopper = tx.clone();
 
     let bind = "127.0.0.1:8080";
 
