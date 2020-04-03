@@ -19,12 +19,8 @@ async fn again() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     println!("Starting actix-web server");
 
-    HttpServer::new(|| {
-        App::new()
-            .service(index)
-            .service(again)
-    })
-    .bind("0.0.0.0:5000")?
-    .run()
-    .await
+    HttpServer::new(|| App::new().service(index).service(again))
+        .bind("0.0.0.0:5000")?
+        .run()
+        .await
 }
