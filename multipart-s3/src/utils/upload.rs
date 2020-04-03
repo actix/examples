@@ -4,20 +4,19 @@ use actix_web::{web, Error};
 use bytes::Bytes;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use serde_json::{Map as serdeMap, Value};
 use std::convert::From;
 use std::io::Write;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
-pub struct UplodFile {
+pub struct UploadFile {
     pub filename: String,
     pub key: String,
     pub url: String,
 }
 
-impl From<Tmpfile> for UplodFile {
+impl From<Tmpfile> for UploadFile {
     fn from(tmp_file: Tmpfile) -> Self {
-        UplodFile {
+        UploadFile {
             filename: tmp_file.name,
             key: tmp_file.s3_key,
             url: tmp_file.s3_url,
@@ -104,21 +103,21 @@ pub async fn split_payload(payload: &mut Multipart) -> (bytes::Bytes, Vec<Tmpfil
 pub async fn save_file(
     tmp_files: Vec<Tmpfile>,
     s3_upload_key: String,
-) -> Result<Vec<UplodFile>, Error> {
-    let mut arr: Vec<UplodFile> = Vec::new();
-    let mut iter = tmp_files.iter();
+) -> Result<Vec<UploadFile>, Error> {
+    let mut arr: Vec<UploadFile> = Vec::with_capacity(tmp_files.len());
 
-    while let Some(item) = iter.next() {
+    for item in tmp_files {
         let mut tmp_file: Tmpfile = item.clone();
         tmp_file
             .s3_upload_and_tmp_remove(s3_upload_key.clone())
             .await;
-        arr.push(UplodFile::from(tmp_file));
+        arr.push(UploadFile::from(tmp_file));
     }
     Ok(arr)
 }
 
-pub async fn delete_object(mut list: Vec<String>) {
+#[allow(unused)]
+pub async fn delete_object(list: Vec<String>) {
     for key in list {
         Client::new().delete_object(key).await;
     }
