@@ -13,5 +13,5 @@ actix-session = "0.3.0"
 actix-utils = "1.0.3"
 
 futures = "0.3.1"
-env_logger = "0.5"
+env_logger = "0.7"
 bytes = "0.5"
