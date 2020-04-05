@@ -117,7 +117,10 @@ impl Handler<Connect> for ChatServer {
         self.sessions.insert(id, msg.addr);
 
         // auto join session to Main room
-        self.rooms.get_mut(&"Main".to_owned()).unwrap().insert(id);
+        self.rooms
+            .entry("Main".to_owned())
+            .or_insert(HashSet::new())
+            .insert(id);
 
         // send id back
         id
@@ -193,10 +196,11 @@ impl Handler<Join> for ChatServer {
             self.send_message(&room, "Someone disconnected", 0);
         }
 
-        if self.rooms.get_mut(&name).is_none() {
-            self.rooms.insert(name.clone(), HashSet::new());
-        }
+        self.rooms
+            .entry(name.clone())
+            .or_insert(HashSet::new())
+            .insert(id);
+
         self.send_message(&name, "Someone connected", id);
-        self.rooms.get_mut(&name).unwrap().insert(id);
     }
 }
