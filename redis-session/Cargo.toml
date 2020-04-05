@@ -9,7 +9,7 @@ actix-rt = "1.0.0"
 actix-web = "2.0.0"
 actix-session = "0.3.0"
 actix-redis = { version = "0.8.0", features = ["web"] }
-env_logger = "0.6"
+env_logger = "0.7"
 serde = { version = "^1.0", features = ["derive"] }
 actix-service = "1.0.0"
 actix-http = "1.0.0"
