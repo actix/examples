@@ -12,4 +12,4 @@ actix-rt = "1.0.0"
 
 futures = "0.3.1"
 time = "0.1"
-env_logger = "0.6"
+env_logger = "0.7"
