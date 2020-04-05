@@ -8,4 +8,4 @@ description = "Run actix-web in separate thread"
 [dependencies]
 actix-web = "2.0.0"
 actix-rt = "1.0.0"
-env_logger = "0.6"
+env_logger = "0.7"
