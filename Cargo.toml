@@ -10,6 +10,7 @@ members = [
    "cookie-auth",
    "cookie-session",
    "diesel",
+   "docker_sample",
    "error_handling",
    "form",
    "graphql-demo",
@@ -48,5 +49,4 @@ members = [
    "websocket-chat",
 #   "websocket-chat-broker",
    "websocket-tcp-chat",
-   "docker_sample",
 ]

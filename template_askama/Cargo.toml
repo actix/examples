@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 actix-web = "2.0.0"
 actix-rt = "1.0.0"
-askama = "0.8"
+askama = "0.9"
 
 [build-dependencies]
-askama = "0.8"
+askama = "0.9"

@@ -13,7 +13,7 @@ use std::io;
 
 // Macro documentation can be found in the actix_web_codegen crate
 #[get("/")]
-async fn index(hb: web::Data<Handlebars>) -> HttpResponse {
+async fn index(hb: web::Data<Handlebars<'_>>) -> HttpResponse {
     let data = json!({
         "name": "Handlebars"
     });
@@ -24,7 +24,7 @@ async fn index(hb: web::Data<Handlebars>) -> HttpResponse {
 
 #[get("/{user}/{data}")]
 async fn user(
-    hb: web::Data<Handlebars>,
+    hb: web::Data<Handlebars<'_>>,
     info: web::Path<(String, String)>,
 ) -> HttpResponse {
     let data = json!({
