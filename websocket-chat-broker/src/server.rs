@@ -1,29 +1,14 @@
 use actix::prelude::*;
 use actix_broker::BrokerSubscribe;
-use rand;
 
 use std::collections::HashMap;
 use std::mem;
 
-#[derive(Clone, Message)]
-pub struct ChatMessage(pub String);
-
-#[derive(Clone, Message)]
-#[rtype(result = "usize")]
-pub struct JoinRoom(pub String, pub Option<String>, pub Recipient<ChatMessage>);
-
-#[derive(Clone, Message)]
-pub struct LeaveRoom(pub String, pub usize);
-
-#[derive(Clone, Message)]
-#[rtype(result = "Vec<String>")]
-pub struct ListRooms;
-
-#[derive(Clone, Message)]
-pub struct SendMessage(pub String, pub usize, pub String);
+use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
 
 type Client = Recipient<ChatMessage>;
 type Room = HashMap<usize, Client>;
+
 #[derive(Default)]
 pub struct WsChatServer {
     rooms: HashMap<String, Room>,
@@ -43,6 +28,7 @@ impl WsChatServer {
         client: Client,
     ) -> usize {
         let mut id = id.unwrap_or_else(rand::random::<usize>);
+
         if let Some(room) = self.rooms.get_mut(room_name) {
             loop {
                 if room.contains_key(&id) {
@@ -51,13 +37,17 @@ impl WsChatServer {
                     break;
                 }
             }
+
             room.insert(id, client);
             return id;
         }
+
         // Create a new room for the first client
         let mut room: Room = HashMap::new();
+
         room.insert(id, client);
         self.rooms.insert(room_name.to_owned(), room);
+
         id
     }
 
@@ -68,11 +58,13 @@ impl WsChatServer {
         _src: usize,
     ) -> Option<()> {
         let mut room = self.take_room(room_name)?;
+
         for (id, client) in room.drain() {
             if client.do_send(ChatMessage(msg.to_owned())).is_ok() {
                 self.add_client_to_room(room_name, Some(id), client);
             }
         }
+
         Some(())
     }
 }
@@ -91,12 +83,14 @@ impl Handler<JoinRoom> for WsChatServer {
 
     fn handle(&mut self, msg: JoinRoom, _ctx: &mut Self::Context) -> Self::Result {
         let JoinRoom(room_name, client_name, client) = msg;
+
         let id = self.add_client_to_room(&room_name, None, client);
         let join_msg = format!(
             "{} joined {}",
             client_name.unwrap_or_else(|| "anon".to_string()),
             room_name
         );
+
         self.send_chat_message(&room_name, &join_msg, id);
         MessageResult(id)
     }
