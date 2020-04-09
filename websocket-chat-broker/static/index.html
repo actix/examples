@@ -1,90 +1,204 @@
 <!DOCTYPE html>
-<meta charset="utf-8" />
 <html>
-<head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
-</script>
-  <script language="javascript" type="text/javascript">
-    $(function() {
-      var conn = null;
-      function log(msg) {
-        var control = $('#log');
-        control.html(control.html() + msg + '<br/>');
-        control.scrollTop(control.scrollTop() + 1000);
+  <head>
+    <meta charset="utf-8" />
+    <title>Websocket Chat Broker</title>
+
+    <style>
+      :root {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 18px;
       }
+
+      input[type='text'] {
+        font-size: inherit;
+      }
+
+      #log {
+        width: 30em;
+        height: 20em;
+        overflow: auto;
+        margin: 0.5em 0;
+
+        border: 1px solid black;
+      }
+
+      #status {
+        padding: 0 0.2em;
+      }
+
+      #text {
+        width: 17em;
+        padding: 0.5em;
+      }
+
+      .msg {
+        margin: 0;
+        padding: 0.25em 0.5em;
+      }
+
+      .msg--status {
+        /* a light yellow */
+        background-color: #ffffc9;
+      }
+
+      .msg--message {
+        /* a light blue */
+        background-color: #d2f4ff;
+      }
+
+      .msg--error {
+        background-color: pink;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Chat!</h1>
+
+    <div>
+      <button id="connect">Connect</button>
+      <span>Status:</span>
+      <span id="status">disconnected</span>
+    </div>
+
+    <div id="log"></div>
+
+    <form id="chatform">
+      <input type="text" id="text" />
+      <input type="submit" id="send" />
+    </form>
+
+    <hr />
+
+    <section>
+      <h2>Commands</h2>
+      <table style="border-spacing: 0.5em;">
+        <tr>
+          <td>
+            <code>/list</code>
+          </td>
+          <td>
+            list all available rooms
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>/join name</code>
+          </td>
+          <td>
+            join room, if room does not exist, create new one
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>/name name</code>
+          </td>
+          <td>
+            set session name
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>some message</code>
+          </td>
+          <td>
+            just string, send message to all peers in same room
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <script>
+      const $status = document.querySelector('#status')
+      const $connectButton = document.querySelector('#connect')
+      const $log = document.querySelector('#log')
+      const $form = document.querySelector('#chatform')
+      const $input = document.querySelector('#text')
+
+      /** @type {WebSocket | null} */
+      var socket = null
+
+      function log(msg, type = 'status') {
+        $log.innerHTML += `<p class="msg msg--${type}">${msg}</p>`
+        $log.scrollTop += 1000
+      }
+
       function connect() {
-        disconnect();
-        var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host + '/ws/';
-        conn = new WebSocket(wsUri);
-        log('Connecting...');
-        conn.onopen = function() {
-          log('Connected.');
-          update_ui();
-        };
-        conn.onmessage = function(e) {
-          log('Received: ' + e.data);
-        };
-        conn.onclose = function() {
-          log('Disconnected.');
-          conn = null;
-          update_ui();
-        };
+        disconnect()
+
+        const { location } = window
+
+        const proto = location.protocol.startsWith('https') ? 'wss' : 'ws'
+        const wsUri = `${proto}://${location.host}/ws/`
+
+        log('Connecting...')
+        socket = new WebSocket(wsUri)
+
+        socket.onopen = () => {
+          log('Connected')
+          updateConnectionStatus()
+        }
+
+        socket.onmessage = (ev) => {
+          log('Received: ' + ev.data, 'message')
+        }
+
+        socket.onclose = () => {
+          log('Disconnected')
+          socket = null
+          updateConnectionStatus()
+        }
       }
+
       function disconnect() {
-        if (conn != null) {
-          log('Disconnecting...');
-          conn.close();
-          conn = null;
-          update_ui();
+        if (socket) {
+          log('Disconnecting...')
+          socket.close()
+          socket = null
+
+          updateConnectionStatus()
         }
       }
-      function update_ui() {
-        var msg = '';
-        if (conn == null) {
-          $('#status').text('disconnected');
-          $('#connect').html('Connect');
+
+      function updateConnectionStatus() {
+        if (socket) {
+          $status.style.backgroundColor = 'transparent'
+          $status.style.color = 'green'
+          $status.textContent = `connected`
+          $connectButton.innerHTML = 'Disconnect'
+          $input.focus()
         } else {
-          $('#status').text('connected (' + conn.protocol + ')');
-          $('#connect').html('Disconnect');
+          $status.style.backgroundColor = 'red'
+          $status.style.color = 'white'
+          $status.textContent = 'disconnected'
+          $connectButton.textContent = 'Connect'
         }
       }
-      $('#connect').click(function() {
-        if (conn == null) {
-          connect();
+
+      $connectButton.addEventListener('click', () => {
+        if (socket) {
+          disconnect()
         } else {
-          disconnect();
+          connect()
         }
-        update_ui();
-        return false;
-      });
-      $('#send').click(function() {
-        var text = $('#text').val();
-        log('Sending: ' + text);
-        conn.send(text);
-        $('#text').val('').focus();
-        return false;
-      });
-      $('#text').keyup(function(e) {
-        if (e.keyCode === 13) {
-          $('#send').click();
-          return false;
-        }
-      });
-    });
-</script>
-</head>
-<body>
-<h3>Chat!</h3>
-<div>
-  <button id="connect">Connect</button>&nbsp;|&nbsp;Status:
-  <span id="status">disconnected</span>
-</div>
-<div id="log"
-     style="width:20em;height:15em;overflow:auto;border:1px solid black">
-</div>
-<form id="chatform" onsubmit="return false;">
-  <input id="text" type="text" />
-  <input id="send" type="button" value="Send" />
-</form>
-</body>
+
+        updateConnectionStatus()
+      })
+
+      $form.addEventListener('submit', (ev) => {
+        ev.preventDefault()
+
+        const text = $input.value
+
+        log('Sending: ' + text)
+        socket.send(text)
+
+        $input.value = ''
+        $input.focus()
+      })
+
+      updateConnectionStatus()
+    </script>
+  </body>
 </html>
