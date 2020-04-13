@@ -1,6 +1,7 @@
 use actix_identity::Identity;
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer};
+use rand::Rng;
 
 async fn index(id: Identity) -> String {
     format!(
@@ -24,10 +25,14 @@ async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
-    HttpServer::new(|| {
+    // Generate a random 32 byte key. Note that it is important to use a unique
+    // private key for every project. Anyone with access to the key can generate
+    // authentication cookies for any user!
+    let private_key = rand::thread_rng().gen::<[u8; 32]>();
+    HttpServer::new(move || {
         App::new()
             .wrap(IdentityService::new(
-                CookieIdentityPolicy::new(&[0; 32])
+                CookieIdentityPolicy::new(&private_key)
                     .name("auth-example")
                     .secure(false),
             ))
