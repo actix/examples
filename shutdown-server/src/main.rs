@@ -22,17 +22,14 @@ async fn main() -> std::io::Result<()> {
 
     // create a channel
     let (tx, rx) = mpsc::channel::<()>();
-    let _stopper = tx.clone();
 
     let bind = "127.0.0.1:8080";
 
     // start server as normal but don't .await after .run() yet
     let server = HttpServer::new(move || {
         // give the server a Sender in .data
-        let stopper = tx.clone();
-
         App::new()
-            .data(stopper)
+            .data(tx.clone())
             .wrap(middleware::Logger::default())
             .service(hello)
             .service(stop)
