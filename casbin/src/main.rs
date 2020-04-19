@@ -26,7 +26,8 @@ async fn fail(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpRe
 
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
-    dotenv::dotenv().ok();
+    std::env::set_var("RUST_LOG", "info");
+    std::env::set_var("LOGE_FORMAT", "target");
 
     loge::init();
 

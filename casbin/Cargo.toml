@@ -9,5 +9,4 @@ workspace = ".."
 actix-web = "2.0"
 actix-rt = "1.1.0"
 casbin = "0.6.0"
-dotenv = "0.15"
 loge = {version = "0.4", default-features = false, features = ["colored", "chrono"]}
