@@ -1,5 +1,4 @@
-use casbin::{DefaultModel, Enforcer, FileAdapter, RbacApi};
-use std::boxed::Box;
+use casbin::{CoreApi, DefaultModel, Enforcer, FileAdapter, RbacApi};
 use std::io;
 use std::sync::RwLock;
 
@@ -37,9 +36,7 @@ async fn main() -> io::Result<()> {
         .unwrap();
     let adapter = FileAdapter::new("rbac/rbac_policy.csv");
 
-    let e = Enforcer::new(Box::new(model), Box::new(adapter))
-        .await
-        .unwrap();
+    let e = Enforcer::new(model, adapter).await.unwrap();
     let e = web::Data::new(RwLock::new(e)); // wrap enforcer into actix-state
 
     //move is necessary to give closure below ownership of counter
