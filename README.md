@@ -14,6 +14,7 @@ A curated list of examples related to actix.
 * [Rust, Docker & GraphQL](https://github.com/jayy-lmao/rust-graphql-docker): An example of using Dataloaders, context, and a minimal docker container. 
 * [Complete Actix 2.x REST Server](https://github.com/ddimaria/rust-actix-example): Actix 2.x HTTP Server featuring multi-database support, auth/JWTs, caching, static files, app state, tests, coverage, and docker.
 * [Actix Server Authentication with JWT and MongoDB](https://github.com/emreyalvac/actix-web-jwt/) : An implementation of JWT in Actix.
+* [MongoDB Example](https://github.com/mehmetsefabalik/rust-mongodb-example) : Example usage of MongoDB with Actix-web.
 
 ## Contribute
 
