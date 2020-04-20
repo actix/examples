@@ -1,26 +1,26 @@
 [package]
-name = 'async_pg'
-version = '0.1.0'
-authors = ['dowwie <dkcdkg@gmail.com>']
-edition = '2018'
-workspace = '..'
+name = "async_pg"
+version = "0.1.0"
+authors = ["dowwie <dkcdkg@gmail.com>"]
+edition = "2018"
+workspace = ".."
 
 [dependencies]
-actix-rt = '1.0.0'
-actix-web = '2.0.0'
-actix-server = '1.0.2'
-config = '0.10.1'
-deadpool-postgres = '0.5.5'
-derive_more = '0.99.3'
-dotenv = '0.15.0'
-tokio-pg-mapper = '0.1.5'
-tokio-pg-mapper-derive = '0.1.5'
-tokio-postgres = '0.5.3'
+actix-rt = "1.0.0"
+actix-web = "2.0.0"
+actix-server = "1.0.2"
+config = "0.10.1"
+deadpool-postgres = "0.5.5"
+derive_more = "0.99.3"
+dotenv = "0.15.0"
+tokio-pg-mapper = "0.1.5"
+tokio-pg-mapper-derive = "0.1.5"
+tokio-postgres = "0.5.3"
 
 [dependencies.serde]
-version = '1.0.104'
-features = ['derive']
+version = "1.0.104"
+features = ["derive"]
 
 [dependencies.tokio]
-version = '0.2.13'
-features = ['signal']
+version = "0.2.13"
+features = ["signal"]
