@@ -106,10 +106,10 @@ mod handlers {
     }
 }
 
-use actix_server::Server;
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use handlers::add_user;
+use tokio::signal;
 use tokio_postgres::NoTls;
 
 #[actix_rt::main]
@@ -128,35 +128,12 @@ async fn main() -> std::io::Result<()> {
     .run();
     println!("Server running at http://{}/", config.server_addr);
 
-    stop_listener(server.clone());
+    let s = server.clone();
+    actix_rt::spawn(async move {
+        signal::ctrl_c().await.expect("failed to listen for event");
+        println!("\nSIGINT Received.  Stopping server.\n");
+        s.stop(true).await;
+    });
 
     server.await
-}
-
-#[cfg(windows)]
-fn stop_listener(server: Server) {
-    use tokio::signal::windows::ctrl_break;
-    let mut stream = ctrl_break().unwrap();
-
-    actix_rt::spawn(async move {
-        loop {
-            stream.recv().await;
-            println!("\nSIGINT Received.  Stopping server.\n");
-            server.stop(true).await;
-        }
-    });
-}
-
-#[cfg(unix)]
-fn stop_listener(server: Server) {
-    use tokio::signal::unix::{signal, SignalKind};
-    let mut stream = signal(SignalKind::interrupt()).unwrap();
-
-    actix_rt::spawn(async move {
-        loop {
-            stream.recv().await;
-            println!("\nSIGINT Received.  Stopping server.\n");
-            server.stop(true).await;
-        }
-    });
 }

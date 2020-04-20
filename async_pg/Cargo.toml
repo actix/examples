@@ -8,7 +8,6 @@ workspace = ".."
 [dependencies]
 actix-rt = "1.0.0"
 actix-web = "2.0.0"
-actix-server = "1.0.2"
 config = "0.10.1"
 deadpool-postgres = "0.5.5"
 derive_more = "0.99.3"
