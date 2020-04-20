@@ -37,6 +37,7 @@ members = [
    "simple-auth-server",
    "state",
    "static_index",
+   "stop_handling",
    "template_askama",
    "template_handlebars",
    "template_tera",

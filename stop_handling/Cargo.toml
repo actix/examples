@@ -1,0 +1,17 @@
+[package]
+name = "stop_handling"
+version = "0.1.0"
+authors = ["Icatream <windc96@gmail.com>"]
+edition = "2018"
+workspace = ".."
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-rt = "1.1.0"
+actix-web = "2.0.0"
+#actix-server = "1.0.2"
+
+[dependencies.tokio]
+version = "0.2.18"
+features = ["signal"]
