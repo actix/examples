@@ -1,3 +1,5 @@
+#![allow(clippy::type_complexity)]
+
 use actix_service::Service;
 use actix_web::{web, App, HttpServer};
 use futures::future::FutureExt;

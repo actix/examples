@@ -9,9 +9,9 @@ actix-rt = "1.0.0"
 actix-web = "2.0.0"
 
 futures = "0.3.1"
-env_logger = "0.6"
+env_logger = "0.7"
 uuid = { version = "0.8", features = ["v4"] }
 
 r2d2 = "0.8"
-r2d2_sqlite = "0.10"
-rusqlite = "0.18"
+r2d2_sqlite = "0.14"
+rusqlite = "0.21"

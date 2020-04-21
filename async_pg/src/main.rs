@@ -98,8 +98,7 @@ mod handlers {
     ) -> Result<HttpResponse, Error> {
         let user_info: User = user.into_inner();
 
-        let client: Client =
-            db_pool.get().await.map_err(|err| MyError::PoolError(err))?;
+        let client: Client = db_pool.get().await.map_err(MyError::PoolError)?;
 
         let new_user = db::add_user(&client, user_info).await?;
 
@@ -110,7 +109,6 @@ mod handlers {
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use handlers::add_user;
-use tokio::signal::unix::{signal, SignalKind};
 use tokio_postgres::NoTls;
 
 #[actix_rt::main]
@@ -128,16 +126,6 @@ async fn main() -> std::io::Result<()> {
     .bind(config.server_addr.clone())?
     .run();
     println!("Server running at http://{}/", config.server_addr);
-
-    let srv = server.clone();
-    let mut stream = signal(SignalKind::interrupt())?;
-    actix_rt::spawn(async move {
-        loop {
-            stream.recv().await;
-            println!("\nSIGINT Received.  Stopping server.\n");
-            srv.stop(true).await;
-        }
-    });
 
     server.await
 }

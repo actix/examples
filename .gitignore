@@ -16,5 +16,8 @@ Cargo.lock
 
 .history/
 
+# VS Code workspace config
+.vscode
+
 # For multipart example
 upload.png

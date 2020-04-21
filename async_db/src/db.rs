@@ -1,8 +1,6 @@
 use actix_web::{web, Error as AWError};
 use failure::Error;
 use futures::{Future, TryFutureExt};
-use r2d2;
-use r2d2_sqlite;
 use rusqlite::{Statement, NO_PARAMS};
 use serde::{Deserialize, Serialize};
 use std::{thread::sleep, time::Duration};

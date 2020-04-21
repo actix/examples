@@ -4,7 +4,6 @@ use std::io;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
-use uuid;
 
 /// Async request handler. Ddb pool is stored in application state.
 async fn index(
