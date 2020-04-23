@@ -34,9 +34,6 @@ async fn main() -> Result<()> {
     let mut listenfd = ListenFd::from_env();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
-    // PgPool::builder()
-    //     .max_size(5) // maximum number of connections in the pool
-    //     .build(env::var("DATABASE_URL")?).await?;
     let db_pool = PgPool::new(&database_url).await?;
 
     let mut server = HttpServer::new(move || {
@@ -60,6 +57,3 @@ async fn main() -> Result<()> {
 
     Ok(())
 }
-
-// export DATABASE_URL="postgres://pguser:zx@192.168.33.11/realworld"
-// systemfd --no-pid -s http::5000 -- cargo watch -x run

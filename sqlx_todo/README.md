@@ -30,4 +30,4 @@ To run the application execute:
 cargo run
 ```
 
-By default application will be available on `http://localhost:5000`. If you wish to change address or port you can do it insde `.env` file.
+By default application will be available on `http://localhost:5000`. If you wish to change address or port you can do it inside `.env` file
