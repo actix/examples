@@ -1,3 +1,6 @@
+{{# unless title.is_str() && !title.is_empty() }}
+    {{$ "Need static args: title: str" }}
+{{/unless}}
 <head>
     <meta charset="utf-8"/>
     <title>{{ title }}</title>

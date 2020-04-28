@@ -5,4 +5,7 @@
         - id
         - tail
 !}}
+{{#unless tag.is_match(r"^p|(h[1-6])$") && !id.is_empty() }}
+   {{$ "Need static args: tag: str /^h[1-6]$/, id: str" }}
+{{/unless }}
 <{{ tag }} id="{{ id }}" class="welcome">Welcome{{ tail }}</{{ tag }}>
