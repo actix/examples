@@ -1,3 +1,3 @@
 fn main() {
-    yarte::recompile::when_changed();
+    yarte_helpers::recompile::when_changed();
 }

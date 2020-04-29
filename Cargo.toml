@@ -34,7 +34,8 @@ members = [
    "rustls",
    "shutdown-server",
    "server-sent-events",
-   "simple-auth-server",
+# Depency clang outdate bindgen@0.48
+#   "simple-auth-server",
    "state",
    "static_index",
    "template_askama",
