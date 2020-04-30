@@ -9,7 +9,8 @@ workspace = ".."
 actix-identity = "0.2.0"
 actix-web = "2.0.0"
 actix-rt = "1.0.0"
-argonautica = "0.2.0"
+# FIXME: Specify the commit hash to use bindgen v0.50.
+argonautica = { git = "https://github.com/bcmyers/argonautica", rev = "67fc8d8d7d67696cd8ca7a59b92531f06b089212" }
 chrono = { version = "0.4.6", features = ["serde"] }
 derive_more = "0.99.0"
 diesel = { version = "1.4.2", features = ["postgres", "uuidv07", "r2d2", "chrono"] }
