@@ -1,5 +1,5 @@
 [package]
-name = "json_error"
+name = "json-error"
 version = "1.0.0"
 authors = ["Kai Yao <kai.b.yao@gmail.com>"]
 edition = "2018"

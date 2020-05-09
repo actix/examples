@@ -1,5 +1,5 @@
 [package]
-name = "template_handlebars"
+name = "template-handlebars"
 version = "1.0.0"
 authors = ["Alexandru Tiniuc <tiniuc.alexandru@gmail.com>"]
 edition = "2018"

@@ -1,5 +1,5 @@
 [package]
-name = "async_ex2"
+name = "async-ex2"
 version = "0.1.0"
 authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"

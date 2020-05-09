@@ -1,5 +1,5 @@
 [package]
-name = "r2d2-example"
+name = "r2d2"
 version = "1.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2018"

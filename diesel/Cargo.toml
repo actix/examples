@@ -1,11 +1,10 @@
 [package]
-name = "diesel-example"
+name = "diesel"
 version = "1.0.0"
 authors = [
   "Nikolay Kim <fafhrd91@gmail.com>",
   "Rob Ede <robjtede@icloud.com>",
 ]
-workspace = ".."
 edition = "2018"
 
 [dependencies]

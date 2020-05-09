@@ -1,11 +1,10 @@
 [package]
-name = "template_yarte"
+name = "template-yarte"
 version = "0.0.1"
 authors = ["Juan Aguilar Santillana <mhpoin@gmail.com>"]
 publish = false
 edition = "2018"
 
-workspace = ".."
 
 [dependencies]
 env_logger = "0.7"

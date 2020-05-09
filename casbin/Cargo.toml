@@ -1,9 +1,8 @@
 [package]
-name = "actix-casbin-example"
+name = "casbin"
 version = "0.1.0"
 authors = ["Chojan Shang <psiace@outlook.com>"]
 edition = "2018"
-workspace = ".."
 
 [dependencies]
 actix-web = "2.0"

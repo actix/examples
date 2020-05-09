@@ -1,9 +1,8 @@
 [package]
-name = "async_pg"
+name = "async-pg"
 version = "0.1.0"
 authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"
-workspace = ".."
 
 [dependencies]
 actix-rt = "1.0.0"

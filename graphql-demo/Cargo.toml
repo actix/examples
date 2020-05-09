@@ -1,5 +1,5 @@
 [package]
-name = "actix-graphql-demo"
+name = "graphql-demo"
 version = "2.0.0"
 authors = ["Dwi Sulfahnur <hello@dwisulfahnur.com>"]
 edition = "2018"

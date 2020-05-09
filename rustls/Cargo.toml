@@ -1,13 +1,8 @@
 [package]
-name = "rustls-example"
+name = "rustls"
 version = "1.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = ".."
 edition = "2018"
-
-[[bin]]
-name = "rustls-server"
-path = "src/main.rs"
 
 [dependencies]
 env_logger = "0.5"

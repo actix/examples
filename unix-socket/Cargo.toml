@@ -2,7 +2,6 @@
 name = "unix-socket"
 version = "1.0.0"
 authors = ["Messense Lv <messense@icloud.com>"]
-workspace = ".."
 edition = "2018"
 
 [dependencies]

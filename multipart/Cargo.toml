@@ -1,5 +1,5 @@
 [package]
-name = "multipart-example"
+name = "multipart"
 version = "0.3.0"
 authors = ["Bevan Hunt <bevan@bevanhunt.com>"]
 edition = "2018"

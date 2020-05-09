@@ -1,12 +1,8 @@
 [package]
-name = "websocket-example"
+name = "websocket-chat"
 version = "2.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2018"
-
-[[bin]]
-name = "websocket-chat-server"
-path = "src/main.rs"
 
 [dependencies]
 actix-rt = "1.0.0"

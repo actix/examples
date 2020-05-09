@@ -1,9 +1,8 @@
 [package]
-name = "openssl-example"
+name = "openssl"
 version = "0.2.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2018"
-workspace = ".."
 
 [dependencies]
 actix-rt = "1.0.0"

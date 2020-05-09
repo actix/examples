@@ -1,12 +1,13 @@
 [package]
-name = "template-tera"
+name = "static-index"
 version = "2.0.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = ".."
+authors = ["Jose Marinez <digeratus@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+futures = "0.3.1"
 env_logger = "0.6"
-tera = "1.0"
+
 actix-web = "2.0.0"
+actix-files = "0.2.1"
 actix-rt = "1.0.0"

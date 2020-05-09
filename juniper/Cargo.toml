@@ -1,5 +1,5 @@
 [package]
-name = "juniper-example"
+name = "juniper"
 version = "0.2.0"
 authors = ["pyros2097 <pyros2097@gmail.com>"]
 edition = "2018"

@@ -1,9 +1,8 @@
 [package]
-name = "async_db"
+name = "async-db"
 version = "2.0.0"
 authors = ["Darin Gordon <dkcdkg@gmail.com>"]
 edition = "2018"
-workspace = ".."
 
 [dependencies]
 actix-rt = "1.0.0"

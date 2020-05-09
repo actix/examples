@@ -1,5 +1,5 @@
 [package]
-name = "docker_sample"
+name = "docker-sample"
 version = "0.1.0"
 authors = ["docker_sample <docker_sample@sample.com>"]
 edition = "2018"

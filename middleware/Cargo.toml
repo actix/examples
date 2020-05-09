@@ -1,5 +1,5 @@
 [package]
-name = "middleware-example"
+name = "middleware"
 version = "1.0.0"
 authors = ["Gorm Casper <gcasper@gmail.com>", "Sven-Hendrik Haase <svenstaro@gmail.com>"]
 edition = "2018"

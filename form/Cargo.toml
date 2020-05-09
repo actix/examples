@@ -1,9 +1,8 @@
 [package]
-name = "form-example"
+name = "form"
 version = "1.0.0"
 authors = ["Gorm Casper <gcasper@gmail.com>"]
 edition = "2018"
-workspace = ".."
 
 [dependencies]
 actix-web = "2.0.0"
