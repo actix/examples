@@ -1,5 +1,3 @@
-use std::pin::Pin;
-
 use actix_identity::Identity;
 use actix_web::{
     dev::Payload, error::BlockingError, web, Error, FromRequest, HttpRequest,
@@ -7,7 +5,7 @@ use actix_web::{
 };
 use diesel::prelude::*;
 use diesel::PgConnection;
-use futures::future::Future;
+use futures::future::{Ready, ok, err};
 use serde::Deserialize;
 
 use crate::errors::ServiceError;
@@ -27,18 +25,17 @@ pub type LoggedUser = SlimUser;
 impl FromRequest for LoggedUser {
     type Config = ();
     type Error = Error;
-    type Future = Pin<Box<dyn Future<Output = Result<LoggedUser, Error>>>>;
+    type Future = Ready<Result<LoggedUser, Error>>;
 
     fn from_request(req: &HttpRequest, pl: &mut Payload) -> Self::Future {
-        let fut = Identity::from_request(req, pl);
-
-        Box::pin(async move {
-            if let Some(identity) = fut.await?.identity() {
-                let user: LoggedUser = serde_json::from_str(&identity)?;
-                return Ok(user);
-            };
-            Err(ServiceError::Unauthorized.into())
-        })
+        if let Ok(identity) = Identity::from_request(req, pl).into_inner() {
+            if let Some(user_json) = identity.identity() {
+                if let Ok(user) = serde_json::from_str(&user_json) {
+                    return ok(user);
+                }
+            }
+        }
+        err(ServiceError::Unauthorized.into())
     }
 }
 
