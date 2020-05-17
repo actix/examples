@@ -1,0 +1,11 @@
+body {
+    text-align: center;
+}
+
+h1 {
+    font-family: sans-serif;
+}
+
+img {
+    transition: .5s ease-in-out;
+}
