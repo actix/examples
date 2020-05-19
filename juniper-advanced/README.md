@@ -1,4 +1,4 @@
-# actix-graphql-demo
+# juniper-advanced
 
 GraphQL Implementation in Rust using Actix, Juniper, and Mysql as Database
 
@@ -17,7 +17,7 @@ Create ```.env``` file on the root directory of this project and set environment
 
 ```sh
 # go to the root dir
-cd graphql-demo
+cd juniper-advanced
 
 # Run
 cargo run
