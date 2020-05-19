@@ -21,6 +21,8 @@ async fn main() -> std::io::Result<()> {
     }
     env_logger::init();
 
+    println!("Started http server: 127.0.0.1:8443");
+
     // load ssl keys
     let mut config = ServerConfig::new(NoClientAuth::new());
     let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
