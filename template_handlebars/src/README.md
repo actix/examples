@@ -5,3 +5,4 @@ This is an example of how to use Actix Web with the [Handlebars templating langu
 - http://localhost:8080
 - http://localhost:8080/Emma/documents
 - http://localhost:8080/Bob/passwords
+- http://localhost:8080/some-non-existing-page - 404 error rendered using template
