@@ -78,7 +78,7 @@ pub async fn split_payload(payload: &mut Multipart) -> (bytes::Bytes, Vec<Tmpfil
         } else {
             match content_type.get_filename() {
                 Some(filename) => {
-                    let tmp_file = Tmpfile::new(filename);
+                    let tmp_file = Tmpfile::new(&sanitize_filename::sanitize(&filename));
                     let tmp_path = tmp_file.tmp_path.clone();
                     let mut f = web::block(move || std::fs::File::create(&tmp_path))
                         .await
