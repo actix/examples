@@ -15,3 +15,4 @@ cargo run (or ``cargo watch -x run``)
 ### web client
 
 - [http://localhost:8080](http://localhost:8080)
+- [http://localhost:8080/non-existing-page](http://localhost:8080/non-existing-page) - 404 page rendered using template
