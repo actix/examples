@@ -64,7 +64,7 @@ async fn add_user(
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info,diesel=debug");
+    std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
     dotenv::dotenv().ok();
 
