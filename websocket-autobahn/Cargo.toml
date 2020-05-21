@@ -1,0 +1,16 @@
+[package]
+name = "websocket-autobahn"
+version = "2.0.0"
+authors = ["Mark Lodato <mlodato517@gmail.com"]
+edition = "2018"
+
+[[bin]]
+name = "websocket-autobahn-server"
+path = "src/main.rs"
+
+[dependencies]
+actix = "0.9.0"
+actix-web = "2.0.0"
+actix-web-actors = "2.0.0"
+actix-rt = "1.0.0"
+env_logger = "0.7"
