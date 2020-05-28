@@ -1,15 +1,24 @@
-FROM rust:1 as builder
+FROM rust:1-slim-buster AS base
 
-COPY . .
+ENV USER=root
 
-RUN cargo build --release
+WORKDIR /code
+RUN cargo init
+COPY Cargo.toml /code/Cargo.toml
+RUN cargo fetch
 
-FROM rust:1-slim-stretch
+COPY src /code/src
 
-COPY --from=builder /target/release/docker_sample .
+CMD [ "cargo", "test", "--offline" ]
 
-RUN ls -la /docker_sample
+FROM base AS builder
+
+RUN cargo build --release --offline
+
+FROM rust:1-slim-buster
+
+COPY --from=builder /code/target/release/docker_sample /usr/bin/docker_sample
 
 EXPOSE 5000
 
-ENTRYPOINT ["/docker_sample"]
+ENTRYPOINT [ "/usr/bin/docker_sample" ]
