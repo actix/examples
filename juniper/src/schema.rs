@@ -45,7 +45,7 @@ pub struct MutationRoot;
 
 #[juniper::object]
 impl MutationRoot {
-    fn createHuman(new_human: NewHuman) -> FieldResult<Human> {
+    fn create_human(new_human: NewHuman) -> FieldResult<Human> {
         Ok(Human {
             id: "1234".to_owned(),
             name: new_human.name,
