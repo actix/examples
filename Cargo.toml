@@ -46,6 +46,7 @@ members = [
    "unix-socket",
    "web-cors/backend",
    "websocket",
+   "websocket-autobahn",
    "websocket-chat",
    "websocket-chat-broker",
    "websocket-tcp-chat",
