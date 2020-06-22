@@ -4,6 +4,7 @@ members = [
    "async_ex1",
    "async_ex2",
    "async_pg",
+   "async_data_factory",
    "awc_https",
    "basics",
    "casbin",
