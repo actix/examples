@@ -59,7 +59,8 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for MyWebSocket {
             }
             Ok(ws::Message::Text(text)) => ctx.text(text),
             Ok(ws::Message::Binary(bin)) => ctx.binary(bin),
-            Ok(ws::Message::Close(_)) => {
+            Ok(ws::Message::Close(reason)) => {
+                ctx.close(reason);
                 ctx.stop();
             }
             _ => ctx.stop(),

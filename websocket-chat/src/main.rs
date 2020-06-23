@@ -182,7 +182,8 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                 }
             }
             ws::Message::Binary(_) => println!("Unexpected binary"),
-            ws::Message::Close(_) => {
+            ws::Message::Close(reason) => {
+                ctx.close(reason);
                 ctx.stop();
             }
             ws::Message::Continuation(_) => {
