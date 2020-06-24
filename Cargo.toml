@@ -42,7 +42,7 @@ members = [
    "template_tera",
    "template_yarte",
    "todo",
-#   "udp-echo",
+   "udp-echo",
    "unix-socket",
    "web-cors/backend",
    "websocket",
