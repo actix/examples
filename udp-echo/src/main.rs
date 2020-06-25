@@ -1,42 +1,57 @@
+use actix::io::SinkWrite;
 use actix::{Actor, AsyncContext, Context, Message, StreamHandler};
+use bytes::Bytes;
 use bytes::BytesMut;
 use futures::stream::SplitSink;
-use futures::{Future, Sink, Stream};
+use futures_util::stream::StreamExt;
+use std::io::Result;
 use std::net::SocketAddr;
-use tokio::codec::BytesCodec;
-use tokio::net::{UdpFramed, UdpSocket};
+use tokio::net::UdpSocket;
+use tokio_util::codec::BytesCodec;
+use tokio_util::udp::UdpFramed;
+
+type SinkItem = (Bytes, SocketAddr);
+type UdpSink = SplitSink<UdpFramed<BytesCodec>, SinkItem>;
 
 struct UdpActor {
-    sink: SplitSink<UdpFramed<BytesCodec>>,
+    sink: SinkWrite<SinkItem, UdpSink>,
 }
 impl Actor for UdpActor {
     type Context = Context<Self>;
 }
 
 #[derive(Message)]
+#[rtype(result = "()")]
 struct UdpPacket(BytesMut, SocketAddr);
-impl StreamHandler<UdpPacket, std::io::Error> for UdpActor {
+
+impl StreamHandler<UdpPacket> for UdpActor {
     fn handle(&mut self, msg: UdpPacket, _: &mut Context<Self>) {
         println!("Received: ({:?}, {:?})", msg.0, msg.1);
-        (&mut self.sink).send((msg.0.into(), msg.1)).wait().unwrap();
+        self.sink.write((msg.0.into(), msg.1)).unwrap();
     }
 }
 
-fn main() {
-    let sys = actix::System::new("echo-udp");
+impl actix::io::WriteHandler<std::io::Error> for UdpActor {}
 
+#[actix_rt::main]
+async fn main() {
     let addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
-    let sock = UdpSocket::bind(&addr).unwrap();
+    let sock = UdpSocket::bind(&addr).await.unwrap();
     println!(
         "Started udp server on: 127.0.0.1:{:?}",
         sock.local_addr().unwrap().port()
     );
-
     let (sink, stream) = UdpFramed::new(sock, BytesCodec::new()).split();
     UdpActor::create(|ctx| {
-        ctx.add_stream(stream.map(|(data, sender)| UdpPacket(data, sender)));
-        UdpActor { sink: sink }
+        ctx.add_stream(
+            stream.filter_map(
+                |item: Result<(BytesMut, SocketAddr)>| async {
+                    item.map(|(data, sender)| UdpPacket(data, sender)).ok()
+                },
+            ),
+        );
+        UdpActor { sink: SinkWrite::new(sink, ctx), }
     });
 
-    std::process::exit(sys.run());
+    actix_rt::Arbiter::local_join().await;
 }
