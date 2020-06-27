@@ -1,5 +1,6 @@
 [workspace]
 members = [
+   "async_data_factory",
    "async_db",
    "async_ex1",
    "async_ex2",
