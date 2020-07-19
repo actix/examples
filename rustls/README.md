@@ -18,6 +18,11 @@ If you want to generate your own cert/private key file, then run:
 mkcert 127.0.0.1
 ```
 
+If your key doesn't work, convert it to rsa:
+```bash
+openssl rsa -in key.pem -out key-rsa.pem
+```
+
 [`mkcert`]: https://github.com/FiloSottile/mkcert
 
 ### server
