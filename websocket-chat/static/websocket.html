@@ -9,7 +9,7 @@ window.onload = () => {
   };
   const connect = () => {
     disconnect();
-    const wsUri = (window.location.protocol === 'https:' && 'wss://' || 'ws://') + window.location.host + '/ws/';
+    const wsUri = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/';
     conn = new WebSocket(wsUri);
     log('Connecting...');
     conn.onopen = function() {
