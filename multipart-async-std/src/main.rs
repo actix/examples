@@ -30,7 +30,7 @@ fn index() -> HttpResponse {
         <body>
             <form target="/" method="post" enctype="multipart/form-data">
                 <input type="file" multiple name="file"/>
-                <input type="submit" value="Submit"></button>
+                <button type=submit>Submit</button>
             </form>
         </body>
     </html>"#;
