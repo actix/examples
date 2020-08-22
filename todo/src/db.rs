@@ -18,7 +18,7 @@ fn get_conn(pool: &PgPool) -> Result<PgPooledConnection, &'static str> {
 }
 
 pub fn get_all_tasks(pool: &PgPool) -> Result<Vec<Task>, &'static str> {
-    Task::all(get_conn(pool)?.deref()).map_err(|_| "Error inserting task")
+    Task::all(get_conn(pool)?.deref()).map_err(|_| "Error retrieving tasks")
 }
 
 pub fn create_task(todo: String, pool: &PgPool) -> Result<(), &'static str> {
@@ -31,11 +31,11 @@ pub fn create_task(todo: String, pool: &PgPool) -> Result<(), &'static str> {
 pub fn toggle_task(id: i32, pool: &PgPool) -> Result<(), &'static str> {
     Task::toggle_with_id(id, get_conn(pool)?.deref())
         .map(|_| ())
-        .map_err(|_| "Error inserting task")
+        .map_err(|_| "Error toggling task completion")
 }
 
 pub fn delete_task(id: i32, pool: &PgPool) -> Result<(), &'static str> {
     Task::delete_with_id(id, get_conn(pool)?.deref())
         .map(|_| ())
-        .map_err(|_| "Error inserting task")
+        .map_err(|_| "Error deleting task")
 }
