@@ -1,6 +1,6 @@
 # template_tinytemplate
 
-Minimal example of using the template [tera](https://github.com/Keats/tera) that displays a form.
+See the documentation for the minimalist template engine [tiny_template](https://docs.rs/tinytemplate/1.1.0/tinytemplate/).
 
 ## Usage
 

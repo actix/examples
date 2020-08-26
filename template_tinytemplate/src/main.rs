@@ -37,13 +37,13 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     HttpServer::new(|| {
-        let mut tera = TinyTemplate::new();
-        tera.add_template("index.html", INDEX).unwrap();
-        tera.add_template("user.html", USER).unwrap();
-        tera.add_template("error.html", ERROR).unwrap();
+        let mut tt = TinyTemplate::new();
+        tt.add_template("index.html", INDEX).unwrap();
+        tt.add_template("user.html", USER).unwrap();
+        tt.add_template("error.html", ERROR).unwrap();
 
         App::new()
-            .data(tera)
+            .data(tt)
             .wrap(middleware::Logger::default()) // enable logger
             .service(web::resource("/").route(web::get().to(index)))
             .service(web::scope("").wrap(error_handlers()))
@@ -82,11 +82,11 @@ fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> Response<Body
         .app_data::<web::Data<TinyTemplate<'_>>>()
         .map(|t| t.get_ref());
     match tt {
-        Some(tera) => {
+        Some(tt) => {
             let mut context = std::collections::HashMap::new();
             context.insert("error", error.to_owned());
             context.insert("status_code", res.status().as_str().to_owned());
-            let body = tera.render("error.html", &context);
+            let body = tt.render("error.html", &context);
 
             match body {
                 Ok(body) => Response::build(res.status())
