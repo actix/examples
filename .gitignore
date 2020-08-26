@@ -12,7 +12,7 @@ Cargo.lock
 **/*.rs.bk
 
 # intellij files
-.idea/**
+**/.idea/**
 
 .history/
 
