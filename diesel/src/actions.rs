@@ -3,7 +3,7 @@ use uuid::Uuid;
 
 use crate::models;
 
-/// Run query using Diesel to insert a new database row and return the result.
+/// Run query using Diesel to find user by uid and return it.
 pub fn find_user_by_uid(
     uid: Uuid,
     conn: &SqliteConnection,
