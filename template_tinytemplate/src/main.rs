@@ -1,5 +1,3 @@
-extern crate tinytemplate;
-
 use std::collections::HashMap;
 
 use actix_http::{body::Body, Response};
