@@ -41,6 +41,7 @@ members = [
    "template_askama",
    "template_handlebars",
    "template_tera",
+   "template_tinytemplate",
    "template_yarte",
    "todo",
    "udp-echo",

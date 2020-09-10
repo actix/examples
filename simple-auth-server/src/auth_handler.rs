@@ -5,7 +5,7 @@ use actix_web::{
 };
 use diesel::prelude::*;
 use diesel::PgConnection;
-use futures::future::{Ready, ok, err};
+use futures::future::{err, ok, Ready};
 use serde::Deserialize;
 
 use crate::errors::ServiceError;
