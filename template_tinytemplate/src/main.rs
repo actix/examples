@@ -7,26 +7,25 @@ use actix_web::dev::ServiceResponse;
 use actix_web::http::StatusCode;
 use actix_web::middleware::errhandlers::{ErrorHandlerResponse, ErrorHandlers};
 use actix_web::{error, middleware, web, App, Error, HttpResponse, HttpServer, Result};
+use serde_json::json;
 use tinytemplate::TinyTemplate;
 
-// store tera template in application state
+// store tiny_template in application state
 async fn index(
     tmpl: web::Data<TinyTemplate<'_>>,
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, Error> {
     let s = if let Some(name) = query.get("name") {
         // submitted form
-        let mut ctx = std::collections::HashMap::new();
-        ctx.insert("name", name.to_owned());
-        ctx.insert("text", "Welcome!".to_owned());
+        let ctx = json!({
+          "name" : name.to_owned(),
+          "text" : "Welcome!".to_owned()
+        });
         tmpl.render("user.html", &ctx)
             .map_err(|_| error::ErrorInternalServerError("Template error"))?
     } else {
-        tmpl.render(
-            "index.html",
-            &std::collections::HashMap::<&str, String>::new(),
-        )
-        .map_err(|_| error::ErrorInternalServerError("Template error"))?
+        tmpl.render("index.html", &serde_json::Value::Null)
+            .map_err(|_| error::ErrorInternalServerError("Template error"))?
     };
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
@@ -99,47 +98,6 @@ fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> Response<Body
     }
 }
 
-static ERROR: &str = r#"<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>{error}</title>
-</head>
-<body>
-  <h1>{status_code} {error}</h1>
-</body>
-</html>"#;
-
-static INDEX: &str = r#"<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Actix web</title>
-</head>
-<body>
-  <h1>Welcome!</h1>
-  <p>
-    <h3>What is your name?</h3>
-    <form>
-      <input type="text" name="name" /><br/>
-      <p><input type="submit"></p>
-    </form>
-  </p>
-</body>
-</html>
-"#;
-
-static USER: &str = r#"<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Actix web</title>
-</head>
-<body>
-  <h1>Hi, {name}!</h1>
-  <p>
-    {text}
-  </p>
-</body>
-</html>
-"#;
+static ERROR: &str = include_str!("../templates/error.html");
+static INDEX: &str = include_str!("../templates/index.html");
+static USER: &str = include_str!("../templates/user.html");

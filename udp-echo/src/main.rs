@@ -43,14 +43,14 @@ async fn main() {
     );
     let (sink, stream) = UdpFramed::new(sock, BytesCodec::new()).split();
     UdpActor::create(|ctx| {
-        ctx.add_stream(
-            stream.filter_map(
-                |item: Result<(BytesMut, SocketAddr)>| async {
-                    item.map(|(data, sender)| UdpPacket(data, sender)).ok()
-                },
-            ),
-        );
-        UdpActor { sink: SinkWrite::new(sink, ctx), }
+        ctx.add_stream(stream.filter_map(
+            |item: Result<(BytesMut, SocketAddr)>| async {
+                item.map(|(data, sender)| UdpPacket(data, sender)).ok()
+            },
+        ));
+        UdpActor {
+            sink: SinkWrite::new(sink, ctx),
+        }
     });
 
     actix_rt::Arbiter::local_join().await;
