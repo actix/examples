@@ -5,7 +5,6 @@ authors = [
   "Nikolay Kim <fafhrd91@gmail.com>",
   "Rob Ede <robjtede@icloud.com>",
 ]
-workspace = ".."
 edition = "2018"
 
 [dependencies]

@@ -3,7 +3,6 @@ name = "actix-casbin-example"
 version = "0.1.0"
 authors = ["Chojan Shang <psiace@outlook.com>"]
 edition = "2018"
-workspace = ".."
 
 [dependencies]
 actix-web = "2.0"

@@ -13,7 +13,7 @@ actix-rt = "1.0.0"
 argonautica = { git = "https://github.com/bcmyers/argonautica", rev = "67fc8d8d7d67696cd8ca7a59b92531f06b089212" }
 chrono = { version = "0.4.6", features = ["serde"] }
 derive_more = "0.99.0"
-diesel = { version = "1.4.2", features = ["postgres", "uuidv07", "r2d2", "chrono"] }
+diesel = { version = "1.4.5", features = ["postgres", "uuidv07", "r2d2", "chrono"] }
 dotenv = "0.15"
 env_logger = "0.7"
 futures = "0.3.1"
