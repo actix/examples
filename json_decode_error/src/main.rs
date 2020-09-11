@@ -1,5 +1,5 @@
 use actix_web::{
-    error, post, web, App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder,
+    error, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder,
 };
 use serde::Deserialize;
 
@@ -34,9 +34,9 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(greet)
-            .app_data(web::Json::<Info>::configure(|cfg| {
-                cfg.error_handler(json_error_handler)
-            }))
+            .app_data(web::JsonConfig::default()
+              .error_handler(json_error_handler)
+            ) // <- register error_handler for JSON extractors.
     })
     .bind("127.0.0.1:8088")?
     .run()
