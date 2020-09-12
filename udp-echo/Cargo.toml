@@ -5,7 +5,7 @@ authors = ["Anton Patrushev <apatrushev@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-actix = "0.9"
+actix = "0.10"
 actix-rt = "1.1"
 tokio = "0.2"
 tokio-util = { version = "0.3", features = [ "codec", "udp" ] }
