@@ -3,7 +3,7 @@ use actix_web::{get, App, HttpServer};
 
 use redis_tang::{Builder, Pool, RedisManager};
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let redis_url =
         std::env::var("REDIS_URL").unwrap_or_else(|_| String::from("redis://127.0.0.1"));
@@ -14,6 +14,7 @@ async fn main() -> std::io::Result<()> {
     let pool = pool_builder(num_cpus, redis_url.as_str())
         .await
         .expect("fail to build pool");
+
     let pool = RedisWrapper(pool);
 
     HttpServer::new(move || {

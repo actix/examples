@@ -5,13 +5,11 @@ authors = ["Darin Gordon <dkcdkg@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-actix-rt = "1.0.0"
-actix-web = "2.0.0"
-
+actix-web = "3"
 env_logger = "0.7"
 failure = "0.1.7"
 futures = "0.3.1"
-num_cpus = "1.10.0"
+num_cpus = "1.13"
 r2d2 = "0.8.2"
 r2d2_sqlite = "0.14"
 rusqlite = "0.21"

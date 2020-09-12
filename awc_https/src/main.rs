@@ -7,7 +7,7 @@ use openssl::ssl::{SslConnector, SslMethod};
 async fn index(_req: HttpRequest) -> HttpResponse {
     let builder = SslConnector::builder(SslMethod::tls()).unwrap();
 
-    let client = Client::build()
+    let client = Client::builder()
         .connector(Connector::new().ssl(builder.build()).finish())
         .finish();
 
@@ -31,7 +31,7 @@ async fn index(_req: HttpRequest) -> HttpResponse {
     HttpResponse::Ok().content_type("image/jpeg").body(payload)
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let port = 3000;
 

@@ -5,8 +5,8 @@ authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-actix-rt = "1.0.0"
-actix-web = { version="2.0.0", features = ["openssl"] }
+actix-rt = "1"
+actix-web = { version = "3", features = ["openssl"] }
 actix-service = "1.0.0"
 bytes = "0.5.3"
 env_logger = "0.7"
