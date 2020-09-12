@@ -176,7 +176,7 @@ pub fn tcp_server(_s: &str, server: Addr<ChatServer>) {
     // Create server listener
     let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
 
-    actix_rt::spawn(async move {
+    actix_web::rt::spawn(async move {
         let server = server.clone();
         let mut listener = TcpListener::bind(&addr).await.unwrap();
         let mut incoming = listener.incoming();
