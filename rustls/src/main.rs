@@ -14,7 +14,7 @@ async fn index(req: HttpRequest) -> HttpResponse {
         .body("Welcome!")
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     if std::env::var("RUST_LOG").is_err() {
         std::env::set_var("RUST_LOG", "actix_web=info");
