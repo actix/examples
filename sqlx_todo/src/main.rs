@@ -25,7 +25,7 @@ async fn index() -> impl Responder {
     )
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> Result<()> {
     dotenv().ok();
     env_logger::init();
