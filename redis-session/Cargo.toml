@@ -6,7 +6,6 @@ edition = "2018"
 
 [dependencies]
 actix-web = "3"
-actix-rt = "1"
 actix-session = "0.4"
 actix-redis = "0.9"
 env_logger = "0.7"
@@ -16,3 +15,6 @@ actix-service = "1"
 actix-http = "2"
 rand = "0.7.3"
 time = "0.2"
+
+[dev-dependencies]
+actix-rt = "1"

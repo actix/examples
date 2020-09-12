@@ -7,7 +7,6 @@ edition = "2018"
 
 [dependencies]
 actix-web = "3"
-actix-rt = "1"
 env_logger = "0.7"
 yarte = { version = "0.8", features = ["html-min"]  }
 
@@ -15,3 +14,6 @@ yarte = { version = "0.8", features = ["html-min"]  }
 version = "0.8"
 default-features = false
 features = ["config"]
+
+[dev-dependencies]
+actix-rt = "1"
