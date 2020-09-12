@@ -35,7 +35,7 @@ async fn index() -> Result<web::HttpResponse, Error> {
     })
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> io::Result<()> {
     let ip_address = "127.0.0.1:8000";
     println!("Running server on {}", ip_address);

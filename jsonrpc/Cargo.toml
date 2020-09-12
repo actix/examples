@@ -5,8 +5,7 @@ authors = ["mohanson <mohanson@outlook.com>"]
 edition = "2018"
 
 [dependencies]
-actix-web = "2.0.0"
-actix-rt = "1.0.0"
+actix-web = "3"
 bytes = "0.5"
 env_logger = "0.7"
 futures = "0.3.1"

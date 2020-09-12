@@ -6,7 +6,6 @@ use std::pin::Pin;
 use std::sync::{Arc, RwLock};
 use std::time::Duration;
 
-use actix_rt::time::delay_for;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use bytes::Bytes;
 use futures::{Future, FutureExt};
@@ -115,7 +114,7 @@ impl ImplNetwork for ObjNetwork {
         d: u64,
     ) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>> {
         async move {
-            delay_for(Duration::from_secs(d)).await;
+            actix_web::rt::time::delay_for(Duration::from_secs(d)).await;
             Ok(String::from("pong"))
         }
         .boxed_local()
@@ -141,7 +140,7 @@ impl AppState {
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();

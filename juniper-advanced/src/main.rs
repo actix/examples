@@ -13,7 +13,7 @@ mod db;
 mod handlers;
 mod schemas;
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     std::env::set_var("RUST_LOG", "actix_web=info,info");
