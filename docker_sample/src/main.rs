@@ -15,7 +15,7 @@ async fn again() -> impl Responder {
     HttpResponse::Ok().body("Hello world again!")
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Starting actix-web server");
 

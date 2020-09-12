@@ -29,7 +29,7 @@ fn json_error_handler(err: error::JsonPayloadError, _req: &HttpRequest) -> error
     error::InternalError::from_response(err, resp).into()
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()

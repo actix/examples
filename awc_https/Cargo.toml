@@ -3,10 +3,7 @@ name = "awc_https"
 version = "0.1.0"
 authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"
-workspace = ".."
-
 
 [dependencies]
-actix-rt = "1.0.0"
-actix-web = { version = "2.0.0", features = ["openssl"] }
+actix-web = { version = "3", features = ["openssl"] }
 openssl = "0.10.28"

@@ -8,7 +8,7 @@ use tokio_util::codec::FramedRead;
 
 mod codec;
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() {
     // Connect to server
     let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
@@ -38,7 +38,11 @@ async fn main() {
 }
 
 struct ChatClient {
-    framed: actix::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
+    framed: actix::io::FramedWrite<
+        codec::ChatRequest,
+        WriteHalf<TcpStream>,
+        codec::ClientChatCodec,
+    >,
 }
 
 #[derive(Message)]

@@ -72,7 +72,7 @@ async fn logout(session: Session) -> Result<HttpResponse> {
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info,actix_redis=info");
     env_logger::init();
@@ -308,7 +308,9 @@ mod test {
             .into_iter()
             .find(|c| c.name() == "test-session")
             .unwrap();
-        assert!(&time::now().tm_year != &cookie_4.expires().map(|t| t.tm_year).unwrap());
+
+        let now = time::OffsetDateTime::now_utc();
+        assert!(now.year() != cookie_4.expires().map(|t| t.year()).unwrap());
 
         // Step 10: GET index, including session cookie #2 in request
         //   - set-cookie actix-session will be in response (session cookie #3)

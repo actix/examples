@@ -1,12 +1,9 @@
-#[macro_use]
-extern crate redis_async;
-use serde::Deserialize;
-
 use actix::prelude::*;
 use actix_redis::{Command, RedisActor};
 use actix_web::{middleware, web, App, Error as AWError, HttpResponse, HttpServer};
 use futures::future::join_all;
-use redis_async::resp::RespValue;
+use redis_async::{resp::RespValue, resp_array};
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct CacheInfo {
@@ -74,7 +71,7 @@ async fn del_stuff(redis: web::Data<Addr<RedisActor>>) -> Result<HttpResponse, A
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=trace,actix_redis=trace");
     env_logger::init();

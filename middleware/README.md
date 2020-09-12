@@ -1,6 +1,6 @@
 # middleware examples
 
-This example showcases a bunch of different uses of middlewares. See also the [Middleware guide](https://actix.rs/docs/middleware/)..
+This example showcases a bunch of different uses of middlewares. See also the [Middleware guide](https://actix.rs/docs/middleware/).
 
 ## Usage
 

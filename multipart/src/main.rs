@@ -10,10 +10,12 @@ async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
         let content_type = field.content_disposition().unwrap();
         let filename = content_type.get_filename().unwrap();
         let filepath = format!("./tmp/{}", sanitize_filename::sanitize(&filename));
+
         // File::create is blocking operation, use threadpool
         let mut f = web::block(|| std::fs::File::create(filepath))
             .await
             .unwrap();
+
         // Field in turn is stream of *Bytes* object
         while let Some(chunk) = field.next().await {
             let data = chunk.unwrap();
@@ -38,7 +40,7 @@ fn index() -> HttpResponse {
     HttpResponse::Ok().body(html)
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();

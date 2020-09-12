@@ -2,16 +2,11 @@
 name = "basics"
 version = "2.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-rt = "1.0.0"
-actix-web = "2.0.0"
-actix-files = "0.2.1"
-actix-session = "0.3.0"
-actix-utils = "1.0.3"
-
-futures = "0.3.1"
+actix-web = "3"
+actix-files = "0.3"
+actix-session = "0.4"
+actix-utils = "2"
 env_logger = "0.7"
-bytes = "0.5"

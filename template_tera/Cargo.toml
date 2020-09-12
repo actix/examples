@@ -2,12 +2,10 @@
 name = "template-tera"
 version = "2.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = ".."
 edition = "2018"
 
 [dependencies]
 env_logger = "0.7"
 tera = "1.0"
-actix-http = "1.0.1"
-actix-web = "2.0.0"
-actix-rt = "1.0.0"
+actix-http = "2"
+actix-web = "3"

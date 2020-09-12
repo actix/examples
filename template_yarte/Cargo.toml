@@ -5,17 +5,15 @@ authors = ["Juan Aguilar Santillana <mhpoin@gmail.com>"]
 publish = false
 edition = "2018"
 
-workspace = ".."
-
 [dependencies]
+actix-web = "3"
 env_logger = "0.7"
-
 yarte = { version = "0.8", features = ["html-min"]  }
-
-actix-rt = "1.0"
-actix-web = "2.0.0"
 
 [build-dependencies.yarte_helpers]
 version = "0.8"
 default-features = false
 features = ["config"]
+
+[dev-dependencies]
+actix-rt = "1"

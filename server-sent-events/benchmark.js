@@ -1,6 +1,6 @@
 const http = require('http')
 
-const n = 1000;
+const n = 100;
 let connected = 0;
 let messages = 0;
 let start = Date.now();

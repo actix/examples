@@ -3,10 +3,8 @@ name = "openssl-example"
 version = "0.2.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2018"
-workspace = ".."
 
 [dependencies]
-actix-rt = "1.0.0"
-actix-web = { version = "2.0.0", features = ["openssl"] }
+actix-web = { version = "3", features = ["openssl"] }
 env_logger = "0.7"
 openssl = "0.10"

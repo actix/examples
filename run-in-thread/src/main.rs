@@ -1,8 +1,7 @@
 use std::sync::mpsc;
 use std::{thread, time};
 
-use actix_rt::System;
-use actix_web::{dev::Server, middleware, web, App, HttpRequest, HttpServer};
+use actix_web::{dev::Server, middleware, rt, web, App, HttpRequest, HttpServer};
 
 async fn index(req: HttpRequest) -> &'static str {
     println!("REQ: {:?}", req);
@@ -10,7 +9,7 @@ async fn index(req: HttpRequest) -> &'static str {
 }
 
 fn run_app(tx: mpsc::Sender<Server>) -> std::io::Result<()> {
-    let mut sys = System::new("test");
+    let mut sys = rt::System::new("test");
 
     // srv is server controller type, `dev::Server`
     let srv = HttpServer::new(|| {
@@ -48,5 +47,5 @@ fn main() {
 
     println!("STOPPING SERVER");
     // init stop server and wait until server gracefully exit
-    System::new("").block_on(srv.stop(true));
+    rt::System::new("").block_on(srv.stop(true));
 }

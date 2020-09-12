@@ -20,7 +20,7 @@ mod session;
 
 static SESSION_SIGNING_KEY: &[u8] = &[0; 32];
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> io::Result<()> {
     dotenv().ok();
 

@@ -111,7 +111,7 @@ use dotenv::dotenv;
 use handlers::add_user;
 use tokio_postgres::NoTls;
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
 

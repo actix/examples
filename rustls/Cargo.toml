@@ -2,7 +2,6 @@
 name = "rustls-example"
 version = "1.0.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-workspace = ".."
 edition = "2018"
 
 [[bin]]
@@ -11,7 +10,6 @@ path = "src/main.rs"
 
 [dependencies]
 env_logger = "0.7"
-rustls = "0.16"
-actix-web = { version = "2.0.0", features = ["rustls"] }
-actix-files = "0.2.1"
-actix-rt = "1.0.0"
+rustls = "0.18"
+actix-web = { version = "3", features = ["rustls"] }
+actix-files = "0.3"

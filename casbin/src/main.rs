@@ -24,7 +24,7 @@ async fn fail(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpRe
     HttpResponse::Ok().body("Fail: alice is not data1_admin.") // In fact, it can't be displayed.
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "info");
     std::env::set_var("LOGE_FORMAT", "target");

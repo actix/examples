@@ -3,13 +3,10 @@ name = "async_data_factory"
 version = "0.1.0"
 authors = ["fakeshadow <24548779@qq.com>"]
 edition = "2018"
-workspace = ".."
-
 
 [dependencies]
-actix-rt = "1.1.1"
-actix-web = { version = "2.0.0" }
-num_cpus = "1.13.0"
+actix-web = "3"
+num_cpus = "1.13"
 redis = { version = "0.16.0", default-features = false, features = ["tokio-rt-core"] }
 # redis_tang is an redis pool for test purpose
-redis_tang = "0.1.0"
+redis_tang = "0.1"

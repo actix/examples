@@ -3,13 +3,13 @@ use std::sync::Mutex;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
+use actix_web::rt::time::{interval_at, Instant};
 use actix_web::web::{Bytes, Data, Path};
 use actix_web::{web, App, Error, HttpResponse, HttpServer, Responder};
 use futures::{Stream, StreamExt};
 use tokio::sync::mpsc::{channel, Receiver, Sender};
-use tokio::time::{interval_at, Instant};
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init();
     let data = Broadcaster::create();
@@ -39,7 +39,6 @@ async fn new_client(broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
 
     HttpResponse::Ok()
         .header("content-type", "text/event-stream")
-        .no_chunking()
         .streaming(rx)
 }
 
@@ -74,7 +73,7 @@ impl Broadcaster {
     }
 
     fn spawn_ping(me: Data<Mutex<Self>>) {
-        actix_rt::spawn(async move {
+        actix_web::rt::spawn(async move {
             let mut task = interval_at(Instant::now(), Duration::from_secs(10));
             while let Some(_) = task.next().await {
                 me.lock().unwrap().remove_stale_clients();

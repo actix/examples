@@ -2,12 +2,10 @@
 name = "server-sent-events"
 version = "1.0.0"
 authors = ["Arve Seljebu"]
-workspace = ".."
 edition = "2018"
 
 [dependencies]
-actix-rt = "1.0.0"
-actix-web = "2.0.0"
+actix-web = "3"
 env_logger = "0.7"
 futures = "0.3.1"
-tokio = "0.2"
+tokio = { version = "0.2", features = ["sync"] }

@@ -5,6 +5,7 @@ use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{middleware, web, App, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
+use time::Duration;
 
 mod auth_handler;
 mod email_service;
@@ -15,7 +16,7 @@ mod register_handler;
 mod schema;
 mod utils;
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     std::env::set_var(
@@ -44,7 +45,7 @@ async fn main() -> std::io::Result<()> {
                     .name("auth")
                     .path("/")
                     .domain(domain.as_str())
-                    .max_age_time(chrono::Duration::days(1))
+                    .max_age_time(Duration::days(1))
                     .secure(false), // this can only be true if you have https
             ))
             .data(web::JsonConfig::default().limit(4096))
