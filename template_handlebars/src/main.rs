@@ -39,7 +39,7 @@ async fn user(
     HttpResponse::Ok().body(body)
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> io::Result<()> {
     // Handlebars uses a repository for the compiled templates. This object must be
     // shared between the application threads, and is therefore passed to the

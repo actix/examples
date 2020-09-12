@@ -28,7 +28,7 @@ async fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpRespons
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // start http server
     HttpServer::new(move || {

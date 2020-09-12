@@ -26,7 +26,7 @@ async fn index(
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
