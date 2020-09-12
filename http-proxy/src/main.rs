@@ -40,7 +40,7 @@ async fn forward(
     Ok(client_resp.body(res.body().await?))
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let matches = clap::App::new("HTTP Proxy")
         .arg(
