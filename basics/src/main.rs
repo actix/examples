@@ -1,17 +1,12 @@
-#[macro_use]
-extern crate actix_web;
-
-use std::{env, io};
-
 use actix_files as fs;
 use actix_session::{CookieSession, Session};
 use actix_utils::mpsc;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
-    error, guard, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
-    Result,
+    error, get, guard, middleware, web, App, Error, HttpRequest, HttpResponse,
+    HttpServer, Result
 };
-use bytes::Bytes;
+use std::{env, io};
 
 /// favicon handler
 #[get("/favicon")]
@@ -50,21 +45,24 @@ async fn response_body(path: web::Path<String>) -> HttpResponse {
     let text = format!("Hello {}!", *path);
 
     let (tx, rx_body) = mpsc::channel();
-    let _ = tx.send(Ok::<_, Error>(Bytes::from(text)));
+    let _ = tx.send(Ok::<_, Error>(web::Bytes::from(text)));
 
     HttpResponse::Ok().streaming(rx_body)
 }
 
 /// handler with path parameters like `/user/{name}/`
-async fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
+async fn with_param(
+    req: HttpRequest,
+    web::Path((name,)): web::Path<(String,)>,
+) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
         .content_type("text/plain")
-        .body(format!("Hello {}!", path.0))
+        .body(format!("Hello {}!", name))
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
     env_logger::init();
