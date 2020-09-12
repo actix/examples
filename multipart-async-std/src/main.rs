@@ -38,7 +38,7 @@ fn index() -> HttpResponse {
     HttpResponse::Ok().body(html)
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     async_std::fs::create_dir_all("./tmp").await?;

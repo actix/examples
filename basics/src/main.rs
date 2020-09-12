@@ -4,7 +4,7 @@ use actix_utils::mpsc;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
     error, get, guard, middleware, web, App, Error, HttpRequest, HttpResponse,
-    HttpServer, Result
+    HttpServer, Result,
 };
 use std::{env, io};
 

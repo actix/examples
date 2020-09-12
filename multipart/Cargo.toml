@@ -10,8 +10,7 @@ repository = "https://github.com/actix/examples"
 readme = "README.md"
 
 [dependencies]
-actix-multipart = "0.2.0"
-actix-rt = "1.0.0"
-actix-web = "2.0.0"
+actix-multipart = "0.3"
+actix-web = "3"
 futures = "0.3.1"
 sanitize-filename = "0.2"

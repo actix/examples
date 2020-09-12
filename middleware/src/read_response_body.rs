@@ -5,8 +5,8 @@ use std::task::{Context, Poll};
 
 use actix_service::{Service, Transform};
 use actix_web::body::{BodySize, MessageBody, ResponseBody};
+use actix_web::web::{Bytes, BytesMut};
 use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error};
-use bytes::{Bytes, BytesMut};
 use futures::future::{ok, Ready};
 
 pub struct Logging;
@@ -86,13 +86,16 @@ where
     }
 }
 
+#[pin_project::pin_project(PinnedDrop)]
 pub struct BodyLogger<B> {
+    #[pin]
     body: ResponseBody<B>,
     body_accum: BytesMut,
 }
 
-impl<B> Drop for BodyLogger<B> {
-    fn drop(&mut self) {
+#[pin_project::pinned_drop]
+impl<B> PinnedDrop for BodyLogger<B> {
+    fn drop(self: Pin<&mut Self>) {
         println!("response body: {:?}", self.body_accum);
     }
 }
@@ -102,10 +105,15 @@ impl<B: MessageBody> MessageBody for BodyLogger<B> {
         self.body.size()
     }
 
-    fn poll_next(&mut self, cx: &mut Context<'_>) -> Poll<Option<Result<Bytes, Error>>> {
-        match self.body.poll_next(cx) {
+    fn poll_next(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<Bytes, Error>>> {
+        let this = self.project();
+
+        match this.body.poll_next(cx) {
             Poll::Ready(Some(Ok(chunk))) => {
-                self.body_accum.extend_from_slice(&chunk);
+                this.body_accum.extend_from_slice(&chunk);
                 Poll::Ready(Some(Ok(chunk)))
             }
             Poll::Ready(Some(Err(e))) => Poll::Ready(Some(Err(e))),
