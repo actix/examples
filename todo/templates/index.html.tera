@@ -52,7 +52,7 @@
               {% else %}
                 <form action="/todo/{{task.id}}" class="link" method="post">
                   <input type="hidden" name="_method" value="put" />
-                  <button type="submit" class="link">{{ task.description }}</button>
+                  <button type="submit" class="link">{{task.description}}</button>
                 </form>
               {% endif %}
             </li>

@@ -33,7 +33,14 @@ async fn main() -> io::Result<()> {
     let app = move || {
         debug!("Constructing the App");
 
-        let templates: Tera = Tera::new("templates/**/*").unwrap();
+        let mut templates = match Tera::new("templates/**/*") {
+            Ok(t) => t,
+            Err(e) => {
+                println!("Parsing error(s): {}", e);
+                ::std::process::exit(1);
+            }
+        };
+        templates.autoescape_on(vec!["tera"]);
 
         let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
 
