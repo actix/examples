@@ -5,32 +5,22 @@ use std::io;
 use std::sync::Arc;
 
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
-use juniper::http::graphiql::graphiql_source;
-use juniper::http::GraphQLRequest;
+use juniper_actix::{graphql_handler, playground_handler};
 
 mod schema;
 
 use crate::schema::{create_schema, Schema};
 
-async fn graphiql() -> HttpResponse {
-    let html = graphiql_source("http://127.0.0.1:8080/graphql");
-    HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
-        .body(html)
+async fn playground() -> Result<HttpResponse, Error> {
+    playground_handler("/graphql", None).await
 }
 
 async fn graphql(
+    req: actix_web::HttpRequest,
+    payload: actix_web::web::Payload,
     st: web::Data<Arc<Schema>>,
-    data: web::Json<GraphQLRequest>,
 ) -> Result<HttpResponse, Error> {
-    let user = web::block(move || {
-        let res = data.execute(&st, &());
-        Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
-    })
-    .await?;
-    Ok(HttpResponse::Ok()
-        .content_type("application/json")
-        .body(user))
+    graphql_handler(&st, &(), req, payload).await
 }
 
 #[actix_web::main]
@@ -47,7 +37,7 @@ async fn main() -> io::Result<()> {
             .data(schema.clone())
             .wrap(middleware::Logger::default())
             .service(web::resource("/graphql").route(web::post().to(graphql)))
-            .service(web::resource("/graphiql").route(web::get().to(graphiql)))
+            .service(web::resource("/playground").route(web::get().to(playground)))
     })
     .bind("127.0.0.1:8080")?
     .run()
