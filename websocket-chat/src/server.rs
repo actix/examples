@@ -119,7 +119,7 @@ impl Handler<Connect> for ChatServer {
         // auto join session to Main room
         self.rooms
             .entry("Main".to_owned())
-            .or_insert(HashSet::new())
+            .or_insert_with(HashSet::new)
             .insert(id);
 
         // send id back
@@ -198,7 +198,7 @@ impl Handler<Join> for ChatServer {
 
         self.rooms
             .entry(name.clone())
-            .or_insert(HashSet::new())
+            .or_insert_with(HashSet::new)
             .insert(id);
 
         self.send_message(&name, "Someone connected", id);

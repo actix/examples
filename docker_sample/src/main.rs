@@ -24,11 +24,3 @@ async fn main() -> std::io::Result<()> {
         .run()
         .await
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn sample_test() {
-        assert!(true);
-    }
-}
