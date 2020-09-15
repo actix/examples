@@ -39,7 +39,7 @@ jobs:
 
       - name: cargo check
         uses: actions-rs/cargo@v1
-        timeout-minutes: 40
+        timeout-minutes: 30
         with:
           command: check
           args: --workspace --bins --examples --tests
@@ -51,7 +51,7 @@ jobs:
 
       - name: cargo test
         uses: actions-rs/cargo@v1
-        timeout-minutes: 40
+        timeout-minutes: 30
         env:
           # included in example of redis, not clear its purpose
           CI: true
