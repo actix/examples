@@ -4,6 +4,7 @@ members = [
    "async_db",
    "async_ex1",
    "async_ex2",
+   "async-graphql-demo",
    "async_pg",
    "awc_https",
    "basics",
@@ -51,5 +52,5 @@ members = [
    "websocket-autobahn",
    "websocket-chat",
    "websocket-chat-broker",
-   "websocket-tcp-chat",
+   "websocket-tcp-chat"
 ]
