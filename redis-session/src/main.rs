@@ -108,7 +108,6 @@ mod test {
         App,
     };
     use serde_json::json;
-    use time;
 
     #[actix_rt::test]
     async fn test_workflow() {
@@ -233,10 +232,7 @@ mod test {
             .into_iter()
             .find(|c| c.name() == "test-session")
             .unwrap();
-        assert_eq!(
-            true,
-            cookie_1.value().to_string() != cookie_2.value().to_string()
-        );
+        assert_ne!(cookie_1.value(), cookie_2.value());
 
         let result_5 = resp_5.json::<IndexResponse>().await.unwrap();
         assert_eq!(
@@ -294,7 +290,7 @@ mod test {
                 counter: 0
             }
         );
-        assert!(cookie_3.value().to_string() != cookie_2.value().to_string());
+        assert_ne!(cookie_3.value(), cookie_2.value());
 
         // Step 9: POST to logout, including session cookie #2
         //   - set-cookie actix-session will be in response with session cookie #2
@@ -333,6 +329,6 @@ mod test {
             .into_iter()
             .find(|c| c.name() == "test-session")
             .unwrap();
-        assert!(cookie_5.value().to_string() != cookie_2.value().to_string());
+        assert_ne!(cookie_5.value(), cookie_2.value());
     }
 }

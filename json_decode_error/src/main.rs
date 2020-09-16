@@ -32,11 +32,11 @@ fn json_error_handler(err: error::JsonPayloadError, _req: &HttpRequest) -> error
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        App::new()
-            .service(greet)
-            .app_data(web::JsonConfig::default()
-              .error_handler(json_error_handler)
-            ) // <- register error_handler for JSON extractors.
+        App::new().service(greet).app_data(
+            web::JsonConfig::default()
+                // register error_handler for JSON extractors.
+                .error_handler(json_error_handler),
+        )
     })
     .bind("127.0.0.1:8088")?
     .run()

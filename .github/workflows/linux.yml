@@ -1,0 +1,60 @@
+name: CI (Linux)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_test:
+    name: ${{ matrix.version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ["stable", "nightly"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cache cargo artifacts
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ./target/debug
+          key: cargo-linux-${{ matrix.version }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-linux-${{ matrix.version }}-
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.version }}
+          override: true
+
+      - name: cargo check
+        uses: actions-rs/cargo@v1
+        timeout-minutes: 30
+        with:
+          command: check
+          args: --workspace --bins --examples --tests
+
+      - name: start redis
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: 6
+
+      - name: cargo test
+        uses: actions-rs/cargo@v1
+        timeout-minutes: 30
+        env:
+          # included in example of redis, not clear its purpose
+          CI: true
+        with:
+          command: test
+          args: --workspace --all-features --no-fail-fast -- --nocapture
