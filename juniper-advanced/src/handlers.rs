@@ -34,7 +34,7 @@ pub async fn graphql_playground() -> HttpResponse {
 }
 
 pub fn register(config: &mut web::ServiceConfig) {
-    let schema = std::sync::Arc::new(create_schema());
+    let schema = Arc::new(create_schema());
     config
         .data(schema)
         .route("/graphql", web::post().to(graphql))
