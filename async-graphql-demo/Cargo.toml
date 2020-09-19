@@ -6,6 +6,8 @@ edition = "2018"
 
 [dependencies]
 actix-web = "3.0.0"
-async-graphql = "2.0.0-alpha.7"
-async-graphql-actix-web = "2.0.0-alpha.7"
+
+async-graphql = "=2.0.0-alpha.13"
+async-graphql-actix-web = "=2.0.0-alpha.13"
+
 slab = "0.4.2"
