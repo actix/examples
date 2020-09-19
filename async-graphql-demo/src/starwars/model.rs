@@ -1,9 +1,9 @@
 use super::StarWars;
 use async_graphql::connection::{query, Connection, Edge, EmptyFields};
-use async_graphql::{Context, FieldResult, GQLEnum, GQLInterface, GQLObject};
+use async_graphql::{Context, Enum, FieldResult, Interface, Object};
 
 /// One of the films in the Star Wars Trilogy
-#[derive(GQLEnum, Copy, Clone, Eq, PartialEq)]
+#[derive(Enum, Copy, Clone, Eq, PartialEq)]
 pub enum Episode {
     /// Released in 1977.
     NewHope,
@@ -18,7 +18,7 @@ pub enum Episode {
 pub struct Human(usize);
 
 /// A humanoid creature in the Star Wars universe.
-#[GQLObject]
+#[Object]
 impl Human {
     /// The id of the human.
     async fn id(&self, ctx: &Context<'_>) -> &str {
@@ -53,7 +53,7 @@ impl Human {
 pub struct Droid(usize);
 
 /// A mechanical creature in the Star Wars universe.
-#[GQLObject]
+#[Object]
 impl Droid {
     /// The id of the droid.
     async fn id(&self, ctx: &Context<'_>) -> &str {
@@ -87,7 +87,7 @@ impl Droid {
 
 pub struct QueryRoot;
 
-#[GQLObject]
+#[Object]
 impl QueryRoot {
     async fn hero(
         &self,
@@ -159,7 +159,7 @@ impl QueryRoot {
     }
 }
 
-#[derive(GQLInterface)]
+#[derive(Interface)]
 #[graphql(
     field(name = "id", type = "&str", context),
     field(name = "name", type = "&str", context),
