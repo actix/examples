@@ -7,10 +7,10 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "vue": "2.6.10"
+    "vue": "2.6.12"
   },
   "devDependencies": {
     "@vue/cli-service": "^3.0.0",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.6.12"
   }
 }
