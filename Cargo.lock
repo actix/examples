@@ -156,9 +156,9 @@ dependencies = [
 
 [[package]]
 name = "actix-cors"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "48de0a29c99c8a5068c1c5492f6e477ef1843cc5e3c53daa0191562b71950632"
+checksum = "d88ea83af46935098feec2e19a28c919b54eb3cbf0e239b330298e2e69d4b76b"
 dependencies = [
  "actix-service",
  "actix-web 3.0.0",
@@ -3113,6 +3113,7 @@ dependencies = [
 name = "juniper-example"
 version = "0.2.0"
 dependencies = [
+ "actix-cors",
  "actix-web 3.0.0",
  "env_logger 0.7.1",
  "juniper",
