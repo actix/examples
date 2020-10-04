@@ -28,7 +28,7 @@ async fn index(hb: web::Data<Handlebars<'_>>) -> HttpResponse {
 #[get("/{user}/{data}")]
 async fn user(
     hb: web::Data<Handlebars<'_>>,
-    info: web::Path<(String, String)>,
+    web::Path(info): web::Path<(String, String)>,
 ) -> HttpResponse {
     let data = json!({
         "user": info.0,
