@@ -3,6 +3,7 @@
 A curated list of examples related to actix.
 
 ## from community
+* [binserve](https://github.com/mufeedvh/binserve) : A fast, secure, and easy to set up static web server written on top of actix-web with routing, templating, and various other features. 
 * [Roseline](https://github.com/DoumanAsh/roseline.rs) : A personal web site and discord & IRC bot to access simple SQLite database. Demonstrates usage of various actix and actix-web concepts.
 * [Actix Auth Server](https://hgill.io/posts/auth-microservice-rust-actix-web-diesel-complete-tutorial-part-1/) : Auth web micro-service with rust using actix-web - complete tutorial. See code in [examples/simple-auth-server](https://github.com/actix/examples/tree/master/simple-auth-server)
 * [Actix Casbin](https://github.com/casbin-rs/actix-casbin) : An authorization library that supports access control models like ACL, RBAC, ABAC in Rust.
