@@ -3,10 +3,10 @@ mod starwars;
 use actix_web::{guard, web, App, HttpResponse, HttpServer, Result};
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
-use async_graphql_actix_web::{GQLRequest, GQLResponse};
+use async_graphql_actix_web::{Request, Response};
 use starwars::{QueryRoot, StarWars, StarWarsSchema};
 
-async fn index(schema: web::Data<StarWarsSchema>, req: GQLRequest) -> GQLResponse {
+async fn index(schema: web::Data<StarWarsSchema>, req: Request) -> Response {
     schema.execute(req.into_inner()).await.into()
 }
 

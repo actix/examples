@@ -92,7 +92,7 @@ impl QueryRoot {
     async fn hero(
         &self,
         ctx: &Context<'_>,
-        #[arg(
+        #[graphql(
             desc = "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode."
         )]
         episode: Episode,
@@ -107,7 +107,7 @@ impl QueryRoot {
     async fn human(
         &self,
         ctx: &Context<'_>,
-        #[arg(desc = "id of the human")] id: String,
+        #[graphql(desc = "id of the human")] id: String,
     ) -> Option<Human> {
         ctx.data_unchecked::<StarWars>().human(&id).map(Human)
     }
@@ -134,7 +134,7 @@ impl QueryRoot {
     async fn droid(
         &self,
         ctx: &Context<'_>,
-        #[arg(desc = "id of the droid")] id: String,
+        #[graphql(desc = "id of the droid")] id: String,
     ) -> Option<Droid> {
         ctx.data_unchecked::<StarWars>().droid(&id).map(Droid)
     }
@@ -161,10 +161,10 @@ impl QueryRoot {
 
 #[derive(Interface)]
 #[graphql(
-    field(name = "id", type = "&str", context),
-    field(name = "name", type = "&str", context),
-    field(name = "friends", type = "Vec<Character>", context),
-    field(name = "appears_in", type = "&'ctx [Episode]", context)
+    field(name = "id", type = "&str"),
+    field(name = "name", type = "&str"),
+    field(name = "friends", type = "Vec<Character>"),
+    field(name = "appears_in", type = "&'ctx [Episode]")
 )]
 pub enum Character {
     Human(Human),
