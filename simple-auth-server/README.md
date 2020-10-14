@@ -27,7 +27,7 @@
 
 Read the full tutorial series on [gill.net.in](https://gill.net.in)
 
-- [Auth Web Microservice with rust using Actix-Web 1.0 - Complete Tutorial](https://gill.net.in/posts/auth-microservice-rust-actix-web1.0-diesel-complete-tutorial/)
+- [Auth Web Microservice with Rust using Actix Web v2 - Complete Tutorial](https://gill.net.in/posts/auth-microservice-rust-actix-web1.0-diesel-complete-tutorial/)
 
 ## Dependencies
 
