@@ -1,6 +1,6 @@
 # Actix Examples
 
-> A curated list of examples related to the Actix ecosystem.
+> Curated examples using the Actix ecosystem.
 
 [![build status](https://github.com/actix/examples/workflows/CI%20%28Linux%29/badge.svg?branch=master&event=push)](https://github.com/actix/examples/actions)
 [![Join the chat at https://gitter.im/actix/actix-web](https://badges.gitter.im/actix/actix-web.svg)](https://gitter.im/actix/actix-web?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
