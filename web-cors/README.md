@@ -1,15 +1,16 @@
 # Actix Web CORS example
 
-## start
-1 - backend server
-```bash
-$ cd web-cors/backend
-$ cargo run
+## Run Server
+```sh
+cd web-cors/backend
+cargo run
 ```
-2 - frontend server
-```bash
-$ cd web-cors/frontend
-$ npm install
-$ npm run serve
+
+## Run Frontend
+In a separate terminal, also run:
+```sh
+cd web-cors/frontend
+npm install
+npm run serve
 ```
-then open browser 'http://localhost:8080'
+then open browser at: http://localhost:8080

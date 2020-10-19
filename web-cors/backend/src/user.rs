@@ -1,4 +1,4 @@
-use actix_web::web;
+use actix_web::{post, web};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -9,6 +9,7 @@ pub struct Info {
     confirm_password: String,
 }
 
+#[post("/user/info")]
 pub async fn info(info: web::Json<Info>) -> web::Json<Info> {
     println!("=========={:?}=========", info);
     web::Json(Info {
