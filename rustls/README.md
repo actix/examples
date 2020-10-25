@@ -15,12 +15,13 @@ mkcert -install
 If you want to generate your own cert/private key file, then run:
 
 ```bash
-mkcert 127.0.0.1
+mkcert 127.0.0.1 localhost
 ```
 
-If your key doesn't work, convert it to rsa:
-```bash
-openssl rsa -in key.pem -out key-rsa.pem
+For `rsa` keys use `rsa_private_keys` function instead `pkcs8_private_keys`
+```
+let mut keys = pkcs8_private_keys(key_file).unwrap(); // pkcs8
+let mut keys = rsa_private_keys(key_file).unwrap(); // rsa
 ```
 
 [`mkcert`]: https://github.com/FiloSottile/mkcert
