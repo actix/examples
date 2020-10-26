@@ -34,6 +34,7 @@ members = [
    "redis-session",
    "run-in-thread",
    "rustls",
+   "rustls-client-cert",
    "shutdown-server",
    "server-sent-events",
    "simple-auth-server",

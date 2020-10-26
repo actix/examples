@@ -272,8 +272,6 @@ dependencies = [
 [[package]]
 name = "actix-http"
 version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05dd80ba8f27c4a34357c07e338c8f5c38f8520e6d626ca1727d8fecc41b0cab"
 dependencies = [
  "actix 0.10.0",
  "actix-codec 0.3.0",
@@ -283,7 +281,7 @@ dependencies = [
  "actix-threadpool",
  "actix-tls 2.0.0",
  "actix-utils 2.0.0",
- "base64 0.12.3",
+ "base64 0.13.0",
  "bitflags",
  "brotli2",
  "bytes 0.5.6",
@@ -631,8 +629,6 @@ dependencies = [
 [[package]]
 name = "actix-web"
 version = "3.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1b12fe25e11cd9ed2ef2e428427eb6178a1b363f3f7f0dab8278572f11b2da1"
 dependencies = [
  "actix-codec 0.3.0",
  "actix-http 2.0.0",
@@ -1410,6 +1406,12 @@ name = "base64"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3441f0f7b02788e948e47f457ca01f1d7e6d92c693bc132c22b087d3141c03ff"
+
+[[package]]
+name = "base64"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
 
 [[package]]
 name = "basics"
@@ -4773,6 +4775,17 @@ dependencies = [
  "ring",
  "sct",
  "webpki",
+]
+
+[[package]]
+name = "rustls-client-cert"
+version = "1.0.0"
+dependencies = [
+ "actix-tls 2.0.0",
+ "actix-web 3.1.0",
+ "env_logger 0.8.1",
+ "log",
+ "rustls",
 ]
 
 [[package]]
