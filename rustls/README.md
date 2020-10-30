@@ -1,4 +1,4 @@
-# tls example
+# TLS / HTTPS (via Rustls)
 
 ## Usage
 
