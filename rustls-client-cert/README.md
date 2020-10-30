@@ -20,7 +20,7 @@ The server runs HTTP on port 8080 and HTTPS on port 8443.
 
 Using [HTTPie]:
 ```sh
-# verify used because HTTPie doesn't have an option to provide the CA cert
+# `--verify=false` used because HTTPie doesn't have an option to provide the CA cert
 http https://127.0.0.1:8443/ --verify=false --cert=certs/client-cert.pem --cert-key=certs/client-key.pem
 ```
 

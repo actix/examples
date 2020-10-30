@@ -27,7 +27,7 @@ dependencies = [
  "lazy_static",
  "log",
  "parking_lot 0.10.2",
- "pin-project",
+ "pin-project 0.4.27",
  "smallvec",
  "tokio",
  "tokio-util 0.2.0",
@@ -52,7 +52,7 @@ dependencies = [
  "log",
  "once_cell",
  "parking_lot 0.11.0",
- "pin-project",
+ "pin-project 0.4.27",
  "smallvec",
  "tokio",
  "tokio-util 0.3.1",
@@ -75,7 +75,7 @@ dependencies = [
 name = "actix-casbin-example"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "casbin",
  "loge",
 ]
@@ -106,7 +106,7 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "log",
- "pin-project",
+ "pin-project 0.4.27",
  "tokio",
  "tokio-util 0.3.1",
 ]
@@ -161,7 +161,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3e5c769e4d332bfad27f11b8139b5818c4bbddb02c385b8f16344d93ff1a8eb"
 dependencies = [
  "actix-service",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "derive_more",
  "futures-util",
 ]
@@ -172,7 +172,7 @@ version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aaf0c4345c9663a2822d42602391418fd5766f269109ec6bf1784b056a9356a7"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "derive_more",
  "futures-util",
  "log",
@@ -207,9 +207,9 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8035f08f194893b199f4928b40425bd727c0257cf0fcf36f4ac214968d649ec7"
 dependencies = [
- "actix-http 2.0.0",
+ "actix-http 2.1.0",
  "actix-service",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bitflags",
  "bytes 0.5.6",
  "derive_more",
@@ -258,7 +258,7 @@ dependencies = [
  "log",
  "mime",
  "percent-encoding",
- "pin-project",
+ "pin-project 0.4.27",
  "rand",
  "regex",
  "serde 1.0.116",
@@ -271,7 +271,9 @@ dependencies = [
 
 [[package]]
 name = "actix-http"
-version = "2.0.0"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "404df68c297f73b8d36c9c9056404913d25905a8f80127b0e5fe147c9c4b9f02"
 dependencies = [
  "actix 0.10.0",
  "actix-codec 0.3.0",
@@ -305,7 +307,7 @@ dependencies = [
  "log",
  "mime",
  "percent-encoding",
- "pin-project",
+ "pin-project 1.0.1",
  "rand",
  "regex",
  "serde 1.0.116",
@@ -323,7 +325,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3263fe74cf505c6f9e18209c89fbdba5569cfd3905a7e907b42aa1c85c18fae5"
 dependencies = [
  "actix-service",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "futures-util",
  "serde 1.0.116",
  "serde_json",
@@ -348,7 +350,7 @@ checksum = "774bfeb11b54bf9c857a005b8ab893293da4eaff79261a66a9200dab7f5ab6e3"
 dependencies = [
  "actix-service",
  "actix-utils 2.0.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "derive_more",
  "futures-util",
@@ -365,7 +367,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "af362615b2f93a278580d218b6485cb2afa4e7a22cbc9ab36e44ba3d79c66967"
 dependencies = [
  "actix-rt",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "derive_more",
  "futures-util",
@@ -379,12 +381,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6856e8adb0b1683817fc6504fed3eba36aba49bea450eb7437a0777a9adc78bc"
 dependencies = [
  "actix 0.10.0",
- "actix-http 2.0.0",
+ "actix-http 2.1.0",
  "actix-rt",
  "actix-service",
  "actix-session",
  "actix-utils 2.0.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "backoff",
  "derive_more",
  "futures-util",
@@ -453,7 +455,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0052435d581b5be835d11f4eb3bce417c8af18d87ddf8ace99f8e67e595882bb"
 dependencies = [
  "futures-util",
- "pin-project",
+ "pin-project 0.4.27",
 ]
 
 [[package]]
@@ -463,7 +465,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cfe0c795741b7a1a6f8eb46680c5a0f6f53484d054226a7af9a86195dfc2c14d"
 dependencies = [
  "actix-service",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "derive_more",
  "futures-util",
@@ -541,7 +543,7 @@ version = "2.0.0"
 dependencies = [
  "actix-files 0.3.0",
  "actix-session",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "diesel",
  "dotenv",
  "env_logger 0.7.1",
@@ -566,7 +568,7 @@ dependencies = [
  "either",
  "futures 0.3.6",
  "log",
- "pin-project",
+ "pin-project 0.4.27",
  "slab",
 ]
 
@@ -586,7 +588,7 @@ dependencies = [
  "futures-sink",
  "futures-util",
  "log",
- "pin-project",
+ "pin-project 0.4.27",
  "slab",
 ]
 
@@ -617,7 +619,7 @@ dependencies = [
  "log",
  "mime",
  "net2",
- "pin-project",
+ "pin-project 0.4.27",
  "regex",
  "serde 1.0.116",
  "serde_json",
@@ -628,10 +630,12 @@ dependencies = [
 
 [[package]]
 name = "actix-web"
-version = "3.1.0"
+version = "3.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "88344b7a5ef27e5e09e73565379f69273dd3e2d29e82afc381b84d170d0a5631"
 dependencies = [
  "actix-codec 0.3.0",
- "actix-http 2.0.0",
+ "actix-http 2.1.0",
  "actix-macros",
  "actix-router",
  "actix-rt",
@@ -641,7 +645,7 @@ dependencies = [
  "actix-threadpool",
  "actix-tls 2.0.0",
  "actix-utils 2.0.0",
- "actix-web-codegen 0.3.0",
+ "actix-web-codegen 0.4.0",
  "awc 2.0.0",
  "bytes 0.5.6",
  "derive_more",
@@ -653,7 +657,7 @@ dependencies = [
  "log",
  "mime",
  "openssl",
- "pin-project",
+ "pin-project 1.0.1",
  "regex",
  "rustls",
  "serde 1.0.116",
@@ -677,7 +681,7 @@ dependencies = [
  "actix-web 2.0.0",
  "bytes 0.5.6",
  "futures 0.3.6",
- "pin-project",
+ "pin-project 0.4.27",
 ]
 
 [[package]]
@@ -688,12 +692,12 @@ checksum = "7f6edf3c2693e2a8c422800c87ee89a6a4eac7dd01109bc172a1093ce1f4f001"
 dependencies = [
  "actix 0.10.0",
  "actix-codec 0.3.0",
- "actix-http 2.0.0",
- "actix-web 3.1.0",
+ "actix-http 2.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "futures-channel",
  "futures-core",
- "pin-project",
+ "pin-project 0.4.27",
 ]
 
 [[package]]
@@ -709,9 +713,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web-codegen"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "750ca8fb60bbdc79491991650ba5d2ae7cd75f3fc00ead51390cfe9efda0d4d8"
+checksum = "ad26f77093333e0e7c6ffe54ebe3582d908a104e448723eec6d43d08b07143fb"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.7",
@@ -723,7 +727,7 @@ name = "actix-web-cors"
 version = "1.0.0"
 dependencies = [
  "actix-cors 0.5.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.8.1",
  "futures 0.3.6",
  "serde 1.0.116",
@@ -747,7 +751,7 @@ version = "1.0.0"
 dependencies = [
  "actix 0.10.0",
  "actix-redis",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "futures 0.3.6",
  "redis-async",
@@ -1055,9 +1059,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b09f159aa2d1cc30d54b0e6f2a7b359d09c818193e7ddfbc166402bdab83e644"
 dependencies = [
  "actix 0.10.0",
- "actix-http 2.0.0",
+ "actix-http 2.1.0",
  "actix-rt",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "actix-web-actors 3.0.0",
  "async-graphql",
  "futures 0.3.6",
@@ -1068,7 +1072,7 @@ dependencies = [
 name = "async-graphql-demo"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "async-graphql",
  "async-graphql-actix-web",
  "slab",
@@ -1212,7 +1216,7 @@ dependencies = [
 name = "async_data_factory"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "num_cpus",
  "redis",
  "redis_tang",
@@ -1222,7 +1226,7 @@ dependencies = [
 name = "async_db"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "failure",
  "futures 0.3.6",
@@ -1240,7 +1244,7 @@ version = "0.1.0"
 dependencies = [
  "actix-rt",
  "actix-service",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "env_logger 0.7.1",
  "futures 0.3.6",
@@ -1253,7 +1257,7 @@ dependencies = [
 name = "async_pg"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "config",
  "deadpool-postgres",
  "derive_more",
@@ -1317,7 +1321,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "150e00c06683ab44c5f97d033950e5d87a7a042d06d77f5eecb443cbd23d0575"
 dependencies = [
  "actix-codec 0.3.0",
- "actix-http 2.0.0",
+ "actix-http 2.1.0",
  "actix-rt",
  "actix-service",
  "base64 0.12.3",
@@ -1339,7 +1343,7 @@ dependencies = [
 name = "awc_examples"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "futures 0.3.6",
  "serde 1.0.116",
@@ -1352,7 +1356,7 @@ dependencies = [
 name = "awc_https"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "openssl",
 ]
 
@@ -1420,7 +1424,7 @@ dependencies = [
  "actix-files 0.3.0",
  "actix-session",
  "actix-utils 2.0.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
 ]
 
@@ -1889,7 +1893,7 @@ name = "cookie-auth"
 version = "2.0.0"
 dependencies = [
  "actix-identity",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "rand",
 ]
@@ -1899,7 +1903,7 @@ name = "cookie-session"
 version = "1.0.0"
 dependencies = [
  "actix-session",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
 ]
 
@@ -2130,7 +2134,7 @@ dependencies = [
 name = "diesel-example"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "diesel",
  "dotenv",
  "env_logger 0.7.1",
@@ -2223,7 +2227,7 @@ checksum = "212d0f5754cb6769937f4501cc0e67f4f4483c8d2c3e1e922ee9edbe4ab4c7c0"
 name = "docker_sample"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
 ]
 
 [[package]]
@@ -2388,7 +2392,7 @@ dependencies = [
 name = "error_handling"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "derive_more",
  "env_logger 0.7.1",
  "rand",
@@ -2488,7 +2492,7 @@ name = "form-example"
 version = "1.0.0"
 dependencies = [
  "actix-rt",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "serde 1.0.116",
 ]
 
@@ -2637,7 +2641,7 @@ dependencies = [
  "futures-sink",
  "futures-task",
  "memchr",
- "pin-project",
+ "pin-project 0.4.27",
  "pin-utils",
  "proc-macro-hack",
  "proc-macro-nested",
@@ -2805,7 +2809,7 @@ name = "hello-world"
 version = "2.0.0"
 dependencies = [
  "actix-rt",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
 ]
 
@@ -2890,7 +2894,7 @@ dependencies = [
 name = "http-proxy"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "clap",
  "url",
 ]
@@ -2944,7 +2948,7 @@ dependencies = [
  "httparse",
  "httpdate",
  "itoa",
- "pin-project",
+ "pin-project 0.4.27",
  "socket2",
  "tokio",
  "tower-service",
@@ -3124,7 +3128,7 @@ version = "0.1.0"
 dependencies = [
  "actix-rt",
  "actix-service",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "futures 0.3.6",
  "json",
@@ -3136,7 +3140,7 @@ dependencies = [
 name = "json_decode_error"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "serde 1.0.116",
 ]
 
@@ -3144,7 +3148,7 @@ dependencies = [
 name = "json_error"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "failure",
  "serde 1.0.116",
  "serde_json",
@@ -3154,7 +3158,7 @@ dependencies = [
 name = "jsonrpc-example"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "env_logger 0.7.1",
  "futures 0.3.6",
@@ -3183,7 +3187,7 @@ dependencies = [
 name = "juniper-advanced"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "dotenv",
  "env_logger 0.7.1",
  "juniper",
@@ -3201,7 +3205,7 @@ name = "juniper-example"
 version = "0.2.0"
 dependencies = [
  "actix-cors 0.4.1",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "juniper",
  "serde 1.0.116",
@@ -3478,10 +3482,10 @@ name = "middleware-example"
 version = "2.0.0"
 dependencies = [
  "actix-service",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "futures 0.3.6",
- "pin-project",
+ "pin-project 0.4.27",
 ]
 
 [[package]]
@@ -3598,7 +3602,7 @@ name = "multipart-async-std-example"
 version = "0.3.0"
 dependencies = [
  "actix-multipart",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "async-std",
  "futures 0.3.6",
  "sanitize-filename",
@@ -3609,7 +3613,7 @@ name = "multipart-example"
 version = "0.3.0"
 dependencies = [
  "actix-multipart",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "futures 0.3.6",
  "sanitize-filename",
 ]
@@ -3619,7 +3623,7 @@ name = "multipart-s3"
 version = "0.1.0"
 dependencies = [
  "actix-multipart",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "dotenv",
  "futures 0.3.6",
@@ -3890,7 +3894,7 @@ dependencies = [
 name = "openssl-example"
 version = "0.2.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "openssl",
 ]
@@ -4078,7 +4082,16 @@ version = "0.4.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2ffbc8e94b38ea3d2d8ba92aea2983b503cd75d0888d75b86bb37970b5698e15"
 dependencies = [
- "pin-project-internal",
+ "pin-project-internal 0.4.27",
+]
+
+[[package]]
+name = "pin-project"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee41d838744f60d959d7074e3afb6b35c7456d0f61cad38a24e35e6553f73841"
+dependencies = [
+ "pin-project-internal 1.0.1",
 ]
 
 [[package]]
@@ -4086,6 +4099,17 @@ name = "pin-project-internal"
 version = "0.4.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "65ad2ae56b6abe3a1ee25f15ee605bacadb9a764edaba9c2bf4103800d4a1895"
+dependencies = [
+ "proc-macro2 1.0.24",
+ "quote 1.0.7",
+ "syn",
+]
+
+[[package]]
+name = "pin-project-internal"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "81a4ffa594b66bff340084d4081df649a7dc049ac8d7fc458d8e628bfbbb2f86"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.7",
@@ -4295,7 +4319,7 @@ version = "0.2.0"
 dependencies = [
  "actix 0.10.0",
  "actix-protobuf",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "bytes 0.5.6",
  "env_logger 0.7.1",
  "prost",
@@ -4356,7 +4380,7 @@ dependencies = [
 name = "r2d2-example"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "r2d2",
  "r2d2_sqlite",
@@ -4473,12 +4497,12 @@ dependencies = [
 name = "redis_session"
 version = "2.0.0"
 dependencies = [
- "actix-http 2.0.0",
+ "actix-http 2.1.0",
  "actix-redis",
  "actix-rt",
  "actix-service",
  "actix-session",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "rand",
  "serde 1.0.116",
@@ -4615,7 +4639,7 @@ dependencies = [
 name = "run-in-thread"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
 ]
 
@@ -4637,7 +4661,7 @@ dependencies = [
  "log",
  "md5",
  "percent-encoding",
- "pin-project",
+ "pin-project 0.4.27",
  "rusoto_credential",
  "rusoto_signature",
  "rustc_version",
@@ -4659,7 +4683,7 @@ dependencies = [
  "dirs 2.0.2",
  "futures 0.3.6",
  "hyper",
- "pin-project",
+ "pin-project 0.4.27",
  "regex",
  "serde 1.0.116",
  "serde_json",
@@ -4697,7 +4721,7 @@ dependencies = [
  "log",
  "md5",
  "percent-encoding",
- "pin-project",
+ "pin-project 0.4.27",
  "rusoto_credential",
  "rustc_version",
  "serde 1.0.116",
@@ -4782,7 +4806,7 @@ name = "rustls-client-cert"
 version = "1.0.0"
 dependencies = [
  "actix-tls 2.0.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.8.1",
  "log",
  "rustls",
@@ -4793,7 +4817,7 @@ name = "rustls-example"
 version = "1.0.0"
 dependencies = [
  "actix-files 0.3.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "rustls",
 ]
@@ -4978,7 +5002,7 @@ dependencies = [
 name = "server-sent-events"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "futures 0.3.6",
  "tokio",
@@ -5056,7 +5080,7 @@ checksum = "7fdf1b9db47230893d76faad238fd6097fd6d6a9245cd7a4d90dbd639536bbd2"
 name = "shutdown-server"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "futures 0.3.6",
  "tokio",
@@ -5077,7 +5101,7 @@ name = "simple-auth-server"
 version = "2.0.0"
 dependencies = [
  "actix-identity",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "argonautica",
  "chrono",
  "derive_more",
@@ -5165,7 +5189,7 @@ dependencies = [
 name = "state"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
 ]
 
@@ -5186,7 +5210,7 @@ name = "static_index"
 version = "2.0.0"
 dependencies = [
  "actix-files 0.3.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
 ]
 
@@ -5377,7 +5401,7 @@ dependencies = [
 name = "template-askama"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "askama",
 ]
 
@@ -5385,8 +5409,8 @@ dependencies = [
 name = "template-tera"
 version = "2.0.0"
 dependencies = [
- "actix-http 2.0.0",
- "actix-web 3.1.0",
+ "actix-http 2.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "tera",
 ]
@@ -5409,8 +5433,8 @@ dependencies = [
 name = "template_handlebars"
 version = "1.0.0"
 dependencies = [
- "actix-http 2.0.0",
- "actix-web 3.1.0",
+ "actix-http 2.1.0",
+ "actix-web 3.2.0",
  "handlebars",
  "serde_json",
 ]
@@ -5420,7 +5444,7 @@ name = "template_yarte"
 version = "0.0.1"
 dependencies = [
  "actix-rt",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
  "yarte",
  "yarte_helpers",
@@ -6072,7 +6096,7 @@ dependencies = [
 name = "unix-socket"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "env_logger 0.7.1",
 ]
 
@@ -6397,7 +6421,7 @@ dependencies = [
  "actix 0.10.0",
  "actix-codec 0.3.0",
  "actix-files 0.3.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "actix-web-actors 3.0.0",
  "awc 2.0.0",
  "bytes 0.5.6",
@@ -6410,7 +6434,7 @@ name = "websocket-autobahn"
 version = "2.0.0"
 dependencies = [
  "actix 0.10.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "actix-web-actors 3.0.0",
  "env_logger 0.7.1",
 ]
@@ -6437,7 +6461,7 @@ version = "2.0.0"
 dependencies = [
  "actix 0.10.0",
  "actix-files 0.3.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "actix-web-actors 3.0.0",
  "byteorder",
  "bytes 0.5.6",
@@ -6455,7 +6479,7 @@ dependencies = [
  "actix 0.10.0",
  "actix-codec 0.3.0",
  "actix-files 0.3.0",
- "actix-web 3.1.0",
+ "actix-web 3.2.0",
  "actix-web-actors 3.0.0",
  "byteorder",
  "bytes 0.5.6",

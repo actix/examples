@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 actix-tls = "2"
-actix-web = { version = "3", features = ["rustls"] }
+actix-web = { version = "3.2", features = ["rustls"] }
 env_logger = "0.8"
 log = "0.4"
 rustls = "0.18"
