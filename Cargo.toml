@@ -29,6 +29,7 @@ members = [
    "multipart-async-std",
    "openssl",
    "protobuf",
+   "rbatis",
    "r2d2",
    "redis",
    "redis-session",
