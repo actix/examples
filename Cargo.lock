@@ -1085,7 +1085,6 @@ checksum = "2715bdae98b056314f2cb2207951546585f551b0a841f714e357e7b47ddd3d73"
 dependencies = [
  "actix 0.10.0",
  "actix-http 2.1.0",
- "actix-rt",
  "actix-web 3.2.0",
  "actix-web-actors 3.0.0",
  "async-channel",
@@ -2589,7 +2588,6 @@ checksum = "ece68d15c92e84fa4f19d3780f1294e5ca82a78a6d515f1efaabcc144688be00"
 dependencies = [
  "matches",
  "percent-encoding",
- "serde 1.0.117",
 ]
 
 [[package]]
