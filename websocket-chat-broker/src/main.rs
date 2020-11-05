@@ -17,7 +17,7 @@ async fn chat_route(
     ws::start(WsChatSession::default(), &req, stream)
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::from_env(env_logger::Env::default().default_filter_or("info")).init();
 
