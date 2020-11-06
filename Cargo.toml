@@ -53,5 +53,6 @@ members = [
    "websocket-autobahn",
    "websocket-chat",
    "websocket-chat-broker",
+   "websocket-state",
    "websocket-tcp-chat"
 ]

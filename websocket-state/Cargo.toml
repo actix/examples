@@ -1,0 +1,23 @@
+[package]
+name = "websocket-state"
+version = "2.0.0"
+authors = ["Aravinth Manivannan <realaravinth@batsense.net"]
+edition = "2018"
+
+[[bin]]
+name = "websocket-state"
+path = "src/main.rs"
+
+[dependencies]
+actix = "0.10"
+actix-web = "3"
+actix-web-actors = "3"
+actix-files = "0.3"
+
+rand = "0.7"
+bytes = "0.5"
+byteorder = "1.3"
+futures = "0.3"
+env_logger = "0.7"
+serde = "1"
+serde_json = "1"
