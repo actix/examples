@@ -12,6 +12,9 @@ pub struct VisitorCountWrite(pub usize);
 #[rtype(result = "usize")]
 pub struct VisitorCountRead();
 
+/// StateManager  manages the application state and is the single
+/// source of truth for the same. If you have prior experience with redux
+/// it might help to thing of this a store
 pub struct StateManager {
     visitor_count: Arc<AtomicUsize>,
 }
@@ -28,6 +31,8 @@ impl Actor for StateManager {
     type Context = Context<Self>;
 }
 
+/// The Handler trait impls are how you mutate application state.
+/// For refux folks, handlers are similar to actions.
 impl Handler<VisitorCountWrite> for StateManager {
     type Result = usize;
     fn handle(&mut self, msg: VisitorCountWrite, _: &mut Self::Context) -> Self::Result {

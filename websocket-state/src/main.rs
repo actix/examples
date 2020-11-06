@@ -233,8 +233,10 @@ async fn get_count(visiter_count: web::Data<Addr<StateManager>>) -> impl Respond
 async fn main() -> std::io::Result<()> {
     env_logger::init();
 
-    // Start chat server actor
+    /// creates store(think, application state actor)
     let visitor_count_actor = StateManager::default().start();
+
+    // Start chat server actor
     let server = server::ChatServer::new(visitor_count_actor.clone()).start();
 
 
