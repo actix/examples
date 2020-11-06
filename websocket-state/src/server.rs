@@ -6,7 +6,7 @@ use actix::prelude::*;
 use rand::{self, rngs::ThreadRng, Rng};
 use std::collections::{HashMap, HashSet};
 
-use crate::state::{StateManager, VisitorCountRead, VisitorCountWrite};
+use crate::state::{StateManager, VisitorCountWrite};
 
 /// Chat server sends this messages to session
 #[derive(Message)]
@@ -110,15 +110,14 @@ impl Actor for ChatServer {
 impl Handler<Connect> for ChatServer {
     type Result = usize;
 
-    fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
+    fn handle(&mut self, msg: Connect, ctx: &mut Context<Self>) -> Self::Result {
         println!("Someone joined");
 
         // notify all users in same room
-        self.send_message(&"Main".to_owned(), "Someone joined", 0);
-
         // register session with random id
         let id = self.rng.gen::<usize>();
         self.sessions.insert(id, msg.addr);
+        self.send_message(&"Main".to_owned(), "Someone joined", 0);
 
         // auto join session to Main room
         self.rooms
@@ -126,7 +125,21 @@ impl Handler<Connect> for ChatServer {
             .or_insert_with(HashSet::new)
             .insert(id);
 
-        // send id back
+        self.visitor_count_actor
+            .send(VisitorCountWrite(1))
+            .into_actor(self)
+            .then(|res, act, _| {
+                match res {
+                    Ok(num_visitors) => act.send_message(
+                        &"Main",
+                        &format!("Total visitor count: {:?}", num_visitors),
+                        0,
+                    ),
+                    _ => println!("Something is wrong"),
+                }
+                fut::ready(())
+            })
+            .wait(ctx);
         id
     }
 }

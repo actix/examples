@@ -234,7 +234,6 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     // Start chat server actor
-
     let visitor_count_actor = StateManager::default().start();
     let server = server::ChatServer::new(visitor_count_actor.clone()).start();
 

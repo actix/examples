@@ -30,11 +30,7 @@ impl Actor for StateManager {
 
 impl Handler<VisitorCountWrite> for StateManager {
     type Result = usize;
-    fn handle(
-        &mut self,
-        msg: VisitorCountWrite,
-        ctx: &mut Self::Context,
-    ) -> Self::Result {
+    fn handle(&mut self, msg: VisitorCountWrite, _: &mut Self::Context) -> Self::Result {
         let res = self.visitor_count.fetch_add(msg.0, Ordering::SeqCst);
         res
     }
@@ -44,8 +40,8 @@ impl Handler<VisitorCountRead> for StateManager {
     type Result = usize;
     fn handle(
         &mut self,
-        msg: VisitorCountRead,
-        ctx: &mut Self::Context,
+        _msg: VisitorCountRead,
+        _ctx: &mut Self::Context,
     ) -> Self::Result {
         self.visitor_count.load(Ordering::SeqCst)
     }
