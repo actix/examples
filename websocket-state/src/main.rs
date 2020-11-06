@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use actix::*;
 use actix_files as fs;
-use actix_web::{web, App, Responder, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_web_actors::ws;
 
 mod server;
@@ -228,7 +228,6 @@ async fn get_count(visiter_count: web::Data<Addr<StateManager>>) -> impl Respond
     format!("Visitors: {}", count)
 }
 
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init();
@@ -238,7 +237,6 @@ async fn main() -> std::io::Result<()> {
 
     // Start chat server actor
     let server = server::ChatServer::new(visitor_count_actor.clone()).start();
-
 
     // Create Http server with websocket support
     HttpServer::new(move || {
