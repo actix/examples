@@ -67,12 +67,11 @@ pub struct ChatServer {
     visitor_count_actor: Addr<StateManager>,
 }
 
-impl Default for ChatServer {
-    fn default() -> ChatServer {
+impl ChatServer {
+    pub fn new(visitor_count_actor: Addr<StateManager>) -> ChatServer {
         // default room
         let mut rooms = HashMap::new();
         rooms.insert("Main".to_owned(), HashSet::new());
-        let visitor_count_actor = StateManager::default().start();
 
         ChatServer {
             sessions: HashMap::new(),

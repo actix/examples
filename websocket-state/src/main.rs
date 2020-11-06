@@ -2,11 +2,13 @@ use std::time::{Duration, Instant};
 
 use actix::*;
 use actix_files as fs;
-use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{web, App, Responder, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_actors::ws;
 
 mod server;
 mod state;
+
+use crate::state::{StateManager, VisitorCountWrite};
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -221,18 +223,27 @@ impl WsChatSession {
     }
 }
 
+async fn get_count(visiter_count: web::Data<Addr<StateManager>>) -> impl Responder {
+    let count = visiter_count.send(VisitorCountWrite(1)).await.unwrap();
+    format!("Visitors: {}", count)
+}
+
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     // Start chat server actor
 
-    let server = server::ChatServer::default().start();
+    let visitor_count_actor = StateManager::default().start();
+    let server = server::ChatServer::new(visitor_count_actor.clone()).start();
+
 
     // Create Http server with websocket support
     HttpServer::new(move || {
         App::new()
             .data(server.clone())
+            .data(visitor_count_actor.clone())
             // redirect to websocket.html
             .service(web::resource("/").route(web::get().to(|| {
                 HttpResponse::Found()
@@ -241,6 +252,7 @@ async fn main() -> std::io::Result<()> {
             })))
             // websocket
             .service(web::resource("/ws/").to(chat_route))
+            .route("/count/", web::get().to(get_count))
             // static resources
             .service(fs::Files::new("/static/", "static/"))
     })
