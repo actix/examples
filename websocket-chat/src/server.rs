@@ -4,6 +4,12 @@
 
 use actix::prelude::*;
 use rand::{self, rngs::ThreadRng, Rng};
+
+use std::sync::{
+    atomic::{AtomicUsize, Ordering},
+    Arc,
+};
+
 use std::collections::{HashMap, HashSet};
 
 /// Chat server sends this messages to session
@@ -62,10 +68,11 @@ pub struct ChatServer {
     sessions: HashMap<usize, Recipient<Message>>,
     rooms: HashMap<String, HashSet<usize>>,
     rng: ThreadRng,
+    visitor_count: Arc<AtomicUsize>,
 }
 
-impl Default for ChatServer {
-    fn default() -> ChatServer {
+impl ChatServer {
+    pub fn new(visitor_count: Arc<AtomicUsize>) -> ChatServer {
         // default room
         let mut rooms = HashMap::new();
         rooms.insert("Main".to_owned(), HashSet::new());
@@ -74,6 +81,7 @@ impl Default for ChatServer {
             sessions: HashMap::new(),
             rooms,
             rng: rand::thread_rng(),
+            visitor_count,
         }
     }
 }
@@ -121,6 +129,9 @@ impl Handler<Connect> for ChatServer {
             .entry("Main".to_owned())
             .or_insert_with(HashSet::new)
             .insert(id);
+
+        let count = self.visitor_count.fetch_add(1, Ordering::SeqCst);
+        self.send_message("Main", &format!("Total visitors {}", count), 0);
 
         // send id back
         id
