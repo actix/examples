@@ -13,7 +13,7 @@
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
 - [Dalted](https://github.com/carrascomj/dalted): Simple webapp that showcases the integration of [image-rs](https://github.com/image-rs/image) with Actix Web for color blindness simulations.
 
-## Community Example Apps, Starters & Boilerplate Projects
+## Community Articles, Example Apps, Starters & Boilerplate Projects
 
 - [webapp.rs](https://github.com/saschagrunert/webapp.rs) : A web application completely written in Rust.
 - [RealWorld Example App](https://github.com/fairingrey/actix-realworld-example-app) : Implementation of the RealWorld backend API spec in Actix.
@@ -21,6 +21,7 @@
 - [Rust, Docker & GraphQL](https://github.com/jayy-lmao/rust-graphql-docker): An example of using Dataloaders, context, and a minimal docker container.
 - [Complete Actix 2.x REST Server](https://github.com/ddimaria/rust-actix-example): Actix 2.x HTTP Server featuring multi-database support, auth/JWTs, caching, static files, app state, tests, coverage, and docker.
 - [Actix Server Authentication with JWT and MongoDB](https://github.com/emreyalvac/actix-web-jwt/) : An implementation of JWT in Actix.
+- [Production-Grade Logging in Rust Applications](https://medium.com/better-programming/production-grade-logging-in-rust-applications-2c7fffd108a6) : An article showcasing the use of [tracing](https://github.com/tokio-rs/tracing) in an Actix application
 
 ## Contribute
 
