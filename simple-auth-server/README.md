@@ -9,7 +9,7 @@
 ##### Crates Used
 
 - [actix-web](https://crates.io/crates/actix-web) // Actix web is a simple, pragmatic and extremely fast web framework for Rust.
-- [argonautica](https://docs.rs/argonautica) // crate for hashing passwords using the cryptographically-secure Argon2 hashing algorithm.
+- [rust-argon2](https://crates.io/crates/rust-argon2) // crate for hashing passwords using the cryptographically-secure Argon2 hashing algorithm.
 - [chrono](https://crates.io/crates/chrono) // Date and time library for Rust.
 - [diesel](https://crates.io/crates/diesel) // A safe, extensible ORM and Query Builder for PostgreSQL, SQLite, and MySQL.
 - [dotenv](https://crates.io/crates/dotenv) // A dotenv implementation for Rust.
