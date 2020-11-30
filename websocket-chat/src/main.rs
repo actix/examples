@@ -1,8 +1,12 @@
+use std::sync::{
+    atomic::{AtomicUsize, Ordering},
+    Arc,
+};
 use std::time::{Duration, Instant};
 
 use actix::*;
 use actix_files as fs;
-use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_web_actors::ws;
 
 mod server;
@@ -12,7 +16,7 @@ const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 /// How long before lack of client response causes a timeout
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
-/// Entry point for our route
+/// Entry point for our websocket route
 async fn chat_route(
     req: HttpRequest,
     stream: web::Payload,
@@ -29,6 +33,12 @@ async fn chat_route(
         &req,
         stream,
     )
+}
+
+///  Displays and affects state
+async fn get_count(count: web::Data<Arc<AtomicUsize>>) -> impl Responder {
+    let current_count = count.fetch_add(1, Ordering::SeqCst);
+    format!("Visitors: {}", current_count)
 }
 
 struct WsChatSession {
@@ -224,12 +234,17 @@ impl WsChatSession {
 async fn main() -> std::io::Result<()> {
     env_logger::init();
 
+    // App state
+    // We are keeping a count of the number of visitors
+    let app_state = Arc::new(AtomicUsize::new(0));
+
     // Start chat server actor
-    let server = server::ChatServer::default().start();
+    let server = server::ChatServer::new(app_state.clone()).start();
 
     // Create Http server with websocket support
     HttpServer::new(move || {
         App::new()
+            .data(app_state.clone())
             .data(server.clone())
             // redirect to websocket.html
             .service(web::resource("/").route(web::get().to(|| {
@@ -237,6 +252,7 @@ async fn main() -> std::io::Result<()> {
                     .header("LOCATION", "/static/websocket.html")
                     .finish()
             })))
+            .route("/count/", web::get().to(get_count))
             // websocket
             .service(web::resource("/ws/").to(chat_route))
             // static resources
