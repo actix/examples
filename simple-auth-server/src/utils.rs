@@ -1,28 +1,26 @@
 use crate::errors::ServiceError;
-use argonautica::{Hasher, Verifier};
+use argon2::{self, Config};
 
 lazy_static::lazy_static! {
-pub  static ref SECRET_KEY: String = std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
+    pub static ref SECRET_KEY: String = std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
 }
+
+const SALT: &'static [u8] = b"supersecuresalt";
 
 // WARNING THIS IS ONLY FOR DEMO PLEASE DO MORE RESEARCH FOR PRODUCTION USE
 pub fn hash_password(password: &str) -> Result<String, ServiceError> {
-    Hasher::default()
-        .with_password(password)
-        .with_secret_key(SECRET_KEY.as_str())
-        .hash()
-        .map_err(|err| {
-            dbg!(err);
-            ServiceError::InternalServerError
-        })
+    let config = Config {
+        secret: SECRET_KEY.as_bytes(),
+        ..Default::default()
+    };
+    argon2::hash_encoded(password.as_bytes(), &SALT, &config).map_err(|err| {
+        dbg!(err);
+        ServiceError::InternalServerError
+    })
 }
 
 pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {
-    Verifier::default()
-        .with_hash(hash)
-        .with_password(password)
-        .with_secret_key(SECRET_KEY.as_str())
-        .verify()
+    argon2::verify_encoded_ext(hash, password.as_bytes(), SECRET_KEY.as_bytes(), &[])
         .map_err(|err| {
             dbg!(err);
             ServiceError::Unauthorized
