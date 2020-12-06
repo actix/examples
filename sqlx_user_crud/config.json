@@ -1,13 +1,13 @@
 {
   "app": {
     "url": "127.0.0.1",
-    "port": "8000"
+    "port": 8000
   },
   "dao":
   {
-    "user": "",
-    "password": "",
-    "address": "",
-    "database": ""
+    "user": "ecfapp",
+    "password": "780765502513ab4575149cfc55fb374ee773536f",
+    "address": "localhost",
+    "database": "ecf_user_db"
   }
 }
