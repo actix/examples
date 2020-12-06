@@ -61,7 +61,6 @@ async fn patch_group_by_name(update: web::Json<GroupUpdate>, app_state: web::Dat
 }
 
 // TODO: provide response headers
-// TODO: provide different endpoints for soft and hard deletions
 #[delete("/group/{name}")]
 async fn delete_group_by_name(name: web::Path<String>, app_state: web::Data<AppState<'_>>) -> impl Responder {
     log_request("DELETE: /group", &app_state.connections);

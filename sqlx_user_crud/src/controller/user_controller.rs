@@ -70,7 +70,6 @@ async fn patch_user(user: web::Json<User>, app_state: web::Data<AppState<'_>>) -
 }
 
 // TODO: provide response headers
-// TODO: provide different endpoints for soft and hard deletions
 #[delete("/user/{id}")]
 async fn delete_user(id: web::Path<String>, app_state: web::Data<AppState<'_>>) -> impl Responder {
     log_request("DELETE: /user", &app_state.connections);

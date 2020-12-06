@@ -30,7 +30,7 @@ async fn main() -> std::io::Result<()> {
             .configure(controller::init_user_controller)
             .configure(controller::init_group_controller)
     })
-        .bind("127.0.0.1:8080")?
-        .run()
-        .await
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }
