@@ -19,7 +19,6 @@ impl<'c, T> DbSet<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
 }
 
 pub struct DbContext<'c> {
-    //pool: Arc<MySqlPool>,
     pub users: Arc<DbSet<'c, User>>,
     pub groups: Arc<DbSet<'c, Group>>,
 }

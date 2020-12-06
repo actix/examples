@@ -1,10 +1,11 @@
 use std::sync::{Mutex, Arc};
-use crate::model::DbContext;
-use crate::controller::user_controller;
 use actix_web::{web, HttpServer, App};
+use crate::controller::user_controller;
+use crate::dao::DbContext;
 
-mod controller;
 mod model;
+mod dao;
+mod controller;
 
 struct AppState<'a> {
     connections: Mutex<u32>,
