@@ -30,7 +30,6 @@ impl DbContext<'_> {
         let pool = Arc::new(pool);
 
         DbContext {
-            //pool: pool.clone(),
             users: Arc::from(DbSet::new(pool.clone())),
             groups: Arc::from( DbSet::new(pool.clone())),
         }
