@@ -17,6 +17,6 @@ also exists in the *Rust* application where a `User` has a `Vec<Group>`.
 ## Application Design
 
 The application itself has been designed with a modular approach. It is common for *Rust* projects (specifically for the
-purpose of demonstration) to consolidate code into only a handful of files. Dividing this project into multiple modules 
+purpose of demonstration) to consolidate code into only a handful of files. Dividing this project into multiple modules, 
 and many small files was intentional, as it makes the overall architecture clear.
 
