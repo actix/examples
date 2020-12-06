@@ -10,4 +10,5 @@ edition = "2018"
 actix-web = "3"
 sqlx = { version = "0.3.5", features = ["mysql"] }
 serde = "1.0.117"
+serde_json = "1.0"
 uuid = { version = "0.8.1", features = ["serde", "v4"] }

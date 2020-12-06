@@ -6,6 +6,7 @@ use crate::dao::DbContext;
 mod model;
 mod dao;
 mod controller;
+mod config;
 
 struct AppState<'a> {
     connections: Mutex<u32>,

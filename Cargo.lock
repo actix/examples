@@ -4975,6 +4975,7 @@ version = "0.1.0"
 dependencies = [
  "actix-web",
  "serde 1.0.117",
+ "serde_json",
  "sqlx",
  "uuid 0.8.1",
 ]
