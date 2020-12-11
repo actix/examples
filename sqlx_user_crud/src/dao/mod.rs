@@ -1,6 +1,7 @@
 use super::model::{User, Group};
 
 pub mod db_context;
+mod table;
 mod group_dao;
 mod user_dao;
 
