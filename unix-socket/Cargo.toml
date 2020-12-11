@@ -5,5 +5,5 @@ authors = ["Messense Lv <messense@icloud.com>"]
 edition = "2018"
 
 [dependencies]
-env_logger = "0.7"
+env_logger = "0.8"
 actix-web = "3"

@@ -9,7 +9,7 @@ name = "rustls-server"
 path = "src/main.rs"
 
 [dependencies]
-env_logger = "0.7"
+env_logger = "0.8"
 rustls = "0.18"
 actix-web = { version = "3", features = ["rustls"] }
 actix-files = "0.3"

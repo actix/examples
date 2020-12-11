@@ -7,5 +7,5 @@ edition = "2018"
 [dependencies]
 actix-web = "3"
 actix-identity = "0.3"
-env_logger = "0.7"
+env_logger = "0.8"
 rand = "0.7"
