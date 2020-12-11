@@ -42,7 +42,7 @@ fn main() {
 
     let srv = rx.recv().unwrap();
 
-    println!("WATING 10 SECONDS");
+    println!("WAITING 10 SECONDS");
     thread::sleep(time::Duration::from_secs(10));
 
     println!("STOPPING SERVER");
