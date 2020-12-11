@@ -1,6 +1,7 @@
 use super::DbSet;
 use super::User;
 use sqlx::mysql::MySqlQueryAs;
+use crate::model::Group;
 
 impl<'c> DbSet<'c, User> {
 
@@ -12,7 +13,7 @@ impl<'c> DbSet<'c, User> {
     pub async fn create_table(&self) -> Result<u64,sqlx::Error> {
         sqlx::query(r#"
             CREATE TABLE IF NOT EXISTS users (
-            id VARCHAR(48) NOT NULL,
+            id VARCHAR(48) NOT NULL UNIQUE,
             name VARCHAR(64) NOT NULL UNIQUE,
             email VARCHAR(256) NOT NULL UNIQUE,
             PRIMARY KEY (id)
