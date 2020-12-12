@@ -8,7 +8,7 @@ impl<'c> DbSet<'c, Group> {
         sqlx::query(r#"
             CREATE TABLE IF NOT EXISTS `groups`
             (
-                `id` INT NOT NULL AUTO INCREMENT,
+                `id` INT NOT NULL AUTO_INCREMENT,
                 `name` VARCHAR(64) NOT NULL UNIQUE,
                 PRIMARY KEY(id)
             )
