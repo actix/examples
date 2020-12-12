@@ -22,7 +22,7 @@ impl<'c> DbSet<'c, UserToGroup> {
 
     pub async fn add_user_groups(&self, user_id: &String, groups: &Vec<Group>) -> Result<u64,sqlx::Error>
     {
-        let insert_statement = self.build_insert_statement(groups.len());
+        let insert_statement = build_insert_statement(groups.len());
         let mut query = sqlx::query(&insert_statement);
 
         for group in groups {
@@ -31,23 +31,41 @@ impl<'c> DbSet<'c, UserToGroup> {
 
         query.execute(&*self.pool).await
     }
+}
 
-    fn build_insert_statement(&self, rows: usize) -> String {
-        let mut insert = String::from(r#"
-            INSERT INTO `users_to_groups` (`user_id`, `group_id`)
-            VALUES (?,?)
-        "#);
+static DEFAULT_INSERT: &'static str = r#"
+    INSERT INTO `users_to_groups` (`user_id`, `group_id`)
+    VALUES (?,?)
+"#;
 
-        match rows {
-            1|0 => insert,
-            _ => {
-                let mut i = 1;
-                while i < rows {
-                    insert.push_str(", (?,?)");
-                    i += 1;
-                }
-                insert
+fn build_insert_statement(rows: usize) -> String {
+    let mut insert = String::from(DEFAULT_INSERT);
+
+    match rows {
+        1|0 => insert,
+        _ => {
+            let mut i = 1;
+            while i < rows {
+                insert.push_str(", (?,?)");
+                i += 1;
             }
+            insert
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::dao::user_to_group_dao::{build_insert_statement, DEFAULT_INSERT};
+
+    #[test]
+    fn build_insert_statement_returns_default_string_when_input_is_zero_or_one()
+    {
+
+        let results = vec![build_insert_statement(0)
+                           , build_insert_statement(1)];
+
+        assert_eq!(results[0], results[1]);
+        assert_eq!(results[0], DEFAULT_INSERT);
     }
 }
