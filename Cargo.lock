@@ -4973,6 +4973,7 @@ dependencies = [
 name = "sqlx_user_crud"
 version = "0.1.0"
 dependencies = [
+ "actix-rt",
  "actix-web",
  "serde 1.0.117",
  "serde_json",

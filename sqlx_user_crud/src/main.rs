@@ -1,22 +1,27 @@
 use std::sync::{Mutex, Arc};
 use actix_web::{web, HttpServer, App};
-use crate::controller::user_controller;
-use crate::dao::DbContext;
-use crate::config::Config;
+use sqlx_user_crud::dao::DbContext;
+use sqlx_user_crud::config::Config;
+use sqlx_user_crud::{controller, AppState};
+// use crate::controller::user_controller;
+// use crate::dao::DbContext;
+// use crate::config::Config;
 
-mod model;
-mod dao;
-mod controller;
-mod config;
+// mod model;
+// mod dao;
+// mod controller;
+// mod config;
 
-// AppState
-// This the primary dependency for our application's dependency injection.
-// Each controller function that interacts with the database will require an `AppState` instance in
-// order to communicate with the database.
-struct AppState<'a> {
-    connections: Mutex<u32>,
-    context: Arc<DbContext<'a>>,
-}
+
+
+// // AppState
+// // This the primary dependency for our application's dependency injection.
+// // Each controller_test function that interacts with the database will require an `AppState` instance in
+// // order to communicate with the database.
+// struct AppState<'a> {
+//     connections: Mutex<u32>,
+//     context: Arc<DbContext<'a>>,
+// }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

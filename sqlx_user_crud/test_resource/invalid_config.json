@@ -1,0 +1,13 @@
+{
+  "app": {
+    "url": "127.0.0.1",
+    "port": 8000
+  },
+  "dao":
+  {
+    "user": "invalid_user",
+    "password": "invalid_password",
+    "address": "localhost",
+    "database": "invalid_db"
+  }
+}
