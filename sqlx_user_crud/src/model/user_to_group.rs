@@ -1,7 +1,6 @@
 use sqlx::{FromRow, Row};
 use sqlx::mysql::MySqlRow;
 use crate::model::User;
-use std::rc::Rc;
 
 pub struct UserToGroup {
     user_id: String,

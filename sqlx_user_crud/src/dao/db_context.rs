@@ -1,6 +1,5 @@
 use sqlx::{MySqlPool, FromRow};
-use super::User;
-use super::Group;
+use super::{User, Group, UserToGroup};
 use std::sync::Arc;
 use sqlx::mysql::{MySqlQueryAs, MySqlRow};
 
@@ -21,6 +20,7 @@ impl<'c, T> DbSet<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
 pub struct DbContext<'c> {
     pub users: Arc<DbSet<'c, User>>,
     pub groups: Arc<DbSet<'c, Group>>,
+    pub users_to_groups: Arc<DbSet<'c, UserToGroup>>
 }
 
 impl DbContext<'_> {
@@ -32,6 +32,7 @@ impl DbContext<'_> {
         DbContext {
             users: Arc::from(DbSet::new(pool.clone())),
             groups: Arc::from( DbSet::new(pool.clone())),
+            users_to_groups: Arc::from(DbSet::new(pool.clone()))
         }
     }
 }

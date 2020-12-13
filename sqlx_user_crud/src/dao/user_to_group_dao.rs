@@ -2,6 +2,7 @@ use super::DbSet;
 use super::UserToGroup;
 use super::Group;
 use super::User;
+use sqlx::mysql::MySqlQueryAs;
 
 impl<'c> DbSet<'c, UserToGroup> {
 
@@ -20,8 +21,7 @@ impl<'c> DbSet<'c, UserToGroup> {
             .execute(&*self.pool).await
     }
 
-    pub async fn add_user_groups(&self, user_id: &String, groups: &Vec<Group>) -> Result<u64,sqlx::Error>
-    {
+    pub async fn add_user_groups(&self, user_id: &String, groups: &Vec<Group>) -> Result<u64,sqlx::Error> {
         let insert_statement = build_insert_statement(groups.len());
         let mut query = sqlx::query(&insert_statement);
 
@@ -30,6 +30,19 @@ impl<'c> DbSet<'c, UserToGroup> {
         }
 
         query.execute(&*self.pool).await
+    }
+
+    pub async fn get_groups_by_user_id(&self, user_id: &String) -> Result<Vec<Group>,sqlx::Error> {
+        sqlx::query_as(r#"
+            select * from `groups` as `a`
+            where `a`.`id` in (
+                select `b`.`group_id` from `users_to_groups` as `b`
+                where `b`.`user_id` = ?
+            )
+        "#)
+        .bind(user_id)
+        .fetch_all(&*self.pool)
+        .await
     }
 }
 
