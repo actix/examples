@@ -56,16 +56,21 @@ fn build_insert_statement(rows: usize) -> String {
 
 #[cfg(test)]
 mod test {
-    use crate::dao::user_to_group_dao::{build_insert_statement, DEFAULT_INSERT};
+    use super::{build_insert_statement, DEFAULT_INSERT};
 
     #[test]
-    fn build_insert_statement_returns_default_string_when_input_is_zero_or_one()
-    {
-
+    fn build_insert_statement_returns_default_string_when_input_is_zero_or_one() {
         let results = vec![build_insert_statement(0)
                            , build_insert_statement(1)];
 
         assert_eq!(results[0], results[1]);
         assert_eq!(results[0], DEFAULT_INSERT);
+    }
+
+    #[test]
+    fn build_insert_statement_returns_n_parameters_when_input_is_n() {
+        let result = build_insert_statement(3);
+
+        assert_eq!(format!("{0}{1}{2}", DEFAULT_INSERT, ", (?,?)", ", (?,?)"), result);
     }
 }
