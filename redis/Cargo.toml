@@ -11,4 +11,4 @@ actix-redis = "0.9"
 futures = "0.3"
 redis-async = "0.6.3"
 serde = { version = "1", features = ["derive"] }
-env_logger = "0.7"
+env_logger = "0.8"
