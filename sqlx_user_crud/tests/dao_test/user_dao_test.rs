@@ -82,3 +82,20 @@ async fn get_user_by_id_returns_user_when_user_exists() -> Result<(),sqlx::Error
     assert_eq!(user.email, result.email);
     Ok(())
 }
+
+#[actix_rt::test]
+async fn update_user_returns_zero_when_user_does_not_exist() -> () {
+    let db = init_db_context().await;
+
+    let user  = User {
+        id: Uuid::new_v4().to_string(),
+        name: randomize_string("david"),
+        email: randomize_string("david@email.com"),
+        groups: Vec::with_capacity(0),
+    };
+
+    let result = db.users.update_user(&user).await;
+    assert!(result.is_ok());
+    let result = result.unwrap();
+    assert_eq!(0, result);
+}
