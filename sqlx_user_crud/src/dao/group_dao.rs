@@ -16,7 +16,7 @@ impl<'c> DbSet<'c, Group> {
     }
 
     pub async fn drop_table(&self) -> Result<u64,sqlx::Error> {
-        sqlx::query("DROP TABLE IF EXISTS groups")
+        sqlx::query("DROP TABLE IF EXISTS `groups`")
             .execute(&*self.pool).await
     }
 
