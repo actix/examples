@@ -4,7 +4,7 @@ use sqlx::mysql::MySqlRow;
 use super::Group;
 use uuid::Uuid;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct User {
     pub id: String, // TODO: use the Uuid type
     pub name: String,
