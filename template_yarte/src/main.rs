@@ -4,21 +4,22 @@ use actix_web::{
     error::ErrorInternalServerError, get, middleware::Logger, web, App, Error,
     HttpResponse, HttpServer,
 };
-use yarte::TemplateMin;
-
-#[derive(TemplateMin)]
-#[template(path = "index")]
-struct IndexTemplate {
-    query: web::Query<HashMap<String, String>>,
-}
+use yarte::ywrite_min;
 
 #[get("/")]
 async fn index(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, Error> {
-    IndexTemplate { query }
-        .call()
-        .map(|body| {
+    // TODO: check this capacity
+    let mut body = web::BytesMut::with_capacity(4096);
+    // `ywrite_min` is work in progress check your templates before put in production or use `ywrite_html`
+    let mut wrapper = || {
+        ywrite_min!(body, "{{> index }}");
+        Ok::<_, yarte::Error>(())
+    };
+
+    wrapper()
+        .map(|_| {
             HttpResponse::Ok()
                 .content_type("text/html; charset=utf-8")
                 .body(body)
