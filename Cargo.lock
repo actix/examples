@@ -5220,6 +5220,7 @@ version = "0.0.1"
 dependencies = [
  "actix-rt",
  "actix-web",
+ "derive_more",
  "env_logger 0.8.2",
  "yarte",
  "yarte_helpers",
