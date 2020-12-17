@@ -15,9 +15,9 @@ impl ResponseError for MyErr {}
 async fn index(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, Error> {
-    // TODO: check this capacity
-    let mut body = web::BytesMut::with_capacity(4096);
-    // `ywrite_min` is work in progress check your templates before put in production or use `ywrite_html`
+    let mut body = web::BytesMut::with_capacity(512);
+    // `ywrite_min` is work in progress check your templates before put in production
+    // or use `ywrite_html`
     ywrite_min!(body, "{{> index }}");
 
     Ok(HttpResponse::Ok()
