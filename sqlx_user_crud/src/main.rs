@@ -4,25 +4,6 @@ use sqlx_user_crud::dao::DbContext;
 use sqlx_user_crud::config::Config;
 use sqlx_user_crud::{controller, AppState};
 use std::time::SystemTime;
-// use crate::controller::user_controller;
-// use crate::dao::DbContext;
-// use crate::config::Config;
-
-// mod model;
-// mod dao;
-// mod controller;
-// mod config;
-
-
-
-// // AppState
-// // This the primary dependency for our application's dependency injection.
-// // Each controller_test function that interacts with the database will require an `AppState` instance in
-// // order to communicate with the database.
-// struct AppState<'a> {
-//     connections: Mutex<u32>,
-//     context: Arc<DbContext<'a>>,
-// }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -53,6 +34,7 @@ async fn main() -> std::io::Result<()> {
     let app = HttpServer::new(move || {
         App::new()
             .app_data(app_state.clone())
+            .configure(controller::init_index_controller)
             .configure(controller::init_user_controller)
             .configure(controller::init_group_controller)
     })

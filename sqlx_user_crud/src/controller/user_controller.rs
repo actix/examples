@@ -6,20 +6,10 @@ use crate::model::User;
 use uuid::Uuid;
 
 pub fn init(cfg: &mut web::ServiceConfig) {
-    cfg.service(status);
     cfg.service(get_user);
     cfg.service(post_user);
     cfg.service(patch_user);
     cfg.service(delete_user);
-}
-
-// TODO: move to index controller_test
-#[get("/status")]
-async fn status(data: web::Data<AppState<'_>>) -> impl Responder {
-    log_request("GET: /status", &data.connections);
-
-    HttpResponse::Ok()
-        .body("I am up")
 }
 
 // TODO: provide response headers
