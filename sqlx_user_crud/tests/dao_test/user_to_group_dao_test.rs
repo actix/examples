@@ -66,7 +66,7 @@ async fn add_user_groups_returns_3_when_user_is_associated_with_3_groups() -> Re
 }
 
 #[actix_rt::test]
-async fn add_user_groups_returns_err_when_user_does_not_exist() -> Result<(),sqlx::Error> {
+async fn add_user_groups_returns_err_when_group_does_not_exist() -> Result<(),sqlx::Error> {
     let db = init_db_context().await;
 
     let user = User {
@@ -87,4 +87,61 @@ async fn add_user_groups_returns_err_when_user_does_not_exist() -> Result<(),sql
                                                     , &groups).await;
     assert!(result.is_err());
     Ok(())
+}
+
+#[actix_rt::test]
+async fn add_user_groups_returns_err_when_user_does_not_exist() -> Result<(),sqlx::Error> {
+    let db = init_db_context().await;
+
+    let group_name = randomize_string("hackers");
+    let _ = db.groups.add_group(&group_name).await?;
+    let group = db.groups.get_group_by_name(&group_name).await?;
+    let groups = vec![group];
+
+    let result = db.users_to_groups.add_user_groups(&Uuid::new_v4().to_string()
+                                                    , &groups).await;
+    assert!(result.is_err());
+    Ok(())
+}
+
+#[actix_rt::test]
+async fn get_groups_by_user_id_returns_users_groups() -> Result<(),sqlx::Error> {
+    let db = init_db_context().await;
+    let user = User {
+        id: Uuid::new_v4().to_string(),
+        name: randomize_string("charlie"),
+        email: randomize_string("charlie@email.com"),
+        groups: Vec::with_capacity(0),
+    };
+    let group = randomize_string("user");
+
+    {
+        let _ = db.users.add_user(&user).await?;
+        let _ = db.groups.add_group(&group).await?;
+        let group = db.groups.get_group_by_name(&group).await?;
+        let groups = vec![group];
+        let _ = db.users_to_groups.add_user_groups(&user.id
+           , &groups)
+            .await?;
+    }
+
+    let result = db.users_to_groups.get_groups_by_user_id(&user.id)
+        .await;
+
+    assert!(result.is_ok());
+    let result = result.unwrap();
+    assert_eq!(1, result.len());
+    assert_eq!(group, result[0].name);
+    Ok(())
+}
+
+#[actix_rt::test]
+async fn get_groups_by_user_id_returns_empty_vec_when_user_does_not_exist() -> () {
+    let db = init_db_context().await;
+    let user_id = Uuid::new_v4().to_string();
+
+    let result = db.users_to_groups.get_groups_by_user_id(&user_id).await;
+    assert!(result.is_ok());
+    let result = result.unwrap();
+    assert_eq!(0, result.len());
 }
