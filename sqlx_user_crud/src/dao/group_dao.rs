@@ -8,7 +8,7 @@ impl<'c> DbSet<'c, Group> {
         sqlx::query(r#"
             CREATE TABLE IF NOT EXISTS `groups`
             (
-                `id` INT NOT NULL AUTO_INCREMENT,
+                `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                 `name` VARCHAR(64) NOT NULL UNIQUE,
                 PRIMARY KEY(id)
             )
@@ -38,14 +38,14 @@ impl<'c> DbSet<'c, Group> {
 
     pub async fn add_group(&self, name: &str) -> Result<u64,sqlx::Error> {
         sqlx::query(r#"
-            INSERT INTO groups (`name`)
+            INSERT INTO `groups` (`name`)
             VALUES (?)
         "#).bind(name).execute(&*self.pool).await
     }
 
     pub async fn update_group(&self, current: &str, update: &str) -> Result<u64,sqlx::Error> {
         sqlx::query(r#"
-            UPDATE groups
+            UPDATE `groups`
             SET `name` = ?
             WHERE `name` = ?
         "#)
@@ -58,7 +58,7 @@ impl<'c> DbSet<'c, Group> {
     pub async fn delete_group(&self, name: &str) -> Result<u64,sqlx::Error>
     {
         sqlx::query(r#"
-            DELETE FROM groups
+            DELETE FROM `groups`
             WHERE `name` = ?
         "#).bind(name).execute(&*self.pool).await
     }
