@@ -20,16 +20,15 @@ async fn get_user(user_id: web::Path<String>, app_state: web::Data<AppState<'_>>
 
     let user = app_state.context.users.get_user_by_id(&user_id).await;
 
-    // TODO: return 404 on not found & 500 on bad request data (^ see above about Uuid)
     match user {
-        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+        Err(e) => HttpResponse::NotFound().finish(),
         Ok(mut user) => {
             let groups = app_state.context.users_to_groups
                 .get_groups_by_user_id(&user.id)
                 .await;
 
             match groups {
-                Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+                Err(e) => HttpResponse::InternalServerError().finish(),
                 Ok(groups) => {
                     user.groups = groups;
                     HttpResponse::Ok().json(user)
