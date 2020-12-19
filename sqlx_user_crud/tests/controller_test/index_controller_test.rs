@@ -2,7 +2,6 @@ use super::init_db_context;
 use actix_web::{App, web,test};
 use sqlx_user_crud::{controller, AppState};
 use std::sync::{Mutex, Arc};
-use actix_web::dev::Service;
 
 #[actix_rt::test]
 async fn status_returns_ok_and_message() -> () {

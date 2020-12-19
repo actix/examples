@@ -1,8 +1,6 @@
 use super::init_app_state;
-use actix_web::{App, web, test, http};
-use sqlx_user_crud::{controller, AppState};
-use std::sync::{Mutex, Arc};
-use actix_web::dev::Service;
+use actix_web::{App, test, http};
+use sqlx_user_crud::{controller};
 
 #[actix_rt::test]
 async fn get_user_returns_err_when_not_found() -> () {

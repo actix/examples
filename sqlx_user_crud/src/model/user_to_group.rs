@@ -1,6 +1,5 @@
 use sqlx::{FromRow, Row};
 use sqlx::mysql::MySqlRow;
-use crate::model::User;
 
 pub struct UserToGroup {
     user_id: String,

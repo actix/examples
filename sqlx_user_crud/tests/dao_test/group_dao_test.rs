@@ -1,7 +1,5 @@
 use super::{randomize_string, init_db_context};
 use sqlx;
-use sqlx_user_crud::dao::db_context::{DbSet, DbContext};
-use sqlx_user_crud::model::Group;
 
 #[actix_rt::test]
 async fn add_group_returns_1_when_group_is_valid() -> () {

@@ -1,8 +1,7 @@
-use super::{init_db_context, randomize_string};
-use actix_web::{web, App, test, HttpRequest, HttpResponse, Error};
-use sqlx_user_crud::{AppState, controller};
+use super::{init_db_context};
+use actix_web::{web};
+use sqlx_user_crud::{AppState};
 use std::sync::{Mutex, Arc};
-use actix_web::dev::Service;
 use actix_web::web::Data;
 
 async fn init_app_state() -> Data<AppState<'static>> {

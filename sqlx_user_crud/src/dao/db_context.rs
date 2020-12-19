@@ -1,7 +1,7 @@
 use sqlx::{MySqlPool, FromRow};
 use super::{User, Group, UserToGroup};
 use std::sync::Arc;
-use sqlx::mysql::{MySqlQueryAs, MySqlRow};
+use sqlx::mysql::{MySqlRow};
 
 pub struct DbSet<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
     pub pool: Arc<MySqlPool>,

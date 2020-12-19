@@ -1,6 +1,5 @@
 use super::{randomize_string, init_db_context};
 use sqlx;
-use sqlx_user_crud::dao::db_context::{DbSet, DbContext};
 use sqlx_user_crud::model::User;
 use uuid::Uuid;
 

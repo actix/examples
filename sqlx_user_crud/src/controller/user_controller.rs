@@ -1,7 +1,6 @@
 use actix_web::{get, post, patch, delete, web, Responder, HttpResponse};
 use super::AppState;
 use super::log_request;
-use std::sync::Mutex;
 use crate::model::User;
 use uuid::Uuid;
 
@@ -21,14 +20,14 @@ async fn get_user(user_id: web::Path<String>, app_state: web::Data<AppState<'_>>
     let user = app_state.context.users.get_user_by_id(&user_id).await;
 
     match user {
-        Err(e) => HttpResponse::NotFound().finish(),
+        Err(_) => HttpResponse::NotFound().finish(),
         Ok(mut user) => {
             let groups = app_state.context.users_to_groups
                 .get_groups_by_user_id(&user.id)
                 .await;
 
             match groups {
-                Err(e) => HttpResponse::InternalServerError().finish(),
+                Err(_) => HttpResponse::InternalServerError().finish(),
                 Ok(groups) => {
                     user.groups = groups;
                     HttpResponse::Ok().json(user)

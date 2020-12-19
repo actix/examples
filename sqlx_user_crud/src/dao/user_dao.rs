@@ -1,7 +1,6 @@
 use super::DbSet;
 use super::User;
 use sqlx::mysql::MySqlQueryAs;
-use crate::model::Group;
 
 impl<'c> DbSet<'c, User> {
 

@@ -2,7 +2,6 @@ use actix_web::{get, post, patch, delete, web, Responder, HttpResponse};
 use serde::Deserialize;
 use super::AppState;
 use super::log_request;
-use crate::model::Group;
 
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(get_group_by_id);

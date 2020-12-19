@@ -1,7 +1,6 @@
 use super::DbSet;
 use super::UserToGroup;
 use super::Group;
-use super::User;
 use sqlx::mysql::MySqlQueryAs;
 
 impl<'c> DbSet<'c, UserToGroup> {
