@@ -1,5 +1,5 @@
 use actix_web::{get, post, patch, delete, web, Responder, HttpResponse};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use super::AppState;
 use super::log_request;
 
@@ -17,9 +17,8 @@ async fn get_group_by_id(group_id: web::Path<u64>, app_state: web::Data<AppState
 
     let x = app_state.context.groups.get_group_by_id(group_id.into_inner()).await;
 
-    // TODO: return 404 on not found & 500 on bad request data
     match x {
-        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+        Err(_) => HttpResponse::NotFound().finish(),
         Ok(group) => HttpResponse::Ok().json(group)
     }
 }
@@ -29,17 +28,25 @@ async fn get_group_by_id(group_id: web::Path<u64>, app_state: web::Data<AppState
 async fn post_group(group: web::Json<String>, app_state: web::Data<AppState<'_>>) -> impl Responder {
     log_request("POST: /group", &app_state.connections);
 
-    // TODO: modify add_group to return the group that was added
     let x = app_state.context.groups.add_group(group.as_str()).await;
 
     match x {
-        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
-        Ok(_) => HttpResponse::Accepted().body(group.into_inner()) // TODO: as per above ^ return the id of the inserted group
+        Ok(_) => {
+            let group = app_state.context.groups
+                .get_group_by_name(group.as_str())
+                .await;
+
+            match group {
+                Ok(g) => HttpResponse::Accepted().json(g),
+                _ => HttpResponse::InternalServerError().finish(),
+            }
+        }
+        _ => HttpResponse::InternalServerError().finish()
     }
 }
 
-#[derive(Deserialize)]
-struct GroupUpdate {
+#[derive(Deserialize, Serialize)]
+pub struct GroupUpdate {
     pub old: String,
     pub new: String,
 }

@@ -1,4 +1,4 @@
-use super::{init_db_context};
+use super::{init_db_context, randomize_string};
 use actix_web::{web};
 use sqlx_user_crud::{AppState};
 use std::sync::{Mutex, Arc};
@@ -16,3 +16,4 @@ async fn init_app_state() -> Data<AppState<'static>> {
 #[cfg(test)]
 mod index_controller_test;
 mod user_controller_test;
+mod group_controller_test;
