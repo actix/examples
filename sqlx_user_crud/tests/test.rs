@@ -1,4 +1,6 @@
 use std::time::SystemTime;
+use sqlx_user_crud::dao::DbContext;
+use sqlx_user_crud::config::Config;
 
 fn current_time() -> u64 {
     SystemTime::now()
@@ -10,6 +12,11 @@ fn current_time() -> u64 {
 
 fn randomize_string(input: &'static str) -> String {
     format!("{0}{1}", input, current_time())
+}
+
+async fn init_db_context() -> DbContext<'static> {
+    let config = Config::from_file("test_resource/config.test.json");
+    DbContext::new(&config.get_database_url()).await
 }
 
 #[cfg(test)]
