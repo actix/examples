@@ -10,8 +10,10 @@ impl<'c> DbSet<'c, UserToGroup> {
         sqlx::query(r#"
             CREATE TABLE IF NOT EXISTS `users_to_groups`
             (
-                `user_id` VARCHAR(48) NOT NULL REFERENCES `users`(`id`),
-                `group_id` INT NOT NULL REFERENCES `groups`(`id`)
+                `user_id` VARCHAR(48) NOT NULL,
+                `group_id` BIGINT UNSIGNED NOT NULL,
+                FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                FOREIGN KEY (`group_id`) REFERENCES `groups`(`id`)
             )
         "#).execute(&*self.pool).await
     }
