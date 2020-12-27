@@ -108,11 +108,11 @@ async fn get_groups_by_user_id_returns_users_groups() -> Result<(),sqlx::Error> 
     let db = init_db_context().await;
     let user = User {
         id: Uuid::new_v4().to_string(),
-        name: randomize_string("charlie"),
-        email: randomize_string("charlie@email.com"),
+        name: randomize_string("candice"),
+        email: randomize_string("candice@email.com"),
         groups: Vec::with_capacity(0),
     };
-    let group = randomize_string("user");
+    let group = randomize_string("vendor");
 
     {
         let _ = db.users.add_user(&user).await?;
