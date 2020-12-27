@@ -62,11 +62,8 @@ async fn post_user_returns_200_when_user_is_valid() -> () {
         groups: Vec::new(),
     };
 
-    let user = serde_json::to_string(&user).unwrap();
-    println!("{0}", &user);
-
     let req = test::TestRequest::post()
-        .uri("user")
+        .uri("/user")
         .set_json(&user)
         .to_request();
 
