@@ -36,7 +36,7 @@ async fn post_group_returns_204_when_valid_group_is_added() -> () {
         .set_json(&group_name)
         .to_request();
 
-    let mut resp = test::call_service(&mut app, req).await;
+    let resp = test::call_service(&mut app, req).await;
     assert_eq!(resp.status(), http::StatusCode::ACCEPTED);
 }
 

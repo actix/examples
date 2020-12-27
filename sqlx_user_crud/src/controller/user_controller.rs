@@ -48,8 +48,14 @@ async fn post_user(user: web::Json<User>, app_state: web::Data<AppState<'_>>) ->
     let x = app_state.context.users.add_user(&user).await;
 
     match x {
-        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
-        Ok(_) => HttpResponse::Accepted().body(user.id)
+        Ok(_) => {
+            if user.groups.len() > 0 {
+                let _ = app_state.context.users_to_groups
+                    .add_user_groups(&user.id, &user.groups);
+            }
+            HttpResponse::Accepted().body(user.id)
+        },
+        Err(_) => HttpResponse::InternalServerError().finish(),
     }
 }
 
