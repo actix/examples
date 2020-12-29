@@ -99,3 +99,30 @@ async fn post_user_returns_202_when_user_and_groups_are_valid() -> Result<(),sql
     assert_eq!(resp.status(), http::StatusCode::ACCEPTED);
     Ok(())
 }
+
+#[actix_rt::test]
+async fn post_user_returns_500_when_user_already_exists() -> Result<(),sqlx::Error> {
+    let app_state = init_app_state().await;
+    let mut app = test::init_service(App::new()
+        .app_data(app_state.clone())
+        .configure(controller::init_user_controller))
+        .await;
+
+    let user = User {
+        id: Uuid::new_v4().to_string(),
+        name: randomize_string("charlie"),
+        email: randomize_string("charlie@email.com"),
+        groups: vec![]
+    };
+
+    let _ = app_state.context.users.add_user(&user).await?;
+
+    let req = test::TestRequest::post()
+        .uri("/user")
+        .set_json(&user)
+        .to_request();
+
+    let resp = test::call_service(&mut app, req).await;
+    assert_eq!(resp.status(), http::StatusCode::INTERNAL_SERVER_ERROR);
+    Ok(())
+}
