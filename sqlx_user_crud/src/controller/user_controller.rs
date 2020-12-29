@@ -49,7 +49,8 @@ async fn post_user(user: web::Json<User>, app_state: web::Data<AppState<'_>>) ->
         Ok(_) => {
             if user.groups.len() > 0 {
                 let _ = app_state.context.users_to_groups
-                    .add_user_groups(&user.id, &user.groups);
+                    .add_user_groups(&user.id, &user.groups)
+                    .await;
             }
             HttpResponse::Accepted().body(user.id)
         },
@@ -57,7 +58,6 @@ async fn post_user(user: web::Json<User>, app_state: web::Data<AppState<'_>>) ->
     }
 }
 
-// TODO: provide response headers
 #[patch("/user")]
 async fn patch_user(user: web::Json<User>, app_state: web::Data<AppState<'_>>) -> impl Responder {
     log_request("PATCH: /user", &app_state.connections);
@@ -66,23 +66,27 @@ async fn patch_user(user: web::Json<User>, app_state: web::Data<AppState<'_>>) -
 
     let x = app_state.context.users.update_user(&user).await;
 
-    // TODO: better error handling
     match x {
-        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
-        Ok(_) => HttpResponse::Accepted().body(user.id)
+        Ok(0) => {
+            HttpResponse::NotFound().finish()
+        },
+        Ok(_) => {
+            let _ = app_state.context.users_to_groups.update_user_groups(&user).await;
+            HttpResponse::Accepted().json(user)
+        },
+        _ => HttpResponse::InternalServerError().finish(),
     }
 }
 
-// TODO: provide response headers
 #[delete("/user/{id}")]
 async fn delete_user(id: web::Path<String>, app_state: web::Data<AppState<'_>>) -> impl Responder {
     log_request("DELETE: /user", &app_state.connections);
 
     let x = app_state.context.users.delete_user(id.as_str()).await;
 
-    // TODO: better error handling
     match x {
-        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
-        Ok(_) => HttpResponse::Ok().body(format!("Successfully deleted user {}", id))
+        Ok(0) => HttpResponse::NotFound().finish(),
+        Ok(_) => HttpResponse::Ok().finish(),
+        Err(_) => HttpResponse::InternalServerError().finish(),
     }
 }

@@ -5,14 +5,14 @@ use sqlx::mysql::{MySqlRow};
 
 pub struct Table<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
     pub pool: Arc<MySqlPool>,
-    from_row: fn(&MySqlRow<'c>) -> Result<T,sqlx::Error>,
+    _from_row: fn(&MySqlRow<'c>) -> Result<T,sqlx::Error>,
 }
 
 impl<'c, T> Table<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
     fn new(pool: Arc<MySqlPool>) -> Self {
         Table {
             pool,
-            from_row: T::from_row,
+            _from_row: T::from_row,
         }
     }
 }
@@ -21,8 +21,8 @@ pub struct JoinTable<'c, T1, T2> where T1 : FromRow<'c, MySqlRow<'c>>
     , T2 : FromRow<'c, MySqlRow<'c>>
 {
     pub pool: Arc<MySqlPool>,
-    from_row: (fn(&MySqlRow<'c>) -> Result<T1,sqlx::Error>
-               ,fn(&MySqlRow<'c>) -> Result<T2,sqlx::Error>)
+    _from_row: (fn(&MySqlRow<'c>) -> Result<T1,sqlx::Error>
+                , fn(&MySqlRow<'c>) -> Result<T2,sqlx::Error>)
 }
 
 impl<'c, T1, T2> JoinTable<'c, T1, T2> where T1 : FromRow<'c, MySqlRow<'c>>
@@ -31,7 +31,7 @@ impl<'c, T1, T2> JoinTable<'c, T1, T2> where T1 : FromRow<'c, MySqlRow<'c>>
     fn new(pool: Arc<MySqlPool>) -> Self {
         JoinTable {
             pool,
-            from_row: (T1::from_row, T2::from_row)
+            _from_row: (T1::from_row, T2::from_row)
         }
     }
 }
