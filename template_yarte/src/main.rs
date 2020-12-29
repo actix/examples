@@ -1,29 +1,28 @@
 use std::collections::HashMap;
 
 use actix_web::{
-    error::ErrorInternalServerError, get, middleware::Logger, web, App, Error,
-    HttpResponse, HttpServer,
+    get, middleware::Logger, web, App, Error, HttpResponse, HttpServer, ResponseError,
 };
-use yarte::TemplateMin;
+use derive_more::Display;
+use yarte::ywrite_min;
 
-#[derive(TemplateMin)]
-#[template(path = "index")]
-struct IndexTemplate {
-    query: web::Query<HashMap<String, String>>,
-}
+#[derive(Debug, Display)]
+struct MyErr(pub &'static str);
+
+impl ResponseError for MyErr {}
 
 #[get("/")]
 async fn index(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, Error> {
-    IndexTemplate { query }
-        .call()
-        .map(|body| {
-            HttpResponse::Ok()
-                .content_type("text/html; charset=utf-8")
-                .body(body)
-        })
-        .map_err(|_| ErrorInternalServerError("Some error message"))
+    let mut body = web::BytesMut::with_capacity(512);
+    // `ywrite_min` is work in progress check your templates before put in production
+    // or use `ywrite_html`
+    ywrite_min!(body, "{{> index }}");
+
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(body))
 }
 
 #[actix_web::main]
@@ -40,8 +39,9 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use actix_web::{http, test as atest, web::Bytes};
+
+    use super::*;
 
     #[actix_rt::test]
     async fn test() {
@@ -98,7 +98,7 @@ mod test {
 
         let bytes = atest::read_body(resp).await;
 
-        assert_eq!(bytes, Bytes::from_static("Some error message".as_ref()));
+        assert_eq!(bytes, Bytes::from_static("Bad query".as_ref()));
 
         let req = atest::TestRequest::with_uri("/?lastname=bar").to_request();
         let resp = atest::call_service(&mut app, req).await;

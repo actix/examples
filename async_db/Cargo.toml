@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 actix-web = "3"
-env_logger = "0.7"
+env_logger = "0.8"
 failure = "0.1.7"
 futures = "0.3.1"
 num_cpus = "1.13"
