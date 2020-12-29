@@ -1,8 +1,8 @@
-use std::sync::{Mutex, Arc};
-use actix_web::{web, HttpServer, App};
-use sqlx_user_crud::dao::Database;
+use actix_web::{web, App, HttpServer};
 use sqlx_user_crud::config::Config;
+use sqlx_user_crud::dao::Database;
 use sqlx_user_crud::{controller, AppState};
+use std::sync::{Arc, Mutex};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

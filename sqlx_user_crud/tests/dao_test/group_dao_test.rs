@@ -1,4 +1,4 @@
-use super::{randomize_string, init_db_context};
+use super::{init_db_context, randomize_string};
 use sqlx;
 
 #[actix_rt::test]
@@ -47,7 +47,7 @@ async fn get_group_by_name_returns_err_when_group_does_not_exist() -> () {
 }
 
 #[actix_rt::test]
-async fn get_group_by_id_returns_group_when_id_is_valid() -> Result<(),sqlx::Error> {
+async fn get_group_by_id_returns_group_when_id_is_valid() -> Result<(), sqlx::Error> {
     let db = init_db_context().await;
 
     let group_name = randomize_string("engineers");
@@ -63,14 +63,17 @@ async fn get_group_by_id_returns_group_when_id_is_valid() -> Result<(),sqlx::Err
 }
 
 #[actix_rt::test]
-async fn update_group_returns_1_when_group_has_been_updated() -> Result<(),sqlx::Error> {
+async fn update_group_returns_1_when_group_has_been_updated() -> Result<(), sqlx::Error>
+{
     let db = init_db_context().await;
 
     let group_name = randomize_string("testers");
     let _ = db.groups.add_group(&group_name).await?;
 
-    let result = db.groups.update_group(&group_name
-                                        , &randomize_string("qa testers")).await;
+    let result = db
+        .groups
+        .update_group(&group_name, &randomize_string("qa testers"))
+        .await;
     assert!(result.is_ok());
     let result = result.unwrap();
     assert_eq!(1, result);
@@ -81,15 +84,14 @@ async fn update_group_returns_1_when_group_has_been_updated() -> Result<(),sqlx:
 async fn update_group_returns_0_when_group_does_not_exist() -> () {
     let db = init_db_context().await;
 
-    let result = db.groups.update_group("not found"
-                                        , "still not found").await;
+    let result = db.groups.update_group("not found", "still not found").await;
     assert!(result.is_ok());
     let result = result.unwrap();
     assert_eq!(0, result);
 }
 
 #[actix_rt::test]
-async fn delete_group_returns_1_when_group_can_be_deleted() -> Result<(),sqlx::Error> {
+async fn delete_group_returns_1_when_group_can_be_deleted() -> Result<(), sqlx::Error> {
     let db = init_db_context().await;
 
     let group_name = randomize_string("executives");

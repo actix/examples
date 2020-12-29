@@ -1,10 +1,10 @@
-use super::{randomize_string, init_db_context};
+use super::{init_db_context, randomize_string};
 use sqlx;
 use sqlx_user_crud::model::User;
 use uuid::Uuid;
 
 #[actix_rt::test]
-async fn add_user_returns_1() -> Result<(),sqlx::Error> {
+async fn add_user_returns_1() -> Result<(), sqlx::Error> {
     let db = init_db_context().await;
     let user = User {
         id: Uuid::new_v4().to_string(),
@@ -22,7 +22,8 @@ async fn add_user_returns_1() -> Result<(),sqlx::Error> {
 }
 
 #[actix_rt::test]
-async fn add_user_returns_err_when_duplicate_username_is_added() -> Result<(),sqlx::Error> {
+async fn add_user_returns_err_when_duplicate_username_is_added(
+) -> Result<(), sqlx::Error> {
     let db = init_db_context().await;
 
     let name = randomize_string("bob");
@@ -62,10 +63,10 @@ async fn get_user_by_id_returns_error_when_user_does_not_exist() -> () {
 }
 
 #[actix_rt::test]
-async fn get_user_by_id_returns_user_when_user_exists() -> Result<(),sqlx::Error> {
+async fn get_user_by_id_returns_user_when_user_exists() -> Result<(), sqlx::Error> {
     let db = init_db_context().await;
 
-    let user  = User {
+    let user = User {
         id: Uuid::new_v4().to_string(),
         name: randomize_string("charlie"),
         email: randomize_string("charlie@email.com"),
@@ -86,7 +87,7 @@ async fn get_user_by_id_returns_user_when_user_exists() -> Result<(),sqlx::Error
 async fn update_user_returns_zero_when_user_does_not_exist() -> () {
     let db = init_db_context().await;
 
-    let user  = User {
+    let user = User {
         id: Uuid::new_v4().to_string(),
         name: randomize_string("david"),
         email: randomize_string("david@email.com"),
@@ -100,10 +101,10 @@ async fn update_user_returns_zero_when_user_does_not_exist() -> () {
 }
 
 #[actix_rt::test]
-async fn update_user_returns_1_when_user_exists() -> Result<(),sqlx::Error> {
+async fn update_user_returns_1_when_user_exists() -> Result<(), sqlx::Error> {
     let db = init_db_context().await;
 
-    let user  = User {
+    let user = User {
         id: Uuid::new_v4().to_string(),
         name: randomize_string("emily"),
         email: randomize_string("emily@email.com"),
@@ -134,10 +135,10 @@ async fn delete_user_returns_0_when_user_does_not_exist() -> () {
 }
 
 #[actix_rt::test]
-async fn delete_user_returns_1_when_user_exists() -> Result<(),sqlx::Error> {
+async fn delete_user_returns_1_when_user_exists() -> Result<(), sqlx::Error> {
     let db = init_db_context().await;
 
-    let user  = User {
+    let user = User {
         id: Uuid::new_v4().to_string(),
         name: randomize_string("gary"),
         email: randomize_string("gary@email.com"),

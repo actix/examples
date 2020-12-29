@@ -1,6 +1,6 @@
-use actix_web::{get, web, Responder, HttpResponse};
-use super::AppState;
 use super::log_request;
+use super::AppState;
+use actix_web::{get, web, HttpResponse, Responder};
 
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(status);

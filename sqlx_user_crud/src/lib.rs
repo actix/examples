@@ -1,10 +1,10 @@
-use std::sync::{Mutex, Arc};
 use crate::dao::Database;
+use std::sync::{Arc, Mutex};
 
-pub mod model;
-pub mod dao;
-pub mod controller;
 pub mod config;
+pub mod controller;
+pub mod dao;
+pub mod model;
 
 // AppState
 // This the primary dependency for our application's dependency injection.

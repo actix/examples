@@ -1,5 +1,5 @@
-use std::fs;
 use serde::Deserialize;
+use std::fs;
 
 #[derive(Deserialize)]
 struct AppConfig {
@@ -20,7 +20,6 @@ pub struct Config {
 }
 
 impl Config {
-
     pub fn from_file(path: &'static str) -> Self {
         let config = fs::read_to_string(path).unwrap();
         serde_json::from_str(&config).unwrap()
@@ -31,10 +30,9 @@ impl Config {
     }
 
     pub fn get_database_url(&self) -> String {
-        format!("mysql://{0}:{1}@{2}/{3}"
-                , self.dao.user
-                , self.dao.password
-                , self.dao.address
-                , self.dao.database)
+        format!(
+            "mysql://{0}:{1}@{2}/{3}",
+            self.dao.user, self.dao.password, self.dao.address, self.dao.database
+        )
     }
 }

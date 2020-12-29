@@ -1,5 +1,5 @@
-use sqlx_user_crud::dao::Database;
 use sqlx_user_crud::config::Config;
+use sqlx_user_crud::dao::Database;
 use uuid::Uuid;
 
 fn randomize_string(input: &'static str) -> String {

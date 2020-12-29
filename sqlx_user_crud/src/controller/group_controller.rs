@@ -1,7 +1,7 @@
-use actix_web::{get, post, patch, delete, web, Responder, HttpResponse};
-use serde::{Deserialize, Serialize};
-use super::AppState;
 use super::log_request;
+use super::AppState;
+use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
+use serde::{Deserialize, Serialize};
 
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(get_group_by_id);
@@ -12,27 +12,39 @@ pub fn init(cfg: &mut web::ServiceConfig) {
 
 // TODO: provide response headers
 #[get("/group/{id}")]
-async fn get_group_by_id(group_id: web::Path<u64>, app_state: web::Data<AppState<'_>>) -> impl Responder {
+async fn get_group_by_id(
+    group_id: web::Path<u64>,
+    app_state: web::Data<AppState<'_>>,
+) -> impl Responder {
     log_request("GET: /group", &app_state.connections);
 
-    let x = app_state.context.groups.get_group_by_id(group_id.into_inner()).await;
+    let x = app_state
+        .context
+        .groups
+        .get_group_by_id(group_id.into_inner())
+        .await;
 
     match x {
         Err(_) => HttpResponse::NotFound().finish(),
-        Ok(group) => HttpResponse::Ok().json(group)
+        Ok(group) => HttpResponse::Ok().json(group),
     }
 }
 
 // TODO: provide response headers
 #[post("/group")]
-async fn post_group(group: web::Json<String>, app_state: web::Data<AppState<'_>>) -> impl Responder {
+async fn post_group(
+    group: web::Json<String>,
+    app_state: web::Data<AppState<'_>>,
+) -> impl Responder {
     log_request("POST: /group", &app_state.connections);
 
     let x = app_state.context.groups.add_group(group.as_str()).await;
 
     match x {
         Ok(_) => {
-            let group = app_state.context.groups
+            let group = app_state
+                .context
+                .groups
                 .get_group_by_name(group.as_str())
                 .await;
 
@@ -41,7 +53,7 @@ async fn post_group(group: web::Json<String>, app_state: web::Data<AppState<'_>>
                 _ => HttpResponse::InternalServerError().finish(),
             }
         }
-        _ => HttpResponse::InternalServerError().finish()
+        _ => HttpResponse::InternalServerError().finish(),
     }
 }
 
@@ -53,22 +65,32 @@ pub struct GroupUpdate {
 
 // TODO: provide response headers
 #[patch("/group")]
-async fn patch_group_by_name(update: web::Json<GroupUpdate>, app_state: web::Data<AppState<'_>>) -> impl Responder {
+async fn patch_group_by_name(
+    update: web::Json<GroupUpdate>,
+    app_state: web::Data<AppState<'_>>,
+) -> impl Responder {
     log_request("PATCH: /user", &app_state.connections);
 
     // TODO: modify update_group to return the group that was added
-    let x = app_state.context.groups.update_group(&update.old, &update.new).await;
+    let x = app_state
+        .context
+        .groups
+        .update_group(&update.old, &update.new)
+        .await;
 
     // TODO: better error handling
     match x {
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
-        Ok(_) => HttpResponse::Accepted().body(&update.new) // TODO: as per above ^ return the id of the inserted group
+        Ok(_) => HttpResponse::Accepted().body(&update.new), // TODO: as per above ^ return the id of the inserted group
     }
 }
 
 // TODO: provide response headers
 #[delete("/group/{name}")]
-async fn delete_group_by_name(name: web::Path<String>, app_state: web::Data<AppState<'_>>) -> impl Responder {
+async fn delete_group_by_name(
+    name: web::Path<String>,
+    app_state: web::Data<AppState<'_>>,
+) -> impl Responder {
     log_request("DELETE: /group", &app_state.connections);
 
     let x = app_state.context.groups.delete_group(name.as_str()).await;
@@ -76,6 +98,6 @@ async fn delete_group_by_name(name: web::Path<String>, app_state: web::Data<AppS
     // TODO: better error handling
     match x {
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
-        Ok(_) => HttpResponse::Ok().body(format!("Successfully deleted group {}", name))
+        Ok(_) => HttpResponse::Ok().body(format!("Successfully deleted group {}", name)),
     }
 }
