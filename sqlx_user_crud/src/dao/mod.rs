@@ -1,4 +1,4 @@
-use super::model::{User, Group, UserToGroup};
+use super::model::{User, Group};
 
 pub mod db_context;
 mod group_dao;

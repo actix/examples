@@ -1,6 +1,4 @@
-use super::Table;
 use super::JoinTable;
-use super::UserToGroup;
 use super::User;
 use super::Group;
 use sqlx::mysql::MySqlQueryAs;

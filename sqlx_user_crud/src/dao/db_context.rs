@@ -1,5 +1,5 @@
 use sqlx::{MySqlPool, FromRow};
-use super::{User, Group, UserToGroup};
+use super::{User, Group};
 use std::sync::Arc;
 use sqlx::mysql::{MySqlRow};
 
