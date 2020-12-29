@@ -1,8 +1,8 @@
-use super::DbSet;
+use super::Table;
 use super::Group;
 use sqlx::mysql::MySqlQueryAs;
 
-impl<'c> DbSet<'c, Group> {
+impl<'c> Table<'c, Group> {
 
     pub async fn create_table(&self) -> Result<u64,sqlx::Error> {
         sqlx::query(r#"

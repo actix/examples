@@ -1,5 +1,5 @@
 use std::sync::{Mutex, Arc};
-use crate::dao::DbContext;
+use crate::dao::Database;
 
 pub mod model;
 pub mod dao;
@@ -12,5 +12,5 @@ pub mod config;
 // order to communicate with the database.
 pub struct AppState<'a> {
     pub connections: Mutex<u32>,
-    pub context: Arc<DbContext<'a>>,
+    pub context: Arc<Database<'a>>,
 }

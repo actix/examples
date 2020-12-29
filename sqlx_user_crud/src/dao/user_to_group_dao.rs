@@ -1,9 +1,11 @@
-use super::DbSet;
+use super::Table;
+use super::JoinTable;
 use super::UserToGroup;
+use super::User;
 use super::Group;
 use sqlx::mysql::MySqlQueryAs;
 
-impl<'c> DbSet<'c, UserToGroup> {
+impl<'c> JoinTable<'c, User, Group> {
 
     pub async fn create_table(&self) -> Result<u64,sqlx::Error> {
         sqlx::query(r#"

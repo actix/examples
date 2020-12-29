@@ -1,5 +1,5 @@
 use std::time::SystemTime;
-use sqlx_user_crud::dao::DbContext;
+use sqlx_user_crud::dao::Database;
 use sqlx_user_crud::config::Config;
 use uuid::Uuid;
 
@@ -15,9 +15,9 @@ fn randomize_string(input: &'static str) -> String {
     format!("{0}{1}", input, Uuid::new_v4().to_string())
 }
 
-async fn init_db_context() -> DbContext<'static> {
+async fn init_db_context() -> Database<'static> {
     let config = Config::from_file("test_resource/config.test.json");
-    DbContext::new(&config.get_database_url()).await
+    Database::new(&config.get_database_url()).await
 }
 
 #[cfg(test)]

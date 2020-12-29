@@ -3,36 +3,55 @@ use super::{User, Group, UserToGroup};
 use std::sync::Arc;
 use sqlx::mysql::{MySqlRow};
 
-pub struct DbSet<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
+pub struct Table<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
     pub pool: Arc<MySqlPool>,
     from_row: fn(&MySqlRow<'c>) -> Result<T,sqlx::Error>,
 }
 
-impl<'c, T> DbSet<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
+impl<'c, T> Table<'c, T> where T : FromRow<'c, MySqlRow<'c>> {
     fn new(pool: Arc<MySqlPool>) -> Self {
-        DbSet {
+        Table {
             pool,
             from_row: T::from_row,
         }
     }
 }
 
-pub struct DbContext<'c> {
-    pub users: Arc<DbSet<'c, User>>,
-    pub groups: Arc<DbSet<'c, Group>>,
-    pub users_to_groups: Arc<DbSet<'c, UserToGroup>>
+pub struct JoinTable<'c, T1, T2> where T1 : FromRow<'c, MySqlRow<'c>>
+    , T2 : FromRow<'c, MySqlRow<'c>>
+{
+    pub pool: Arc<MySqlPool>,
+    from_row: (fn(&MySqlRow<'c>) -> Result<T1,sqlx::Error>
+               ,fn(&MySqlRow<'c>) -> Result<T2,sqlx::Error>)
 }
 
-impl DbContext<'_> {
-    pub async fn new(sql_url: &str) -> DbContext<'_> {
+impl<'c, T1, T2> JoinTable<'c, T1, T2> where T1 : FromRow<'c, MySqlRow<'c>>
+    , T2 : FromRow<'c, MySqlRow<'c>>
+{
+    fn new(pool: Arc<MySqlPool>) -> Self {
+        JoinTable {
+            pool,
+            from_row: (T1::from_row, T2::from_row)
+        }
+    }
+}
+
+pub struct Database<'c> {
+    pub users: Arc<Table<'c, User>>,
+    pub groups: Arc<Table<'c, Group>>,
+    pub users_to_groups: Arc<JoinTable<'c, User, Group>>
+}
+
+impl Database<'_> {
+    pub async fn new(sql_url: &str) -> Database<'_> {
 
         let pool = MySqlPool::new(sql_url).await.unwrap();
         let pool = Arc::new(pool);
 
-        DbContext {
-            users: Arc::from(DbSet::new(pool.clone())),
-            groups: Arc::from( DbSet::new(pool.clone())),
-            users_to_groups: Arc::from(DbSet::new(pool.clone()))
+        Database {
+            users: Arc::from(Table::new(pool.clone())),
+            groups: Arc::from( Table::new(pool.clone())),
+            users_to_groups: Arc::from(JoinTable::new(pool.clone()))
         }
     }
 }

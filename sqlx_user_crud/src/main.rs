@@ -1,6 +1,6 @@
 use std::sync::{Mutex, Arc};
 use actix_web::{web, HttpServer, App};
-use sqlx_user_crud::dao::DbContext;
+use sqlx_user_crud::dao::Database;
 use sqlx_user_crud::config::Config;
 use sqlx_user_crud::{controller, AppState};
 
@@ -17,7 +17,7 @@ async fn main() -> std::io::Result<()> {
     println!("Using configuration file from {0}", config_file);
 
     // Connect to the database
-    let db_context = DbContext::new(&config.get_database_url()).await;
+    let db_context = Database::new(&config.get_database_url()).await;
     println!("Connected to database: {0}", config.get_database_url());
 
     // Instantiate the app_state. This application state will be cloned for each Actix thread but

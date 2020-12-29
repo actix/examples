@@ -11,7 +11,6 @@ pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(delete_user);
 }
 
-// TODO: provide response headers
 // TODO: use a Uuid in the path instead of a string
 #[get("/user/{id}")]
 async fn get_user(user_id: web::Path<String>, app_state: web::Data<AppState<'_>>) -> impl Responder {
@@ -37,7 +36,6 @@ async fn get_user(user_id: web::Path<String>, app_state: web::Data<AppState<'_>>
     }
 }
 
-// TODO: provide response headers
 #[post("/user")]
 async fn post_user(user: web::Json<User>, app_state: web::Data<AppState<'_>>) -> impl Responder {
     log_request("POST: /user", &app_state.connections);

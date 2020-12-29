@@ -1,8 +1,8 @@
-use super::DbSet;
+use super::Table;
 use super::User;
 use sqlx::mysql::MySqlQueryAs;
 
-impl<'c> DbSet<'c, User> {
+impl<'c> Table<'c, User> {
 
     pub async fn drop_table(&self) -> Result<u64,sqlx::Error> {
         sqlx::query("DROP TABLE IF EXISTS users;")
