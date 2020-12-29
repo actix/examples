@@ -144,3 +144,79 @@ async fn get_groups_by_user_id_returns_empty_vec_when_user_does_not_exist() -> (
     let result = result.unwrap();
     assert_eq!(0, result.len());
 }
+
+#[actix_rt::test]
+async fn delete_by_user_id_returns_0_when_user_id_does_not_exist() -> () {
+    let db = init_db_context().await;
+    let user_id = Uuid::new_v4().to_string();
+
+    let result = db.users_to_groups.delete_by_user_id(&user_id).await;
+    assert!(result.is_ok());
+    let result = result.unwrap();
+    assert_eq!(0, result);
+}
+
+#[actix_rt::test]
+async fn delete_by_user_id_returns_number_of_rows_deleted() -> Result<(),sqlx::Error> {
+    let db = init_db_context().await;
+    let user = User {
+        id: Uuid::new_v4().to_string(),
+        name: randomize_string("donald"),
+        email: randomize_string("donald@email.com"),
+        groups: Vec::with_capacity(0),
+    };
+    let group = randomize_string("customer");
+
+    {
+        let _ = db.users.add_user(&user).await?;
+        let _ = db.groups.add_group(&group).await?;
+        let group = db.groups.get_group_by_name(&group).await?;
+        let groups = vec![group];
+        let _ = db.users_to_groups.add_user_groups(&user.id, &groups).await?;
+    }
+
+    let result = db.users_to_groups.delete_by_user_id(&user.id).await;
+    assert!(result.is_ok());
+    let result = result.unwrap();
+    assert_eq!(1, result);
+    Ok(())
+}
+
+#[actix_rt::test]
+async fn delete_by_group_id_returns_0_when_group_id_does_not_exist() -> () {
+    let db = init_db_context().await;
+
+    let result = db.users_to_groups.delete_by_group_id(0).await;
+    assert!(result.is_ok());
+    let result = result.unwrap();
+    assert_eq!(0, result);
+}
+
+#[actix_rt::test]
+async fn delete_by_group_id_returns_number_of_rows_deleted() -> Result<(),sqlx::Error> {
+    let db = init_db_context().await;
+    let user = User {
+        id: Uuid::new_v4().to_string(),
+        name: randomize_string("emily"),
+        email: randomize_string("emily@email.com"),
+        groups: Vec::with_capacity(0),
+    };
+    let group = randomize_string("executive");
+
+    {
+        let _ = db.users.add_user(&user).await?;
+        let _ = db.groups.add_group(&group).await?;
+    }
+
+    let group = db.groups.get_group_by_name(&group).await?;
+    {
+        let groups = vec![group.clone()];
+        let _ = db.users_to_groups.add_user_groups(&user.id, &groups).await?;
+    }
+
+    let result = db.users_to_groups.delete_by_group_id(group.id).await;
+    assert!(result.is_ok());
+    let result = result.unwrap();
+    assert_eq!(1, result);
+    Ok(())
+}

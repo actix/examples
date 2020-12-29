@@ -23,14 +23,19 @@ impl<'c> JoinTable<'c, User, Group> {
     }
 
     pub async fn add_user_groups(&self, user_id: &String, groups: &Vec<Group>) -> Result<u64,sqlx::Error> {
-        let insert_statement = build_insert_statement(groups.len());
-        let mut query = sqlx::query(&insert_statement);
-
-        for group in groups {
-            query = query.bind(user_id).bind(group.id)
+        if 0 == groups.len() {
+            Ok(0)
         }
+        else {
+            let insert_statement = build_insert_statement(groups.len());
+            let mut query = sqlx::query(&insert_statement);
 
-        query.execute(&*self.pool).await
+            for group in groups {
+                query = query.bind(user_id).bind(group.id)
+            }
+
+            query.execute(&*self.pool).await
+        }
     }
 
     pub async fn get_groups_by_user_id(&self, user_id: &String) -> Result<Vec<Group>,sqlx::Error> {
@@ -45,6 +50,37 @@ impl<'c> JoinTable<'c, User, Group> {
         .fetch_all(&*self.pool)
         .await
     }
+
+    pub async fn delete_by_user_id(&self, user_id: &String) -> Result<u64,sqlx::Error> {
+        sqlx::query(r#"
+            DELETE
+            FROM `users_to_groups`
+            WHERE `user_id` = ?
+        "#)
+        .bind(user_id)
+        .execute(&*self.pool)
+        .await
+    }
+
+    pub async fn delete_by_group_id(&self, group_id: u64) -> Result<u64,sqlx::Error> {
+        sqlx::query(r#"
+            DELETE
+            FROM `users_to_groups`
+            WHERE `group_id` = ?
+        "#)
+        .bind(group_id)
+        .execute(&*self.pool)
+        .await
+    }
+
+    // pub async fn update_user_groups(&self, user: &User) -> Result<u64,sqlx::Error> {
+    //     if 0 == user.groups.len() {
+    //
+    //     }
+    //
+    //     let groups = self.get_groups_by_user_id(&user.id).await?;
+    //
+    // }
 }
 
 static DEFAULT_INSERT: &'static str = r#"
