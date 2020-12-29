@@ -220,3 +220,74 @@ async fn delete_by_group_id_returns_number_of_rows_deleted() -> Result<(),sqlx::
     assert_eq!(1, result);
     Ok(())
 }
+
+#[actix_rt::test]
+async fn update_user_groups_deletes_rows_when_users_group_vec_is_empty() -> Result<(),sqlx::Error> {
+    let db = init_db_context().await;
+    let user = User {
+        id: Uuid::new_v4().to_string(),
+        name: randomize_string("frank"),
+        email: randomize_string("frank@email.com"),
+        groups: vec![]
+    };
+
+    let group_name = randomize_string("faculty");
+    {
+        let _ = db.users.add_user(&user).await?;
+        let _ = db.groups.add_group(&group_name).await?;
+    }
+
+    let group = db.groups.get_group_by_name(&group_name).await?;
+    {
+        let groups = vec![group.clone()];
+        let _ = db.users_to_groups.add_user_groups(&user.id, &groups).await?;
+    }
+    // Assert the function returns 1 modification
+    let result = db.users_to_groups.update_user_groups(&user).await;
+    assert!(result.is_ok());
+    assert_eq!(1, result.unwrap());
+    // Verify the function has altered the table
+    let result = db.users_to_groups.get_groups_by_user_id(&user.id).await?;
+    assert_eq!(0, result.len());
+    Ok(())
+}
+
+#[actix_rt::test]
+async fn update_user_groups_returns_deleted_plus_added_rows_when_groups_is_not_empty()
+    -> Result<(),sqlx::Error>
+{
+    let db = init_db_context().await;
+    let mut user = User {
+        id: Uuid::new_v4().to_string(),
+        name: randomize_string("george"),
+        email: randomize_string("george@email.com"),
+        groups: vec![]
+    };
+
+    let group_names = vec![
+        randomize_string("general"),
+        randomize_string("gossiper")
+    ];
+
+    {
+        let _ = db.users.add_user(&user).await?;
+        let _ = db.groups.add_group(&group_names[0]).await?;
+        let _ = db.groups.add_group(&group_names[1]).await?;
+    }
+
+    let groups = vec![
+        db.groups.get_group_by_name(&group_names[0]).await?,
+        db.groups.get_group_by_name(&group_names[1]).await?
+    ];
+    {
+        let groups = vec![groups[0].clone()];
+        let _ = db.users_to_groups.add_user_groups(&user.id, &groups).await?;
+    }
+
+    user.groups = groups;
+    // Assert the function returns 1 modification
+    let result = db.users_to_groups.update_user_groups(&user).await;
+    assert!(result.is_ok());
+    assert_eq!(3, result.unwrap());
+    Ok(())
+}

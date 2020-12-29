@@ -73,14 +73,16 @@ impl<'c> JoinTable<'c, User, Group> {
         .await
     }
 
-    // pub async fn update_user_groups(&self, user: &User) -> Result<u64,sqlx::Error> {
-    //     if 0 == user.groups.len() {
-    //
-    //     }
-    //
-    //     let groups = self.get_groups_by_user_id(&user.id).await?;
-    //
-    // }
+    pub async fn update_user_groups(&self, user: &User) -> Result<u64,sqlx::Error> {
+        if 0 == user.groups.len() {
+            self.delete_by_user_id(&user.id).await
+        }
+        else {
+            let deleted = self.delete_by_user_id(&user.id).await?;
+            let added = self.add_user_groups(&user.id, &user.groups).await?;
+            Ok(added + deleted)
+        }
+    }
 }
 
 static DEFAULT_INSERT: &'static str = r#"
