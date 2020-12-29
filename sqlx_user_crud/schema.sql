@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS `actix_user_crud`;
+USE `actix_user_crud`;
+
 DROP TABLE IF EXISTS `users_to_groups`;
 DROP TABLE IF EXISTS `groups`;
 DROP TABLE IF EXISTS `users`;
@@ -24,3 +27,6 @@ CREATE TABLE IF NOT EXISTS `users_to_groups`
     FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
     FOREIGN KEY (`group_id`) REFERENCES `groups`(`id`)
 );
+
+CREATE USER IF NOT EXISTS 'sqlx_user_crud'@'localhost' IDENTIFIED BY 'rust_is_the_future';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `actix_user_crud`.* TO 'sqlx_user_crud'@'localhost';

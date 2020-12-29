@@ -20,3 +20,32 @@ The application itself has been designed with a modular approach. It is common f
 purpose of demonstration) to consolidate code into only a handful of files. Dividing this project into multiple modules, 
 and many small files was intentional, as it makes the overall architecture clear.
 
+The architecture is that of a trivial crud. There are two key layers: (1) the Controller and (2) the DAO (Data Access 
+Object). The controller layer organizes the interaction between the DAO and the incoming/outgoing HTTP. Based on the 
+various DAO responses, specific HTTP responses are provided.
+
+## Test Coverage
+
+This application uses an integration testing style to provided test coverage for all methods. Note, not all method paths
+are fully tested. All expected paths of behavior are tested. In a more comprehensive system, there would be reason to test
+all permutations of behavior. These test serve as an example for what is sufficient test coverage for an initial 
+application.
+
+## Setup
+
+First, have MySql installed and running.
+
+Next, run the `schema.sql` script. On Linux, this can be done in the terminal:
+```shell
+sudo mysql -u root < schema.sql
+```
+
+When `schema.sql` has executed successfully, run the tests:
+```shell
+cargo test
+```
+
+After the tests have completed and all pass, startup the application:
+```shell
+cargo run
+```

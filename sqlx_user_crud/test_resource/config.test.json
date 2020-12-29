@@ -5,9 +5,9 @@
   },
   "dao":
   {
-    "user": "ecfapp",
-    "password": "780765502513ab4575149cfc55fb374ee773536f",
+    "user": "sqlx_user_crud",
+    "password": "rust_is_the_future",
     "address": "localhost",
-    "database": "ecf_user_db"
+    "database": "actix_user_crud"
   }
 }
