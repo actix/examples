@@ -33,7 +33,7 @@ application.
 
 ## Setup
 
-First, have MySql installed and running.
+First, have MySQL installed and running.
 
 Next, run the `schema.sql` script. On Linux, this can be done in the terminal:
 ```shell
