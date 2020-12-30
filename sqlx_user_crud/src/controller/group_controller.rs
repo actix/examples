@@ -10,7 +10,6 @@ pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(delete_group_by_name);
 }
 
-// TODO: provide response headers
 #[get("/group/{id}")]
 async fn get_group_by_id(
     group_id: web::Path<u64>,
@@ -30,7 +29,6 @@ async fn get_group_by_id(
     }
 }
 
-// TODO: provide response headers
 #[post("/group")]
 async fn post_group(
     group: web::Json<String>,
@@ -63,7 +61,6 @@ pub struct GroupUpdate {
     pub new: String,
 }
 
-// TODO: provide response headers
 #[patch("/group")]
 async fn patch_group_by_name(
     update: web::Json<GroupUpdate>,
@@ -71,21 +68,18 @@ async fn patch_group_by_name(
 ) -> impl Responder {
     log_request("PATCH: /user", &app_state.connections);
 
-    // TODO: modify update_group to return the group that was added
     let x = app_state
         .context
         .groups
         .update_group(&update.old, &update.new)
         .await;
 
-    // TODO: better error handling
     match x {
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
-        Ok(_) => HttpResponse::Accepted().body(&update.new), // TODO: as per above ^ return the id of the inserted group
+        Ok(_) => HttpResponse::Accepted().body(&update.new),
     }
 }
 
-// TODO: provide response headers
 #[delete("/group/{name}")]
 async fn delete_group_by_name(
     name: web::Path<String>,
@@ -95,7 +89,6 @@ async fn delete_group_by_name(
 
     let x = app_state.context.groups.delete_group(name.as_str()).await;
 
-    // TODO: better error handling
     match x {
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
         Ok(_) => HttpResponse::Ok().body(format!("Successfully deleted group {}", name)),

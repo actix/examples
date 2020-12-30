@@ -11,7 +11,6 @@ pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(delete_user);
 }
 
-// TODO: use a Uuid in the path instead of a string
 #[get("/user/{id}")]
 async fn get_user(
     user_id: web::Path<String>,

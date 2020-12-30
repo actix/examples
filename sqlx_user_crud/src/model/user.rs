@@ -5,9 +5,9 @@ use sqlx::{FromRow, Row};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct User {
-    pub id: String, // TODO: use the Uuid type
+    pub id: String,
     pub name: String,
-    pub email: String, // TODO: use the EmailAddress type
+    pub email: String,
     pub groups: Vec<Group>,
 }
 
