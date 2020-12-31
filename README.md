@@ -7,6 +7,7 @@
 
 ## Community Showcase
 
+- [Triox](https://github.com/AaronErhardt/Triox) : A free file hosting server that focuses on speed, reliability and security.
 - [binserve](https://github.com/mufeedvh/binserve) : A fast, secure, and easy to set up static web server written on top of Actix Web with routing, templating, and various other features.
 - [Roseline](https://github.com/DoumanAsh/roseline.rs) : A personal web site and discord & IRC bot to access simple SQLite database. Demonstrates usage of various Actix and Actix Web concepts.
 - [lemmy](https://github.com/dessalines/lemmy) : A federated alternative to reddit in Rust.
