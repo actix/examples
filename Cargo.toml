@@ -40,7 +40,6 @@ members = [
    "simple-auth-server",
    "state",
    "static_index",
-   "sqlx_user_crud",
    "template_askama",
    "template_handlebars",
    "template_tera",
