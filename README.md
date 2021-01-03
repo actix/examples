@@ -23,6 +23,7 @@
 - [Complete Actix 2.x REST Server](https://github.com/ddimaria/rust-actix-example): Actix 2.x HTTP Server featuring multi-database support, auth/JWTs, caching, static files, app state, tests, coverage, and docker.
 - [Actix Server Authentication with JWT and MongoDB](https://github.com/emreyalvac/actix-web-jwt/) : An implementation of JWT in Actix.
 - [Production-Grade Logging in Rust Applications](https://medium.com/better-programming/production-grade-logging-in-rust-applications-2c7fffd108a6) : An article showcasing the use of [tracing](https://github.com/tokio-rs/tracing) in an Actix application
+- [Actix and Sqlx User CRUD for MySQL](https://github.com/jamesjmeyer210/actix_sqlx_mysql_user_crud) : A User CRUD showcasing MySQL database interaction with full integration test coverage, designed to fit comfortably in a system of micro-services.
 
 ## Contribute
 
