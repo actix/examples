@@ -1,0 +1,17 @@
+[package]
+name = "tonic-bidirectional"
+version = "0.1.0"
+authors = ["Lunar"]
+edition = "2018"
+
+[dependencies]
+tonic = "0.4"
+actix = "0.10"
+actix-rt = "1.1"
+env_logger = "0.8"
+log = "0.4"
+futures = "0.3"
+prost = "0.7"
+
+[build-dependencies]
+tonic-build = { version = "0.4" }

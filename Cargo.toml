@@ -46,6 +46,7 @@ members = [
    "template_tinytemplate",
    "template_yarte",
    "todo",
+   "tonic-bidirectional",
    "udp-echo",
    "unix-socket",
    "web-cors/backend",
