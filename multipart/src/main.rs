@@ -6,21 +6,25 @@ use futures::{StreamExt, TryStreamExt};
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
-    while let Ok(Some(mut field)) = payload.try_next().await {
-        let content_type = field.content_disposition().unwrap();
-        let filename = content_type.get_filename().unwrap();
-        let filepath = format!("./tmp/{}", sanitize_filename::sanitize(&filename));
+    while let Some(mut field) = payload.try_next().await? {
+        // A multipart/form-data stream has to contain `content_disposition`
+        let content_disposition = field
+            .content_disposition()
+            .ok_or_else(|| HttpResponse::BadRequest().finish())?;
+
+        let filename = content_dispostition.get_filename().map_or_else(
+            |f| sanitize_filename::sanitize(f),
+            || uuid::v4::new().to_string(),
+        );
+        let filepath = format!("./tmp/{}", filename);
 
         // File::create is blocking operation, use threadpool
-        let mut f = web::block(|| std::fs::File::create(filepath))
-            .await
-            .unwrap();
+        let mut f = web::block(|| std::fs::File::create(filepath)).await?;
 
         // Field in turn is stream of *Bytes* object
-        while let Some(chunk) = field.next().await {
-            let data = chunk.unwrap();
+        while let Some(chunk) = field.try_next().await? {
             // filesystem operations are blocking, we have to use threadpool
-            f = web::block(move || f.write_all(&data).map(|_| f)).await?;
+            f = web::block(move || f.write_all(&chunk).map(|_| f)).await?;
         }
     }
     Ok(HttpResponse::Ok().into())
@@ -43,7 +47,7 @@ fn index() -> HttpResponse {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
-    std::fs::create_dir_all("./tmp").unwrap();
+    std::fs::create_dir_all("./tmp")?;
 
     let ip = "0.0.0.0:3000";
 
