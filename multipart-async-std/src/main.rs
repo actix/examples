@@ -35,7 +35,7 @@ fn index() -> HttpResponse {
         </body>
     </html>"#;
 
-    HttpResponse::Ok().body(html)
+    HttpResponse::Ok().content_type("text/html; charset=utf-8").body(html)
 }
 
 #[actix_web::main]
