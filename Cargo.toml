@@ -24,6 +24,7 @@ members = [
    "juniper",
    "juniper-advanced",
    "middleware",
+   "middleware-ext-mut",
    "multipart",
    "multipart-s3",
    "multipart-async-std",

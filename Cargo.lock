@@ -3281,6 +3281,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "middleware-ext-mut"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "env_logger 0.8.2",
+ "futures",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
