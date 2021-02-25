@@ -19,7 +19,6 @@ members = [
    "database_interactions/r2d2",
    "database_interactions/redis",
    "database_interactions/simple-auth-server",
-   "database_interactions/sqlx_todo",
    "forms/form",
    "forms/multipart",
    "forms/multipart-async-std",
