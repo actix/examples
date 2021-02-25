@@ -1,12 +1,12 @@
 #[macro_use]
 extern crate log;
 
+use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use anyhow::Result;
 use dotenv::dotenv;
 use listenfd::ListenFd;
-use std::env;
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use sqlx::PgPool;
-use anyhow::Result;
+use std::env;
 
 // import todo module (routes and model)
 mod todo;
@@ -33,7 +33,8 @@ async fn main() -> Result<()> {
     // this will enable us to keep application running during recompile: systemfd --no-pid -s http::5000 -- cargo watch -x run
     let mut listenfd = ListenFd::from_env();
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
+    let database_url =
+        env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
     let db_pool = PgPool::new(&database_url).await?;
 
     let mut server = HttpServer::new(move || {
