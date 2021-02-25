@@ -3,7 +3,7 @@ name = "simple-auth-server"
 version = "2.0.0"
 authors = ["mygnu <tech@hgill.io>"]
 edition = "2018"
-workspace = ".."
+workspace = "../.."
 
 [dependencies]
 actix-web = "3"
