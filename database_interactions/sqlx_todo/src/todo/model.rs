@@ -1,15 +1,15 @@
-use serde::{Serialize, Deserialize};
-use actix_web::{HttpResponse, HttpRequest, Responder, Error};
-use futures::future::{ready, Ready};
-use sqlx::{PgPool, FromRow, Row};
-use sqlx::postgres::PgRow;
+use actix_web::{Error, HttpRequest, HttpResponse, Responder};
 use anyhow::Result;
+use futures::future::{ready, Ready};
+use serde::{Deserialize, Serialize};
+use sqlx::postgres::PgRow;
+use sqlx::{FromRow, PgPool, Row};
 
 // this struct will use to receive user input
 #[derive(Serialize, Deserialize)]
 pub struct TodoRequest {
     pub description: String,
-    pub done: bool
+    pub done: bool,
 }
 
 // this struct will be used to represent database record
@@ -28,11 +28,9 @@ impl Responder for Todo {
     fn respond_to(self, _req: &HttpRequest) -> Self::Future {
         let body = serde_json::to_string(&self).unwrap();
         // create response and set content type
-        ready(Ok(
-            HttpResponse::Ok()
-                .content_type("application/json")
-                .body(body)
-        ))
+        ready(Ok(HttpResponse::Ok()
+            .content_type("application/json")
+            .body(body)))
     }
 }
 
@@ -47,14 +45,14 @@ impl Todo {
                 ORDER BY id
             "#
         )
-            .fetch_all(pool)
-            .await?;
+        .fetch_all(pool)
+        .await?;
 
         for rec in recs {
             todos.push(Todo {
                 id: rec.id,
                 description: rec.description,
-                done: rec.done
+                done: rec.done,
             });
         }
 
@@ -63,18 +61,18 @@ impl Todo {
 
     pub async fn find_by_id(id: i32, pool: &PgPool) -> Result<Todo> {
         let rec = sqlx::query!(
-                r#"
+            r#"
                     SELECT * FROM todos WHERE id = $1
                 "#,
-                id
-            )
-            .fetch_one(&*pool)
-            .await?;
+            id
+        )
+        .fetch_one(&*pool)
+        .await?;
 
         Ok(Todo {
             id: rec.id,
             description: rec.description,
-            done: rec.done
+            done: rec.done,
         })
     }
 
