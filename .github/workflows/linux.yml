@@ -49,6 +49,13 @@ jobs:
         with:
           redis-version: 6
 
+      - name: run diesel migrations
+        run: |
+          cargo install diesel_cli
+          cd database_interactions/diesel
+          diesel migration run
+          chmod a+rwx test.db
+
       - name: cargo test
         uses: actions-rs/cargo@v1
         timeout-minutes: 30
