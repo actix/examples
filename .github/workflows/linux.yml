@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ["stable", "nightly"]
+        version: ['stable', 'nightly']
 
     steps:
       - uses: actions/checkout@v2
@@ -50,9 +50,9 @@ jobs:
           redis-version: 6
 
       - name: run diesel migrations
-        uses: danitrod/diesel-cli-action@v0.2.0
+        uses: danitrod/diesel-cli-action@v0.3.0
         with:
-          migration_directories: database_interactions/diesel/migrations
+          migration_directories: database_interactions/diesel
           database_url: test.db
 
       - name: cargo test
