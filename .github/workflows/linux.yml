@@ -49,6 +49,12 @@ jobs:
         with:
           redis-version: 6
 
+      - name: run diesel migrations
+        uses: danitrod/diesel-cli-action@v0.2.0
+        with:
+          migration_directories: database_interactions/diesel/migrations
+          database_url: test.db
+
       - name: cargo test
         uses: actions-rs/cargo@v1
         timeout-minutes: 30
