@@ -26,18 +26,11 @@ brew install sqlite3
 cd examples/diesel
 cargo install diesel_cli --no-default-features --features sqlite
 
-echo "DATABASE_URL=prod.db" > .env
+echo "DATABASE_URL=test.db" > .env
 diesel migration run
 ```
 
-There will now be a database file at `./prod.db`.
-
-Optionally you can add another database for tests:
-
-```sh
-echo "TEST_DATABASE_URL=test.db" >> .env
-diesel migration run --database-url test.db
-```
+There will now be a database file at `./test.db`.
 
 ### Running Server
 

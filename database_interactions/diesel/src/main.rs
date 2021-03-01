@@ -104,7 +104,7 @@ mod tests {
         env_logger::init();
         dotenv::dotenv().ok();
 
-        let connspec = std::env::var("TEST_DATABASE_URL").expect("TEST_DATABASE_URL");
+        let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
         let manager = ConnectionManager::<SqliteConnection>::new(connspec);
         let pool = r2d2::Pool::builder()
             .build(manager)
@@ -140,9 +140,10 @@ mod tests {
 
         assert_eq!(resp.name, "Test user");
 
-        // Cleanup users table
-        diesel::delete(crate::schema::users::dsl::users)
+        // Delete new user from table
+        use crate::schema::users::dsl::*;
+        diesel::delete(users.filter(id.eq(resp.id)))
             .execute(&pool.get().expect("couldn't get db connection from pool"))
-            .expect("couldn't delete table values");
+            .expect("couldn't delete test user from table");
     }
 }
