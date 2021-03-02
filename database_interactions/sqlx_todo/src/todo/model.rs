@@ -3,7 +3,7 @@ use anyhow::Result;
 use futures::future::{ready, Ready};
 use serde::{Deserialize, Serialize};
 use sqlx::sqlite::SqliteRow;
-use sqlx::{FromRow, SqlitePool, Row};
+use sqlx::{FromRow, Row, SqlitePool};
 
 // this struct will use to receive user input
 #[derive(Serialize, Deserialize)]
