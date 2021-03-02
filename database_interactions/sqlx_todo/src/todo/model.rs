@@ -2,8 +2,8 @@ use actix_web::{Error, HttpRequest, HttpResponse, Responder};
 use anyhow::Result;
 use futures::future::{ready, Ready};
 use serde::{Deserialize, Serialize};
-use sqlx::postgres::PgRow;
-use sqlx::{FromRow, PgPool, Row};
+use sqlx::sqlite::SqliteRow;
+use sqlx::{FromRow, SqlitePool, Row};
 
 // this struct will use to receive user input
 #[derive(Serialize, Deserialize)]
@@ -36,7 +36,7 @@ impl Responder for Todo {
 
 // Implementation for Todo struct, functions for read/write/update and delete todo from database
 impl Todo {
-    pub async fn find_all(pool: &PgPool) -> Result<Vec<Todo>> {
+    pub async fn find_all(pool: &SqlitePool) -> Result<Vec<Todo>> {
         let mut todos = vec![];
         let recs = sqlx::query!(
             r#"
@@ -59,7 +59,7 @@ impl Todo {
         Ok(todos)
     }
 
-    pub async fn find_by_id(id: i32, pool: &PgPool) -> Result<Todo> {
+    pub async fn find_by_id(id: i32, pool: &SqlitePool) -> Result<Todo> {
         let rec = sqlx::query!(
             r#"
                     SELECT * FROM todos WHERE id = $1
@@ -76,12 +76,12 @@ impl Todo {
         })
     }
 
-    pub async fn create(todo: TodoRequest, pool: &PgPool) -> Result<Todo> {
+    pub async fn create(todo: TodoRequest, pool: &SqlitePool) -> Result<Todo> {
         let mut tx = pool.begin().await?;
         let todo = sqlx::query("INSERT INTO todos (description, done) VALUES ($1, $2) RETURNING id, description, done")
             .bind(&todo.description)
             .bind(todo.done)
-            .map(|row: PgRow| {
+            .map(|row: SqliteRow| {
                 Todo {
                     id: row.get(0),
                     description: row.get(1),
@@ -95,13 +95,13 @@ impl Todo {
         Ok(todo)
     }
 
-    pub async fn update(id: i32, todo: TodoRequest, pool: &PgPool) -> Result<Todo> {
+    pub async fn update(id: i32, todo: TodoRequest, pool: &SqlitePool) -> Result<Todo> {
         let mut tx = pool.begin().await.unwrap();
         let todo = sqlx::query("UPDATE todos SET description = $1, done = $2 WHERE id = $3 RETURNING id, description, done")
             .bind(&todo.description)
             .bind(todo.done)
             .bind(id)
-            .map(|row: PgRow| {
+            .map(|row: SqliteRow| {
                 Todo {
                     id: row.get(0),
                     description: row.get(1),
@@ -115,7 +115,7 @@ impl Todo {
         Ok(todo)
     }
 
-    pub async fn delete(id: i32, pool: &PgPool) -> Result<u64> {
+    pub async fn delete(id: i32, pool: &SqlitePool) -> Result<u64> {
         let mut tx = pool.begin().await?;
         let deleted = sqlx::query("DELETE FROM todos WHERE id = $1")
             .bind(id)

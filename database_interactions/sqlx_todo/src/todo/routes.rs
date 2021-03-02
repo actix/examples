@@ -1,9 +1,9 @@
 use crate::todo::{Todo, TodoRequest};
 use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
-use sqlx::PgPool;
+use sqlx::SqlitePool;
 
 #[get("/todos")]
-async fn find_all(db_pool: web::Data<PgPool>) -> impl Responder {
+async fn find_all(db_pool: web::Data<SqlitePool>) -> impl Responder {
     let result = Todo::find_all(db_pool.get_ref()).await;
     match result {
         Ok(todos) => HttpResponse::Ok().json(todos),
@@ -13,7 +13,7 @@ async fn find_all(db_pool: web::Data<PgPool>) -> impl Responder {
 }
 
 #[get("/todo/{id}")]
-async fn find(id: web::Path<i32>, db_pool: web::Data<PgPool>) -> impl Responder {
+async fn find(id: web::Path<i32>, db_pool: web::Data<SqlitePool>) -> impl Responder {
     let result = Todo::find_by_id(id.into_inner(), db_pool.get_ref()).await;
     match result {
         Ok(todo) => HttpResponse::Ok().json(todo),
@@ -24,7 +24,7 @@ async fn find(id: web::Path<i32>, db_pool: web::Data<PgPool>) -> impl Responder 
 #[post("/todo")]
 async fn create(
     todo: web::Json<TodoRequest>,
-    db_pool: web::Data<PgPool>,
+    db_pool: web::Data<SqlitePool>,
 ) -> impl Responder {
     let result = Todo::create(todo.into_inner(), db_pool.get_ref()).await;
     match result {
@@ -37,7 +37,7 @@ async fn create(
 async fn update(
     id: web::Path<i32>,
     todo: web::Json<TodoRequest>,
-    db_pool: web::Data<PgPool>,
+    db_pool: web::Data<SqlitePool>,
 ) -> impl Responder {
     let result =
         Todo::update(id.into_inner(), todo.into_inner(), db_pool.get_ref()).await;
@@ -48,7 +48,7 @@ async fn update(
 }
 
 #[delete("/todo/{id}")]
-async fn delete(id: web::Path<i32>, db_pool: web::Data<PgPool>) -> impl Responder {
+async fn delete(id: web::Path<i32>, db_pool: web::Data<SqlitePool>) -> impl Responder {
     let result = Todo::delete(id.into_inner(), db_pool.get_ref()).await;
     match result {
         Ok(rows) => {
