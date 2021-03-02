@@ -39,7 +39,7 @@ jobs:
 
       - name: create test db for sqlx
         run: |
-          apt-get update && apt-get install sqlite3
+          sudo apt-get update && sudo apt-get install sqlite3
           cd database_interactions/sqlx_todo
           cp .env.example .env
           cat schema.sql | sqlite3 test.db
