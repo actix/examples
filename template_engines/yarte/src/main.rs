@@ -4,7 +4,7 @@ use actix_web::{
     get, middleware::Logger, web, App, Error, HttpResponse, HttpServer, ResponseError,
 };
 use derive_more::Display;
-use yarte::ywrite_min;
+use yarte::{auto, ywrite_min};
 
 #[derive(Debug, Display)]
 struct MyErr(pub &'static str);
@@ -15,14 +15,11 @@ impl ResponseError for MyErr {}
 async fn index(
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, Error> {
-    let mut body = web::BytesMut::with_capacity(512);
     // `ywrite_min` is work in progress check your templates before put in production
     // or use `ywrite_html`
-    ywrite_min!(body, "{{> index }}");
-
     Ok(HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
-        .body(body))
+        .body(auto!(ywrite_min!(String, "{{> index }}"))))
 }
 
 #[actix_web::main]
