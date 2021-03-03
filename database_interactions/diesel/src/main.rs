@@ -92,3 +92,58 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use actix_web::test;
+
+    #[actix_rt::test]
+    async fn user_routes() {
+        std::env::set_var("RUST_LOG", "actix_web=debug");
+        env_logger::init();
+        dotenv::dotenv().ok();
+
+        let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
+        let manager = ConnectionManager::<SqliteConnection>::new(connspec);
+        let pool = r2d2::Pool::builder()
+            .build(manager)
+            .expect("Failed to create pool.");
+
+        let mut app = test::init_service(
+            App::new()
+                .data(pool.clone())
+                .wrap(middleware::Logger::default())
+                .service(get_user)
+                .service(add_user),
+        )
+        .await;
+
+        // Insert a user
+        let req = test::TestRequest::post()
+            .uri("/user")
+            .set_json(&models::NewUser {
+                name: "Test user".to_owned(),
+            })
+            .to_request();
+
+        let resp: models::User = test::read_response_json(&mut app, req).await;
+
+        assert_eq!(resp.name, "Test user");
+
+        // Get a user
+        let req = test::TestRequest::get()
+            .uri(&format!("/user/{}", resp.id))
+            .to_request();
+
+        let resp: models::User = test::read_response_json(&mut app, req).await;
+
+        assert_eq!(resp.name, "Test user");
+
+        // Delete new user from table
+        use crate::schema::users::dsl::*;
+        diesel::delete(users.filter(id.eq(resp.id)))
+            .execute(&pool.get().expect("couldn't get db connection from pool"))
+            .expect("couldn't delete test user from table");
+    }
+}
