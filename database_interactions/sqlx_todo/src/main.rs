@@ -5,7 +5,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use anyhow::Result;
 use dotenv::dotenv;
 use listenfd::ListenFd;
-use sqlx::PgPool;
+use sqlx::SqlitePool;
 use std::env;
 
 // import todo module (routes and model)
@@ -35,7 +35,7 @@ async fn main() -> Result<()> {
 
     let database_url =
         env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
-    let db_pool = PgPool::new(&database_url).await?;
+    let db_pool = SqlitePool::new(&database_url).await?;
 
     let mut server = HttpServer::new(move || {
         App::new()

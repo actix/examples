@@ -37,6 +37,14 @@ jobs:
           toolchain: ${{ matrix.version }}
           override: true
 
+      - name: create test db for sqlx
+        run: |
+          sudo apt-get update && sudo apt-get install sqlite3
+          cd database_interactions/sqlx_todo
+          cp .env.example .env
+          cat schema.sql | sqlite3 test.db
+          chmod a+rwx test.db
+
       - name: cargo check
         uses: actions-rs/cargo@v1
         timeout-minutes: 30

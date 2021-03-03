@@ -1,13 +1,13 @@
 # actix-sqlx-todo
 
-Example Todo application using Actix-web and [SQLx](https://github.com/launchbadge/sqlx) with posgresql
+Example Todo application using Actix-web and [SQLx](https://github.com/launchbadge/sqlx) with sqlite
 
 # Usage
 
 ## Prerequisites
 
 * Rust
-* PostgreSQL
+* SQLite
 
 ## Change into the project sub-directory
 
@@ -20,7 +20,7 @@ cd examples/sqlx_todo
 ## Set up the database
 
 * Create new database using `schema.sql`
-* Copy `.env-example` into `.env` and adjust DATABASE_URL to match your PostgreSQL address, username and password 
+* Copy `.env-example` into `.env` and adjust DATABASE_URL to match your SQLite address, username and password 
 
 ## Run the application
 
