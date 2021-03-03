@@ -1,6 +1,6 @@
 # actix-sqlx-todo
 
-Example Todo application using Actix-web and [SQLx](https://github.com/launchbadge/sqlx) with posgresql
+Example Todo application using Actix-web and [SQLx](https://github.com/launchbadge/sqlx) with sqlite
 
 # Usage
 
