@@ -8,8 +8,7 @@ edition = "2018"
 [dependencies]
 actix-web = "3"
 env_logger = "0.8"
-# TODO: remove fixed feature. Is a bug.
-yarte = { version = "0.12", features = ["bytes-buf", "html-min", "fixed"] }
+yarte = { version = "0.15", features = ["bytes-buf", "html-min"] }
 derive_more = "0.99"
 
 [build-dependencies.yarte_helpers]
