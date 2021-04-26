@@ -14,7 +14,7 @@ pub async fn graphql(
         dbpool: pool.get_ref().to_owned(),
     };
     let res = web::block(move || {
-        let res = data.execute(&schema, &ctx);
+        let res = data.execute_sync(&schema, &ctx);
         Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
     })
     .await
@@ -28,7 +28,7 @@ pub async fn graphql(
 pub async fn graphql_playground() -> HttpResponse {
     HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
-        .body(graphiql_source("/graphql"))
+        .body(graphiql_source("/graphql", None))
 }
 
 pub fn register(config: &mut web::ServiceConfig) {

@@ -20,6 +20,7 @@ cargo run (or ``cargo watch -x run``)
 [http://127.0.0.1:8080/graphiql](http://127.0.0.1:8080/graphiql)
 
 _Query example:_
+
 ```graphql
 {
   human(id: "1234") {
@@ -29,7 +30,9 @@ _Query example:_
   }
 }
 ```
+
 _Result:_
+
 ```json
 {
   "data": {
@@ -58,6 +61,7 @@ mutation {
 ```
 
 _Result:_
+
 ```json
 {
   "data": {

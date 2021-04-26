@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 actix-web = "3"
 
-juniper = "0.14"
+juniper = "0.15"
 
 mysql = "17"
 r2d2 = "0.8"

@@ -14,7 +14,7 @@ mod schema;
 use crate::schema::{create_schema, Schema};
 
 async fn graphiql() -> HttpResponse {
-    let html = graphiql_source("http://127.0.0.1:8080/graphql");
+    let html = graphiql_source("http://127.0.0.1:8080/graphql", None);
     HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .body(html)
@@ -25,7 +25,7 @@ async fn graphql(
     data: web::Json<GraphQLRequest>,
 ) -> Result<HttpResponse, Error> {
     let user = web::block(move || {
-        let res = data.execute(&st, &());
+        let res = data.execute_sync(&st, &());
         Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
     })
     .await?;

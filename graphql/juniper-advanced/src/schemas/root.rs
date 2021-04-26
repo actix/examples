@@ -1,4 +1,4 @@
-use juniper::{FieldError, FieldResult, RootNode};
+use juniper::{EmptySubscription, FieldError, FieldResult, RootNode};
 use mysql::{from_row, params, Error as DBError, Row};
 
 use crate::db::Pool;
@@ -14,7 +14,7 @@ impl juniper::Context for Context {}
 
 pub struct QueryRoot;
 
-#[juniper::object(Context = Context)]
+#[juniper::graphql_object(Context = Context)]
 impl QueryRoot {
     #[graphql(description = "List of all users")]
     fn users(context: &Context) -> FieldResult<Vec<User>> {
@@ -24,7 +24,7 @@ impl QueryRoot {
             .map(|result| {
                 result
                     .map(|x| x.unwrap())
-                    .map(|mut row| {
+                    .map(|row| {
                         let (id, name, email) = from_row(row);
                         User { id, name, email }
                     })
@@ -41,7 +41,7 @@ impl QueryRoot {
         let user: Result<Option<Row>, DBError> =
             conn.first_exec("SELECT * FROM user WHERE id=:id", params! {"id" => id});
 
-        if let Err(err) = user {
+        if let Err(_err) = user {
             return Err(FieldError::new(
                 "User Not Found",
                 graphql_value!({ "not_found": "user not found" }),
@@ -60,7 +60,7 @@ impl QueryRoot {
             .map(|result| {
                 result
                     .map(|x| x.unwrap())
-                    .map(|mut row| {
+                    .map(|row| {
                         let (id, user_id, name, price) = from_row(row);
                         Product {
                             id,
@@ -80,7 +80,7 @@ impl QueryRoot {
         let mut conn = context.dbpool.get().unwrap();
         let product: Result<Option<Row>, DBError> =
             conn.first_exec("SELECT * FROM user WHERE id=:id", params! {"id" => id});
-        if let Err(err) = product {
+        if let Err(_err) = product {
             return Err(FieldError::new(
                 "Product Not Found",
                 graphql_value!({ "not_found": "product not found" }),
@@ -99,7 +99,7 @@ impl QueryRoot {
 
 pub struct MutationRoot;
 
-#[juniper::object(Context = Context)]
+#[juniper::graphql_object(Context = Context)]
 impl MutationRoot {
     fn create_user(context: &Context, user: UserInput) -> FieldResult<User> {
         let mut conn = context.dbpool.get().unwrap();
@@ -115,7 +115,7 @@ impl MutationRoot {
         );
 
         match insert {
-            Ok(opt_row) => Ok(User {
+            Ok(_opt_row) => Ok(User {
                 id: new_id,
                 name: user.name,
                 email: user.email,
@@ -148,7 +148,7 @@ impl MutationRoot {
         );
 
         match insert {
-            Ok(opt_row) => Ok(Product {
+            Ok(_opt_row) => Ok(Product {
                 id: new_id,
                 user_id: product.user_id,
                 name: product.name,
@@ -168,8 +168,8 @@ impl MutationRoot {
     }
 }
 
-pub type Schema = RootNode<'static, QueryRoot, MutationRoot>;
+pub type Schema = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<Context>>;
 
 pub fn create_schema() -> Schema {
-    Schema::new(QueryRoot, MutationRoot)
+    Schema::new(QueryRoot, MutationRoot, EmptySubscription::new())
 }

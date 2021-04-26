@@ -18,7 +18,7 @@ pub struct UserInput {
     pub email: String,
 }
 
-#[juniper::object(Context = Context)]
+#[juniper::graphql_object(Context = Context)]
 impl User {
     fn id(&self) -> &str {
         &self.id
@@ -42,7 +42,7 @@ impl User {
         .map(|result| {
             result
                 .map(|x| x.unwrap())
-                .map(|mut row| {
+                .map(|row| {
                     let (id, user_id, name, price) = from_row(row);
                     Product {
                         id,

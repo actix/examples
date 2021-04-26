@@ -12,7 +12,7 @@ pub struct Product {
     pub price: f64,
 }
 
-#[juniper::object(Context = Context)]
+#[juniper::graphql_object(Context = Context)]
 impl Product {
     fn id(&self) -> &str {
         &self.id
@@ -33,7 +33,7 @@ impl Product {
             "SELECT * FROM user WHERE id=:id",
             params! {"id" => &self.user_id},
         );
-        if let Err(err) = user {
+        if let Err(_err) = user {
             None
         } else {
             let (id, name, email) = from_row(user.unwrap().unwrap());
