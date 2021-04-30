@@ -25,6 +25,7 @@
 - [Complete Actix 2.x REST Server](https://github.com/ddimaria/rust-actix-example): Actix 2.x HTTP Server featuring multi-database support, auth/JWTs, caching, static files, app state, tests, coverage, and docker.
 - [Actix Server Authentication with JWT and MongoDB](https://github.com/emreyalvac/actix-web-jwt/) : An implementation of JWT in Actix.
 - [Production-Grade Logging in Rust Applications](https://medium.com/better-programming/production-grade-logging-in-rust-applications-2c7fffd108a6) : An article showcasing the use of [tracing](https://github.com/tokio-rs/tracing) in an Actix application
+- [Fullstack-Rust](https://github.com/vascokk/fullstack-rust) - A Full Stack Rust application (Connect5 game) with Actix-web, Yew, Bulma CSS and Diesel.
 
 ## Contribute
 
