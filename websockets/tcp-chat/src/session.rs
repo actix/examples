@@ -172,30 +172,28 @@ impl ChatSession {
 
 /// Define tcp server that will accept incoming tcp connection and create
 /// chat actors.
-pub fn tcp_server(_s: &str, server: Addr<ChatServer>) {
+pub async fn tcp_server(_s: &str, server: Addr<ChatServer>) {
     // Create server listener
     let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
 
-    actix_web::rt::spawn(async move {
-        let server = server.clone();
-        let mut listener = TcpListener::bind(&addr).await.unwrap();
-        let mut incoming = listener.incoming();
+    let server = server.clone();
+    let mut listener = TcpListener::bind(&addr).await.unwrap();
+    let mut incoming = listener.incoming();
 
-        while let Some(stream) = incoming.next().await {
-            match stream {
-                Ok(stream) => {
-                    let server = server.clone();
-                    ChatSession::create(|ctx| {
-                        let (r, w) = split(stream);
-                        ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
-                        ChatSession::new(
-                            server,
-                            actix::io::FramedWrite::new(w, ChatCodec, ctx),
-                        )
-                    });
-                }
-                Err(_) => return,
+    while let Some(stream) = incoming.next().await {
+        match stream {
+            Ok(stream) => {
+                let server = server.clone();
+                ChatSession::create(|ctx| {
+                    let (r, w) = split(stream);
+                    ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
+                    ChatSession::new(
+                        server,
+                        actix::io::FramedWrite::new(w, ChatCodec, ctx),
+                    )
+                });
             }
+            Err(_) => return,
         }
-    });
+    }
 }

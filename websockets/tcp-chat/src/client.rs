@@ -8,33 +8,36 @@ use tokio_util::codec::FramedRead;
 
 mod codec;
 
-#[actix_web::main]
-async fn main() {
-    // Connect to server
-    let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
+fn main() {
+    let sys = System::new("tcp-chat-client");
 
-    println!("Running chat client");
+    Arbiter::spawn(async {
+        // Connect to server
+        let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
 
-    let stream = TcpStream::connect(&addr).await.unwrap();
+        println!("Running chat client");
 
-    let addr = ChatClient::create(|ctx| {
-        let (r, w) = split(stream);
-        ChatClient::add_stream(FramedRead::new(r, codec::ClientChatCodec), ctx);
-        ChatClient {
-            framed: actix::io::FramedWrite::new(w, codec::ClientChatCodec, ctx),
-        }
+        let stream = TcpStream::connect(&addr).await.unwrap();
+
+        let addr = ChatClient::create(|ctx| {
+            let (r, w) = split(stream);
+            ChatClient::add_stream(FramedRead::new(r, codec::ClientChatCodec), ctx);
+            ChatClient {
+                framed: actix::io::FramedWrite::new(w, codec::ClientChatCodec, ctx),
+            }
+        });
+        // start console loop
+        thread::spawn(move || loop {
+            let mut cmd = String::new();
+            if io::stdin().read_line(&mut cmd).is_err() {
+                println!("error");
+                return;
+            }
+
+            addr.do_send(ClientCommand(cmd));
+        });
     });
-
-    // start console loop
-    thread::spawn(move || loop {
-        let mut cmd = String::new();
-        if io::stdin().read_line(&mut cmd).is_err() {
-            println!("error");
-            return;
-        }
-
-        addr.do_send(ClientCommand(cmd));
-    });
+    sys.run().unwrap();
 }
 
 struct ChatClient {
@@ -133,6 +136,7 @@ impl StreamHandler<Result<codec::ChatResponse, io::Error>> for ChatClient {
                 }
                 println!();
             }
+            Ok(codec::ChatResponse::Ping) => {}
             _ => ctx.stop(),
         }
     }
