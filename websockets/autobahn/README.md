@@ -7,7 +7,7 @@ Websocket server for autobahn suite testing.
 ### server
 
 ```bash
-cd examples/websocket-autobahn
+cd websockets/autobahn
 cargo run --bin websocket-autobahn-server
 ```
 
