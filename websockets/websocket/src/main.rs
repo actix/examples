@@ -1,5 +1,5 @@
 //! Simple echo websocket server.
-//! Open `http://localhost:8080/ws/index.html` in browser
+//! Open `http://localhost:8080/index.html` in browser
 //! or [python console client](https://github.com/actix/examples/blob/master/websocket/websocket-client.py)
 //! could be used for testing.
 
