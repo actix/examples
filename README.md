@@ -3,7 +3,7 @@
 > Curated examples using the Actix ecosystem.
 
 [![build status](https://github.com/actix/examples/workflows/CI%20%28Linux%29/badge.svg?branch=master&event=push)](https://github.com/actix/examples/actions)
-[![Join the chat at https://gitter.im/actix/actix-web](https://badges.gitter.im/actix/actix-web.svg)](https://gitter.im/actix/actix-web?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Chat on Discord](https://img.shields.io/discord/771444961383153695?label=chat&logo=discord)](https://discord.gg/NWpN5mmg3x)
 
 ## Community Showcase
 
