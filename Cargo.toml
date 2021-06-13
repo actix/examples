@@ -20,6 +20,7 @@ members = [
    "database_interactions/redis",
    "database_interactions/simple-auth-server",
    "database_interactions/sqlx_todo",
+   "database_interactions/mongodb",
    "forms/form",
    "forms/multipart",
    "forms/multipart-async-std",
