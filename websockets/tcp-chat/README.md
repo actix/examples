@@ -1,13 +1,12 @@
 # Websocket chat example
 
-This is extension of the
+This is modified version of the
 [actix chat example](https://github.com/actix/actix/tree/master/examples/chat)
 
-Added features:
+features:
 
-* Browser WebSocket client
-* Chat server runs in separate thread
-* Tcp listener runs in separate thread
+* Tcp Chat Server
+* Tcp Chat Client
 
 ## Server
 
@@ -26,7 +25,3 @@ To start server use command: `cargo run --bin websocket-tcp-server`
 Client connects to server. Reads input from stdin and sends to server.
 
 To run client use command: `cargo run --bin websocket-tcp-client`
-
-## WebSocket Browser Client
-
-Open url: [http://localhost:8080/](http://localhost:8080/)
