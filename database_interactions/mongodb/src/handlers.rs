@@ -1,9 +1,8 @@
 use crate::service::NewUser;
 use crate::AppState;
 use actix_web::{web, HttpResponse};
-use std::sync::Arc;
 
-async fn index(app_state: web::Data<Arc<AppState>>) -> HttpResponse {
+async fn index(app_state: web::Data<AppState>) -> HttpResponse {
     let result = app_state.user.get_all().await;
 
     match result {
@@ -13,7 +12,7 @@ async fn index(app_state: web::Data<Arc<AppState>>) -> HttpResponse {
 }
 
 async fn create_user(
-    app_state: web::Data<Arc<AppState>>,
+    app_state: web::Data<AppState>,
     new_user_req: web::Json<NewUser>,
 ) -> HttpResponse {
     let new_user = new_user_req.into_inner();

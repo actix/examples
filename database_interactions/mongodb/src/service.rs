@@ -16,7 +16,6 @@ impl UserService {
     pub fn new(collection: Collection) -> Self {
         Self { collection }
     }
-    
     pub async fn create_user(&self, user: NewUser) -> Result<InsertOneResult, Error> {
         let NewUser { name, email, .. } = user;
         self.collection

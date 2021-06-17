@@ -1,8 +1,7 @@
-use actix_web::{App, HttpServer};
+use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use mongodb::{options::ClientOptions, Client};
 use service::UserService;
-use std::sync::Arc;
 
 mod handlers;
 mod service;
@@ -32,13 +31,13 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     let mongo = MongoDB::init().await.expect("mongodb connection");
     let db = mongo.connection_base("myApp");
-    let app_state = Arc::new(AppState {
+    let app_state = web::Data::new(AppState {
         user: UserService::new(db.collection("users")),
     });
 
     HttpServer::new(move || {
         App::new()
-            .data(app_state.clone())
+            .app_data(app_state.clone())
             .configure(handlers::config)
     })
     .bind("127.0.0.1:8080")?
