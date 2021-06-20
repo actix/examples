@@ -81,7 +81,7 @@ impl WsChatSession {
     pub fn send_msg(&self, msg: &str) {
         let content = format!(
             "{}: {}",
-            self.name.clone().unwrap_or_else(|| "anon".to_string()),
+            self.client_name(),
             msg
         );
 
@@ -89,6 +89,10 @@ impl WsChatSession {
 
         // issue_async comes from having the `BrokerIssue` trait in scope.
         self.issue_system_async(msg);
+    }
+
+    pub fn client_name(&self) -> String {
+        self.name.as_ref().unwrap_or(&String::from("anon")).clone()
     }
 }
 
@@ -102,7 +106,7 @@ impl Actor for WsChatSession {
     fn stopped(&mut self, _ctx: &mut Self::Context) {
         info!(
             "WsChatSession closed for {}({}) in room {}",
-            self.name.clone().unwrap_or_else(|| "anon".to_string()),
+            self.client_name(),
             self.id,
             self.room
         );
@@ -131,7 +135,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
             Ok(msg) => msg,
         };
 
-        debug!("WsChatSession::handle() - message: {:?}", msg);
+        debug!("WsChatSession::handle() - message: {:?} from: {}", msg, self.client_name());
 
         match msg {
             ws::Message::Text(text) => {

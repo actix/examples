@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use log::debug;
+use log::{debug, warn};
 use actix::prelude::*;
 use actix_broker::BrokerSubscribe;
 
@@ -33,9 +33,8 @@ impl WsChatServer {
 
             loop {
                 if room.contains_key(&client_id) {
-                    // avoids duplicate client ids
-                    debug!(
-                        "add_client_to_room() - creating new client id, {}",
+                    warn!(
+                        "add_client_to_room() - client id already here, creating new client id: {}",
                         &client_id
                     );
                     client_id = rand::random::<usize>();
