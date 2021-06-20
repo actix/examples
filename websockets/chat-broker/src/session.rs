@@ -91,6 +91,11 @@ impl WsChatSession {
         self.issue_system_async(msg);
     }
 
+    pub fn who_am_i(&self, ctx: &mut ws::WebsocketContext<Self>) {
+        let msg = format!("name: {}, client_id: {} in room_name: {}", self.client_name(), self.id, self.room);
+        ctx.text(msg);
+    }
+
     pub fn client_name(&self) -> String {
         self.name.as_ref().unwrap_or(&String::from("anon")).clone()
     }
@@ -165,6 +170,8 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                         }
 
                         Some("/list-clients") => self.list_clients(ctx),
+
+                        Some("/whoami") => self.who_am_i(ctx),
 
                         _ => ctx.text(format!("!!! unknown command: {:?}", msg)),
                     }
