@@ -64,6 +64,8 @@
       <button id="connect">Connect</button>
       <span>Status:</span>
       <span id="status">disconnected</span>
+      <span>Room:</span>
+      <span id="roomname"></span>
     </div>
 
     <div id="log"></div>
@@ -132,6 +134,7 @@
     <script>
       const $status = document.querySelector('#status')
       const $connectButton = document.querySelector('#connect')
+      const $roomName = document.querySelector('#roomname')
       const $log = document.querySelector('#log')
       const $form = document.querySelector('#chatform')
       const $input = document.querySelector('#text')
@@ -161,6 +164,7 @@
         }
 
         socket.onmessage = (ev) => {
+          updateRoomName(ev.data)
           log('Received: ' + ev.data, 'message')
         }
 
@@ -193,7 +197,14 @@
           $status.style.color = 'white'
           $status.textContent = 'disconnected'
           $connectButton.textContent = 'Connect'
+          $roomName.textContent = ''
         }
+      }
+
+      function updateRoomName(message) {
+        const match = /joined (.*)$/.exec(message) || []
+        const roomName = match[1]
+        if (roomName) $roomName.textContent = roomName
       }
 
       $connectButton.addEventListener('click', () => {
