@@ -18,14 +18,13 @@ pub struct WsChatSession {
 }
 
 impl WsChatSession {
+    /// Getter for self.name, the client's name for this session
+    pub fn client_name(&self) -> String {
+        self.name.as_ref().unwrap_or(&String::from("anon")).clone()
+    }
+
     pub fn join_room(&mut self, room_name: &str, ctx: &mut ws::WebsocketContext<Self>) {
         let room_name = room_name.to_owned();
-
-        // First send a leave message for the current room
-        let leave_msg = LeaveRoom(self.room.clone(), self.id);
-
-        // issue_sync comes from having the `BrokerIssue` trait in scope.
-        self.issue_system_sync(leave_msg, ctx);
 
         // Then send a join message for the new room
         let join_msg = JoinRoom(
@@ -98,10 +97,6 @@ impl WsChatSession {
         );
         ctx.text(msg);
     }
-
-    pub fn client_name(&self) -> String {
-        self.name.as_ref().unwrap_or(&String::from("anon")).clone()
-    }
 }
 
 impl Actor for WsChatSession {
@@ -111,7 +106,13 @@ impl Actor for WsChatSession {
         self.join_room("Main", ctx);
     }
 
-    fn stopped(&mut self, _ctx: &mut Self::Context) {
+    fn stopped(&mut self, ctx: &mut Self::Context) {
+        // send a leave message for the current room
+        let leave_msg = LeaveRoom(self.room.clone(), self.id);
+
+        // issue_sync comes from having the `BrokerIssue` trait in scope.
+        self.issue_system_sync(leave_msg, ctx);
+
         info!(
             "WsChatSession closed for {}({}) in room {}",
             self.client_name(),

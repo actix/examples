@@ -114,8 +114,14 @@ impl Handler<LeaveRoom> for WsChatServer {
     type Result = ();
 
     fn handle(&mut self, msg: LeaveRoom, _ctx: &mut Self::Context) {
-        if let Some(room) = self.rooms.get_mut(&msg.0) {
-            room.remove(&msg.1);
+        let LeaveRoom(room_name, client_id) = msg;
+
+        if let Some(room) = self.rooms.get_mut(&room_name) {
+            debug!(
+                "LeaveRoom::handle() - removing {} from {}",
+                &client_id, &room_name
+            );
+            room.remove(&client_id);
         }
     }
 }
@@ -144,11 +150,16 @@ impl Handler<ListClients> for WsChatServer {
         let ListClients(room_name) = msg;
 
         if let Some(room) = self.rooms.get(room_name.as_str()).cloned() {
-            let client_names = room
+            let client_names: Vec<String> = room
                 .keys()
                 .map(|client_id| format!("{:?}", client_id))
                 .collect();
 
+            debug!(
+                "ListClients::handle() - listing {} clients in room {}",
+                &client_names.len(),
+                &room_name
+            );
             MessageResult(client_names)
         } else {
             panic!("ListClients::handle() - 404 room not found")
