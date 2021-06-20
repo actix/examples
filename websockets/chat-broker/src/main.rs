@@ -26,14 +26,14 @@ async fn main() -> std::io::Result<()> {
     let port = std::env::var("PORT").unwrap_or(String::from("8080"));
     let address = format!("{}:{}", &host, &port);
 
-    let srv = HttpServer::new(move || {
+    let server = HttpServer::new(move || {
         App::new()
             .service(web::resource("/ws/").to(chat_route))
             .service(Files::new("/", "./static/").index_file("index.html"))
     })
-        .bind(&address)?;
+    .bind(&address)?;
 
     info!("Starting http server: {}", &address);
 
-    srv.run().await
+    server.run().await
 }

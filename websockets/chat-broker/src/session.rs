@@ -5,7 +5,9 @@ use actix::prelude::*;
 use actix_broker::BrokerIssue;
 use actix_web_actors::ws;
 
-use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage, ListClients};
+use crate::message::{
+    ChatMessage, JoinRoom, LeaveRoom, ListClients, ListRooms, SendMessage,
+};
 use crate::server::WsChatServer;
 
 #[derive(Default)]
@@ -79,11 +81,7 @@ impl WsChatSession {
     }
 
     pub fn send_msg(&self, msg: &str) {
-        let content = format!(
-            "{}: {}",
-            self.client_name(),
-            msg
-        );
+        let content = format!("{}: {}", self.client_name(), msg);
 
         let msg = SendMessage(self.room.clone(), self.id, content);
 
@@ -92,7 +90,12 @@ impl WsChatSession {
     }
 
     pub fn who_am_i(&self, ctx: &mut ws::WebsocketContext<Self>) {
-        let msg = format!("name: {}, client_id: {} in room_name: {}", self.client_name(), self.id, self.room);
+        let msg = format!(
+            "name: {}, client_id: {} in room_name: {}",
+            self.client_name(),
+            self.id,
+            self.room
+        );
         ctx.text(msg);
     }
 
@@ -140,7 +143,11 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
             Ok(msg) => msg,
         };
 
-        debug!("WsChatSession::handle() - message: {:?} from: {}", msg, self.client_name());
+        debug!(
+            "WsChatSession::handle() - message: {:?} from: {}",
+            msg,
+            self.client_name()
+        );
 
         match msg {
             ws::Message::Text(text) => {
