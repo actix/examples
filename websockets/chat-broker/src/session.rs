@@ -164,7 +164,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                             }
                         }
 
-                        Some("/lc") => self.list_clients(ctx),
+                        Some("/list-clients") => self.list_clients(ctx),
 
                         _ => ctx.text(format!("!!! unknown command: {:?}", msg)),
                     }
