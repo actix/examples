@@ -5,7 +5,7 @@ use actix::prelude::*;
 use actix_broker::BrokerIssue;
 use actix_web_actors::ws;
 
-use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
+use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage, ListClients};
 use crate::server::WsChatServer;
 
 #[derive(Default)]
@@ -50,10 +50,26 @@ impl WsChatSession {
         WsChatServer::from_registry()
             .send(ListRooms)
             .into_actor(self)
-            .then(|res, _, ctx| {
-                if let Ok(rooms) = res {
+            .then(|result, _, ctx| {
+                if let Ok(rooms) = result {
                     for room in rooms {
                         ctx.text(room);
+                    }
+                }
+
+                fut::ready(())
+            })
+            .wait(ctx);
+    }
+
+    pub fn list_clients(&mut self, ctx: &mut ws::WebsocketContext<Self>) {
+        WsChatServer::from_registry()
+            .send(ListClients(self.room.clone()))
+            .into_actor(self)
+            .then(|result, _, ctx| {
+                if let Ok(clients) = result {
+                    for client in clients {
+                        ctx.text(client);
                     }
                 }
 
@@ -143,6 +159,8 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                                 ctx.text("!!! name is required");
                             }
                         }
+
+                        Some("/lc") => self.list_clients(ctx),
 
                         _ => ctx.text(format!("!!! unknown command: {:?}", msg)),
                     }

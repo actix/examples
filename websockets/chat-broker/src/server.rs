@@ -1,11 +1,10 @@
-use log::debug;
+use std::collections::HashMap;
 
+use log::debug;
 use actix::prelude::*;
 use actix_broker::BrokerSubscribe;
 
-use std::collections::HashMap;
-
-use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
+use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage, ListClients};
 
 type Client = Recipient<ChatMessage>;
 type Room = HashMap<usize, Client>;
@@ -45,13 +44,14 @@ impl WsChatServer {
                 }
             }
 
-            debug!("add_client_to_room() - adding client, {}", &client_id);
+            debug!("add_client_to_room() - adding client to existing room, {}", &client_id);
             room.insert(client_id, client);
             return client_id;
         }
 
         // Create a new room for the first client
         let mut room: Room = HashMap::new();
+        debug!("add_client_to_room() - adding client to new room, {}", &client_id);
 
         room.insert(client_id, client);
         self.rooms.insert(room_name.to_owned(), room);
@@ -127,6 +127,26 @@ impl Handler<SendMessage> for WsChatServer {
     fn handle(&mut self, msg: SendMessage, _ctx: &mut Self::Context) {
         let SendMessage(room_name, id, msg) = msg;
         self.send_chat_message(&room_name, &msg, id);
+    }
+}
+
+impl Handler<ListClients> for WsChatServer {
+    type Result = MessageResult<ListClients>;
+
+    fn handle(&mut self, msg: ListClients, _ctx: &mut Self::Context) -> Self::Result {
+        let ListClients(room_name) = msg;
+
+        if let Some(room) = self.rooms.get(room_name.as_str()).cloned() {
+
+            let client_names = room
+                .keys()
+                .map(|client_id| format!("{:?}", client_id))
+                .collect();
+
+            MessageResult(client_names)
+        } else {
+            panic!("ListClients::handle() - 404 room not found")
+        }
     }
 }
 
