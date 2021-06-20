@@ -115,7 +115,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
             Ok(msg) => msg,
         };
 
-        debug!("WEBSOCKET MESSAGE: {:?}", msg);
+        debug!("WsChatSession::handle() - message: {:?}", msg);
 
         match msg {
             ws::Message::Text(text) => {

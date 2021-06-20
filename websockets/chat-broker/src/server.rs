@@ -1,8 +1,9 @@
+use log::debug;
+
 use actix::prelude::*;
 use actix_broker::BrokerSubscribe;
 
 use std::collections::HashMap;
-use std::mem;
 
 use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
 
@@ -15,40 +16,43 @@ pub struct WsChatServer {
 }
 
 impl WsChatServer {
-    fn take_room(&mut self, room_name: &str) -> Option<Room> {
+    fn get_room(&mut self, room_name: &str) -> Option<&mut Room> {
         let room = self.rooms.get_mut(room_name)?;
-        let room = mem::replace(room, HashMap::new());
         Some(room)
     }
 
     fn add_client_to_room(
         &mut self,
         room_name: &str,
-        id: Option<usize>,
+        client_identifier: Option<usize>,
         client: Client,
     ) -> usize {
-        let mut id = id.unwrap_or_else(rand::random::<usize>);
+        let mut client_id = client_identifier.unwrap_or_else(rand::random::<usize>);
 
         if let Some(room) = self.rooms.get_mut(room_name) {
+            debug!("add_client_to_room() - room found, {:?}", &room);
+
             loop {
-                if room.contains_key(&id) {
-                    id = rand::random::<usize>();
+                if room.contains_key(&client_id) { // avoids duplicate client ids
+                    debug!("add_client_to_room() - creating new client id, {}", &client_id);
+                    client_id = rand::random::<usize>();
                 } else {
                     break;
                 }
             }
 
-            room.insert(id, client);
-            return id;
+            debug!("add_client_to_room() - adding client, {}", &client_id);
+            room.insert(client_id, client);
+            return client_id;
         }
 
         // Create a new room for the first client
         let mut room: Room = HashMap::new();
 
-        room.insert(id, client);
+        room.insert(client_id, client);
         self.rooms.insert(room_name.to_owned(), room);
 
-        id
+        client_id
     }
 
     fn send_chat_message(
@@ -57,12 +61,10 @@ impl WsChatServer {
         msg: &str,
         _src: usize,
     ) -> Option<()> {
-        let mut room = self.take_room(room_name)?;
+        let room = self.get_room(room_name)?;
 
-        for (id, client) in room.drain() {
-            if client.do_send(ChatMessage(msg.to_owned())).is_ok() {
-                self.add_client_to_room(room_name, Some(id), client);
-            }
+        for (_client_id, client) in room.iter() {
+            client.do_send(ChatMessage(msg.to_owned())).ok()?;
         }
 
         Some(())
@@ -83,11 +85,13 @@ impl Handler<JoinRoom> for WsChatServer {
 
     fn handle(&mut self, msg: JoinRoom, _ctx: &mut Self::Context) -> Self::Result {
         let JoinRoom(room_name, client_name, client) = msg;
+        let name = client_name.unwrap_or_else(|| "anon".to_string());
+        debug!("JoinRoom::handle() - room_name: {}, client_name: {}", &room_name, &name);
 
         let id = self.add_client_to_room(&room_name, None, client);
         let join_msg = format!(
             "{} joined {}",
-            client_name.unwrap_or_else(|| "anon".to_string()),
+            name,
             room_name
         );
 
