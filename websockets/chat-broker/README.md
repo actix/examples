@@ -1,12 +1,9 @@
 # Websocket chat broker example
 
 This is a different implementation of the
-[websocket chat example](https://github.com/actix/examples/tree/master/websockets/chat)
-
-This is based on 
-[websocket chat example](https://github.com/actix/examples/tree/master/websockets/chat), 
-but it's falling behind on organization, cleanliness, and features
-compared to this fork.
+[websocket chat example](https://github.com/actix/examples/tree/master/websockets/chat),
+and it includes: some refactoring, 
+additional features, and requires more dependencies.
 
 Differences:
 
