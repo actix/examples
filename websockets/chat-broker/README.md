@@ -3,11 +3,17 @@
 This is a different implementation of the
 [websocket chat example](https://github.com/actix/examples/tree/master/websockets/chat)
 
+This is based on 
+[websocket chat example](https://github.com/actix/examples/tree/master/websockets/chat), 
+but it's falling behind on organization, cleanliness, and features
+compared to this fork.
+
 Differences:
 
 * Chat Server Actor is a System Service that runs in the same thread as the HttpServer/WS Listener.
 * The [actix-broker](https://github.com/Chris-Ricketts/actix-broker) crate is used to facilitate the sending of some messages between the Chat Session and Server Actors where the session does not require a response.
 * The Client is not required to send Ping messages. The Chat Server Actor auto-clears dead sessions.
+* commands `/list-clients` and `/whoami` were added
 
 Possible Improvements:
 
@@ -19,7 +25,9 @@ Chat server listens for incoming tcp connections. Server can access several type
 
 * `/list` - list all available rooms
 * `/join name` - join room, if room does not exist, create new one
-* `/name name` - set session name
+* `/name name` - set client name for this session
+* `/list-clients` - list all client ids in this room
+* `/whoami` - gets your name, id, and room name
 * `some message` - just string, send message to all peers in same room
 
 To start server use command: `cargo run`
