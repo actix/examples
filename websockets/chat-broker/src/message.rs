@@ -6,7 +6,7 @@ pub struct ChatMessage(pub String);
 
 #[derive(Clone, Message)]
 #[rtype(result = "usize")]
-pub struct JoinRoom(pub String, pub Option<String>, pub Recipient<ChatMessage>);
+pub struct JoinRoom(pub String, pub String, pub Recipient<ChatMessage>);
 
 #[derive(Clone, Message)]
 #[rtype(result = "()")]

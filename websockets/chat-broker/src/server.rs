@@ -96,14 +96,13 @@ impl Handler<JoinRoom> for WsChatServer {
 
     fn handle(&mut self, msg: JoinRoom, _ctx: &mut Self::Context) -> Self::Result {
         let JoinRoom(room_name, client_name, client) = msg;
-        let name = client_name.unwrap_or_else(|| "anon".to_string());
         debug!(
             "JoinRoom::handle() - room_name: {}, client_name: {}",
-            &room_name, &name
+            &room_name, &client_name
         );
 
         let id = self.add_client_to_room(&room_name, None, client);
-        let join_msg = format!("{} joined {}", name, room_name);
+        let join_msg = format!("{} joined {}", client_name, room_name);
 
         self.send_chat_message(&room_name, &join_msg, id);
         MessageResult(id)

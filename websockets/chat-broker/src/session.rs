@@ -12,15 +12,15 @@ use crate::server::WsChatServer;
 
 #[derive(Default)]
 pub struct WsChatSession {
-    id: usize,
-    room: String,
-    name: Option<String>,
+    client_id: usize,
+    room_name: String,
+    client_name: Option<String>,
 }
 
 impl WsChatSession {
     /// Getter for self.name, the client's name for this session
     pub fn client_name(&self) -> String {
-        self.name.as_ref().unwrap_or(&String::from("anon")).clone()
+        self.client_name.as_ref().unwrap_or(&String::from("anon")).clone()
     }
 
     pub fn join_room(&mut self, room_name: &str, ctx: &mut ws::WebsocketContext<Self>) {
@@ -29,7 +29,7 @@ impl WsChatSession {
         // Then send a join message for the new room
         let join_msg = JoinRoom(
             room_name.to_owned(),
-            self.name.clone(),
+            self.client_name(),
             ctx.address().recipient(),
         );
 
@@ -38,8 +38,8 @@ impl WsChatSession {
             .into_actor(self)
             .then(|id, act, _ctx| {
                 if let Ok(id) = id {
-                    act.id = id;
-                    act.room = room_name;
+                    act.client_id = id;
+                    act.room_name = room_name;
                 }
 
                 fut::ready(())
@@ -65,7 +65,7 @@ impl WsChatSession {
 
     pub fn list_clients(&mut self, ctx: &mut ws::WebsocketContext<Self>) {
         WsChatServer::from_registry()
-            .send(ListClients(self.room.clone()))
+            .send(ListClients(self.room_name.clone()))
             .into_actor(self)
             .then(|result, _, ctx| {
                 if let Ok(clients) = result {
@@ -82,7 +82,7 @@ impl WsChatSession {
     pub fn send_msg(&self, msg: &str) {
         let content = format!("{}: {}", self.client_name(), msg);
 
-        let msg = SendMessage(self.room.clone(), self.id, content);
+        let msg = SendMessage(self.room_name.clone(), self.client_id, content);
 
         // issue_async comes from having the `BrokerIssue` trait in scope.
         self.issue_system_async(msg);
@@ -92,8 +92,8 @@ impl WsChatSession {
         let msg = format!(
             "name: {}, client_id: {} in room_name: {}",
             self.client_name(),
-            self.id,
-            self.room
+            self.client_id,
+            self.room_name
         );
         ctx.text(msg);
     }
@@ -108,7 +108,7 @@ impl Actor for WsChatSession {
 
     fn stopped(&mut self, ctx: &mut Self::Context) {
         // send a leave message for the current room
-        let leave_msg = LeaveRoom(self.room.clone(), self.id);
+        let leave_msg = LeaveRoom(self.room_name.clone(), self.client_id);
 
         // issue_sync comes from having the `BrokerIssue` trait in scope.
         self.issue_system_sync(leave_msg, ctx);
@@ -116,8 +116,8 @@ impl Actor for WsChatSession {
         info!(
             "WsChatSession closed for {}({}) in room {}",
             self.client_name(),
-            self.id,
-            self.room
+            self.client_id,
+            self.room_name
         );
     }
 }
@@ -170,7 +170,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
 
                         Some("/name") => {
                             if let Some(name) = command.next() {
-                                self.name = Some(name.to_owned());
+                                self.client_name = Some(name.to_owned());
                                 ctx.text(format!("name changed to: {}", name));
                             } else {
                                 ctx.text("!!! name is required");
