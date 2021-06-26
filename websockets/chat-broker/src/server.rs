@@ -1,10 +1,12 @@
+use std::collections::HashMap;
+
 use actix::prelude::*;
 use actix_broker::BrokerSubscribe;
+use log::{debug, warn};
 
-use std::collections::HashMap;
-use std::mem;
-
-use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
+use crate::message::{
+    ChatMessage, JoinRoom, LeaveRoom, ListClients, ListRooms, SendMessage,
+};
 
 type Client = Recipient<ChatMessage>;
 type Room = HashMap<usize, Client>;
@@ -15,40 +17,53 @@ pub struct WsChatServer {
 }
 
 impl WsChatServer {
-    fn take_room(&mut self, room_name: &str) -> Option<Room> {
+    fn get_room(&mut self, room_name: &str) -> Option<&mut Room> {
         let room = self.rooms.get_mut(room_name)?;
-        let room = mem::replace(room, HashMap::new());
         Some(room)
     }
 
     fn add_client_to_room(
         &mut self,
         room_name: &str,
-        id: Option<usize>,
+        client_identifier: Option<usize>,
         client: Client,
     ) -> usize {
-        let mut id = id.unwrap_or_else(rand::random::<usize>);
+        let mut client_id = client_identifier.unwrap_or_else(rand::random::<usize>);
 
         if let Some(room) = self.rooms.get_mut(room_name) {
+            debug!("add_client_to_room() - room found, {:?}", &room);
+
             loop {
-                if room.contains_key(&id) {
-                    id = rand::random::<usize>();
+                if room.contains_key(&client_id) {
+                    warn!(
+                        "add_client_to_room() - client id already here, creating new client id: {}",
+                        &client_id
+                    );
+                    client_id = rand::random::<usize>();
                 } else {
                     break;
                 }
             }
 
-            room.insert(id, client);
-            return id;
+            debug!(
+                "add_client_to_room() - adding client to existing room, {}",
+                &client_id
+            );
+            room.insert(client_id, client);
+            return client_id;
         }
 
         // Create a new room for the first client
         let mut room: Room = HashMap::new();
+        debug!(
+            "add_client_to_room() - adding client to new room, {}",
+            &client_id
+        );
 
-        room.insert(id, client);
+        room.insert(client_id, client);
         self.rooms.insert(room_name.to_owned(), room);
 
-        id
+        client_id
     }
 
     fn send_chat_message(
@@ -57,12 +72,10 @@ impl WsChatServer {
         msg: &str,
         _src: usize,
     ) -> Option<()> {
-        let mut room = self.take_room(room_name)?;
+        let room = self.get_room(room_name)?;
 
-        for (id, client) in room.drain() {
-            if client.do_send(ChatMessage(msg.to_owned())).is_ok() {
-                self.add_client_to_room(room_name, Some(id), client);
-            }
+        for (_client_id, client) in room.iter() {
+            client.do_send(ChatMessage(msg.to_owned())).ok()?;
         }
 
         Some(())
@@ -83,13 +96,13 @@ impl Handler<JoinRoom> for WsChatServer {
 
     fn handle(&mut self, msg: JoinRoom, _ctx: &mut Self::Context) -> Self::Result {
         let JoinRoom(room_name, client_name, client) = msg;
+        debug!(
+            "JoinRoom::handle() - room_name: {}, client_name: {}",
+            &room_name, &client_name
+        );
 
         let id = self.add_client_to_room(&room_name, None, client);
-        let join_msg = format!(
-            "{} joined {}",
-            client_name.unwrap_or_else(|| "anon".to_string()),
-            room_name
-        );
+        let join_msg = format!("{} joined {}", client_name, room_name);
 
         self.send_chat_message(&room_name, &join_msg, id);
         MessageResult(id)
@@ -100,8 +113,14 @@ impl Handler<LeaveRoom> for WsChatServer {
     type Result = ();
 
     fn handle(&mut self, msg: LeaveRoom, _ctx: &mut Self::Context) {
-        if let Some(room) = self.rooms.get_mut(&msg.0) {
-            room.remove(&msg.1);
+        let LeaveRoom(room_name, client_id) = msg;
+
+        if let Some(room) = self.rooms.get_mut(&room_name) {
+            debug!(
+                "LeaveRoom::handle() - removing {} from {}",
+                &client_id, &room_name
+            );
+            room.remove(&client_id);
         }
     }
 }
@@ -120,6 +139,30 @@ impl Handler<SendMessage> for WsChatServer {
     fn handle(&mut self, msg: SendMessage, _ctx: &mut Self::Context) {
         let SendMessage(room_name, id, msg) = msg;
         self.send_chat_message(&room_name, &msg, id);
+    }
+}
+
+impl Handler<ListClients> for WsChatServer {
+    type Result = MessageResult<ListClients>;
+
+    fn handle(&mut self, msg: ListClients, _ctx: &mut Self::Context) -> Self::Result {
+        let ListClients(room_name) = msg;
+
+        if let Some(room) = self.rooms.get(room_name.as_str()).cloned() {
+            let client_names: Vec<String> = room
+                .keys()
+                .map(|client_id| format!("{:?}", client_id))
+                .collect();
+
+            debug!(
+                "ListClients::handle() - listing {} clients in room {}",
+                &client_names.len(),
+                &room_name
+            );
+            MessageResult(client_names)
+        } else {
+            panic!("ListClients::handle() - 404 room not found")
+        }
     }
 }
 
