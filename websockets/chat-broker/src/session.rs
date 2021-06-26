@@ -20,7 +20,10 @@ pub struct WsChatSession {
 impl WsChatSession {
     /// Getter for self.name, the client's name for this session
     pub fn client_name(&self) -> String {
-        self.client_name.as_ref().unwrap_or(&String::from("anon")).clone()
+        self.client_name
+            .as_ref()
+            .unwrap_or(&String::from("anon"))
+            .clone()
     }
 
     pub fn join_room(&mut self, room_name: &str, ctx: &mut ws::WebsocketContext<Self>) {
