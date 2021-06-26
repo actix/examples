@@ -24,7 +24,7 @@ Chat server listens for incoming tcp connections. Server can access several type
 * `/join name` - join room, if room does not exist, create new one
 * `/name name` - set client name for this session
 * `/list-clients` - list all client ids in this room
-* `/whoami` - gets your name, id, and room name
+* `/whoami` - get your name, id, and room name
 * `some message` - just string, send message to all peers in same room
 
 To start server use command: `cargo run`
