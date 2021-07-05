@@ -7,7 +7,7 @@ Example Todo application using Actix-web and [SQLx](https://github.com/launchbad
 ## Prerequisites
 
 * Rust
-* SQLite
+* SQLite 3.35.0+
 
 ## Change into the project sub-directory
 
