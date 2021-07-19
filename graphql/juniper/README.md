@@ -10,7 +10,7 @@ If you want more advanced example, see also the [juniper-advanced example].
 ### server
 
 ```bash
-cd examples/juniper
+cd examples/graphql/juniper
 cargo run (or ``cargo watch -x run``)
 # Started http server: 127.0.0.1:8080
 ```
