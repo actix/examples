@@ -5,7 +5,7 @@
 ### server
 
 ```bash
-cd examples/basics/basics
+cd basics/basics
 cargo run
 # Started http server: 127.0.0.1:8080
 ```

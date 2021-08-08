@@ -14,6 +14,7 @@ Demonstrates how to shutdown the web server in a couple of ways:
 ### Running The Server
 
 ```bash
+cd basics/shutdown-server
 cargo run --bin shutdown-server
 
 # Starting 8 workers
@@ -24,5 +25,5 @@ cargo run --bin shutdown-server
 
 - [GET /hello](http://localhost:8080/hello)
   - Regular hello world route
-- [POST /stop](http://localhost:8080/stop)
+- [POST /stop](http://localhost:8080/stop)w
   - Calling this will shutdown the server and exit
