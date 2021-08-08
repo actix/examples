@@ -29,7 +29,7 @@ let mut keys = rsa_private_keys(key_file).unwrap(); // rsa
 ### server
 
 ```bash
-cd examples/rustls
+cd security/rustls
 cargo run (or ``cargo watch -x run``)
 # Started http server: 127.0.0.1:8443
 ```

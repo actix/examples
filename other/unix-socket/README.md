@@ -14,5 +14,5 @@ according to the
 [documentation](https://actix.github.io/actix-web/actix_web/struct.HttpServer.html#method.bind_uds).
 
 And it does not delete the socket file (`/tmp/actix-uds.socket`) when stopping
-the server so it will fail to start next time you run it unless you delete
+the server, so it will fail to start next time you run it unless you delete
 the socket file manually.
