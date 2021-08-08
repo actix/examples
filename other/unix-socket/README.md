@@ -1,7 +1,11 @@
 ## Unix domain socket example
 
 ```bash
-$ curl --unix-socket /tmp/actix-uds.socket http://localhost/
+cd other/unix-socket
+cargo run
+
+# in another shell
+curl --unix-socket /tmp/actix-uds.socket http://localhost/
 Hello world!
 ```
 

@@ -17,12 +17,12 @@ Create ```.env``` file on the root directory of this project and set environment
 
 ```sh
 # go to the root dir
-cd juniper-advanced
-
-# Run
+cd graphql/juniper-advanced
 cargo run
 ```
 
 ## GraphQL Playground
 
-<http://127.0.0.1:8080/graphiql>
+```
+http://127.0.0.1:8080/graphiql
+```
