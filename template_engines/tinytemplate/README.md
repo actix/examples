@@ -7,7 +7,7 @@ See the documentation for the minimalist template engine [tiny_template](https:/
 ### Server
 
 ```bash
-cd examples/template_tinytemplate
+cd template_engines/tinytemplate
 cargo run # (or ``cargo watch -x run``)
 # Started http server: 127.0.0.1:8080
 ```
