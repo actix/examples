@@ -9,7 +9,7 @@
 
 - [mCaptcha](https://github.com/mCaptcha/mCaptcha/): Proof of work based, privacy focused, libre CAPTCHA system. Crates used: `actix-web`, `sqlx`, `redis`, and `lettre`.
 - [Zero2prod](https://github.com/LukeMathWalker/zero-to-production/) : Source code of zero to production series [zero2prod.com](https://www.zero2prod.com). Paid book but some of the chapters is available online for free. The book compares and explains the chosen technologies, like actix-web and sqlx.
-- [Triox](https://github.com/AaronErhardt/Triox) : A free file hosting server that focuses on speed, reliability and security.
+- [Triox](https://github.com/Trioxidation/Triox) : A free file hosting server that focuses on speed, reliability and security.
 - [binserve](https://github.com/mufeedvh/binserve) : A fast, secure, and easy to set up static web server written on top of Actix Web with routing, templating, and various other features.
 - [Roseline](https://github.com/DoumanAsh/roseline.rs) : A personal web site and discord & IRC bot to access simple SQLite database. Demonstrates usage of various Actix and Actix Web concepts.
 - [lemmy](https://github.com/dessalines/lemmy) : A federated alternative to reddit in Rust.
