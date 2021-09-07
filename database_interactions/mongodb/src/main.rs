@@ -40,7 +40,7 @@ async fn get_user(client: web::Data<Client>, username: web::Path<String>) -> Res
     }
 }
 
-// Creates an index on the "username" field to force the values to be unique.
+/// Creates an index on the "username" field to force the values to be unique.
 async fn create_username_index(client: &Client) {
     let options = IndexOptions::builder().unique(true).build();
     let model = IndexModel::builder()
