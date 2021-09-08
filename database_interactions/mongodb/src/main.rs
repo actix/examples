@@ -4,8 +4,8 @@ mod model;
 #[cfg(test)]
 mod test;
 
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Result};
-use mongodb::{bson::doc, options::IndexOptions, Client, IndexModel};
+use actix_web::{get, post, web, App, HttpResponse, HttpServer};
+use mongodb::{bson::doc, options::IndexOptions, Client, Collection, IndexModel};
 
 use model::User;
 
@@ -28,17 +28,17 @@ async fn add_user(client: web::Data<Client>, form: web::Form<User>) -> HttpRespo
 async fn get_user(
     client: web::Data<Client>,
     username: web::Path<String>,
-) -> Result<HttpResponse> {
+) -> HttpResponse {
     let username = username.into_inner();
-    let collection = client.database(DB_NAME).collection(COLL_NAME);
-    let user: Option<User> = collection
+    let collection: Collection<User> = client.database(DB_NAME).collection(COLL_NAME);
+    match collection
         .find_one(doc! { "username": &username }, None)
         .await
-        .map_err(|err| HttpResponse::InternalServerError().body(err.to_string()))?;
-    match user {
-        Some(user) => Ok(HttpResponse::Ok().json(user)),
-        None => Ok(HttpResponse::NotFound()
-            .body(format!("No user found with username {}", username))),
+    {
+        Ok(Some(user)) => HttpResponse::Ok().json(user),
+        Ok(None) => HttpResponse::NotFound()
+            .body(format!("No user found with username {}", username)),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
 
@@ -65,8 +65,12 @@ async fn main() -> std::io::Result<()> {
     let client = Client::with_uri_str(uri).await.expect("failed to connect");
     create_username_index(&client).await;
 
-    HttpServer::new(move || App::new().data(client.clone()).service(get_user))
-        .bind("127.0.0.1:8080")?
-        .run()
-        .await
+    HttpServer::new(move || {
+        App::new()
+            .app_data(web::Data::new(client.clone()))
+            .service(get_user)
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }

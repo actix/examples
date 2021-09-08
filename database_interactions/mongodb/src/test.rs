@@ -21,8 +21,13 @@ async fn test() {
         .await
         .expect("drop collection should succeed");
 
-    let mut app =
-        init_service(App::new().data(client).service(add_user).service(get_user)).await;
+    let mut app = init_service(
+        App::new()
+            .app_data(web::Data::new(client))
+            .service(add_user)
+            .service(get_user),
+    )
+    .await;
 
     let user = User {
         first_name: "Jane".into(),
