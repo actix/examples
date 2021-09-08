@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 actix-rt = "2.2.0"
-actix-web = "3"
+actix-web = "4.0.0-beta.8"
 futures-util = "0.3.17"
 mongodb = "2.0.0"
 serde = { version = "1.0", features = ["derive"] }
