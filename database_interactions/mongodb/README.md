@@ -14,7 +14,7 @@ MongoDB Atlas or set up MongoDB locally.
 ### Set an environment variable
 
 The example code creates a client with the URI set by the `MONGODB_URI` environment variable. The
-default URI for a standalone mongod running on localhost is "mongodb://localhost:27017". For more
+default URI for a standalone `mongod` running on localhost is "mongodb://localhost:27017". For more
 information on MongoDB URIs, visit the
 [connection string](https://docs.mongodb.com/manual/reference/connection-string/) entry in the
 MongoDB manual.
