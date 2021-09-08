@@ -8,8 +8,8 @@ use super::*;
 
 #[actix_rt::test]
 async fn test() {
-    let uri =
-        std::env::var("MONGODB_URI").expect("the MONGODB_URI environment variable must be set");
+    let uri = std::env::var("MONGODB_URI")
+        .unwrap_or_else(|_| "mongodb://localhost:27017".into());
 
     let client = Client::with_uri_str(uri).await.expect("failed to connect");
 
@@ -20,8 +20,9 @@ async fn test() {
         .drop(None)
         .await
         .expect("drop collection should succeed");
-    
-    let mut app = init_service(App::new().data(client).service(add_user).service(get_user)).await;
+
+    let mut app =
+        init_service(App::new().data(client).service(add_user).service(get_user)).await;
 
     let user = User {
         first_name: "Jane".into(),

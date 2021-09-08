@@ -25,7 +25,10 @@ async fn add_user(client: web::Data<Client>, form: web::Form<User>) -> HttpRespo
 
 /// Gets the user with the supplied username.
 #[get("/get_user/{username}")]
-async fn get_user(client: web::Data<Client>, username: web::Path<String>) -> Result<HttpResponse> {
+async fn get_user(
+    client: web::Data<Client>,
+    username: web::Path<String>,
+) -> Result<HttpResponse> {
     let username = username.into_inner();
     let collection = client.database(DB_NAME).collection(COLL_NAME);
     let user: Option<User> = collection
@@ -34,9 +37,8 @@ async fn get_user(client: web::Data<Client>, username: web::Path<String>) -> Res
         .map_err(|err| HttpResponse::InternalServerError().body(err.to_string()))?;
     match user {
         Some(user) => Ok(HttpResponse::Ok().json(user)),
-        None => {
-            Ok(HttpResponse::NotFound().body(format!("No user found with username {}", username)))
-        }
+        None => Ok(HttpResponse::NotFound()
+            .body(format!("No user found with username {}", username))),
     }
 }
 
@@ -57,8 +59,8 @@ async fn create_username_index(client: &Client) {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let uri =
-        std::env::var("MONGODB_URI").expect("the MONGODB_URI environment variable must be set");
+    let uri = std::env::var("MONGODB_URI")
+        .unwrap_or_else(|_| "mongodb://localhost:27017".into());
 
     let client = Client::with_uri_str(uri).await.expect("failed to connect");
     create_username_index(&client).await;
