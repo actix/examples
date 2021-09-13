@@ -68,6 +68,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(client.clone()))
+            .service(add_user)
             .service(get_user)
     })
     .bind("127.0.0.1:8080")?
