@@ -26,13 +26,16 @@ let mut keys = rsa_private_keys(key_file).unwrap(); // rsa
 
 [`mkcert`]: https://github.com/FiloSottile/mkcert
 
-### server
+### Running the Example Server
 
 ```bash
 cd security/rustls
 cargo run (or ``cargo watch -x run``)
 # Started http server: 127.0.0.1:8443
 ```
+
+If you prefer reloading you can substitute `cargo watch -x run`.
+That requires you install the `cargo-watch` crate.
 
 ### web client
 
