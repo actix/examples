@@ -7,6 +7,7 @@
 
 ## Community Showcase
 
+- [roapi](https://github.com/roapi/roapi): Create full-fledged APIs for static datasets without writing a single line of code.
 - [mCaptcha](https://github.com/mCaptcha/mCaptcha/): Proof of work based, privacy focused, libre CAPTCHA system. Crates used: `actix-web`, `sqlx`, `redis`, and `lettre`.
 - [Zero2prod](https://github.com/LukeMathWalker/zero-to-production/) : Source code of zero to production series [zero2prod.com](https://www.zero2prod.com). Paid book but some of the chapters is available online for free. The book compares and explains the chosen technologies, like actix-web and sqlx.
 - [Triox](https://github.com/Trioxidation/Triox) : A free file hosting server that focuses on speed, reliability and security.
