@@ -2,8 +2,7 @@ use actix_web::{Error, HttpRequest, HttpResponse, Responder};
 use anyhow::Result;
 use futures::future::{ready, Ready};
 use serde::{Deserialize, Serialize};
-use sqlx::sqlite::SqliteRow;
-use sqlx::{FromRow, Row, SqlitePool};
+use sqlx::{FromRow, SqlitePool};
 
 // this struct will use to receive user input
 #[derive(Serialize, Deserialize)]
@@ -76,39 +75,25 @@ impl Todo {
         })
     }
 
-    pub async fn create(todo: TodoRequest, pool: &SqlitePool) -> Result<Todo> {
+    pub async fn create(todo: TodoRequest, pool: &SqlitePool) -> Result<u64> {
         let mut tx = pool.begin().await?;
-        let todo = sqlx::query("INSERT INTO todos (description, done) VALUES ($1, $2) RETURNING id, description, done")
+        let todo = sqlx::query("INSERT INTO todos (description, done) VALUES ($1, $2)")
             .bind(&todo.description)
             .bind(todo.done)
-            .map(|row: SqliteRow| {
-                Todo {
-                    id: row.get(0),
-                    description: row.get(1),
-                    done: row.get(2)
-                }
-            })
-            .fetch_one(&mut tx)
+            .execute(&mut tx)
             .await?;
 
         tx.commit().await?;
         Ok(todo)
     }
 
-    pub async fn update(id: i32, todo: TodoRequest, pool: &SqlitePool) -> Result<Todo> {
+    pub async fn update(id: i32, todo: TodoRequest, pool: &SqlitePool) -> Result<u64> {
         let mut tx = pool.begin().await.unwrap();
-        let todo = sqlx::query("UPDATE todos SET description = $1, done = $2 WHERE id = $3 RETURNING id, description, done")
+        let todo = sqlx::query("UPDATE todos SET description = $1, done = $2 WHERE id = $3")
             .bind(&todo.description)
             .bind(todo.done)
             .bind(id)
-            .map(|row: SqliteRow| {
-                Todo {
-                    id: row.get(0),
-                    description: row.get(1),
-                    done: row.get(2)
-                }
-            })
-            .fetch_one(&mut tx)
+            .execute(&mut tx)
             .await?;
 
         tx.commit().await.unwrap();

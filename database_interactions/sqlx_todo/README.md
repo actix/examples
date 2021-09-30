@@ -20,7 +20,7 @@ cd examples/sqlx_todo
 ## Set up the database
 
 * Create new database using `schema.sql`
-* Copy `.env-example` into `.env` and adjust DATABASE_URL to match your SQLite address, username and password 
+* Copy `.env-example` into `.env` and adjust DATABASE_URL to match your SQLite address
 
 ## Run the application
 
