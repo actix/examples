@@ -11,6 +11,7 @@ struct MyErr(pub &'static str);
 
 impl ResponseError for MyErr {}
 
+#[allow(unused_must_use)] // ywrite_min causes warning: unused borrow that must be used
 #[get("/")]
 async fn index(
     query: web::Query<HashMap<String, String>>,
