@@ -25,5 +25,5 @@ cargo run --bin shutdown-server
 
 - [GET /hello](http://localhost:8080/hello)
   - Regular hello world route
-- [POST /stop](http://localhost:8080/stop)w
+- [POST /stop](http://localhost:8080/stop)
   - Calling this will shutdown the server and exit
