@@ -89,12 +89,13 @@ impl Todo {
 
     pub async fn update(id: i32, todo: TodoRequest, pool: &SqlitePool) -> Result<u64> {
         let mut tx = pool.begin().await.unwrap();
-        let todo = sqlx::query("UPDATE todos SET description = $1, done = $2 WHERE id = $3")
-            .bind(&todo.description)
-            .bind(todo.done)
-            .bind(id)
-            .execute(&mut tx)
-            .await?;
+        let todo =
+            sqlx::query("UPDATE todos SET description = $1, done = $2 WHERE id = $3")
+                .bind(&todo.description)
+                .bind(todo.done)
+                .bind(id)
+                .execute(&mut tx)
+                .await?;
 
         tx.commit().await.unwrap();
         Ok(todo)
