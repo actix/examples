@@ -18,7 +18,7 @@ Actix Web features illustrated here include:
 ### server
 
 ```bash
-cd examples/basics/json-validation
+cd basics/json-validation
 cargo run
 # Started http server: 127.0.0.1:8080
 ```
