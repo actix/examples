@@ -3,6 +3,7 @@ Getting started using [Async-graphql](https://github.com/async-graphql/async-gra
 ## Run
 
 ```bash
+cd graphql/graphql-demo
 cargo run --bin async-graphql-demo
 ```
 

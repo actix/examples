@@ -4,7 +4,7 @@ Receive multiple data in multipart form in JSON format and receive it as a struc
 
 # usage
 ```
-cd examples/multipart+s3
+cd forms/multipart-s3
 ```
 1. copy .env.example .env
 2. edit .env  AWS_ACCESS_KEY_ID=you_key
@@ -14,7 +14,7 @@ cd examples/multipart+s3
 
 # Running Server
 ```
-cd examples/multipart+s3
+cd forms/multipart-s3
 cargo run (or ``cargo watch -x run``)
 ```
 http://localhost:3000   

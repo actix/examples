@@ -1,12 +1,21 @@
 ## Auth Web Microservice with rust using Actix-Web 1.0
 
-##### Flow of the event would look like this:
+### Flow of the event would look like this:
 
 - Registers with email address ➡ Receive an 📨 with a link to verify
 - Follow the link ➡ register with same email and a password
 - Login with email and password ➡ Get verified and receive auth cookie
 
-##### Crates Used
+### Available Routes
+
+- [GET /](http://localhost:8080/)
+- [POST /api/invitation](http://localhost:8080/api/invitation)
+- [POST /api/invitation/:invitation_id](http://localhost:8080/api/invitation/:invitation_id)
+- [GET /api/auth](http://localhost:8080/api/auth)
+- [POST /api/auth](http://localhost:8080/api/auth)
+- [DELETE /api/auth](http://localhost:8080/api/auth)
+
+### Crates Used
 
 - [actix-web](https://crates.io/crates/actix-web) // Actix web is a simple, pragmatic and extremely fast web framework for Rust.
 - [rust-argon2](https://crates.io/crates/rust-argon2) // crate for hashing passwords using the cryptographically-secure Argon2 hashing algorithm.
@@ -29,7 +38,7 @@ Read the full tutorial series on [gill.net.in](https://gill.net.in)
 
 - [Auth Web Microservice with Rust using Actix Web v2 - Complete Tutorial](https://gill.net.in/posts/auth-microservice-rust-actix-web1.0-diesel-complete-tutorial/)
 
-## Dependencies
+### Dependencies
 
 On Ubuntu 19.10:
 

@@ -2,6 +2,11 @@
 
 ### Run
 
+```bash
+cd forms/multipart
+cargo run
+```
+
 ``` open web browser to localhost:3000 and upload file(s) ```
 
 ### Result

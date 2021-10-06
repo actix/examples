@@ -3,7 +3,8 @@ A simple demo for building a `JSONRPC over HTTP` server in [actix-web](https://g
 # Server
 
 ```sh
-$ cargo run
+cd json/jsonrpc
+cargo run
 # Starting server on 127.0.0.1:8080
 ```
 

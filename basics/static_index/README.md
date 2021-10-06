@@ -9,8 +9,12 @@ Demonstrates how to serve static files. Inside the `./static` folder you will fi
 ## Usage
 
 ```bash
-$ cd examples/static_index
+$ cd basics/static_index
 $ cargo run
 ```
 
-This will start the server on port 8080, it can be viewed at [http://localhost:8080](http://localhost:8080).
+### Available Routes
+
+- [GET /](http://localhost:8080/)
+- [GET /images](http://localhost:8080/images)
+

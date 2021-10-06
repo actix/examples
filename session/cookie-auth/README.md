@@ -1,5 +1,11 @@
 # cookie-auth
 
+```sh
+cd session/cookie-auth
+cargo run
+# Starting http server: 127.0.0.1:8080
+```
+
 Testing with cookie auth with [curl](https://curl.haxx.se).
 
 Login:

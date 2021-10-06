@@ -11,7 +11,7 @@ Differences:
 
 Possible Improvements:
 
-* Could the Chat Server Actor be simultaneously a System Service (accessible to the Chat Session via the System Registry) and also run in a seperate thread?
+* Could the Chat Server Actor be simultaneously a System Service (accessible to the Chat Session via the System Registry) and also run in a separate thread?
 
 ## Server
 
