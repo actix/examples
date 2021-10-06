@@ -10,8 +10,8 @@ use rustls::{NoClientAuth, ServerConfig};
 async fn index(req: HttpRequest) -> HttpResponse {
     println!("{:?}", req);
     HttpResponse::Ok()
-        .content_type("text/plain")
-        .body("Welcome!")
+        .content_type("text/html; charset=utf-8")
+        .body("<!DOCTYPE html><html><body><p>Welcome!</p></body></html>")
 }
 
 #[actix_web::main]
