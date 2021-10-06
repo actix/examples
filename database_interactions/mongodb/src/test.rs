@@ -7,6 +7,7 @@ use mongodb::Client;
 use super::*;
 
 #[actix_rt::test]
+#[ignore = "requires MongoDB instance running"]
 async fn test() {
     let uri = std::env::var("MONGODB_URI")
         .unwrap_or_else(|_| "mongodb://localhost:27017".into());
