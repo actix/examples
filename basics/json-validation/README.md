@@ -1,12 +1,12 @@
 This is a contrived example intended to illustrate a few important actix-web features.
 
-*Imagine* that you have a process that involves 3 steps.  The steps here
-are dumb in that they do nothing other than call a http bin endpoint that
-returns the json that was posted to it.  The intent here
-is to illustrate how to chain these steps together as futures and return
-a final result in a response.
+*Imagine* that you have a process that involves 3 steps. The steps here
+are dumb in that they do nothing other than call an HTTP endpoint that
+returns the json that was posted to it. The intent here is to illustrate
+how to chain these steps together as futures and return a final result
+in a response.
 
-Actix-web features illustrated here include:
+Actix Web features illustrated here include:
 
     1. handling json input param
     2. validating user-submitted parameters using the 'validator' crate
