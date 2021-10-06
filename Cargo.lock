@@ -384,7 +384,7 @@ version = "0.5.0-beta.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "36b95ce0d76d1aa2f98b681702807475ade0f99bd4552546a6843a966d42ea3d"
 dependencies = [
- "bytestring 0.1.5",
+ "bytestring 1.0.0",
  "firestorm",
  "http",
  "log",
@@ -2494,6 +2494,19 @@ name = "env_logger"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f26ecb66b4bdca6c1409b40fb255eefc2bd4f6d135dab3c3124f80ffa2a9661e"
+dependencies = [
+ "atty",
+ "humantime 2.0.1",
+ "log",
+ "regex",
+ "termcolor",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b2cf0344971ee6c64c31be0d530793fba457d322dfec2810c453d0ef228f9c3"
 dependencies = [
  "atty",
  "humantime 2.0.1",
@@ -4624,7 +4637,7 @@ dependencies = [
  "actix-protobuf",
  "actix-web 3.3.1",
  "bytes 0.5.6",
- "env_logger 0.7.1",
+ "env_logger 0.9.0",
  "prost",
  "prost-derive",
 ]
