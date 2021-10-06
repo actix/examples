@@ -5,6 +5,7 @@
 ### Server
 
 ```shell
+cd other/protobuf
 # From workspace
 cargo run --bin protobuf-example
 

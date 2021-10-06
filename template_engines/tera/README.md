@@ -7,7 +7,7 @@ Minimal example of using the template [tera](https://github.com/Keats/tera) that
 ### server
 
 ```bash
-cd examples/template_tera
+cd template_engines/tera
 cargo run (or ``cargo watch -x run``)
 # Started http server: 127.0.0.1:8080
 ```

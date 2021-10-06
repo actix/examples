@@ -9,7 +9,7 @@ representation of the error.
 ## Usage
 
 ```shell
-cd examples/json_decode_error
+cd json/json_decode_error
 cargo run
 # Started HTTP server: 127.0.0.1:8088
 ```

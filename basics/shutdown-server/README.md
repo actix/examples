@@ -14,6 +14,7 @@ Demonstrates how to shutdown the web server in a couple of ways:
 ### Running The Server
 
 ```bash
+cd basics/shutdown-server
 cargo run --bin shutdown-server
 
 # Starting 8 workers

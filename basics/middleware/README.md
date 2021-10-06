@@ -5,7 +5,7 @@ This example showcases a bunch of different uses of middlewares. See also the [M
 ## Usage
 
 ```bash
-cd middleware
+cd basics/middleware
 cargo run
 # Started http server: 127.0.0.1:8080
 ```

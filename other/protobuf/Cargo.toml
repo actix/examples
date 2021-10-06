@@ -5,11 +5,11 @@ authors = ["kingxsp <jin.hb.zh@outlook.com>, Yuki Okushi <huyuumi.dev@gmail.com>
 edition = "2018"
 
 [dependencies]
-bytes = "0.5.4"
-env_logger = "0.7.1"
-prost = "0.6.1"
-prost-derive = "0.6.1"
-
 actix = "0.10"
 actix-protobuf = "0.6"
 actix-web = "3"
+
+bytes = "0.5.4"
+env_logger = "0.9"
+prost = "0.6"
+prost-derive = "0.6"

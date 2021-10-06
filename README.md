@@ -16,6 +16,7 @@
 - [lemmy](https://github.com/dessalines/lemmy) : A federated alternative to reddit in Rust.
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch) : Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
 - [Dalted](https://github.com/carrascomj/dalted) : Simple webapp that showcases the integration of [image-rs](https://github.com/image-rs/image) with Actix Web for color blindness simulations.
+- [Imitari](https://github.com/imitari/imitari) : A lightweight ShareX-compatible image uploader server
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 

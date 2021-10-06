@@ -14,7 +14,7 @@ A port of the [Rocket Todo example](https://github.com/SergioBenitez/Rocket/tree
 All instructions assume you have changed into this folder:
 
 ```bash
-cd examples/todo
+cd basics/todo
 ```
 
 ## Set up the database
