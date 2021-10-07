@@ -1,19 +1,20 @@
 #[macro_use]
 extern crate log;
 
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use std::env;
+
+use actix_web::{middleware, web, App, HttpResponse, HttpServer, Responder};
 use anyhow::Result;
 use dotenv::dotenv;
-use listenfd::ListenFd;
 use sqlx::SqlitePool;
-use std::env;
 
 // import todo module (routes and model)
 mod todo;
 
-// default / handler
+// root (/) handler
 async fn index() -> impl Responder {
-    HttpResponse::Ok().body(r#"
+    HttpResponse::Ok().body(
+        r#"
         Welcome to Actix-web with SQLx Todos example.
         Available routes:
         GET /todos -> list of all todos
@@ -21,7 +22,7 @@ async fn index() -> impl Responder {
         GET /todo/{id} -> show one todo with requested id
         PUT /todo/{id} -> update todo with requested id, example: { "description": "learn actix and sqlx", "done": true }
         DELETE /todo/{id} -> delete todo with requested id
-    "#
+        "#
     )
 }
 
@@ -30,28 +31,32 @@ async fn main() -> Result<()> {
     dotenv().ok();
     env_logger::init();
 
-    // this will enable us to keep application running during recompile: systemfd --no-pid -s http::5000 -- cargo watch -x run
-    let mut listenfd = ListenFd::from_env();
-
     let database_url =
         env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
+    let host = env::var("HOST").expect("HOST is not set in .env file");
+    let port = env::var("PORT")
+        .expect("PORT is not set in .env file")
+        .parse::<u16>()
+        .expect("PORT should be a u16");
+
+    info!("using sqlite database at: {}", &database_url);
     let db_pool = SqlitePool::new(&database_url).await?;
 
-    let mut server = HttpServer::new(move || {
+    // startup connection+schema check
+    sqlx::query!("SELECT * FROM todos")
+        .fetch_one(&db_pool)
+        .await
+        .expect("no connection to database");
+
+    let server = HttpServer::new(move || {
         App::new()
-            .data(db_pool.clone()) // pass database pool to application so we can access it inside handlers
+            // pass database pool to application so we can access it inside handlers
+            .data(db_pool.clone())
+            .wrap(middleware::Logger::default())
             .route("/", web::get().to(index))
             .configure(todo::init) // init todo routes
-    });
-
-    server = match listenfd.take_tcp_listener(0)? {
-        Some(listener) => server.listen(listener)?,
-        None => {
-            let host = env::var("HOST").expect("HOST is not set in .env file");
-            let port = env::var("PORT").expect("PORT is not set in .env file");
-            server.bind(format!("{}:{}", host, port))?
-        }
-    };
+    })
+    .bind((host, port))?;
 
     info!("Starting server");
     server.run().await?;
