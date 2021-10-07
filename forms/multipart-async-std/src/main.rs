@@ -7,11 +7,9 @@ async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
     while let Ok(Some(mut field)) = payload.try_next().await {
         let content_type = field
-            .content_disposition()
-            .ok_or_else(|| actix_web::error::ParseError::Incomplete)?;
+            .content_disposition().ok_or(actix_web::error::ParseError::Incomplete)?;
         let filename = content_type
-            .get_filename()
-            .ok_or_else(|| actix_web::error::ParseError::Incomplete)?;
+            .get_filename().ok_or(actix_web::error::ParseError::Incomplete)?;
         let filepath = format!("./tmp/{}", sanitize_filename::sanitize(&filename));
         let mut f = async_std::fs::File::create(filepath).await?;
 

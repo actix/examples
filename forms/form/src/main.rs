@@ -89,11 +89,11 @@ mod tests {
         fn as_str(&self) -> &str {
             match self {
                 ResponseBody::Body(ref b) => match b {
-                    Body::Bytes(ref by) => std::str::from_utf8(&by).unwrap(),
+                    Body::Bytes(ref by) => std::str::from_utf8(by).unwrap(),
                     _ => panic!(),
                 },
                 ResponseBody::Other(ref b) => match b {
-                    Body::Bytes(ref by) => std::str::from_utf8(&by).unwrap(),
+                    Body::Bytes(ref by) => std::str::from_utf8(by).unwrap(),
                     _ => panic!(),
                 },
             }

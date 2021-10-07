@@ -40,10 +40,10 @@ async fn cache_stuff(
             .collect();
 
     // successful operations return "OK", so confirm that all returned as so
-    if !res.iter().all(|res| match res {
-        Ok(RespValue::SimpleString(x)) if x == "OK" => true,
-        _ => false,
-    }) {
+    if !res
+        .iter()
+        .all(|res| matches!(res,Ok(RespValue::SimpleString(x)) if x == "OK"))
+    {
         Ok(HttpResponse::InternalServerError().finish())
     } else {
         Ok(HttpResponse::Ok().body("successfully cached values"))

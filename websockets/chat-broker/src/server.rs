@@ -2,7 +2,6 @@ use actix::prelude::*;
 use actix_broker::BrokerSubscribe;
 
 use std::collections::HashMap;
-use std::mem;
 
 use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
 
@@ -17,7 +16,7 @@ pub struct WsChatServer {
 impl WsChatServer {
     fn take_room(&mut self, room_name: &str) -> Option<Room> {
         let room = self.rooms.get_mut(room_name)?;
-        let room = mem::replace(room, HashMap::new());
+        let room = std::mem::take(room);
         Some(room)
     }
 

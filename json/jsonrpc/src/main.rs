@@ -33,8 +33,10 @@ async fn rpc_handler(
                 .body(r.dump()));
         }
     };
-    let mut result = convention::Response::default();
-    result.id = reqjson.id.clone();
+    let mut result = convention::Response {
+        id: reqjson.id.clone(),
+        ..convention::Response::default()
+    };
 
     match rpc_select(&app_state, reqjson.method.as_str(), reqjson.params).await {
         Ok(ok) => result.result = ok,

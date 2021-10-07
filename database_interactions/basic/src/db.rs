@@ -15,6 +15,7 @@ pub enum WeatherAgg {
     MonthAgg { year: i32, month: i32, total: f64 },
 }
 
+#[allow(clippy::enum_variant_names)]
 pub enum Queries {
     GetTopTenHottestYears,
     GetTopTenColdestYears,

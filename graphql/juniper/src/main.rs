@@ -26,7 +26,7 @@ async fn graphql(
 ) -> Result<HttpResponse, Error> {
     let user = web::block(move || {
         let res = data.execute_sync(&st, &());
-        Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
+        serde_json::to_string(&res)
     })
     .await?;
     Ok(HttpResponse::Ok()

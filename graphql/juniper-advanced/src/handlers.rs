@@ -15,7 +15,7 @@ pub async fn graphql(
     };
     let res = web::block(move || {
         let res = data.execute_sync(&schema, &ctx);
-        Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
+        serde_json::to_string(&res)
     })
     .await
     .map_err(Error::from)?;
