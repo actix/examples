@@ -21,16 +21,19 @@ async fn main() -> std::io::Result<()> {
     }
     env_logger::init();
 
-    println!("Started http server: 127.0.0.1:8443");
-
     // load ssl keys
     let mut config = ServerConfig::new(NoClientAuth::new());
     let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
     let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
     let cert_chain = certs(cert_file).unwrap();
     let mut keys = pkcs8_private_keys(key_file).unwrap();
+    if keys.is_empty() {
+        eprintln!("Could not locate PKCS 8 private keys.");
+        std::process::exit(1);
+    }
     config.set_single_cert(cert_chain, keys.remove(0)).unwrap();
 
+    println!("Starting https server: 127.0.0.1:8443");
     HttpServer::new(|| {
         App::new()
             // enable logger
