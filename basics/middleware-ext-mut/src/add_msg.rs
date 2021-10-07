@@ -37,7 +37,7 @@ where
 
     fn call(&mut self, req: Self::Request) -> Self::Future {
         println!("request is passing through the AddMsg middleware");
-        
+
         // get mut HttpRequest from ServiceRequest
         let (request, pl) = req.into_parts();
 
@@ -65,7 +65,7 @@ impl AddMsg {
     pub fn enabled() -> Self {
         Self { enabled: true }
     }
-    
+
     pub fn disabled() -> Self {
         Self { enabled: false }
     }
