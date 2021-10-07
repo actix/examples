@@ -1,14 +1,17 @@
 // Allow this lint since it's fine to use type directly in the short example.
 #![allow(clippy::type_complexity)]
 
-use std::error;
-use std::pin::Pin;
-use std::sync::{Arc, RwLock};
-use std::time::Duration;
+use std::{
+    error,
+    future::Future,
+    pin::Pin,
+    sync::{Arc, RwLock},
+    time::Duration,
+};
 
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use bytes::Bytes;
-use futures::{Future, FutureExt};
+use futures_util::FutureExt as _;
 use serde_json::Value;
 
 #[allow(dead_code)]

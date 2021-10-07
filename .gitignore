@@ -23,3 +23,6 @@ upload.png
 
 # any dotenv files
 .env
+
+# file uploads
+/tmp

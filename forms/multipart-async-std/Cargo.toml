@@ -12,6 +12,7 @@ readme = "README.md"
 [dependencies]
 actix-web = "3"
 actix-multipart = "0.3"
-futures = "0.3.5"
-async-std = "1.8.0"
+futures-util = "0.3"
+async-std = "1.8"
 sanitize-filename = "0.2"
+uuid = { version = "0.8", features = ["v4"] }

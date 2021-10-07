@@ -1,24 +1,30 @@
 use actix_multipart::Multipart;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use async_std::prelude::*;
-use futures::{StreamExt, TryStreamExt};
+use futures_util::TryStreamExt as _;
+use uuid::Uuid;
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
     while let Ok(Some(mut field)) = payload.try_next().await {
-        let content_type = field
-            .content_disposition().ok_or(actix_web::error::ParseError::Incomplete)?;
-        let filename = content_type
-            .get_filename().ok_or(actix_web::error::ParseError::Incomplete)?;
+        let content_disposition = field
+            .content_disposition()
+            .ok_or_else(|| HttpResponse::BadRequest().finish())?;
+
+        let filename = content_disposition.get_filename().map_or_else(
+            || Uuid::new_v4().to_string(),
+            |f| sanitize_filename::sanitize(f),
+        );
+
         let filepath = format!("./tmp/{}", sanitize_filename::sanitize(&filename));
         let mut f = async_std::fs::File::create(filepath).await?;
 
         // Field in turn is stream of *Bytes* object
-        while let Some(chunk) = field.next().await {
-            let data = chunk.unwrap();
-            f.write_all(&data).await?;
+        while let Some(chunk) = field.try_next().await? {
+            f.write_all(&chunk).await?;
         }
     }
+
     Ok(HttpResponse::Ok().into())
 }
 
@@ -40,10 +46,8 @@ fn index() -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
+    std::env::set_var("RUST_LOG", "info");
     async_std::fs::create_dir_all("./tmp").await?;
-
-    let ip = "0.0.0.0:3000";
 
     HttpServer::new(|| {
         App::new().wrap(middleware::Logger::default()).service(
@@ -52,7 +56,7 @@ async fn main() -> std::io::Result<()> {
                 .route(web::post().to(save_file)),
         )
     })
-    .bind(ip)?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

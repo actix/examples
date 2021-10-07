@@ -3419,7 +3419,7 @@ dependencies = [
  "actix-web 3.3.2",
  "bytes 0.5.6",
  "env_logger 0.8.4",
- "futures",
+ "futures-util",
  "log",
  "serde 1.0.130",
  "serde_json",
@@ -3951,8 +3951,9 @@ dependencies = [
  "actix-multipart",
  "actix-web 3.3.2",
  "async-std",
- "futures",
+ "futures-util",
  "sanitize-filename",
+ "uuid",
 ]
 
 [[package]]
@@ -3961,8 +3962,9 @@ version = "0.3.0"
 dependencies = [
  "actix-multipart",
  "actix-web 3.3.2",
- "futures",
+ "futures-util",
  "sanitize-filename",
+ "uuid",
 ]
 
 [[package]]
