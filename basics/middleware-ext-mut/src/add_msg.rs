@@ -1,16 +1,22 @@
+use std::{
+    future::{ready, Future, Ready},
+    pin::Pin,
+    task::{Context, Poll},
+};
+
 use actix_web::dev::{Service, ServiceRequest, ServiceResponse, Transform};
 use actix_web::Error;
-use futures::future::{err, ok, Future, Ready};
-use std::pin::Pin;
 
 #[derive(Debug, Clone)]
 pub struct Msg(pub String);
 
-pub struct SendDataService<S> {
+#[doc(hidden)]
+pub struct AddMsgService<S> {
     service: S,
+    enabled: bool,
 }
 
-impl<S, B> Service for SendDataService<S>
+impl<S, B> Service for AddMsgService<S>
 where
     S: Service<
         Request = ServiceRequest,
@@ -25,34 +31,47 @@ where
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Error>>>>;
 
-    fn poll_ready(
-        &mut self,
-        ctx: &mut core::task::Context<'_>,
-    ) -> std::task::Poll<Result<(), Self::Error>> {
+    fn poll_ready(&mut self, ctx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.service.poll_ready(ctx)
     }
 
     fn call(&mut self, req: Self::Request) -> Self::Future {
+        println!("request is passing through the AddMsg middleware");
+        
         // get mut HttpRequest from ServiceRequest
         let (request, pl) = req.into_parts();
 
-        // insert data into extensions
-        request
-            .extensions_mut()
-            .insert(Msg(String::from("Hello from Middleware!")));
+        if self.enabled {
+            // insert data into extensions if enabled
+            request
+                .extensions_mut()
+                .insert(Msg("Hello from Middleware!".to_owned()));
+        }
 
         // construct a new service response
         match ServiceRequest::from_parts(request, pl) {
-            Ok(nq) => Box::pin(self.service.call(nq)),
-            Err(_) => Box::pin(err(Error::from(()))),
+            Ok(req) => Box::pin(self.service.call(req)),
+            Err(_) => Box::pin(ready(Err(Error::from(())))),
         }
     }
 }
 
 #[derive(Clone, Debug)]
-pub struct SendDataFactory;
+pub struct AddMsg {
+    enabled: bool,
+}
 
-impl<S, B> Transform<S> for SendDataFactory
+impl AddMsg {
+    pub fn enabled() -> Self {
+        Self { enabled: true }
+    }
+    
+    pub fn disabled() -> Self {
+        Self { enabled: false }
+    }
+}
+
+impl<S, B> Transform<S> for AddMsg
 where
     S: Service<
         Request = ServiceRequest,
@@ -66,10 +85,13 @@ where
     type Response = ServiceResponse<B>;
     type Error = Error;
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
-    type Transform = SendDataService<S>;
+    type Transform = AddMsgService<S>;
     type InitError = ();
 
     fn new_transform(&self, service: S) -> Self::Future {
-        ok(SendDataService { service })
+        ready(Ok(AddMsgService {
+            service,
+            enabled: self.enabled,
+        }))
     }
 }
