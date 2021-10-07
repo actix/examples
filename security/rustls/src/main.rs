@@ -33,7 +33,7 @@ async fn main() -> std::io::Result<()> {
     }
     config.set_single_cert(cert_chain, keys.remove(0)).unwrap();
 
-    println!("Started https server: 127.0.0.1:8443");
+    println!("Starting https server: 127.0.0.1:8443");
     HttpServer::new(|| {
         App::new()
             // enable logger
