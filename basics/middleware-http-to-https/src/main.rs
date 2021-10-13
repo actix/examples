@@ -36,7 +36,7 @@ async fn main() -> std::io::Result<()> {
 
                 // If the scheme is "https" then it will let other services below this wrap_fn
                 // handle the request and if it's "http" then a response with redirect status code
-                // will be sent whose "location" header will same as before with just "http"
+                // will be sent whose "location" header will be same as before, with just "http"
                 // changed to "https"
                 //
                 if sreq.connection_info().scheme() == "https" {
