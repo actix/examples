@@ -3769,6 +3769,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "middleware-http-to-https"
+version = "0.1.0"
+dependencies = [
+ "actix-web 3.3.2",
+ "futures",
+ "rustls 0.19.1",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
