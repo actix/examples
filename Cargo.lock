@@ -3774,7 +3774,7 @@ version = "0.1.0"
 dependencies = [
  "actix-web 3.3.2",
  "futures",
- "rustls 0.19.1",
+ "rustls 0.18.1",
 ]
 
 [[package]]
