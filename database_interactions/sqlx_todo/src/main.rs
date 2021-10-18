@@ -44,7 +44,7 @@ async fn main() -> Result<()> {
 
     // startup connection+schema check
     sqlx::query!("SELECT * FROM todos")
-        .fetch_one(&db_pool)
+        .fetch_optional(&db_pool)
         .await
         .expect("no connection to database");
 
