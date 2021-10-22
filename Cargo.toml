@@ -25,7 +25,6 @@ members = [
    "database_interactions/sqlx_todo",
    "forms/form",
    "forms/multipart",
-   "forms/multipart-async-std",
    "forms/multipart-s3",
    "graphql/graphql-demo",
    "graphql/juniper",
