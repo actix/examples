@@ -3,11 +3,13 @@ use uuid::Uuid;
 
 use crate::models;
 
+type DbError = Box<dyn std::error::Error + Send + Sync>;
+
 /// Run query using Diesel to find user by uid and return it.
 pub fn find_user_by_uid(
     uid: Uuid,
     conn: &SqliteConnection,
-) -> Result<Option<models::User>, diesel::result::Error> {
+) -> Result<Option<models::User>, DbError> {
     use crate::schema::users::dsl::*;
 
     let user = users
@@ -23,7 +25,7 @@ pub fn insert_new_user(
     // prevent collision with `name` column imported inside the function
     nm: &str,
     conn: &SqliteConnection,
-) -> Result<models::User, diesel::result::Error> {
+) -> Result<models::User, DbError> {
     // It is common when using Diesel with Actix web to import schema-related
     // modules inside a function's scope (rather than the normal module's scope)
     // to prevent import collisions and namespace pollution.
