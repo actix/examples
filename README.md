@@ -21,16 +21,19 @@
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 
-- [Jelly Starter](https://github.com/secretkeysio/jelly-actix-web-starter) : A starter template for actix-web projects that feels very Django-esque. Avoid the boring stuff and move faster.
-- [Actix and SQLx User CRUD for MySQL](https://github.com/jamesjmeyer210/actix_sqlx_mysql_user_crud) : A User CRUD showcasing MySQL database interaction with full integration test coverage, designed to fit comfortably in a system of micro-services.
-- [webapp.rs](https://github.com/saschagrunert/webapp.rs) : A web application completely written in Rust.
-- [RealWorld Example App](https://github.com/fairingrey/actix-realworld-example-app) : Implementation of the RealWorld backend API spec in Actix.
-- [Canduma](https://github.com/clifinger/canduma) : Rust authentication server boilerplate
+- [Jelly Starter](https://github.com/secretkeysio/jelly-actix-web-starter): A starter template for actix-web projects that feels very Django-esque. Avoid the boring stuff and move faster.
+- [Actix and SQLx User CRUD for MySQL](https://github.com/jamesjmeyer210/actix_sqlx_mysql_user_crud): A User CRUD showcasing MySQL database interaction with full integration test coverage, designed to fit comfortably in a system of micro-services.
+- [webapp.rs](https://github.com/saschagrunert/webapp.rs): A web application completely written in Rust.
+- [RealWorld Example App](https://github.com/fairingrey/actix-realworld-example-app): Implementation of the RealWorld backend API spec in Actix.
+- [Canduma](https://github.com/clifinger/canduma): Rust authentication server boilerplate
 - [Rust, Docker & GraphQL](https://github.com/jayy-lmao/rust-graphql-docker): An example of using Dataloaders, context, and a minimal docker container.
 - [Complete Actix 2.x REST Server](https://github.com/ddimaria/rust-actix-example): Actix 2.x HTTP Server featuring multi-database support, auth/JWTs, caching, static files, app state, tests, coverage, and docker.
-- [Actix Server Authentication with JWT and MongoDB](https://github.com/emreyalvac/actix-web-jwt/) : An implementation of JWT in Actix.
-- [Production-Grade Logging in Rust Applications](https://medium.com/better-programming/production-grade-logging-in-rust-applications-2c7fffd108a6) : An article showcasing the use of [tracing](https://github.com/tokio-rs/tracing) in an Actix application
-- [Fullstack-Rust](https://github.com/vascokk/fullstack-rust) : A Full Stack Rust application (Connect5 game) with Actix-web, Yew, Bulma CSS and Diesel.
+- [Actix Server Authentication with JWT and MongoDB](https://github.com/emreyalvac/actix-web-jwt/): An implementation of JWT in Actix.
+- [Production-Grade Logging in Rust Applications](https://medium.com/better-programming/production-grade-logging-in-rust-applications-2c7fffd108a6): An article showcasing the use of [tracing](https://github.com/tokio-rs/tracing) in an Actix application
+- [Fullstack-Rust](https://github.com/vascokk/fullstack-rust): A Full Stack Rust application (Connect5 game) with Actix-web, Yew, Bulma CSS and Diesel.
+
+## Paid Resources
+- [book] [Zero2prod by Luca Palmieri](https://algoluca.gumroad.com/l/zero2prod): Takes you on a journey to discover the world of backend development in Rust.
 
 ## Contribute
 
