@@ -18,6 +18,7 @@
 - [lemmy](https://github.com/dessalines/lemmy): A federated alternative to reddit in Rust.
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
 - [Dalted](https://github.com/carrascomj/dalted): Simple webapp that showcases the integration of [image-rs](https://github.com/image-rs/image) with Actix Web for color blindness simulations.
+- [Four in a Row - Server](https://github.com/ffactory-ofcl/fourinarow-server): An online version of the popular game four in a row, written in Rust on the server side and Flutter + Dart on the client.
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 
