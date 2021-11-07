@@ -15,7 +15,7 @@ FROM base AS builder
 
 RUN cargo build --release --offline
 
-FROM rust:1-slim-buster
+FROM debian:buster-slim
 
 COPY --from=builder /code/target/release/docker_sample /usr/bin/docker_sample
 
