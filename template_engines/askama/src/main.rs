@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use actix_web::{web, App, HttpResponse, HttpServer, Result};
+use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result};
 use askama::Template;
 
 #[derive(Template)]
@@ -30,9 +30,14 @@ async fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpRespons
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info");
+    env_logger::init();
+
     // start http server
     HttpServer::new(move || {
-        App::new().service(web::resource("/").route(web::get().to(index)))
+        App::new()
+            .wrap(middleware::Logger::default())
+            .service(web::resource("/").route(web::get().to(index)))
     })
     .bind("127.0.0.1:8080")?
     .run()
