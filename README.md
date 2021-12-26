@@ -27,6 +27,7 @@
 
 - [Jelly Starter](https://github.com/secretkeysio/jelly-actix-web-starter): A starter template for actix-web projects that feels very Django-esque. Avoid the boring stuff and move faster.
 - [Actix and SQLx User CRUD for MySQL](https://github.com/jamesjmeyer210/actix_sqlx_mysql_user_crud): A User CRUD showcasing MySQL database interaction with full integration test coverage, designed to fit comfortably in a system of micro-services.
+- [Rust, Actix Web & Heroku](https://github.com/emk/rust-buildpack-example-actix): A Heroku buildpack example for Actix Web.
 - [webapp.rs](https://github.com/saschagrunert/webapp.rs): A web application completely written in Rust.
 - [RealWorld Example App](https://github.com/fairingrey/actix-realworld-example-app): Implementation of the RealWorld backend API spec in Actix.
 - [Canduma](https://github.com/clifinger/canduma): Rust authentication server boilerplate
