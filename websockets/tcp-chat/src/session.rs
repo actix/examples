@@ -5,7 +5,7 @@ use std::time::{Duration, Instant};
 use std::{io, net};
 
 use futures::StreamExt;
-use tokio::io::{split, WriteHalf};
+use tokio::io::{AsyncReadExt, split, WriteHalf};
 use tokio::net::{TcpListener, TcpStream};
 use tokio_util::codec::FramedRead;
 
@@ -179,23 +179,16 @@ pub fn tcp_server(_s: &str, server: Addr<ChatServer>) {
     actix_web::rt::spawn(async move {
         let server = server.clone();
         let mut listener = TcpListener::bind(&addr).await.unwrap();
-        let mut incoming = listener.incoming();
-
-        while let Some(stream) = incoming.next().await {
-            match stream {
-                Ok(stream) => {
-                    let server = server.clone();
-                    ChatSession::create(|ctx| {
-                        let (r, w) = split(stream);
-                        ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
-                        ChatSession::new(
-                            server,
-                            actix::io::FramedWrite::new(w, ChatCodec, ctx),
-                        )
-                    });
-                }
-                Err(_) => return,
-            }
+        while let Ok((stream, _)) = listener.accept().await {
+            let server = server.clone();
+            ChatSession::create(|ctx| {
+                let (r, w) = split(stream);
+                ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
+                ChatSession::new(
+                    server,
+                    actix::io::FramedWrite::new(w, ChatCodec, ctx),
+                )
+            });
         }
     });
 }

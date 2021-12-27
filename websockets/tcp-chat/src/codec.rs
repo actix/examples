@@ -3,8 +3,8 @@ use std::io;
 
 use actix::prelude::*;
 use actix_codec::{Decoder, Encoder};
+use actix_web::web::{BufMut, BytesMut};
 use byteorder::{BigEndian, ByteOrder};
-use bytes::{BufMut, BytesMut};
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 
