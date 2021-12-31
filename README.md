@@ -22,7 +22,8 @@
 - [Dalted](https://github.com/carrascomj/dalted): Simple webapp that showcases the integration of [image-rs](https://github.com/image-rs/image) with Actix Web for color blindness simulations.
 - [Atomic-Server](https://github.com/joepio/atomic-data-rust/): Graph database with a dynamic schema, authorization and full text search.
 - [Operator](https://github.com/mkantor/operator): A web server for static and dynamic content.
-- [RCOS Telescope](https://github.com/rcos/Telescope) - The RCOS website and Discord bot.
+- [RCOS Telescope](https://github.com/rcos/Telescope): The RCOS website and Discord bot.
+- [WebThings Registration Server](https://github.com/WebThingsIO/registration_server): Exposes an HTTP API that lets you register a WebThings Gateway for tunneling support.
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 
