@@ -39,6 +39,7 @@
 - [Actix Server Authentication with JWT and MongoDB](https://github.com/emreyalvac/actix-web-jwt/): An implementation of JWT in Actix.
 - [Production-Grade Logging in Rust Applications](https://medium.com/better-programming/production-grade-logging-in-rust-applications-2c7fffd108a6): An article showcasing the use of [tracing](https://github.com/tokio-rs/tracing) in an Actix application
 - [Fullstack-Rust](https://github.com/vascokk/fullstack-rust): A Full Stack Rust application (Connect5 game) with Actix-web, Yew, Bulma CSS and Diesel.
+- [Mozilla Services Skeleton App](https://github.com/mozilla-services/skeleton)
 
 ## Paid Resources
 - [book] [Zero2prod by Luca Palmieri](https://algoluca.gumroad.com/l/zero2prod): Takes you on a journey to discover the world of backend development in Rust.
