@@ -7,7 +7,8 @@
 
 ## Community Showcase
 
-- [Merino](https://github.com/mozilla-services/merino): Web service for Firefox Suggest
+- [Merino](https://github.com/mozilla-services/merino): Web service for Firefox Suggest.
+- [Contile](https://github.com/mozilla-services/contile): The back-end server for the Mozilla Tile Service (MTS).
 - [lemmy](https://github.com/dessalines/lemmy): A federated alternative to reddit in Rust.
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
 - [Four in a Row - Server](https://github.com/ffactory-ofcl/fourinarow-server): An online version of the popular game four in a row, written in Rust on the server side and Flutter + Dart on the client.
