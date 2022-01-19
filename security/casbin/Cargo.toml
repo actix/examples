@@ -13,3 +13,4 @@ casbin = "=2.0.5"
 rhai = "=0.19.14"
 rhai_codegen = "=0.3.3"
 loge = {version = "0.4", default-features = false, features = ["colored", "chrono"]}
+tokio = { version = "0.2.22", features = ["sync"] }

@@ -1,6 +1,6 @@
 use casbin::{CoreApi, DefaultModel, Enforcer, FileAdapter, RbacApi};
 use std::io;
-use std::sync::RwLock;
+use tokio::sync::RwLock;
 
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 
@@ -9,7 +9,7 @@ async fn success(
     enforcer: web::Data<RwLock<Enforcer>>,
     req: HttpRequest,
 ) -> HttpResponse {
-    let mut e = enforcer.write().unwrap();
+    let mut e = enforcer.write().await;
     println!("{:?}", req);
     assert_eq!(vec!["data2_admin"], e.get_roles_for_user("alice", None));
 
@@ -17,7 +17,7 @@ async fn success(
 }
 
 async fn fail(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpResponse {
-    let mut e = enforcer.write().unwrap();
+    let mut e = enforcer.write().await;
     println!("{:?}", req);
     assert_eq!(vec!["data1_admin"], e.get_roles_for_user("alice", None));
 

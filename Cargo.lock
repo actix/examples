@@ -57,6 +57,7 @@ dependencies = [
  "loge",
  "rhai",
  "rhai_codegen",
+ "tokio 0.2.25",
 ]
 
 [[package]]
