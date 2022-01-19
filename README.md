@@ -11,6 +11,7 @@
 - [Contile](https://github.com/mozilla-services/contile): The back-end server for the Mozilla Tile Service (MTS).
 - [lemmy](https://github.com/dessalines/lemmy): A federated alternative to reddit in Rust.
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
+- [tokei.rs](https://github.com/XAMPPRocky/tokei_rs): The tokei.rs server code.
 - [Four in a Row - Server](https://github.com/ffactory-ofcl/fourinarow-server): An online version of the popular game four in a row, written in Rust on the server side and Flutter + Dart on the client.
 - [Nitro Repo](https://github.com/wherkamp/nitro_repo): An open source artifact manager. Rust back-end and Vue front-end.
 - [Imitari](https://github.com/imitari/imitari): A lightweight ShareX-compatible image uploader server
