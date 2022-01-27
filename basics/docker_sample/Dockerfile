@@ -1,24 +1,38 @@
-FROM rust:1-slim-buster AS base
+# NB: This is not a production-grade Dockerfile.
 
-ENV USER=root
-
+#################
+## build stage ##
+#################
+FROM rust:1-slim-bullseye AS builder
 WORKDIR /code
-RUN cargo init
-COPY Cargo.toml /code/Cargo.toml
+
+# Download crates-io index and fetch dependency code.
+# This step avoids needing to spend time on every build downloading the index
+# which can take a long time within the docker context. Docker will cache it.
+RUN USER=root cargo init
+COPY Cargo.toml Cargo.toml
 RUN cargo fetch
 
-COPY src /code/src
+# copy app files
+COPY src src
 
-CMD [ "cargo", "test", "--offline" ]
+# compile app
+RUN cargo build --release
 
-FROM base AS builder
+###############
+## run stage ##
+###############
+FROM debian:bullseye-slim
+WORKDIR /app
 
-RUN cargo build --release --offline
+# copy server binary from build stage
+COPY --from=builder /code/target/release/docker_sample docker_sample
 
-FROM debian:buster-slim
+# set user to non-root unless root is required for your app
+USER 1001
 
-COPY --from=builder /code/target/release/docker_sample /usr/bin/docker_sample
+# indicate what port the server is running on
+EXPOSE 8080
 
-EXPOSE 5000
-
-ENTRYPOINT [ "/usr/bin/docker_sample" ]
+# run server
+CMD [ "/app/docker_sample" ]
