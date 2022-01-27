@@ -1,6 +1,7 @@
 use actix_files as fs;
 use actix_session::{CookieSession, Session};
-use actix_utils::mpsc;
+use tokio::sync::mpsc;
+use tokio_stream::wrappers::UnboundedReceiverStream;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
     error, get, guard, middleware, web, App, Error, HttpRequest, HttpResponse,
@@ -27,7 +28,7 @@ async fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
     }
 
     // set counter to session
-    session.set("counter", counter)?;
+    session.insert("counter", counter)?;
 
     // response
     Ok(HttpResponse::build(StatusCode::OK)
@@ -44,22 +45,23 @@ async fn p404() -> Result<fs::NamedFile> {
 async fn response_body(path: web::Path<String>) -> HttpResponse {
     let text = format!("Hello {}!", *path);
 
-    let (tx, rx_body) = mpsc::channel();
+    let (tx, rx_body) = mpsc::unbounded_channel();
     let _ = tx.send(Ok::<_, Error>(web::Bytes::from(text)));
 
-    HttpResponse::Ok().streaming(rx_body)
+    
+    HttpResponse::Ok().streaming(UnboundedReceiverStream::from(rx_body))
 }
 
 /// handler with path parameters like `/user/{name}/`
 async fn with_param(
     req: HttpRequest,
-    web::Path((name,)): web::Path<(String,)>,
+    path: web::Path<(String,)>,
 ) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
         .content_type("text/plain")
-        .body(format!("Hello {}!", name))
+        .body(format!("Hello {}!", path.0))
 }
 
 #[actix_web::main]
@@ -102,7 +104,7 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/").route(web::get().to(|req: HttpRequest| {
                 println!("{:?}", req);
                 HttpResponse::Found()
-                    .header(header::LOCATION, "static/welcome.html")
+                    .insert_header((header::LOCATION, "static/welcome.html"))
                     .finish()
             })))
             // default
