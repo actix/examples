@@ -90,7 +90,7 @@ mod tests {
         }
     }
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn handle_post_1_unit_test() {
         let params = Form(MyParams {
             name: "John".to_string(),
@@ -107,7 +107,7 @@ mod tests {
         assert_eq!(body.as_str(), "Your name is John");
     }
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn handle_post_1_integration_test() {
         let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
@@ -127,7 +127,7 @@ mod tests {
         assert_eq!(body.as_str(), "Your name is John");
     }
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn handle_post_2_unit_test() {
         let state = TestRequest::default()
             .data(AppState {
@@ -152,7 +152,7 @@ mod tests {
         );
     }
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn handle_post_2_integration_test() {
         let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
@@ -176,7 +176,7 @@ mod tests {
         );
     }
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn handle_post_3_unit_test() {
         let req = TestRequest::default().to_http_request();
         let params = Form(MyParams {
@@ -196,7 +196,7 @@ mod tests {
         assert_eq!(body.as_str(), "Your name is John");
     }
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn handle_post_3_integration_test() {
         let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()

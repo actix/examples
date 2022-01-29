@@ -7,6 +7,3 @@ edition = "2021"
 [dependencies]
 actix-web = "4.0.0-beta.21"
 serde = { version = "1", features = ["derive"] }
-
-[dev-dependencies]
-actix-rt = "2.6.0"
