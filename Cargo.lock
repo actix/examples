@@ -5008,15 +5008,11 @@ dependencies = [
 name = "redis_session"
 version = "2.0.0"
 dependencies = [
- "actix-http 3.0.0-beta.19",
  "actix-redis 0.10.0-beta.5",
- "actix-rt 2.6.0",
- "actix-service 2.0.2",
  "actix-session 0.5.0-beta.7",
  "actix-test",
  "actix-web 4.0.0-beta.21",
  "env_logger 0.9.0",
- "rand 0.8.4",
  "serde 1.0.136",
  "serde_json",
  "time 0.3.7",

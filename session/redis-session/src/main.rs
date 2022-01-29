@@ -11,7 +11,6 @@ use actix_web::{
     web::{get, post, resource},
     App, HttpResponse, HttpServer, Result,
 };
-use rand::Rng;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -80,12 +79,12 @@ async fn main() -> std::io::Result<()> {
     // Generate a random 32 byte key. Note that it is important to use a unique
     // private key for every project. Anyone with access to the key can generate
     // authentication cookies for any user!
-    let private_key = rand::thread_rng().gen::<[u8; 32]>();
+    let private_key = actix_web::cookie::Key::generate();
 
     HttpServer::new(move || {
         App::new()
             // redis session middleware
-            .wrap(RedisSession::new("127.0.0.1:6379", &private_key))
+            .wrap(RedisSession::new("127.0.0.1:6379", &private_key.master()))
             // enable logger - always register actix-web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(resource("/").route(get().to(index)))
@@ -108,7 +107,7 @@ mod test {
     };
     use serde_json::json;
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn test_workflow() {
         // Step 1:  GET index
         //   - set-cookie actix-session will be in response (session cookie #1)
@@ -140,11 +139,11 @@ mod test {
         //   - set-cookie actix-session will be in response (session cookie #3)
         //   - response should be: {"counter": 0, "user_id": None}
 
-        let private_key = rand::thread_rng().gen::<[u8; 32]>();
+        let private_key = actix_web::cookie::Key::generate();
         let srv = actix_test::start(move || {
             App::new()
                 .wrap(
-                    RedisSession::new("127.0.0.1:6379", &private_key)
+                    RedisSession::new("127.0.0.1:6379", &private_key.master())
                         .cookie_name("test-session"),
                 )
                 .wrap(middleware::Logger::default())
