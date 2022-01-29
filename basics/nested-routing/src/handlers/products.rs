@@ -33,13 +33,13 @@ mod tests {
 
     #[actix_rt::test]
     async fn test_add_product() {
-        let mut app = test::init_service(App::new().configure(config_app)).await;
+        let app = test::init_service(App::new().configure(config_app)).await;
 
         let payload = r#"{"id":12345,"product_type":"fancy","name":"test"}"#.as_bytes();
 
         let req = test::TestRequest::post()
             .uri("/products")
-            .header(header::CONTENT_TYPE, "application/json")
+            .insert_header((header::CONTENT_TYPE, "application/json"))
             .set_payload(payload)
             .to_request();
 
