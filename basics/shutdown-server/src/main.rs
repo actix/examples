@@ -29,7 +29,7 @@ async fn main() -> std::io::Result<()> {
     let server = HttpServer::new(move || {
         // give the server a Sender in .data
         App::new()
-            .app_data(tx.clone())
+            .app_data(web::Data::new(tx.clone()))
             .wrap(middleware::Logger::default())
             .service(hello)
             .service(stop)
