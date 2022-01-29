@@ -89,7 +89,7 @@ dependencies = [
  "log",
  "memchr",
  "pin-project-lite 0.2.8",
- "tokio 1.15.0",
+ "tokio 1.16.1",
  "tokio-util 0.6.9",
 ]
 
@@ -412,7 +412,7 @@ checksum = "cdf3f2183be1241ed4dd22611850b85d38de0b08a09f1f7bcccbd0809084b359"
 dependencies = [
  "actix-macros 0.2.3",
  "futures-core",
- "tokio 1.15.0",
+ "tokio 1.16.1",
 ]
 
 [[package]]
@@ -450,7 +450,7 @@ dependencies = [
  "mio 0.8.0",
  "num_cpus",
  "socket2 0.4.3",
- "tokio 1.15.0",
+ "tokio 1.16.1",
 ]
 
 [[package]]
@@ -2804,7 +2804,7 @@ dependencies = [
  "http",
  "indexmap",
  "slab",
- "tokio 1.15.0",
+ "tokio 1.16.1",
  "tokio-util 0.6.9",
  "tracing",
 ]
@@ -3734,7 +3734,7 @@ dependencies = [
  "strsim 0.10.0",
  "take_mut",
  "thiserror",
- "tokio 1.15.0",
+ "tokio 1.16.1",
  "tokio-rustls 0.22.0",
  "tokio-util 0.6.9",
  "trust-dns-proto 0.20.3",
@@ -5376,10 +5376,10 @@ checksum = "7fdf1b9db47230893d76faad238fd6097fd6d6a9245cd7a4d90dbd639536bbd2"
 name = "shutdown-server"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.3.3",
- "env_logger 0.8.4",
+ "actix-web 4.0.0-beta.21",
+ "env_logger 0.9.0",
  "futures",
- "tokio 0.2.25",
+ "tokio 1.16.1",
 ]
 
 [[package]]
@@ -6039,9 +6039,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.15.0"
+version = "1.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fbbf1c778ec206785635ce8ad57fe52b3009ae9e0c9f574a728f3049d3e55838"
+checksum = "0c27a64b625de6d309e8c57716ba93021dccf1b3b5c97edd6d3dd2d2135afc0a"
 dependencies = [
  "bytes 1.1.0",
  "libc",
@@ -6149,7 +6149,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bc6844de72e57df1980054b38be3a9f4702aba4858be64dd700181a8a6d0e1b6"
 dependencies = [
  "rustls 0.19.1",
- "tokio 1.15.0",
+ "tokio 1.16.1",
  "webpki",
 ]
 
@@ -6189,7 +6189,7 @@ dependencies = [
  "futures-sink",
  "log",
  "pin-project-lite 0.2.8",
- "tokio 1.15.0",
+ "tokio 1.16.1",
 ]
 
 [[package]]
@@ -6279,7 +6279,7 @@ dependencies = [
  "smallvec",
  "thiserror",
  "tinyvec",
- "tokio 1.15.0",
+ "tokio 1.16.1",
  "url",
 ]
 
@@ -6318,7 +6318,7 @@ dependencies = [
  "resolv-conf",
  "smallvec",
  "thiserror",
- "tokio 1.15.0",
+ "tokio 1.16.1",
  "trust-dns-proto 0.20.3",
 ]
 
