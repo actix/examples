@@ -112,9 +112,7 @@ async fn main() -> io::Result<()> {
                     .finish()
             })))
             // default
-            .default_service(
-                web::route().to(default_handler),
-            )
+            .default_service(web::route().to(default_handler))
     })
     .bind("127.0.0.1:8080")?
     .run()
