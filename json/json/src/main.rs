@@ -90,7 +90,7 @@ mod tests {
     use actix_web::dev::Service;
     use actix_web::{http, test, web, App};
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn test_index() {
         let app = test::init_service(
             App::new().service(web::resource("/").route(web::post().to(index))),
