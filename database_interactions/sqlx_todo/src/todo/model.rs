@@ -1,4 +1,4 @@
-use actix_web::{HttpRequest, HttpResponse, Responder, body::BoxBody};
+use actix_web::{body::BoxBody, HttpRequest, HttpResponse, Responder};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::sqlite::SqliteRow;

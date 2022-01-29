@@ -1,4 +1,4 @@
-use actix_web::{web, error::InternalError, http::StatusCode};
+use actix_web::{error::InternalError, http::StatusCode, web};
 use failure::Error;
 use rusqlite::Statement;
 use serde::{Deserialize, Serialize};
@@ -22,7 +22,10 @@ pub enum Queries {
     GetTopTenColdestMonths,
 }
 
-pub async fn execute(pool: &Pool, query: Queries) -> Result<Vec<WeatherAgg>, InternalError<Error>> {
+pub async fn execute(
+    pool: &Pool,
+    query: Queries,
+) -> Result<Vec<WeatherAgg>, InternalError<Error>> {
     let pool = pool.clone();
     web::block(move || {
         // simulate an expensive query, see comments at top of main.rs
