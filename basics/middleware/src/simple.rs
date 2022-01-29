@@ -15,13 +15,12 @@ pub struct SayHi;
 // Middleware factory is `Transform` trait from actix-service crate
 // `S` - type of the next service
 // `B` - type of response's body
-impl<S, B> Transform<S> for SayHi
+impl<S, B> Transform<S, ServiceRequest> for SayHi
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
     B: 'static,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = Error;
     type InitError = ();
@@ -37,22 +36,21 @@ pub struct SayHiMiddleware<S> {
     service: S,
 }
 
-impl<S, B> Service for SayHiMiddleware<S>
+impl<S, B> Service<ServiceRequest> for SayHiMiddleware<S>
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
     B: 'static,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 
-    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+    fn poll_ready(&self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.service.poll_ready(cx)
     }
 
-    fn call(&mut self, req: ServiceRequest) -> Self::Future {
+    fn call(&self, req: ServiceRequest) -> Self::Future {
         println!("Hi from start. You requested: {}", req.path());
 
         let fut = self.service.call(req);

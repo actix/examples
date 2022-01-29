@@ -1,19 +1,21 @@
+use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use actix_service::{Service, Transform};
+use actix_web::body::{BoxBody, MessageBody};
 use actix_web::dev::{ServiceRequest, ServiceResponse};
 use actix_web::{http, Error, HttpResponse};
-use futures::future::{ok, Either, Ready};
+use futures::future::{ok, Ready};
+use futures::{Future};
 
 pub struct CheckLogin;
 
-impl<S, B> Transform<S> for CheckLogin
+impl<S> Transform<S, ServiceRequest> for CheckLogin
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<BoxBody>, Error = Error>,
     S::Future: 'static,
 {
-    type Request = ServiceRequest;
-    type Response = ServiceResponse<B>;
+    type Response = ServiceResponse<BoxBody>;
     type Error = Error;
     type InitError = ();
     type Transform = CheckLoginMiddleware<S>;
@@ -27,39 +29,38 @@ pub struct CheckLoginMiddleware<S> {
     service: S,
 }
 
-impl<S, B> Service for CheckLoginMiddleware<S>
+impl<S, B> Service<ServiceRequest> for CheckLoginMiddleware<S>
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    B: MessageBody + 'static,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
 {
-    type Request = ServiceRequest;
-    type Response = ServiceResponse<B>;
+    type Response = ServiceResponse<BoxBody>;
     type Error = Error;
-    type Future = Either<S::Future, Ready<Result<Self::Response, Self::Error>>>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 
-    fn poll_ready(&mut self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
+    fn poll_ready(&self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
         self.service.poll_ready(cx)
     }
 
-    fn call(&mut self, req: ServiceRequest) -> Self::Future {
+    fn call(&self, req: ServiceRequest) -> Self::Future {
         // We only need to hook into the `start` for this middleware.
-
         let is_logged_in = false; // Change this to see the change in outcome in the browser
+        let (request, payload) = req.into_parts();
+        let svc_response = self
+            .service
+            .call(ServiceRequest::from_parts(request.clone(), payload));
 
-        if is_logged_in {
-            Either::Left(self.service.call(req))
-        } else {
+        Box::pin(async move {
             // Don't forward to /login if we are already on /login
-            if req.path() == "/login" {
-                Either::Left(self.service.call(req))
+            if is_logged_in || request.path() == "/login" {
+                svc_response.await.map(|r| r.map_into_boxed_body())
             } else {
-                Either::Right(ok(req.into_response(
-                    HttpResponse::Found()
-                        .header(http::header::LOCATION, "/login")
-                        .finish()
-                        .into_body(),
-                )))
+                let response = HttpResponse::Found()
+                    .insert_header((http::header::LOCATION, "/login"))
+                    .finish();
+                Ok(ServiceResponse::new(request, response))
             }
-        }
+        })
     }
 }

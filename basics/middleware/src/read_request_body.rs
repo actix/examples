@@ -11,13 +11,12 @@ use futures::stream::StreamExt;
 
 pub struct Logging;
 
-impl<S: 'static, B> Transform<S> for Logging
+impl<S: 'static, B> Transform<S, ServiceRequest> for Logging
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
     B: 'static,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = Error;
     type InitError = ();
@@ -36,24 +35,23 @@ pub struct LoggingMiddleware<S> {
     service: Rc<RefCell<S>>,
 }
 
-impl<S, B> Service for LoggingMiddleware<S>
+impl<S, B> Service<ServiceRequest> for LoggingMiddleware<S>
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>
         + 'static,
     S::Future: 'static,
     B: 'static,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 
-    fn poll_ready(&mut self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
+    fn poll_ready(&self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
         self.service.poll_ready(cx)
     }
 
-    fn call(&mut self, mut req: ServiceRequest) -> Self::Future {
-        let mut svc = self.service.clone();
+    fn call(&self, mut req: ServiceRequest) -> Self::Future {
+        let svc = self.service.clone();
 
         Box::pin(async move {
             let mut body = BytesMut::new();

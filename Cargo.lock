@@ -3542,11 +3542,11 @@ checksum = "308cc39be01b73d0d18f82a0e7b2a3df85245f84af96fdddc5d202d27e47b86a"
 name = "middleware-example"
 version = "2.0.0"
 dependencies = [
- "actix-service 1.0.6",
- "actix-web 3.3.3",
- "env_logger 0.8.4",
+ "actix-service 2.0.2",
+ "actix-web 4.0.0-beta.21",
+ "env_logger 0.9.0",
  "futures",
- "pin-project 0.4.29",
+ "pin-project 1.0.10",
 ]
 
 [[package]]
