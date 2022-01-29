@@ -33,7 +33,7 @@ pub enum CustomError {
 
 impl Distribution<CustomError> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> CustomError {
-        match rng.gen_range(0, 4) {
+        match rng.gen_range(0..4) {
             0 => CustomError::CustomOne,
             1 => CustomError::CustomTwo,
             2 => CustomError::CustomThree,
