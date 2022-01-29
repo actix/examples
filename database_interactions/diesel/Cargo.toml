@@ -8,15 +8,12 @@ authors = [
 edition = "2018"
 
 [dependencies]
-actix-web = "3"
-diesel = { version = "^1.1.0", features = ["sqlite", "r2d2"] }
+actix-web = "4.0.0-beta.21"
+diesel = { version = "1.4.8", features = ["sqlite", "r2d2"] }
 dotenv = "0.15"
-env_logger = "0.8"
+env_logger = "0.9.0"
 failure = "0.1.8"
 futures = "0.3.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 uuid = { version = "0.8", features = ["serde", "v4"] }
-
-[dev-dependencies]
-actix-rt = "1"

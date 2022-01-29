@@ -6,6 +6,8 @@
 #[macro_use]
 extern crate diesel;
 
+use actix_web::error::InternalError;
+use actix_web::http::StatusCode;
 use actix_web::{get, middleware, post, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
@@ -30,11 +32,8 @@ async fn get_user(
         let conn = pool.get()?;
         actions::find_user_by_uid(user_uid, &conn)
     })
-    .await
-    .map_err(|e| {
-        eprintln!("{}", e);
-        HttpResponse::InternalServerError().finish()
-    })?;
+    .await?
+    .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
 
     if let Some(user) = user {
         Ok(HttpResponse::Ok().json(user))
@@ -56,11 +55,8 @@ async fn add_user(
         let conn = pool.get()?;
         actions::insert_new_user(&form.name, &conn)
     })
-    .await
-    .map_err(|e| {
-        eprintln!("{}", e);
-        HttpResponse::InternalServerError().finish()
-    })?;
+    .await?
+    .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
 
     Ok(HttpResponse::Ok().json(user))
 }
@@ -86,7 +82,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             // set up DB pool to be used with web::Data<Pool> extractor
-            .data(pool.clone())
+            .app_data(web::Data::new(pool.clone()))
             .wrap(middleware::Logger::default())
             .service(get_user)
             .service(add_user)
@@ -101,7 +97,7 @@ mod tests {
     use super::*;
     use actix_web::test;
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn user_routes() {
         std::env::set_var("RUST_LOG", "actix_web=debug");
         env_logger::init();
@@ -115,7 +111,7 @@ mod tests {
 
         let mut app = test::init_service(
             App::new()
-                .data(pool.clone())
+                .app_data(web::Data::new(pool.clone()))
                 .wrap(middleware::Logger::default())
                 .service(get_user)
                 .service(add_user),
@@ -130,7 +126,7 @@ mod tests {
             })
             .to_request();
 
-        let resp: models::User = test::read_response_json(&mut app, req).await;
+        let resp: models::User = test::call_and_read_body_json(&mut app, req).await;
 
         assert_eq!(resp.name, "Test user");
 
@@ -139,7 +135,7 @@ mod tests {
             .uri(&format!("/user/{}", resp.id))
             .to_request();
 
-        let resp: models::User = test::read_response_json(&mut app, req).await;
+        let resp: models::User = test::call_and_read_body_json(&mut app, req).await;
 
         assert_eq!(resp.name, "Test user");
 
