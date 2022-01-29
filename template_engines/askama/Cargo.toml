@@ -5,9 +5,9 @@ authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-env_logger = "0.8"
-actix-web = "3"
-askama = "0.9"
+env_logger = "0.9.0"
+actix-web = "4.0.0-beta.21"
+askama = "0.11.0"
 
 [build-dependencies]
-askama = "0.9"
+askama = "0.11.0"

@@ -913,9 +913,9 @@ checksum = "eab1c04a571841102f5345a8fc0f6bb3d31c315dec879b5c6e42e40ce7ffa34e"
 
 [[package]]
 name = "askama"
-version = "0.9.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10a1fb9e41eb366cbcd267da2094be5b7e62fdbca9f82091e7503e80f885050d"
+checksum = "4d8f355701c672c2ba3d718acbd213f740beea577cc4eae66accdffe15be1882"
 dependencies = [
  "askama_derive",
  "askama_escape",
@@ -924,33 +924,36 @@ dependencies = [
 
 [[package]]
 name = "askama_derive"
-version = "0.9.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e1012c270085fa35ece6a48a569544fde85b6d9ee41074c7b706cc912a03f939"
+checksum = "84704cab5b7ae0fd3a9f78ee5eb7b27f3749df445f04623db6633459ae283267"
 dependencies = [
  "askama_shared",
- "nom 5.1.2",
  "proc-macro2",
- "quote",
  "syn",
 ]
 
 [[package]]
 name = "askama_escape"
-version = "0.3.0"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a577aeba5fec1aafb9f195d98cfcc38a78b588e4ebf9b15f62ca1c7aa33795a"
+checksum = "9a1bb320f97e6edf9f756bf015900038e43c7700e059688e5724a928c8f3b8d5"
 
 [[package]]
 name = "askama_shared"
-version = "0.9.1"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ee517f4e33c27b129928e71d8a044d54c513e72e0b72ec5c4f5f1823e9de353"
+checksum = "dae03eebba55a2697a376e58b573a29fe36893157173ac8df312ad85f3c0e012"
 dependencies = [
  "askama_escape",
  "humansize",
+ "nom 7.1.0",
  "num-traits 0.2.14",
+ "percent-encoding",
+ "proc-macro2",
+ "quote",
  "serde 1.0.136",
+ "syn",
  "toml",
 ]
 
@@ -5784,9 +5787,9 @@ dependencies = [
 name = "template-askama"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.3.3",
+ "actix-web 4.0.0-beta.21",
  "askama",
- "env_logger 0.8.4",
+ "env_logger 0.9.0",
 ]
 
 [[package]]
