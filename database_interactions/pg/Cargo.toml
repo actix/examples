@@ -5,12 +5,12 @@ authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-actix-web = "3"
-config = "0.10.1"
-deadpool-postgres = "0.5.0"
+actix-web = "4.0.0-beta.21"
+config = "0.11.0"
+deadpool-postgres = { version = "0.10.1", features = ["serde"] }
 derive_more = "0.99.2"
 dotenv = "0.15.0"
 serde = { version = "1.0.104", features = ["derive"] }
-tokio-pg-mapper = "0.1"
-tokio-pg-mapper-derive = "0.1"
-tokio-postgres = "0.5.1"
+tokio-pg-mapper = "0.2.0"
+tokio-pg-mapper-derive = "0.2.0"
+tokio-postgres = "0.7.5"
