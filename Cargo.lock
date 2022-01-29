@@ -5793,9 +5793,8 @@ dependencies = [
 name = "template-tera"
 version = "2.0.0"
 dependencies = [
- "actix-http 2.2.2",
- "actix-web 3.3.3",
- "env_logger 0.8.4",
+ "actix-web 4.0.0-beta.21",
+ "env_logger 0.9.0",
  "tera",
 ]
 
