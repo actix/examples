@@ -1,12 +1,12 @@
-use std::cell::RefCell;
-use std::pin::Pin;
-use std::rc::Rc;
-use std::task::{Context, Poll};
+use std::{
+    future::{ready, Ready},
+    rc::Rc,
+};
 
-use actix_service::{Service, Transform};
+use actix_web::dev::{self, Service, Transform};
 use actix_web::web::BytesMut;
 use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error, HttpMessage};
-use futures::future::{ok, Future, Ready};
+use futures::future::LocalBoxFuture;
 use futures::stream::StreamExt;
 
 pub struct Logging;
@@ -24,31 +24,28 @@ where
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
-        ok(LoggingMiddleware {
-            service: Rc::new(RefCell::new(service)),
-        })
+        ready(Ok(LoggingMiddleware {
+            service: Rc::new(service),
+        }))
     }
 }
 
 pub struct LoggingMiddleware<S> {
     // This is special: We need this to avoid lifetime issues.
-    service: Rc<RefCell<S>>,
+    service: Rc<S>,
 }
 
 impl<S, B> Service<ServiceRequest> for LoggingMiddleware<S>
 where
-    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>
-        + 'static,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error> + 'static,
     S::Future: 'static,
     B: 'static,
 {
     type Response = ServiceResponse<B>;
     type Error = Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
+    type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
 
-    fn poll_ready(&self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
-        self.service.poll_ready(cx)
-    }
+    dev::forward_ready!(service);
 
     fn call(&self, mut req: ServiceRequest) -> Self::Future {
         let svc = self.service.clone();

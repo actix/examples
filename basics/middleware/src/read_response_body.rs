@@ -1,13 +1,13 @@
 use std::future::Future;
+use std::future::{ready, Ready};
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use actix_service::{Service, Transform};
 use actix_web::body::{BodySize, MessageBody};
+use actix_web::dev::{self, Service, Transform};
 use actix_web::web::{Bytes, BytesMut};
 use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error};
-use futures::future::{ok, Ready};
 
 pub struct Logging;
 
@@ -23,7 +23,7 @@ where
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
-        ok(LoggingMiddleware { service })
+        ready(Ok(LoggingMiddleware { service }))
     }
 }
 
@@ -40,9 +40,7 @@ where
     type Error = Error;
     type Future = WrapperStream<S, B>;
 
-    fn poll_ready(&self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
-        self.service.poll_ready(cx)
-    }
+    dev::forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
         WrapperStream {
@@ -83,14 +81,14 @@ where
 }
 
 #[pin_project::pin_project(PinnedDrop)]
-pub struct BodyLogger<B: MessageBody> {
+pub struct BodyLogger<B> {
     #[pin]
     body: B,
     body_accum: BytesMut,
 }
 
 #[pin_project::pinned_drop]
-impl<B: MessageBody> PinnedDrop for BodyLogger<B> {
+impl<B> PinnedDrop for BodyLogger<B> {
     fn drop(self: Pin<&mut Self>) {
         println!("response body: {:?}", self.body_accum);
     }

@@ -1,28 +1,26 @@
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::future::{ready, Ready};
 
-use actix_service::{Service, Transform};
-use actix_web::body::{BoxBody, MessageBody};
-use actix_web::dev::{ServiceRequest, ServiceResponse};
+use actix_web::body::EitherBody;
+use actix_web::dev::{self, ServiceRequest, ServiceResponse};
+use actix_web::dev::{Service, Transform};
 use actix_web::{http, Error, HttpResponse};
-use futures::future::{ok, Ready};
-use futures::{Future};
+use futures::future::LocalBoxFuture;
 
 pub struct CheckLogin;
 
-impl<S> Transform<S, ServiceRequest> for CheckLogin
+impl<S, B> Transform<S, ServiceRequest> for CheckLogin
 where
-    S: Service<ServiceRequest, Response = ServiceResponse<BoxBody>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
 {
-    type Response = ServiceResponse<BoxBody>;
+    type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
     type InitError = ();
     type Transform = CheckLoginMiddleware<S>;
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
-        ok(CheckLoginMiddleware { service })
+        ready(Ok(CheckLoginMiddleware { service }))
     }
 }
 pub struct CheckLoginMiddleware<S> {
@@ -31,17 +29,14 @@ pub struct CheckLoginMiddleware<S> {
 
 impl<S, B> Service<ServiceRequest> for CheckLoginMiddleware<S>
 where
-    B: MessageBody + 'static,
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
 {
-    type Response = ServiceResponse<BoxBody>;
+    type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
+    type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
 
-    fn poll_ready(&self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
-        self.service.poll_ready(cx)
-    }
+    dev::forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
         // We only need to hook into the `start` for this middleware.
@@ -54,11 +49,13 @@ where
         Box::pin(async move {
             // Don't forward to /login if we are already on /login
             if is_logged_in || request.path() == "/login" {
-                svc_response.await.map(|r| r.map_into_boxed_body())
+                svc_response.await.map(ServiceResponse::map_into_left_body)
             } else {
                 let response = HttpResponse::Found()
                     .insert_header((http::header::LOCATION, "/login"))
-                    .finish();
+                    .finish()
+                    .map_into_right_body();
+
                 Ok(ServiceResponse::new(request, response))
             }
         })
