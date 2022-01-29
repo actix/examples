@@ -7,7 +7,7 @@ use std::{env, io};
 
 use actix_files as fs;
 use actix_session::CookieSession;
-use actix_web::middleware::{errhandlers::ErrorHandlers, Logger};
+use actix_web::middleware::{ErrorHandlers, Logger};
 use actix_web::{http, web, App, HttpServer};
 use dotenv::dotenv;
 use tera::Tera;
@@ -53,8 +53,8 @@ async fn main() -> io::Result<()> {
             .handler(http::StatusCode::NOT_FOUND, api::not_found);
 
         App::new()
-            .data(templates)
-            .data(pool.clone())
+            .app_data(templates)
+            .app_data(pool.clone())
             .wrap(Logger::default())
             .wrap(session_store)
             .wrap(error_handlers)
