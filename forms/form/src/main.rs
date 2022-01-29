@@ -23,9 +23,9 @@ async fn main() -> std::io::Result<()> {
 fn app_config(config: &mut web::ServiceConfig) {
     config.service(
         web::scope("")
-            .data(AppState {
+            .app_data(web::Data::new(AppState {
                 foo: "bar".to_string(),
-            })
+            }))
             .service(web::resource("/").route(web::get().to(index)))
             .service(web::resource("/post1").route(web::post().to(handle_post_1)))
             .service(web::resource("/post2").route(web::post().to(handle_post_2)))
@@ -55,11 +55,11 @@ async fn handle_post_1(params: web::Form<MyParams>) -> Result<HttpResponse> {
 async fn handle_post_2(
     state: web::Data<AppState>,
     params: web::Form<MyParams>,
-) -> HttpResponse {
-    HttpResponse::Ok().content_type("text/plain").body(format!(
+) -> Result<HttpResponse> {
+    Ok(HttpResponse::Ok().content_type("text/plain").body(format!(
         "Your name is {}, and in AppState I have foo: {}",
         params.name, state.foo
-    ))
+    )))
 }
 
 /// Request and POST Params
@@ -74,29 +74,19 @@ async fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Re
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    use actix_web::body::{Body, ResponseBody};
-    use actix_web::dev::{HttpResponseBuilder, Service, ServiceResponse};
-    use actix_web::http::{header::CONTENT_TYPE, HeaderValue, StatusCode};
+    use actix_web::body::to_bytes;
+    use actix_web::dev::{Service, ServiceResponse};
+    use actix_web::http::{header::HeaderValue, header::CONTENT_TYPE, StatusCode};
     use actix_web::test::{self, TestRequest};
-    use actix_web::web::Form;
+    use actix_web::web::{Bytes, Form};
 
     trait BodyTest {
         fn as_str(&self) -> &str;
     }
 
-    impl BodyTest for ResponseBody<Body> {
+    impl BodyTest for Bytes {
         fn as_str(&self) -> &str {
-            match self {
-                ResponseBody::Body(ref b) => match b {
-                    Body::Bytes(ref by) => std::str::from_utf8(by).unwrap(),
-                    _ => panic!(),
-                },
-                ResponseBody::Other(ref b) => match b {
-                    Body::Bytes(ref by) => std::str::from_utf8(by).unwrap(),
-                    _ => panic!(),
-                },
-            }
+            std::str::from_utf8(self).unwrap()
         }
     }
 
@@ -112,12 +102,14 @@ mod tests {
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(resp.body().as_str(), "Your name is John");
+
+        let body = to_bytes(resp.into_body()).await.unwrap();
+        assert_eq!(body.as_str(), "Your name is John");
     }
 
     #[actix_rt::test]
     async fn handle_post_1_integration_test() {
-        let mut app = test::init_service(App::new().configure(app_config)).await;
+        let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post1")
             .set_form(&MyParams {
@@ -131,7 +123,8 @@ mod tests {
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(resp.response().body().as_str(), "Your name is John");
+        let body = to_bytes(resp.into_body()).await.unwrap();
+        assert_eq!(body.as_str(), "Your name is John");
     }
 
     #[actix_rt::test]
@@ -145,22 +138,23 @@ mod tests {
         let params = Form(MyParams {
             name: "John".to_string(),
         });
-        let resp = handle_post_2(data.clone(), params).await;
+        let resp = handle_post_2(data.clone(), params).await.unwrap();
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
+        let body = to_bytes(resp.into_body()).await.unwrap();
         assert_eq!(
-            resp.body().as_str(),
+            body.as_str(),
             "Your name is John, and in AppState I have foo: bar"
         );
     }
 
     #[actix_rt::test]
     async fn handle_post_2_integration_test() {
-        let mut app = test::init_service(App::new().configure(app_config)).await;
+        let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post2")
             .set_form(&MyParams {
@@ -174,8 +168,10 @@ mod tests {
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
+        let resp = resp.into_parts().1;
+        let body = to_bytes(resp.into_body()).await.unwrap();
         assert_eq!(
-            resp.response().body().as_str(),
+            body.as_str(),
             "Your name is John, and in AppState I have foo: bar"
         );
     }
@@ -187,24 +183,22 @@ mod tests {
             name: "John".to_string(),
         });
         let result = handle_post_3(req.clone(), params).await;
-        let resp = match result.respond_to(&req).await {
-            Ok(t) => t,
-            Err(_) => {
-                HttpResponseBuilder::new(StatusCode::INTERNAL_SERVER_ERROR).finish()
-            }
-        };
-
+        let resp = result.respond_to(&req);
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(resp.body().as_str(), "Your name is John");
+        let body = match to_bytes(resp.into_body()).await {
+            Ok(x) => x,
+            _ => panic!(),
+        };
+        assert_eq!(body.as_str(), "Your name is John");
     }
 
     #[actix_rt::test]
     async fn handle_post_3_integration_test() {
-        let mut app = test::init_service(App::new().configure(app_config)).await;
+        let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post3")
             .set_form(&MyParams {
@@ -218,6 +212,8 @@ mod tests {
             resp.headers().get(CONTENT_TYPE).unwrap(),
             HeaderValue::from_static("text/plain")
         );
-        assert_eq!(resp.response().body().as_str(), "Your name is John");
+
+        let body = to_bytes(resp.into_body()).await.unwrap();
+        assert_eq!(body.as_str(), "Your name is John");
     }
 }
