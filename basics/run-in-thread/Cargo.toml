@@ -6,5 +6,6 @@ edition = "2018"
 description = "Run actix-web in separate thread"
 
 [dependencies]
-actix-web = "3"
-env_logger = "0.8"
+actix-web = "4.0.0-beta.21"
+log = "0.4"
+env_logger = "0.9.0"
