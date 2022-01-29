@@ -1,9 +1,9 @@
 use actix::io::SinkWrite;
-use actix::{Actor, AsyncContext, Context, Message, StreamHandler};
+use actix::{Actor, AsyncContext, Context, Message, StreamHandler, System};
 use bytes::Bytes;
 use bytes::BytesMut;
 use futures::stream::SplitSink;
-use futures_util::stream::StreamExt;
+use futures::StreamExt;
 use std::io::Result;
 use std::net::SocketAddr;
 use tokio::net::UdpSocket;
@@ -53,5 +53,5 @@ async fn main() {
         }
     });
 
-    actix_rt::Arbiter::local_join().await;
+    System::current().stop();
 }

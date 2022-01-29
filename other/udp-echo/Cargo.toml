@@ -2,13 +2,13 @@
 name = "udp-echo"
 version = "0.1.0"
 authors = ["Anton Patrushev <apatrushev@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-actix = "0.10"
-actix-rt = "1.1"
-tokio = "0.2"
-tokio-util = { version = "0.3", features = [ "codec", "udp" ] }
+actix = "0.12.0"
+actix-rt = "2.6.0"
+tokio = "1.16.1"
+tokio-util = { version = "0.6.9", features = ["codec", "net"] }
 futures = "0.3"
 futures-util = "0.3"
-bytes = "0.5"
+bytes = "1.1.0"
