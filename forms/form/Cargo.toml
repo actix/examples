@@ -2,11 +2,8 @@
 name = "form-example"
 version = "1.0.0"
 authors = ["Gorm Casper <gcasper@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-actix-web = "3"
+actix-web = "4.0.0-beta.21"
 serde = { version = "1", features = ["derive"] }
-
-[dev-dependencies]
-actix-rt = "1"
