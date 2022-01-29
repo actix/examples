@@ -3553,8 +3553,9 @@ dependencies = [
 name = "middleware-ext-mut"
 version = "0.1.0"
 dependencies = [
- "actix-web 3.3.3",
+ "actix-web 4.0.0-beta.21",
  "env_logger 0.9.0",
+ "log",
 ]
 
 [[package]]
