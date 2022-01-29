@@ -3691,7 +3691,6 @@ dependencies = [
 name = "mongodb"
 version = "0.1.0"
 dependencies = [
- "actix-rt 2.6.0",
  "actix-web 4.0.0-beta.21",
  "futures-util",
  "mongodb 2.1.0",

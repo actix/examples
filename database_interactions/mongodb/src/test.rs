@@ -1,12 +1,12 @@
 use actix_web::{
-    test::{init_service, read_response, read_response_json, TestRequest},
+    test::{call_and_read_body, call_and_read_body_json, init_service, TestRequest},
     web::Bytes,
 };
 use mongodb::Client;
 
 use super::*;
 
-#[actix_rt::test]
+#[actix_web::test]
 #[ignore = "requires MongoDB instance running"]
 async fn test() {
     let uri = std::env::var("MONGODB_URI")
@@ -42,13 +42,13 @@ async fn test() {
         .set_form(&user)
         .to_request();
 
-    let response = read_response(&mut app, req).await;
+    let response = call_and_read_body(&mut app, req).await;
     assert_eq!(response, Bytes::from_static(b"user added"));
 
     let req = TestRequest::get()
         .uri(&format!("/get_user/{}", &user.username))
         .to_request();
 
-    let response: User = read_response_json(&mut app, req).await;
+    let response: User = call_and_read_body_json(&mut app, req).await;
     assert_eq!(response, user);
 }
