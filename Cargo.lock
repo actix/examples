@@ -5824,12 +5824,11 @@ dependencies = [
 name = "template_yarte"
 version = "0.0.1"
 dependencies = [
- "actix-rt 1.1.1",
- "actix-web 3.3.3",
+ "actix-web 4.0.0-beta.21",
  "derive_more",
- "env_logger 0.8.4",
+ "env_logger 0.9.0",
  "yarte",
- "yarte_helpers 0.12.2",
+ "yarte_helpers",
 ]
 
 [[package]]
@@ -7061,7 +7060,7 @@ checksum = "c716c25f8cee3c289a749a10255f2b8eac52f8ac7279242f99eeb25acf2b51ce"
 dependencies = [
  "buf-min 0.6.1",
  "yarte_derive",
- "yarte_helpers 0.15.6",
+ "yarte_helpers",
 ]
 
 [[package]]
@@ -7074,7 +7073,7 @@ dependencies = [
  "quote",
  "syn",
  "yarte_dom",
- "yarte_helpers 0.15.6",
+ "yarte_helpers",
  "yarte_hir",
  "yarte_html",
 ]
@@ -7089,7 +7088,7 @@ dependencies = [
  "quote",
  "syn",
  "yarte_codegen",
- "yarte_helpers 0.15.6",
+ "yarte_helpers",
  "yarte_hir",
  "yarte_parser",
 ]
@@ -7103,19 +7102,9 @@ dependencies = [
  "markup5ever",
  "quote",
  "syn",
- "yarte_helpers 0.15.6",
+ "yarte_helpers",
  "yarte_hir",
  "yarte_html",
-]
-
-[[package]]
-name = "yarte_helpers"
-version = "0.12.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f13cb211fffcfc9ac73726af6885f35a627d5662fe380a962529db071a3332d"
-dependencies = [
- "serde 1.0.136",
- "toml",
 ]
 
 [[package]]
@@ -7147,7 +7136,7 @@ dependencies = [
  "syn",
  "v_eval",
  "v_htmlescape 0.14.1",
- "yarte_helpers 0.15.6",
+ "yarte_helpers",
  "yarte_parser",
 ]
 
@@ -7179,7 +7168,7 @@ dependencies = [
  "serde 1.0.136",
  "syn",
  "unicode-xid",
- "yarte_helpers 0.15.6",
+ "yarte_helpers",
 ]
 
 [[package]]
