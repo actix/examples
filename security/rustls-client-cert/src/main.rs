@@ -3,15 +3,17 @@
 
 use std::{any::Any, env, fs::File, io::BufReader, net::SocketAddr};
 
-use actix_tls::rustls::{ServerConfig, TlsStream};
+use actix_tls::accept::rustls::reexports::ServerConfig;
+use actix_tls::accept::rustls::TlsStream;
 use actix_web::{
     dev::Extensions, rt::net::TcpStream, web, App, HttpResponse, HttpServer, Responder,
 };
 use log::info;
 use rustls::{
-    internal::pemfile::{certs, pkcs8_private_keys},
-    AllowAnyAnonymousOrAuthenticatedClient, Certificate, RootCertStore, Session,
+    server::AllowAnyAnonymousOrAuthenticatedClient, Certificate, PrivateKey,
+    RootCertStore,
 };
+use rustls_pemfile::{certs, pkcs8_private_keys};
 
 const CA_CERT: &str = "certs/rootCA.pem";
 const SERVER_CERT: &str = "certs/server-cert.pem";
@@ -47,11 +49,11 @@ fn get_client_cert(connection: &dyn Any, data: &mut Extensions) {
             ttl: socket.ttl().ok(),
         });
 
-        if let Some(mut certs) = tls_session.get_peer_certificates() {
+        if let Some(certs) = tls_session.peer_certificates() {
             info!("client certificate found");
 
             // insert a `rustls::Certificate` into request data
-            data.insert(certs.pop().unwrap());
+            data.insert(certs.last().unwrap().clone());
         }
     } else if let Some(socket) = connection.downcast_ref::<TcpStream>() {
         info!("plaintext on_connect");
@@ -78,21 +80,33 @@ async fn main() -> std::io::Result<()> {
 
     // import CA cert
     let ca_cert = &mut BufReader::new(File::open(CA_CERT)?);
+    let ca_cert = Certificate(certs(ca_cert).unwrap()[0].clone());
+
     cert_store
-        .add_pem_file(ca_cert)
+        .add(&ca_cert)
         .expect("root CA not added to store");
 
     // set up client authentication requirements
     let client_auth = AllowAnyAnonymousOrAuthenticatedClient::new(cert_store);
-    let mut config = ServerConfig::new(client_auth);
+    let config = ServerConfig::builder()
+        .with_safe_defaults()
+        .with_client_cert_verifier(client_auth);
 
     // import server cert and key
     let cert_file = &mut BufReader::new(File::open(SERVER_CERT)?);
     let key_file = &mut BufReader::new(File::open(SERVER_KEY)?);
 
-    let cert_chain = certs(cert_file).unwrap();
-    let mut keys = pkcs8_private_keys(key_file).unwrap();
-    config.set_single_cert(cert_chain, keys.remove(0)).unwrap();
+    let cert_chain = certs(cert_file)
+        .unwrap()
+        .into_iter()
+        .map(Certificate)
+        .collect();
+    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)
+        .unwrap()
+        .into_iter()
+        .map(PrivateKey)
+        .collect();
+    let config = config.with_single_cert(cert_chain, keys.remove(0)).unwrap();
 
     // start server
     HttpServer::new(|| App::new().default_service(web::to(route_whoami)))
