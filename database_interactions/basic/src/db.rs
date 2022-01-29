@@ -1,7 +1,6 @@
-use actix_web::{web, Error as AWError};
+use actix_web::{web, error::InternalError, http::StatusCode};
 use failure::Error;
-use futures::{Future, TryFutureExt};
-use rusqlite::{Statement, NO_PARAMS};
+use rusqlite::Statement;
 use serde::{Deserialize, Serialize};
 use std::{thread::sleep, time::Duration};
 
@@ -23,10 +22,7 @@ pub enum Queries {
     GetTopTenColdestMonths,
 }
 
-pub fn execute(
-    pool: &Pool,
-    query: Queries,
-) -> impl Future<Output = Result<Vec<WeatherAgg>, AWError>> {
+pub async fn execute(pool: &Pool, query: Queries) -> Result<Vec<WeatherAgg>, InternalError<Error>> {
     let pool = pool.clone();
     web::block(move || {
         // simulate an expensive query, see comments at top of main.rs
@@ -40,7 +36,9 @@ pub fn execute(
         };
         result.map_err(Error::from)
     })
-    .map_err(AWError::from)
+    .await
+    .unwrap()
+    .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))
 }
 
 fn get_hottest_years(conn: Connection) -> WeatherAggResult {
@@ -73,7 +71,7 @@ fn get_coldest_years(conn: Connection) -> WeatherAggResult {
 
 fn get_rows_as_annual_agg(mut statement: Statement) -> WeatherAggResult {
     statement
-        .query_map(NO_PARAMS, |row| {
+        .query_map([], |row| {
             Ok(WeatherAgg::AnnualAgg {
                 year: row.get(0)?,
                 total: row.get(1)?,
@@ -112,7 +110,7 @@ fn get_coldest_months(conn: Connection) -> WeatherAggResult {
 
 fn get_rows_as_month_agg(mut statement: Statement) -> WeatherAggResult {
     statement
-        .query_map(NO_PARAMS, |row| {
+        .query_map([], |row| {
             Ok(WeatherAgg::MonthAgg {
                 year: row.get(0)?,
                 month: row.get(1)?,

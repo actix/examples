@@ -5,11 +5,11 @@ authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-actix-web = "3"
+actix-web = "4.0.0-beta.21"
 
-env_logger = "0.8"
-uuid = { version = "0.8", features = ["v4"] }
+env_logger = "0.9.0"
+uuid = { version = "1.0.0-alpha.1", features = ["v4"] }
 
 r2d2 = "0.8"
-r2d2_sqlite = "0.14"
-rusqlite = "0.21"
+r2d2_sqlite = "0.19.0"
+rusqlite = "0.26.3"
