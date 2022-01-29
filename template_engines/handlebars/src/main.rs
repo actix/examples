@@ -1,4 +1,4 @@
-use actix_web::body::{BoxBody};
+use actix_web::body::BoxBody;
 use actix_web::dev::ServiceResponse;
 use actix_web::http::header::ContentType;
 use actix_web::http::StatusCode;
