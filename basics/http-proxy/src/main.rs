@@ -1,8 +1,10 @@
 use std::net::ToSocketAddrs;
 
-use actix_web::client::Client;
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
-use clap::{value_t, Arg};
+use actix_web::{
+    http::StatusCode, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
+};
+use awc::Client;
+use clap::StructOpt;
 use url::Url;
 
 async fn forward(
@@ -15,21 +17,20 @@ async fn forward(
     new_url.set_path(req.uri().path());
     new_url.set_query(req.uri().query());
 
-    // TODO: This forwarded implementation is incomplete as it only handles the inofficial
+    // TODO: This forwarded implementation is incomplete as it only handles the unofficial
     // X-Forwarded-For header but not the official Forwarded one.
     let forwarded_req = client
         .request_from(new_url.as_str(), req.head())
         .no_decompress();
     let forwarded_req = if let Some(addr) = req.head().peer_addr {
-        forwarded_req.header("x-forwarded-for", format!("{}", addr.ip()))
+        forwarded_req.insert_header(("x-forwarded-for", format!("{}", addr.ip())))
     } else {
         forwarded_req
     };
 
-    let res = forwarded_req
-        .send_stream(payload)
-        .await
-        .map_err(Error::from)?;
+    let res = forwarded_req.send_stream(payload).await.map_err(|e| {
+        actix_web::error::InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
+    })?;
 
     let mut client_resp = HttpResponse::build(res.status());
     // Remove `Connection` as per
@@ -37,55 +38,26 @@ async fn forward(
     for (header_name, header_value) in
         res.headers().iter().filter(|(h, _)| *h != "connection")
     {
-        client_resp.header(header_name.clone(), header_value.clone());
+        client_resp.insert_header((header_name.clone(), header_value.clone()));
     }
 
     Ok(client_resp.streaming(res))
 }
 
+#[derive(clap::Parser, Debug)]
+struct CliArguments {
+    listen_addr: String,
+    listen_port: u16,
+    forward_addr: String,
+    forward_port: u16,
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let matches = clap::App::new("HTTP Proxy")
-        .arg(
-            Arg::with_name("listen_addr")
-                .takes_value(true)
-                .value_name("LISTEN ADDR")
-                .index(1)
-                .required(true),
-        )
-        .arg(
-            Arg::with_name("listen_port")
-                .takes_value(true)
-                .value_name("LISTEN PORT")
-                .index(2)
-                .required(true),
-        )
-        .arg(
-            Arg::with_name("forward_addr")
-                .takes_value(true)
-                .value_name("FWD ADDR")
-                .index(3)
-                .required(true),
-        )
-        .arg(
-            Arg::with_name("forward_port")
-                .takes_value(true)
-                .value_name("FWD PORT")
-                .index(4)
-                .required(true),
-        )
-        .get_matches();
-
-    let listen_addr = matches.value_of("listen_addr").unwrap();
-    let listen_port = value_t!(matches, "listen_port", u16).unwrap_or_else(|e| e.exit());
-
-    let forwarded_addr = matches.value_of("forward_addr").unwrap();
-    let forwarded_port =
-        value_t!(matches, "forward_port", u16).unwrap_or_else(|e| e.exit());
-
+    let args = CliArguments::parse();
     let forward_url = Url::parse(&format!(
         "http://{}",
-        (forwarded_addr, forwarded_port)
+        (args.forward_addr, args.forward_port)
             .to_socket_addrs()
             .unwrap()
             .next()
@@ -95,12 +67,12 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .data(Client::new())
-            .data(forward_url.clone())
+            .app_data(web::Data::new(Client::new()))
+            .app_data(web::Data::new(forward_url.clone()))
             .wrap(middleware::Logger::default())
             .default_service(web::route().to(forward))
     })
-    .bind((listen_addr, listen_port))?
+    .bind((args.listen_addr, args.listen_port))?
     .system_exit()
     .run()
     .await

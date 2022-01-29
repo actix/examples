@@ -110,7 +110,7 @@ dependencies = [
  "log",
  "openssl",
  "rustls 0.18.1",
- "tokio-openssl",
+ "tokio-openssl 0.4.0",
  "tokio-rustls 0.14.1",
  "trust-dns-proto 0.19.7",
  "trust-dns-resolver 0.19.7",
@@ -196,7 +196,7 @@ dependencies = [
  "actix-rt 1.1.1",
  "actix-service 1.0.6",
  "actix-threadpool",
- "actix-tls",
+ "actix-tls 2.0.0",
  "actix-utils 2.0.0",
  "base64 0.13.0",
  "bitflags",
@@ -242,6 +242,7 @@ dependencies = [
  "actix-codec 0.4.2",
  "actix-rt 2.6.0",
  "actix-service 2.0.2",
+ "actix-tls 3.0.2",
  "actix-utils 3.0.0",
  "ahash 0.7.6",
  "base64 0.13.0",
@@ -530,10 +531,29 @@ dependencies = [
  "futures-util",
  "openssl",
  "rustls 0.18.1",
- "tokio-openssl",
+ "tokio-openssl 0.4.0",
  "tokio-rustls 0.14.1",
  "webpki",
  "webpki-roots 0.20.0",
+]
+
+[[package]]
+name = "actix-tls"
+version = "3.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a31ab31563b611fa822480b4255e8750cf0af9ce1b8b7bde298afe8447ef9333"
+dependencies = [
+ "actix-codec 0.4.2",
+ "actix-rt 2.6.0",
+ "actix-service 2.0.2",
+ "actix-utils 3.0.0",
+ "futures-core",
+ "http",
+ "log",
+ "openssl",
+ "pin-project-lite 0.2.8",
+ "tokio-openssl 0.6.3",
+ "tokio-util 0.6.9",
 ]
 
 [[package]]
@@ -598,10 +618,10 @@ dependencies = [
  "actix-service 1.0.6",
  "actix-testing",
  "actix-threadpool",
- "actix-tls",
+ "actix-tls 2.0.0",
  "actix-utils 2.0.0",
  "actix-web-codegen 0.4.0",
- "awc",
+ "awc 2.0.3",
  "bytes 0.5.6",
  "derive_more",
  "encoding_rs",
@@ -637,6 +657,7 @@ dependencies = [
  "actix-rt 2.6.0",
  "actix-server 2.0.0",
  "actix-service 2.0.2",
+ "actix-tls 3.0.2",
  "actix-utils 3.0.0",
  "actix-web-codegen 0.5.0-rc.1",
  "ahash 0.7.6",
@@ -861,15 +882,6 @@ checksum = "c3b9d411ecbaf79885c6df4d75fff75858d5995ff25385657a28af47e82f9c36"
 dependencies = [
  "unicode-width",
  "yansi-term",
-]
-
-[[package]]
-name = "ansi_term"
-version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d52a9bb7ec0cf484c551830a7ce27bd20d67eac647e1befb56b0be4ee39a55d2"
-dependencies = [
- "winapi 0.3.9",
 ]
 
 [[package]]
@@ -1350,6 +1362,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "awc"
+version = "3.0.0-beta.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a4cf9b623ee9974723a10c77a3b8c1060ac2d6cfe6d3326512bbc50fe36fad8"
+dependencies = [
+ "actix-codec 0.4.2",
+ "actix-http 3.0.0-beta.19",
+ "actix-rt 2.6.0",
+ "actix-service 2.0.2",
+ "actix-tls 3.0.2",
+ "actix-utils 3.0.0",
+ "ahash 0.7.6",
+ "base64 0.13.0",
+ "bytes 1.1.0",
+ "cfg-if 1.0.0",
+ "cookie 0.16.0",
+ "derive_more",
+ "futures-core",
+ "futures-util",
+ "h2 0.3.11",
+ "http",
+ "itoa 1.0.1",
+ "log",
+ "mime",
+ "percent-encoding",
+ "pin-project-lite 0.2.8",
+ "rand 0.8.4",
+ "serde 1.0.136",
+ "serde_json",
+ "serde_urlencoded",
+ "tokio 1.15.0",
+]
+
+[[package]]
 name = "awc_examples"
 version = "2.0.0"
 dependencies = [
@@ -1762,17 +1808,32 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "2.34.0"
+version = "3.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0610544180c38b88101fecf2dd634b174a62eef6946f84dfc6a7127512b381c"
+checksum = "08799f92c961c7a1cf0cc398a9073da99e21ce388b46372c37f3191f2f3eed3e"
 dependencies = [
- "ansi_term",
  "atty",
  "bitflags",
- "strsim 0.8.0",
+ "clap_derive",
+ "indexmap",
+ "lazy_static",
+ "os_str_bytes",
+ "strsim",
+ "termcolor",
  "textwrap",
- "unicode-width",
- "vec_map",
+]
+
+[[package]]
+name = "clap_derive"
+version = "3.0.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0fd2078197a22f338bd4fbf7d6387eb6f0d6a3c69e6cbc09f5c93e97321fd92a"
+dependencies = [
+ "heck 0.4.0",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -2089,7 +2150,7 @@ dependencies = [
  "ident_case",
  "proc-macro2",
  "quote",
- "strsim 0.10.0",
+ "strsim",
  "syn",
 ]
 
@@ -2103,7 +2164,7 @@ dependencies = [
  "ident_case",
  "proc-macro2",
  "quote",
- "strsim 0.10.0",
+ "strsim",
  "syn",
 ]
 
@@ -2347,7 +2408,7 @@ version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c5f0096a91d210159eceb2ff5e1c4da18388a170e1e3ce948aac9c8fdbbf595"
 dependencies = [
- "heck",
+ "heck 0.3.3",
  "proc-macro2",
  "quote",
  "syn",
@@ -2840,6 +2901,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "heck"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9"
+
+[[package]]
 name = "hello-world"
 version = "2.0.0"
 dependencies = [
@@ -2949,7 +3016,8 @@ dependencies = [
 name = "http-proxy"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.3.3",
+ "actix-web 4.0.0-beta.21",
+ "awc 3.0.0-beta.19",
  "clap",
  "url",
 ]
@@ -3731,7 +3799,7 @@ dependencies = [
  "sha2 0.9.9",
  "socket2 0.4.3",
  "stringprep",
- "strsim 0.10.0",
+ "strsim",
  "take_mut",
  "thiserror",
  "tokio 1.15.0",
@@ -4083,6 +4151,15 @@ checksum = "198e392be7e882f0c2836f425e430f81d9a0e99651e4646311347417cddbfd43"
 dependencies = [
  "log",
  "winapi 0.3.9",
+]
+
+[[package]]
+name = "os_str_bytes"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8e22443d1643a904602595ba1cd8f7d896afe56d26712531c5ff73a15b2fbf64"
+dependencies = [
+ "memchr",
 ]
 
 [[package]]
@@ -5040,7 +5117,7 @@ dependencies = [
 name = "rustls-client-cert"
 version = "1.0.0"
 dependencies = [
- "actix-tls",
+ "actix-tls 2.0.0",
  "actix-web 3.3.3",
  "env_logger 0.8.4",
  "log",
@@ -5561,7 +5638,7 @@ dependencies = [
  "async-std",
  "dotenv",
  "futures",
- "heck",
+ "heck 0.3.3",
  "proc-macro2",
  "quote",
  "sqlx-core",
@@ -5706,12 +5783,6 @@ dependencies = [
  "unicode-bidi",
  "unicode-normalization",
 ]
-
-[[package]]
-name = "strsim"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ea5119cdb4c55b55d432abb513a0429384878c15dde60cc77b1c99de1a95a6a"
 
 [[package]]
 name = "strsim"
@@ -5876,12 +5947,9 @@ dependencies = [
 
 [[package]]
 name = "textwrap"
-version = "0.11.0"
+version = "0.14.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d326610f408c7a4eb6f51c37c330e496b08506c9457c9d34287ecc38809fb060"
-dependencies = [
- "unicode-width",
-]
+checksum = "0066c8d12af8b5acd21e00547c3797fde4e8677254a7ee429176ccebbe93dd80"
 
 [[package]]
 name = "thiserror"
@@ -6086,6 +6154,18 @@ checksum = "3c4b08c5f4208e699ede3df2520aca2e82401b2de33f45e96696a074480be594"
 dependencies = [
  "openssl",
  "tokio 0.2.25",
+]
+
+[[package]]
+name = "tokio-openssl"
+version = "0.6.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c08f9ffb7809f1b20c1b398d92acf4cc719874b3b2b2d9ea2f09b4a80350878a"
+dependencies = [
+ "futures-util",
+ "openssl",
+ "openssl-sys",
+ "tokio 1.15.0",
 ]
 
 [[package]]
@@ -6697,12 +6777,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
 
 [[package]]
-name = "vec_map"
-version = "0.8.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
-
-[[package]]
 name = "version_check"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6874,7 +6948,7 @@ dependencies = [
  "actix-files 0.3.0",
  "actix-web 3.3.3",
  "actix-web-actors",
- "awc",
+ "awc 2.0.3",
  "bytes 0.5.6",
  "env_logger 0.8.4",
  "futures",
