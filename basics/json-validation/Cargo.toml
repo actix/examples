@@ -5,10 +5,11 @@ authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-actix-web = { version = "3", features = ["openssl"] }
-env_logger = "0.8"
+actix-web = { version = "4.0.0-beta.21", features = ["openssl"] }
+awc = "3.0.0-beta.19"
+env_logger = "0.9"
 futures = "0.3.1"
 serde = { version = "1.0.43", features = ["derive"] }
 serde_json = "1.0.16"
-validator = "0.10"
-validator_derive = "0.10"
+validator = "0.14"
+validator_derive = "0.14"

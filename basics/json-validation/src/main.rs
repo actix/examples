@@ -12,18 +12,16 @@
 //           - POSTing json body
 //     3. chaining futures into a single response used by an async endpoint
 
-use serde::{Deserialize, Serialize};
-
-use std::collections::HashMap;
-use std::io;
-
 use actix_web::{
-    client::Client,
     error::ErrorBadRequest,
+    http::StatusCode,
     web::{self, BytesMut},
     App, Error, HttpResponse, HttpServer,
 };
+use awc::Client;
 use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use std::io;
 use validator::Validate;
 use validator_derive::Validate;
 
@@ -37,18 +35,14 @@ struct SomeData {
 
 #[derive(Debug, Deserialize)]
 struct HttpBinResponse {
-    args: HashMap<String, String>,
-    data: String,
-    files: HashMap<String, String>,
-    form: HashMap<String, String>,
-    headers: HashMap<String, String>,
     json: SomeData,
-    origin: String,
-    url: String,
 }
 
 /// validate data, post json to httpbin, get it back in the response body, return deserialized
-async fn step_x(data: SomeData, client: &Client) -> Result<SomeData, Error> {
+async fn step_x(
+    data: SomeData,
+    client: &Client,
+) -> Result<SomeData, actix_web::error::Error> {
     // validate data
     data.validate().map_err(ErrorBadRequest)?;
 
@@ -56,7 +50,10 @@ async fn step_x(data: SomeData, client: &Client) -> Result<SomeData, Error> {
         .post("https://httpbin.org/post")
         .send_json(&data)
         .await
-        .map_err(Error::from)?; // <- convert SendRequestError to an Error
+        // <- convert SendRequestError to an InternalError, a type that implements the ResponseError trait
+        .map_err(|e| {
+            actix_web::error::InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
+        })?; // <- convert it into an actix_web::Error
 
     let mut body = BytesMut::new();
     while let Some(chunk) = res.next().await {
@@ -89,7 +86,7 @@ async fn main() -> io::Result<()> {
     println!("Starting server at: {:?}", endpoint);
     HttpServer::new(|| {
         App::new()
-            .data(Client::default())
+            .app_data(web::Data::new(Client::default()))
             .service(web::resource("/something").route(web::post().to(create_something)))
     })
     .bind(endpoint)?

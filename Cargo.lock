@@ -110,7 +110,7 @@ dependencies = [
  "log",
  "openssl",
  "rustls 0.18.1",
- "tokio-openssl",
+ "tokio-openssl 0.4.0",
  "tokio-rustls 0.14.1",
  "trust-dns-proto 0.19.7",
  "trust-dns-resolver 0.19.7",
@@ -196,7 +196,7 @@ dependencies = [
  "actix-rt 1.1.1",
  "actix-service 1.0.6",
  "actix-threadpool",
- "actix-tls",
+ "actix-tls 2.0.0",
  "actix-utils 2.0.0",
  "base64 0.13.0",
  "bitflags",
@@ -242,6 +242,7 @@ dependencies = [
  "actix-codec 0.4.2",
  "actix-rt 2.6.0",
  "actix-service 2.0.2",
+ "actix-tls 3.0.2",
  "actix-utils 3.0.0",
  "ahash 0.7.6",
  "base64 0.13.0",
@@ -530,10 +531,29 @@ dependencies = [
  "futures-util",
  "openssl",
  "rustls 0.18.1",
- "tokio-openssl",
+ "tokio-openssl 0.4.0",
  "tokio-rustls 0.14.1",
  "webpki",
  "webpki-roots 0.20.0",
+]
+
+[[package]]
+name = "actix-tls"
+version = "3.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a31ab31563b611fa822480b4255e8750cf0af9ce1b8b7bde298afe8447ef9333"
+dependencies = [
+ "actix-codec 0.4.2",
+ "actix-rt 2.6.0",
+ "actix-service 2.0.2",
+ "actix-utils 3.0.0",
+ "futures-core",
+ "http",
+ "log",
+ "openssl",
+ "pin-project-lite 0.2.8",
+ "tokio-openssl 0.6.3",
+ "tokio-util 0.6.9",
 ]
 
 [[package]]
@@ -598,10 +618,10 @@ dependencies = [
  "actix-service 1.0.6",
  "actix-testing",
  "actix-threadpool",
- "actix-tls",
+ "actix-tls 2.0.0",
  "actix-utils 2.0.0",
  "actix-web-codegen 0.4.0",
- "awc",
+ "awc 2.0.3",
  "bytes 0.5.6",
  "derive_more",
  "encoding_rs",
@@ -637,6 +657,7 @@ dependencies = [
  "actix-rt 2.6.0",
  "actix-server 2.0.0",
  "actix-service 2.0.2",
+ "actix-tls 3.0.2",
  "actix-utils 3.0.0",
  "actix-web-codegen 0.5.0-rc.1",
  "ahash 0.7.6",
@@ -1350,11 +1371,46 @@ dependencies = [
 ]
 
 [[package]]
+name = "awc"
+version = "3.0.0-beta.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a4cf9b623ee9974723a10c77a3b8c1060ac2d6cfe6d3326512bbc50fe36fad8"
+dependencies = [
+ "actix-codec 0.4.2",
+ "actix-http 3.0.0-beta.19",
+ "actix-rt 2.6.0",
+ "actix-service 2.0.2",
+ "actix-tls 3.0.2",
+ "actix-utils 3.0.0",
+ "ahash 0.7.6",
+ "base64 0.13.0",
+ "bytes 1.1.0",
+ "cfg-if 1.0.0",
+ "cookie 0.16.0",
+ "derive_more",
+ "futures-core",
+ "futures-util",
+ "h2 0.3.11",
+ "http",
+ "itoa 1.0.1",
+ "log",
+ "mime",
+ "percent-encoding",
+ "pin-project-lite 0.2.8",
+ "rand 0.8.4",
+ "serde 1.0.136",
+ "serde_json",
+ "serde_urlencoded",
+ "tokio 1.15.0",
+]
+
+[[package]]
 name = "awc_examples"
 version = "2.0.0"
 dependencies = [
- "actix-web 3.3.3",
- "env_logger 0.8.4",
+ "actix-web 4.0.0-beta.21",
+ "awc 3.0.0-beta.19",
+ "env_logger 0.9.0",
  "futures",
  "serde 1.0.136",
  "serde_json",
@@ -5040,7 +5096,7 @@ dependencies = [
 name = "rustls-client-cert"
 version = "1.0.0"
 dependencies = [
- "actix-tls",
+ "actix-tls 2.0.0",
  "actix-web 3.3.3",
  "env_logger 0.8.4",
  "log",
@@ -6089,6 +6145,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-openssl"
+version = "0.6.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c08f9ffb7809f1b20c1b398d92acf4cc719874b3b2b2d9ea2f09b4a80350878a"
+dependencies = [
+ "futures-util",
+ "openssl",
+ "openssl-sys",
+ "tokio 1.15.0",
+]
+
+[[package]]
 name = "tokio-pg-mapper"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6652,9 +6720,9 @@ dependencies = [
 
 [[package]]
 name = "validator"
-version = "0.10.1"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e60fadf92c22236de4028ceb0b8af50ed3430d41ad43d7a7d63b6bd1a8f47c38"
+checksum = "6d0f08911ab0fee2c5009580f04615fa868898ee57de10692a45da0c3bcc3e5e"
 dependencies = [
  "idna",
  "lazy_static",
@@ -6663,21 +6731,33 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "url",
+ "validator_types",
 ]
 
 [[package]]
 name = "validator_derive"
-version = "0.10.1"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d577dfb8ca9440a5c0b053d5a19b68f5c92ef57064bac87c8205c3f6072c20f"
+checksum = "d85135714dba11a1bd0b3eb1744169266f1a38977bf4e3ff5e2e1acb8c2b7eee"
 dependencies = [
  "if_chain",
  "lazy_static",
+ "proc-macro-error",
  "proc-macro2",
  "quote",
  "regex",
  "syn",
- "validator",
+ "validator_types",
+]
+
+[[package]]
+name = "validator_types"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ded9d97e1d42327632f5f3bae6403c04886e2de3036261ef42deebd931a6a291"
+dependencies = [
+ "proc-macro2",
+ "syn",
 ]
 
 [[package]]
@@ -6874,7 +6954,7 @@ dependencies = [
  "actix-files 0.3.0",
  "actix-web 3.3.3",
  "actix-web-actors",
- "awc",
+ "awc 2.0.3",
  "bytes 0.5.6",
  "env_logger 0.8.4",
  "futures",
