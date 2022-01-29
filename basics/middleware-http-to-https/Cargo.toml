@@ -6,8 +6,9 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = {version = "3", features = ["rustls"]}
-rustls = "0.18"
+actix-web = {version = "4.0.0-beta.21", features = ["rustls"]}
+rustls = "0.20.2"
+rustls-pemfile = "0.2.1" # these are now in an external library
 futures = "0.3"
 
 
