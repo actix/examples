@@ -10,10 +10,8 @@ use actix_web::{
 };
 use log::info;
 use rustls::{
-    server::AllowAnyAnonymousOrAuthenticatedClient,
-    Certificate,
-    PrivateKey,
-    RootCertStore, //Session,
+    server::AllowAnyAnonymousOrAuthenticatedClient, Certificate, PrivateKey,
+    RootCertStore,
 };
 use rustls_pemfile::{certs, pkcs8_private_keys};
 
