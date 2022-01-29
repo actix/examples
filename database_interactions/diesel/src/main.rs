@@ -6,8 +6,6 @@
 #[macro_use]
 extern crate diesel;
 
-use actix_web::error::InternalError;
-use actix_web::http::StatusCode;
 use actix_web::{get, middleware, post, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
@@ -33,7 +31,7 @@ async fn get_user(
         actions::find_user_by_uid(user_uid, &conn)
     })
     .await?
-    .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
+    .map_err(actix_web::error::ErrorInternalServerError)?;
 
     if let Some(user) = user {
         Ok(HttpResponse::Ok().json(user))
@@ -56,7 +54,7 @@ async fn add_user(
         actions::insert_new_user(&form.name, &conn)
     })
     .await?
-    .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
+    .map_err(actix_web::error::ErrorInternalServerError)?;
 
     Ok(HttpResponse::Ok().json(user))
 }
