@@ -2,9 +2,9 @@
 name = "openssl-example"
 version = "0.2.0"
 authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-actix-web = { version = "3", features = ["openssl"] }
-env_logger = "0.8"
+actix-web = { version = "4.0.0-beta.21", features = ["openssl"] }
+env_logger = "0.9"
 openssl = "0.10"
