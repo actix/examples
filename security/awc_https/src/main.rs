@@ -1,7 +1,13 @@
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
+use awc::{Client, Connector};
+use openssl::ssl::{SslConnector, SslMethod};
 
 async fn index(_req: HttpRequest) -> HttpResponse {
-    let client = reqwest::Client::new();
+    let builder = SslConnector::builder(SslMethod::tls()).unwrap();
+
+    let client = Client::builder()
+        .connector(Connector::new().openssl(builder.build()))
+        .finish();
 
     let now = std::time::Instant::now();
     let payload =
@@ -10,7 +16,8 @@ async fn index(_req: HttpRequest) -> HttpResponse {
         .send()
         .await
         .unwrap()
-        .bytes()
+        .body()
+        .limit(20_000_000)  // sets max allowable payload size
         .await
         .unwrap();
 
