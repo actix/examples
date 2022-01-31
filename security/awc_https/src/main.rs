@@ -1,25 +1,16 @@
-use actix_web::{
-    client::{Client, Connector},
-    web, App, HttpRequest, HttpResponse, HttpServer,
-};
-use openssl::ssl::{SslConnector, SslMethod};
+use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 
 async fn index(_req: HttpRequest) -> HttpResponse {
-    let builder = SslConnector::builder(SslMethod::tls()).unwrap();
-
-    let client = Client::builder()
-        .connector(Connector::new().ssl(builder.build()).finish())
-        .finish();
+    let client = reqwest::Client::new();
 
     let now = std::time::Instant::now();
     let payload =
         client
-        .get("https://upload.wikimedia.org/wikipedia/commons/f/ff/Pizigani_1367_Chart_10MB.jpg")
+        .get("https://upload.wikimedia.org/wikipedia/commons/b/b9/Pizigani_1367_Chart_1MB.jpg")
         .send()
         .await
         .unwrap()
-        .body()
-        .limit(20_000_000)  // sets max allowable payload size
+        .bytes()
         .await
         .unwrap();
 
