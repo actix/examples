@@ -34,7 +34,7 @@ async fn main() -> io::Result<()> {
             // with path parameters
             .service(web::resource("/").route(web::get().to(|| {
                 HttpResponse::Found()
-                    .header("LOCATION", "/index.html")
+                    .append_header(("LOCATION", "/index.html"))
                     .finish()
             })))
     })
