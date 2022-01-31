@@ -7,8 +7,5 @@ edition = "2021"
 [dependencies]
 actix-web = "4.0.0-beta.21"
 casbin = "2.0.9"
-# these rhai deps are needed for casbin v2.0.5
-rhai = "1.4.1"
-rhai_codegen = "1.3.0"
 loge = {version = "0.4", default-features = false, features = ["colored", "chrono"]}
 tokio = { version = "1.16.1", features = ["sync"] }
