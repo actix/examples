@@ -19,7 +19,12 @@ $ cd database_interactions/sqlx_todo
 
 ## Set up the database
 
-* Create new database using `schema.sql`
+* Create new database:
+
+```bash
+./setup_db.sh
+```
+
 * Copy `.env.example` into `.env` and adjust `DATABASE_URL` to match your SQLite address, if needed
 
 ```sh
@@ -35,4 +40,4 @@ To run the application execute:
 cargo run
 ```
 
-By default application will be available on `http://localhost:8080`. If you wish to change address or port you can do it inside the `.env` file
+By default the application will be available on `http://localhost:8080`. If you wish to change address or port you can do it inside the `.env` file

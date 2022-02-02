@@ -1,9 +1,14 @@
 [package]
 name = "awc_https"
-version = "0.1.0"
-authors = ["dowwie <dkcdkg@gmail.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
-actix-web = { version = "3", features = ["openssl"] }
-openssl = "0.10.28"
+actix-web = "4.0.0-rc.1"
+awc = { version = "3.0.0-beta.19", features = ["rustls"] }
+
+env_logger = "0.9"
+log = "0.4"
+mime = "0.3"
+rustls = "0.20"
+webpki-roots = "0.22"

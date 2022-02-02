@@ -35,10 +35,7 @@ pub fn send_invitation(invitation: &Invitation) -> Result<(), ServiceError> {
          your Invitation expires on <strong>{}</strong>",
         invitation.id,
         invitation.email,
-        invitation
-            .expires_at
-            .format("%I:%M %p %A, %-d %B, %C%y")
-            .to_string()
+        invitation.expires_at.format("%I:%M %p %A, %-d %B, %C%y")
     );
 
     // complete the email message with details

@@ -1,8 +1,7 @@
 [package]
 name = "cookie-auth"
-version = "2.0.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-beta.21"
