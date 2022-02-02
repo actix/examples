@@ -1,14 +1,15 @@
 #[macro_use]
 extern crate diesel;
-#[macro_use]
-extern crate log;
 
 use std::{env, io};
 
-use actix_files as fs;
+use actix_files::Files;
 use actix_session::CookieSession;
-use actix_web::middleware::{ErrorHandlers, Logger};
-use actix_web::{http, web, App, HttpServer};
+use actix_web::{
+    http,
+    middleware::{ErrorHandlers, Logger},
+    web, App, HttpServer,
+};
 use dotenv::dotenv;
 use tera::Tera;
 
@@ -24,22 +25,18 @@ static SESSION_SIGNING_KEY: &[u8] = &[0; 32];
 async fn main() -> io::Result<()> {
     dotenv().ok();
 
-    env::set_var("RUST_LOG", "actix_todo=debug,actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = db::init_pool(&database_url).expect("Failed to create pool");
 
-    let app = move || {
-        debug!("Constructing the App");
+    log::info!("starting HTTP serer at http://localhost:8080");
 
-        let mut templates = match Tera::new("templates/**/*") {
-            Ok(t) => t,
-            Err(e) => {
-                println!("Parsing error(s): {}", e);
-                ::std::process::exit(1);
-            }
-        };
+    HttpServer::new(move || {
+        log::debug!("Constructing the App");
+
+        let mut templates =
+            Tera::new("templates/**/*").expect("errors in tera templates");
         templates.autoescape_on(vec!["tera"]);
 
         let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
@@ -61,9 +58,9 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/").route(web::get().to(api::index)))
             .service(web::resource("/todo").route(web::post().to(api::create)))
             .service(web::resource("/todo/{id}").route(web::post().to(api::update)))
-            .service(fs::Files::new("/static", "static/"))
-    };
-
-    debug!("Starting server");
-    HttpServer::new(app).bind("localhost:8088")?.run().await
+            .service(Files::new("/static", "./static/"))
+    })
+    .bind(("127.0.0.1", 8088))?
+    .run()
+    .await
 }
