@@ -5,6 +5,11 @@ authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2021"
 
 [dependencies]
-actix-web = "4.0.0-beta.21"
-awc = {version = "3.0.0-beta.19", features = ["openssl"]}
-openssl = "0.10.38"
+actix-web = "4.0.0-rc.1"
+awc = { version = "3.0.0-beta.19", features = ["rustls"] }
+
+env_logger = "0.9"
+log = "0.4"
+mime = "0.3"
+rustls = "0.20"
+webpki-roots = "0.22"
