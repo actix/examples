@@ -4,6 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { version = "3", features = ["openssl"] }
-clap = "2.33"
+actix-web = { version = "4.0.0-beta.21", features = ["openssl"] }
+awc = "3.0.0-beta.19"
+clap = { version = "3.0.13", features = ["derive"] }
 url = "2.0"
