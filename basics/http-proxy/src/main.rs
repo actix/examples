@@ -1,7 +1,7 @@
 use std::net::ToSocketAddrs;
 
 use actix_web::{
-    http::StatusCode, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
+    error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
 };
 use awc::Client;
 use clap::StructOpt;
@@ -22,15 +22,17 @@ async fn forward(
     let forwarded_req = client
         .request_from(new_url.as_str(), req.head())
         .no_decompress();
-    let forwarded_req = if let Some(addr) = req.head().peer_addr {
-        forwarded_req.insert_header(("x-forwarded-for", format!("{}", addr.ip())))
-    } else {
-        forwarded_req
+    let forwarded_req = match req.head().peer_addr {
+        Some(addr) => {
+            forwarded_req.insert_header(("x-forwarded-for", format!("{}", addr.ip())))
+        }
+        None => forwarded_req,
     };
 
-    let res = forwarded_req.send_stream(payload).await.map_err(|e| {
-        actix_web::error::InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
-    })?;
+    let res = forwarded_req
+        .send_stream(payload)
+        .await
+        .map_err(error::ErrorInternalServerError)?;
 
     let mut client_resp = HttpResponse::build(res.status());
     // Remove `Connection` as per
@@ -54,26 +56,35 @@ struct CliArguments {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     let args = CliArguments::parse();
-    let forward_url = Url::parse(&format!(
-        "http://{}",
-        (args.forward_addr, args.forward_port)
-            .to_socket_addrs()
-            .unwrap()
-            .next()
-            .unwrap()
-    ))
-    .unwrap();
+
+    let forward_socket_addr = (args.forward_addr, args.forward_port)
+        .to_socket_addrs()?
+        .next()
+        .expect("given forwarding address was not valid");
+
+    let forward_url = format!("http://{}", forward_socket_addr);
+    let forward_url = Url::parse(&forward_url).unwrap();
+
+    log::info!(
+        "starting HTTP serer at http://{}:{}",
+        &args.listen_addr,
+        args.listen_port
+    );
+
+    log::info!("forwarding to {forward_url}");
 
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(Client::new()))
+            .app_data(web::Data::new(Client::default()))
             .app_data(web::Data::new(forward_url.clone()))
             .wrap(middleware::Logger::default())
-            .default_service(web::route().to(forward))
+            .default_service(web::to(forward))
     })
     .bind((args.listen_addr, args.listen_port))?
-    .system_exit()
+    .workers(2)
     .run()
     .await
 }
