@@ -1,11 +1,7 @@
 [package]
 name = "websocket-chat-broker"
-version = "0.1.1"
-authors = [
-  "Chris Ricketts <chris.ricketts@steribar.com>",
-  "Rob Ede <robjtede@icloud.com>",
-]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [[bin]]
 name = "server"

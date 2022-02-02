@@ -1,11 +1,13 @@
 use std::{
-    future::{ready, Future, Ready},
-    pin::Pin,
+    future::{ready, Ready},
     task::{Context, Poll},
 };
 
-use actix_web::dev::{Service, ServiceRequest, ServiceResponse, Transform};
 use actix_web::Error;
+use actix_web::{
+    dev::{Service, ServiceRequest, ServiceResponse, Transform},
+    HttpMessage,
+};
 
 #[derive(Debug, Clone)]
 pub struct Msg(pub String);
@@ -16,43 +18,28 @@ pub struct AddMsgService<S> {
     enabled: bool,
 }
 
-impl<S, B> Service for AddMsgService<S>
+impl<S, B> Service<ServiceRequest> for AddMsgService<S>
 where
-    S: Service<
-        Request = ServiceRequest,
-        Response = ServiceResponse<B>,
-        Error = actix_web::Error,
-    >,
-    S::Future: 'static,
-    B: 'static,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = actix_web::Error>,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Error>>>>;
+    type Future = S::Future;
 
-    fn poll_ready(&mut self, ctx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+    fn poll_ready(&self, ctx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.service.poll_ready(ctx)
     }
 
-    fn call(&mut self, req: Self::Request) -> Self::Future {
-        println!("request is passing through the AddMsg middleware");
-
-        // get mut HttpRequest from ServiceRequest
-        let (request, pl) = req.into_parts();
+    fn call(&self, req: ServiceRequest) -> Self::Future {
+        log::info!("request is passing through the AddMsg middleware");
 
         if self.enabled {
             // insert data into extensions if enabled
-            request
-                .extensions_mut()
+            req.extensions_mut()
                 .insert(Msg("Hello from Middleware!".to_owned()));
         }
 
-        // construct a new service response
-        match ServiceRequest::from_parts(request, pl) {
-            Ok(req) => Box::pin(self.service.call(req)),
-            Err(_) => Box::pin(ready(Err(Error::from(())))),
-        }
+        self.service.call(req)
     }
 }
 
@@ -71,17 +58,10 @@ impl AddMsg {
     }
 }
 
-impl<S, B> Transform<S> for AddMsg
+impl<S, B> Transform<S, ServiceRequest> for AddMsg
 where
-    S: Service<
-        Request = ServiceRequest,
-        Response = ServiceResponse<B>,
-        Error = actix_web::Error,
-    >,
-    S::Future: 'static,
-    B: 'static,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = actix_web::Error>,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<B>;
     type Error = Error;
     type Future = Ready<Result<Self::Transform, Self::InitError>>;

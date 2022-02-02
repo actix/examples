@@ -1,12 +1,15 @@
 use actix_files::NamedFile;
 use actix_session::Session;
-use actix_web::middleware::errhandlers::ErrorHandlerResponse;
-use actix_web::{dev, error, http, web, Error, HttpResponse, Result};
+use actix_web::{
+    dev, error, http, middleware::ErrorHandlerResponse, web, Error, HttpResponse, Result,
+};
 use serde::Deserialize;
 use tera::{Context, Tera};
 
-use crate::db;
-use crate::session::{self, FlashMessage};
+use crate::{
+    db,
+    session::{self, FlashMessage},
+};
 
 pub async fn index(
     pool: web::Data<db::PgPool>,
@@ -50,7 +53,8 @@ pub async fn create(
         Ok(redirect_to("/"))
     } else {
         web::block(move || db::create_task(params.into_inner().description, &pool))
-            .await?;
+            .await?
+            .map_err(error::ErrorInternalServerError)?;
         session::set_flash(&session, FlashMessage::success("Task successfully added"))?;
         Ok(redirect_to("/"))
     }
@@ -86,7 +90,9 @@ async fn toggle(
     pool: web::Data<db::PgPool>,
     params: web::Path<UpdateParams>,
 ) -> Result<HttpResponse, Error> {
-    web::block(move || db::toggle_task(params.id, &pool)).await?;
+    web::block(move || db::toggle_task(params.id, &pool))
+        .await?
+        .map_err(error::ErrorInternalServerError)?;
     Ok(redirect_to("/"))
 }
 
@@ -95,33 +101,33 @@ async fn delete(
     params: web::Path<UpdateParams>,
     session: Session,
 ) -> Result<HttpResponse, Error> {
-    web::block(move || db::delete_task(params.id, &pool)).await?;
+    web::block(move || db::delete_task(params.id, &pool))
+        .await?
+        .map_err(error::ErrorInternalServerError)?;
     session::set_flash(&session, FlashMessage::success("Task was deleted."))?;
     Ok(redirect_to("/"))
 }
 
 fn redirect_to(location: &str) -> HttpResponse {
     HttpResponse::Found()
-        .header(http::header::LOCATION, location)
+        .append_header((http::header::LOCATION, location))
         .finish()
 }
 
 pub fn bad_request<B>(res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
     let new_resp = NamedFile::open("static/errors/400.html")?
         .set_status_code(res.status())
-        .into_response(res.request())?;
-    Ok(ErrorHandlerResponse::Response(
-        res.into_response(new_resp.into_body()),
-    ))
+        .into_response(res.request())
+        .map_into_right_body();
+    Ok(ErrorHandlerResponse::Response(res.into_response(new_resp)))
 }
 
 pub fn not_found<B>(res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
     let new_resp = NamedFile::open("static/errors/404.html")?
         .set_status_code(res.status())
-        .into_response(res.request())?;
-    Ok(ErrorHandlerResponse::Response(
-        res.into_response(new_resp.into_body()),
-    ))
+        .into_response(res.request())
+        .map_into_right_body();
+    Ok(ErrorHandlerResponse::Response(res.into_response(new_resp)))
 }
 
 pub fn internal_server_error<B>(
@@ -129,8 +135,7 @@ pub fn internal_server_error<B>(
 ) -> Result<ErrorHandlerResponse<B>> {
     let new_resp = NamedFile::open("static/errors/500.html")?
         .set_status_code(res.status())
-        .into_response(res.request())?;
-    Ok(ErrorHandlerResponse::Response(
-        res.into_response(new_resp.into_body()),
-    ))
+        .into_response(res.request())
+        .map_into_right_body();
+    Ok(ErrorHandlerResponse::Response(res.into_response(new_resp)))
 }
