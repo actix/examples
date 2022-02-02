@@ -8,8 +8,8 @@ use actix_web::{get, App, HttpServer};
 use actix_web::{http, HttpResponse};
 use futures::future;
 use futures::future::Either;
-use rustls::internal::pemfile::{certs, pkcs8_private_keys};
-use rustls::{NoClientAuth, ServerConfig};
+use rustls::{Certificate, PrivateKey, ServerConfig};
+use rustls_pemfile::{certs, pkcs8_private_keys};
 
 #[get("/")]
 async fn index() -> String {
@@ -20,14 +20,25 @@ async fn index() -> String {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let mut config = ServerConfig::new(NoClientAuth::new());
     let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
     let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
 
-    let cert_chain = certs(cert_file).unwrap();
-    let mut keys = pkcs8_private_keys(key_file).unwrap();
+    let cert_chain: Vec<Certificate> = certs(cert_file)
+        .unwrap()
+        .into_iter()
+        .map(Certificate)
+        .collect();
+    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)
+        .unwrap()
+        .into_iter()
+        .map(PrivateKey)
+        .collect();
 
-    config.set_single_cert(cert_chain, keys.remove(0)).unwrap();
+    let config = ServerConfig::builder()
+        .with_safe_defaults()
+        .with_no_client_auth()
+        .with_single_cert(cert_chain, keys.remove(0))
+        .unwrap();
 
     HttpServer::new(|| {
         App::new()
@@ -47,7 +58,7 @@ async fn main() -> std::io::Result<()> {
                     println!("An http request has arrived here, i will redirect it to use https");
                     return Either::Right(future::ready(Ok(sreq.into_response(
                         HttpResponse::MovedPermanently()
-                            .header(http::header::LOCATION, url)
+                            .append_header((http::header::LOCATION, url))
                             .finish(),
                     ))));
                 }

@@ -11,6 +11,6 @@
   },
   "devDependencies": {
     "@vue/cli-service": "^3.0.0",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "2.6.12"
   }
 }

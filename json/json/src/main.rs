@@ -67,11 +67,11 @@ async fn main() -> std::io::Result<()> {
         App::new()
             // enable logger
             .wrap(middleware::Logger::default())
-            .data(web::JsonConfig::default().limit(4096)) // <- limit size of the payload (global configuration)
+            .app_data(web::JsonConfig::default().limit(4096)) // <- limit size of the payload (global configuration)
             .service(web::resource("/extractor").route(web::post().to(index)))
             .service(
                 web::resource("/extractor2")
-                    .data(web::JsonConfig::default().limit(1024)) // <- limit size of the payload (resource level)
+                    .app_data(web::JsonConfig::default().limit(1024)) // <- limit size of the payload (resource level)
                     .route(web::post().to(extract_item)),
             )
             .service(web::resource("/manual").route(web::post().to(index_manual)))
@@ -86,12 +86,13 @@ async fn main() -> std::io::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use actix_web::body::to_bytes;
     use actix_web::dev::Service;
     use actix_web::{http, test, web, App};
 
-    #[actix_rt::test]
-    async fn test_index() -> Result<(), Error> {
-        let mut app = test::init_service(
+    #[actix_web::test]
+    async fn test_index() {
+        let app = test::init_service(
             App::new().service(web::resource("/").route(web::post().to(index))),
         )
         .await;
@@ -107,13 +108,7 @@ mod tests {
 
         assert_eq!(resp.status(), http::StatusCode::OK);
 
-        let response_body = match resp.response().body().as_ref() {
-            Some(actix_web::body::Body::Bytes(bytes)) => bytes,
-            _ => panic!("Response error"),
-        };
-
-        assert_eq!(response_body, r##"{"name":"my-name","number":43}"##);
-
-        Ok(())
+        let body_bytes = to_bytes(resp.into_body()).await.unwrap();
+        assert_eq!(body_bytes, r##"{"name":"my-name","number":43}"##);
     }
 }

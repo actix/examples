@@ -61,7 +61,7 @@ async fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             // store db pool as Data object
-            .data(pool.clone())
+            .app_data(web::Data::new(pool.clone()))
             .wrap(middleware::Logger::default())
             .service(
                 web::resource("/asyncio_weather").route(web::get().to(asyncio_weather)),

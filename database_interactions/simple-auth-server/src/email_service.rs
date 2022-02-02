@@ -38,7 +38,7 @@ pub fn send_invitation(invitation: &Invitation) -> Result<(), ServiceError> {
         invitation
             .expires_at
             .format("%I:%M %p %A, %-d %B, %C%y")
-            .to_string()
+
     );
 
     // complete the email message with details
