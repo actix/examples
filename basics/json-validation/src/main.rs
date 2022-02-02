@@ -12,16 +12,17 @@
 //           - POSTing json body
 //     3. chaining futures into a single response used by an async endpoint
 
+use std::io;
+
 use actix_web::{
     error::ErrorBadRequest,
-    http::StatusCode,
+    http::header::ContentType,
     web::{self, BytesMut},
     App, Error, HttpResponse, HttpServer,
 };
 use awc::Client;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use std::io;
 use validator::Validate;
 use validator_derive::Validate;
 
@@ -40,10 +41,7 @@ struct HttpBinResponse {
 }
 
 /// validate data, post json to httpbin, get it back in the response body, return deserialized
-async fn step_x(
-    data: SomeData,
-    client: &Client,
-) -> Result<SomeData, actix_web::error::Error> {
+async fn step_x(data: SomeData, client: &Client) -> actix_web::Result<SomeData> {
     // validate data
     data.validate().map_err(ErrorBadRequest)?;
 
@@ -75,23 +73,22 @@ async fn create_something(
     let d = step_x(some_data_3, &client).await?;
 
     Ok(HttpResponse::Ok()
-        .content_type("application/json")
+        .content_type(ContentType::json())
         .body(serde_json::to_string(&d).unwrap()))
 }
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
-    let endpoint = "127.0.0.1:8080";
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    println!("Starting server at: {:?}", endpoint);
+    log::info!("starting HTTP serer at http://localhost:8080");
+
     HttpServer::new(|| {
         App::new()
             .app_data(web::Data::new(Client::default()))
-            .service(web::resource("/something").route(web::post().to(create_something)))
+            .service(web::resource("/").route(web::post().to(create_something)))
     })
-    .bind(endpoint)?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

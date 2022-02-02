@@ -1316,19 +1316,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "awc_examples"
-version = "1.0.0"
-dependencies = [
- "actix-web 3.3.3",
- "env_logger 0.8.4",
- "futures",
- "serde 1.0.136",
- "serde_json",
- "validator",
- "validator_derive",
-]
-
-[[package]]
 name = "awc_https"
 version = "1.0.0"
 dependencies = [
@@ -3227,6 +3214,21 @@ dependencies = [
  "json",
  "serde 1.0.136",
  "serde_json",
+]
+
+[[package]]
+name = "json-validation"
+version = "1.0.0"
+dependencies = [
+ "actix-web 4.0.0-rc.1",
+ "awc 3.0.0-beta.20",
+ "env_logger 0.9.0",
+ "futures",
+ "log",
+ "serde 1.0.136",
+ "serde_json",
+ "validator",
+ "validator_derive",
 ]
 
 [[package]]
@@ -6712,9 +6714,9 @@ dependencies = [
 
 [[package]]
 name = "validator"
-version = "0.10.1"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e60fadf92c22236de4028ceb0b8af50ed3430d41ad43d7a7d63b6bd1a8f47c38"
+checksum = "6d0f08911ab0fee2c5009580f04615fa868898ee57de10692a45da0c3bcc3e5e"
 dependencies = [
  "idna",
  "lazy_static",
@@ -6723,21 +6725,33 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "url",
+ "validator_types",
 ]
 
 [[package]]
 name = "validator_derive"
-version = "0.10.1"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d577dfb8ca9440a5c0b053d5a19b68f5c92ef57064bac87c8205c3f6072c20f"
+checksum = "d85135714dba11a1bd0b3eb1744169266f1a38977bf4e3ff5e2e1acb8c2b7eee"
 dependencies = [
  "if_chain",
  "lazy_static",
+ "proc-macro-error",
  "proc-macro2",
  "quote",
  "regex",
  "syn",
- "validator",
+ "validator_types",
+]
+
+[[package]]
+name = "validator_types"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ded9d97e1d42327632f5f3bae6403c04886e2de3036261ef42deebd931a6a291"
+dependencies = [
+ "proc-macro2",
+ "syn",
 ]
 
 [[package]]
