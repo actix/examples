@@ -41,7 +41,7 @@ mod test {
 
     use super::*;
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn test() {
         let mut app = atest::init_service(App::new().service(index)).await;
 

@@ -35,6 +35,7 @@ struct SomeData {
     name: String,
 }
 
+#[allow(dead_code)] // it is debug printed
 #[derive(Debug, Deserialize)]
 struct HttpBinResponse {
     args: HashMap<String, String>,
@@ -64,6 +65,9 @@ async fn step_x(data: SomeData, client: &Client) -> Result<SomeData, Error> {
     }
 
     let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+
+    println!("{:?}", body);
+
     Ok(body.json)
 }
 

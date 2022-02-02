@@ -1,4 +1,4 @@
-use actix_web::{Error, HttpRequest, HttpResponse, Responder};
+use actix_web::{body::BoxBody, HttpRequest, HttpResponse, Responder};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::sqlite::SqliteRow;
@@ -14,17 +14,16 @@ pub struct TodoRequest {
 // this struct will be used to represent database record
 #[derive(Serialize, FromRow)]
 pub struct Todo {
-    pub id: i32,
+    pub id: i64,
     pub description: String,
     pub done: bool,
 }
 
 // implementation of Actix Responder for Todo struct so we can return Todo from action handler
 impl Responder for Todo {
-    type Error = Error;
-    type Future = HttpResponse;
+    type Body = BoxBody;
 
-    fn respond_to(self, _req: &HttpRequest) -> Self::Future {
+    fn respond_to(self, _req: &HttpRequest) -> HttpResponse {
         // create response and set content type
         HttpResponse::Ok().json(&self)
     }
@@ -130,7 +129,8 @@ impl Todo {
             id,
         )
         .execute(&mut tx)
-        .await?;
+        .await?
+        .rows_affected();
 
         if n == 0 {
             return Ok(None);
@@ -168,7 +168,8 @@ impl Todo {
             id,
         )
         .execute(&mut tx)
-        .await?;
+        .await?
+        .rows_affected();
 
         tx.commit().await?;
         Ok(n_deleted)

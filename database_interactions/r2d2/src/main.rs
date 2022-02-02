@@ -1,7 +1,10 @@
 //! Actix web r2d2 example
 use std::io;
 
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{
+    error::InternalError, http::StatusCode, middleware, web, App, Error, HttpResponse,
+    HttpServer,
+};
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 
@@ -26,8 +29,9 @@ async fn index(
         })
     })
     .await
+    .unwrap()
     .map(|user| HttpResponse::Ok().json(user))
-    .map_err(|_| HttpResponse::InternalServerError())?;
+    .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
     Ok(res)
 }
 
@@ -43,7 +47,7 @@ async fn main() -> io::Result<()> {
     // start http server
     HttpServer::new(move || {
         App::new()
-            .data(pool.clone()) // <- store db pool in app state
+            .app_data(web::Data::new(pool.clone())) // <- store db pool in app state
             .wrap(middleware::Logger::default())
             .route("/{name}", web::get().to(index))
     })
