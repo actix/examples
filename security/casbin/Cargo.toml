@@ -1,16 +1,10 @@
 [package]
 name = "actix-casbin-example"
-version = "0.1.0"
-authors = ["Chojan Shang <psiace@outlook.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
-actix-web = "3"
-# from v2.0.6 on casbin only supports tokio 1 which conflicts with actix-web 3,
-# see see https://github.com/casbin/casbin-rs#installation
-casbin = "=2.0.5"
-# these rhai deps are needed for casbin v2.0.5
-rhai = "=0.19.14"
-rhai_codegen = "=0.3.3"
+actix-web = "4.0.0-beta.21"
+casbin = "2.0.9"
 loge = {version = "0.4", default-features = false, features = ["colored", "chrono"]}
-tokio = { version = "0.2.22", features = ["sync"] }
+tokio = { version = "1.16.1", features = ["sync"] }
