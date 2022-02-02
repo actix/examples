@@ -305,7 +305,8 @@ mod test {
 
         let now = time::OffsetDateTime::now_utc();
         assert_ne!(
-            now.year(), cookie_4.expires().unwrap().datetime().unwrap().year()
+            now.year(),
+            cookie_4.expires().unwrap().datetime().unwrap().year()
         );
 
         // Step 10: GET index, including session cookie #2 in request
