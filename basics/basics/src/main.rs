@@ -1,12 +1,13 @@
 use actix_files as fs;
 use actix_session::{CookieSession, Session};
-use actix_utils::mpsc;
 use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
-    error, get, guard, middleware, web, App, Error, HttpRequest, HttpResponse,
+    error, get, middleware, web, App, Either, Error, HttpRequest, HttpResponse,
     HttpServer, Result,
 };
 use std::{env, io};
+use tokio::sync::mpsc;
+use tokio_stream::wrappers::UnboundedReceiverStream;
 
 /// favicon handler
 #[get("/favicon")]
@@ -27,7 +28,7 @@ async fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
     }
 
     // set counter to session
-    session.set("counter", counter)?;
+    session.insert("counter", counter)?;
 
     // response
     Ok(HttpResponse::build(StatusCode::OK)
@@ -35,31 +36,36 @@ async fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
         .body(include_str!("../static/welcome.html")))
 }
 
-/// 404 handler
-async fn p404() -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open("static/404.html")?.set_status_code(StatusCode::NOT_FOUND))
+async fn default_handler(
+    request: HttpRequest,
+) -> Result<Either<fs::NamedFile, HttpResponse>> {
+    match *request.method() {
+        actix_web::http::Method::GET => {
+            let file = fs::NamedFile::open("static/404.html")?
+                .set_status_code(StatusCode::NOT_FOUND);
+            Ok(Either::Left(file))
+        }
+        _ => Ok(Either::Right(HttpResponse::MethodNotAllowed().finish())),
+    }
 }
 
 /// response body
 async fn response_body(path: web::Path<String>) -> HttpResponse {
     let text = format!("Hello {}!", *path);
 
-    let (tx, rx_body) = mpsc::channel();
+    let (tx, rx_body) = mpsc::unbounded_channel();
     let _ = tx.send(Ok::<_, Error>(web::Bytes::from(text)));
 
-    HttpResponse::Ok().streaming(rx_body)
+    HttpResponse::Ok().streaming(UnboundedReceiverStream::from(rx_body))
 }
 
 /// handler with path parameters like `/user/{name}/`
-async fn with_param(
-    req: HttpRequest,
-    web::Path((name,)): web::Path<(String,)>,
-) -> HttpResponse {
+async fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
     println!("{:?}", req);
 
     HttpResponse::Ok()
         .content_type("text/plain")
-        .body(format!("Hello {}!", name))
+        .body(format!("Hello {}!", path.0))
 }
 
 #[actix_web::main]
@@ -102,21 +108,11 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/").route(web::get().to(|req: HttpRequest| {
                 println!("{:?}", req);
                 HttpResponse::Found()
-                    .header(header::LOCATION, "static/welcome.html")
+                    .insert_header((header::LOCATION, "static/welcome.html"))
                     .finish()
             })))
             // default
-            .default_service(
-                // 404 for GET request
-                web::resource("")
-                    .route(web::get().to(p404))
-                    // all requests that are not `GET`
-                    .route(
-                        web::route()
-                            .guard(guard::Not(guard::Get()))
-                            .to(HttpResponse::MethodNotAllowed),
-                    ),
-            )
+            .default_service(web::route().to(default_handler))
     })
     .bind("127.0.0.1:8080")?
     .run()
