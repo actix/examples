@@ -15,13 +15,13 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("fail to build pool");
 
-    let pool = RedisWrapper(pool);
+    let pool = Data::new(RedisWrapper(pool));
 
     HttpServer::new(move || {
         let redis_url = redis_url.clone();
 
         App::new()
-            .data(pool.clone())
+            .app_data(pool.clone())
             // a dummy data_factory implementation
             .data_factory(|| {
                 /*

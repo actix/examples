@@ -1,15 +1,15 @@
-## Usage:
-This is an example on constructing async state with `App::data_factory`
+# Usage:
+This is an example demonstrating the construction of async state with `App::data_factory`
 
 ## Reason:
-`data_factory` would make sense in these situations:
-- When async state not necessarily have to be shared between workers/threads.
+Use of a `data_factory` would make sense in these situations:
+- When async state does not necessarily have to be shared between workers/threads.
 
-- When async state would spawn tasks on `actix-rt`. If we centralized the state there could be a possibility the tasks get a very unbalanced distribution on the workers/threads
+- When an async state would spawn tasks on `actix-rt`. If state was centralized there could be a possibility the tasks get an unbalanced distribution on the workers/threads
 (`actix-rt` would spawn tasks on local thread whenever it's called)
 
 ## Requirement:
-- `rustc 1.43 stable`
+- `rustc 1.58 stable`
 - `redis` server listen on `127.0.0.1:6379`(or use `REDIS_URL` env argument when starting the example)
 
 ## Endpoints:

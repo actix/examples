@@ -12,12 +12,16 @@ async fn index(id: Identity) -> String {
 
 async fn login(id: Identity) -> HttpResponse {
     id.remember("user1".to_owned());
-    HttpResponse::Found().header("location", "/").finish()
+    HttpResponse::Found()
+        .insert_header(("location", "/"))
+        .finish()
 }
 
 async fn logout(id: Identity) -> HttpResponse {
     id.forget();
-    HttpResponse::Found().header("location", "/").finish()
+    HttpResponse::Found()
+        .insert_header(("location", "/"))
+        .finish()
 }
 
 #[actix_web::main]

@@ -1,7 +1,9 @@
-use std::ops::Deref;
+use std::ops::Deref as _;
 
-use diesel::pg::PgConnection;
-use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
+use diesel::{
+    pg::PgConnection,
+    r2d2::{ConnectionManager, Pool, PoolError, PooledConnection},
+};
 
 use crate::model::{NewTask, Task};
 
