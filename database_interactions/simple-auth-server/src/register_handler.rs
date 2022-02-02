@@ -1,4 +1,4 @@
-use actix_web::{error::BlockingError, web, HttpResponse};
+use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::Deserialize;
 
@@ -15,23 +15,17 @@ pub async fn register_user(
     invitation_id: web::Path<String>,
     user_data: web::Json<UserData>,
     pool: web::Data<Pool>,
-) -> Result<HttpResponse, ServiceError> {
-    let res = web::block(move || {
+) -> Result<HttpResponse, actix_web::Error> {
+    let user = web::block(move || {
         query(
             invitation_id.into_inner(),
             user_data.into_inner().password,
             pool,
         )
     })
-    .await;
+    .await??;
 
-    match res {
-        Ok(user) => Ok(HttpResponse::Ok().json(&user)),
-        Err(err) => match err {
-            BlockingError::Error(service_error) => Err(service_error),
-            BlockingError::Canceled => Err(ServiceError::InternalServerError),
-        },
-    }
+    Ok(HttpResponse::Ok().json(&user))
 }
 
 fn query(

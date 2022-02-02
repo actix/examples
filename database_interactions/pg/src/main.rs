@@ -116,11 +116,11 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
     let config = crate::config::Config::from_env().unwrap();
-    let pool = config.pg.create_pool(NoTls).unwrap();
+    let pool = config.pg.create_pool(None, NoTls).unwrap();
 
     let server = HttpServer::new(move || {
         App::new()
-            .data(pool.clone())
+            .app_data(web::Data::new(pool.clone()))
             .service(web::resource("/users").route(web::post().to(add_user)))
     })
     .bind(config.server_addr.clone())?

@@ -1,9 +1,8 @@
-use actix_web::{error::BlockingError, web, HttpResponse};
+use actix_web::{web, HttpResponse};
 use diesel::{prelude::*, PgConnection};
 use serde::Deserialize;
 
 use crate::email_service::send_invitation;
-use crate::errors::ServiceError;
 use crate::models::{Invitation, Pool};
 
 #[derive(Deserialize)]
@@ -14,19 +13,12 @@ pub struct InvitationData {
 pub async fn post_invitation(
     invitation_data: web::Json<InvitationData>,
     pool: web::Data<Pool>,
-) -> Result<HttpResponse, ServiceError> {
+) -> Result<HttpResponse, actix_web::Error> {
     // run diesel blocking code
-    let res =
-        web::block(move || create_invitation(invitation_data.into_inner().email, pool))
-            .await;
+    web::block(move || create_invitation(invitation_data.into_inner().email, pool))
+        .await??;
 
-    match res {
-        Ok(_) => Ok(HttpResponse::Ok().finish()),
-        Err(err) => match err {
-            BlockingError::Error(service_error) => Err(service_error),
-            BlockingError::Canceled => Err(ServiceError::InternalServerError),
-        },
-    }
+    Ok(HttpResponse::Ok().finish())
 }
 
 fn create_invitation(
