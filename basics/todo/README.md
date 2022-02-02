@@ -45,4 +45,4 @@ To run the application execute:
 cargo run
 ```
 
-Then to view it in your browser navigate to: [http://localhost:8088/](http://localhost:8088/)
+Then to view it in your browser navigate to: [http://localhost:8080/](http://localhost:8080/)

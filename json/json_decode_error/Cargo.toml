@@ -1,9 +1,8 @@
 [package]
 name = "json_decode_error"
-version = "0.1.0"
-authors = ["Stig Johan Berggren <stigjb@gmail.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
-actix-web = "4.0.0-beta.21"
+actix-web = "4.0.0-rc.1"
 serde = "1"

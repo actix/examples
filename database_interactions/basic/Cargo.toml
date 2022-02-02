@@ -1,11 +1,10 @@
 [package]
 name = "async_db"
-version = "2.0.0"
-authors = ["Darin Gordon <dkcdkg@gmail.com>"]
+version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.0.0-beta.21"
+actix-web = "4.0.0-rc.1"
 env_logger = "0.9.0"
 failure = "0.1.7"
 futures = "0.3.1"

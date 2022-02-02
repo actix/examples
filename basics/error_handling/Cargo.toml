@@ -1,11 +1,10 @@
 [package]
 name = "error_handling"
 version = "1.0.0"
-authors = ["dowwie <dkcdkg@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-actix-web = "3"
+actix-web = "4.0.0-beta.21"
 derive_more = "0.99.2"
-rand = "0.7"
-env_logger = "0.8"
+rand = "0.8"
+env_logger = "0.9"

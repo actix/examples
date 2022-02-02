@@ -1,9 +1,8 @@
 [package]
 name = "unix-socket"
 version = "1.0.0"
-authors = ["Messense Lv <messense@icloud.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 env_logger = "0.9.0"
-actix-web = "4.0.0-beta.21"
+actix-web = "4.0.0-rc.1"
