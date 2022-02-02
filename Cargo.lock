@@ -1394,7 +1394,6 @@ dependencies = [
  "async-stream",
  "env_logger 0.9.0",
  "log",
- "tokio 1.16.1",
 ]
 
 [[package]]
@@ -2374,10 +2373,10 @@ dependencies = [
 name = "error_handling"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.3.3",
+ "actix-web 4.0.0-rc.1",
  "derive_more",
- "env_logger 0.8.4",
- "rand 0.7.3",
+ "env_logger 0.9.0",
+ "rand 0.8.4",
 ]
 
 [[package]]
