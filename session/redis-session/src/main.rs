@@ -11,7 +11,6 @@ use actix_web::{
     web::{get, post, resource},
     App, HttpResponse, HttpServer, Result,
 };
-use rand::Rng;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -36,7 +35,7 @@ async fn do_something(session: Session) -> Result<HttpResponse> {
         .get::<i32>("counter")
         .unwrap_or(Some(0))
         .map_or(1, |inner| inner + 1);
-    session.set("counter", counter)?;
+    session.insert("counter", counter)?;
 
     Ok(HttpResponse::Ok().json(IndexResponse { user_id, counter }))
 }
@@ -48,7 +47,7 @@ struct Identity {
 
 async fn login(user_id: web::Json<Identity>, session: Session) -> Result<HttpResponse> {
     let id = user_id.into_inner().user_id;
-    session.set("user_id", &id)?;
+    session.insert("user_id", &id)?;
     session.renew();
 
     let counter: i32 = session
@@ -62,11 +61,11 @@ async fn login(user_id: web::Json<Identity>, session: Session) -> Result<HttpRes
     }))
 }
 
-async fn logout(session: Session) -> Result<HttpResponse> {
+async fn logout(session: Session) -> Result<String> {
     let id: Option<String> = session.get("user_id")?;
     if let Some(x) = id {
         session.purge();
-        Ok(format!("Logged out: {}", x).into())
+        Ok(format!("Logged out: {}", x))
     } else {
         Ok("Could not log out anonymous user".into())
     }
@@ -80,12 +79,12 @@ async fn main() -> std::io::Result<()> {
     // Generate a random 32 byte key. Note that it is important to use a unique
     // private key for every project. Anyone with access to the key can generate
     // authentication cookies for any user!
-    let private_key = rand::thread_rng().gen::<[u8; 32]>();
+    let private_key = actix_web::cookie::Key::generate();
 
     HttpServer::new(move || {
         App::new()
             // redis session middleware
-            .wrap(RedisSession::new("127.0.0.1:6379", &private_key))
+            .wrap(RedisSession::new("127.0.0.1:6379", &private_key.master()))
             // enable logger - always register actix-web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(resource("/").route(get().to(index)))
@@ -101,15 +100,14 @@ async fn main() -> std::io::Result<()> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use actix_http::httpmessage::HttpMessage;
     use actix_web::{
-        middleware, test,
+        middleware,
         web::{get, post, resource},
         App,
     };
     use serde_json::json;
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn test_workflow() {
         // Step 1:  GET index
         //   - set-cookie actix-session will be in response (session cookie #1)
@@ -141,11 +139,11 @@ mod test {
         //   - set-cookie actix-session will be in response (session cookie #3)
         //   - response should be: {"counter": 0, "user_id": None}
 
-        let private_key = rand::thread_rng().gen::<[u8; 32]>();
-        let srv = test::start(move || {
+        let private_key = actix_web::cookie::Key::generate();
+        let srv = actix_test::start(move || {
             App::new()
                 .wrap(
-                    RedisSession::new("127.0.0.1:6379", &private_key)
+                    RedisSession::new("127.0.0.1:6379", &private_key.master())
                         .cookie_name("test-session"),
                 )
                 .wrap(middleware::Logger::default())
@@ -158,8 +156,8 @@ mod test {
         // Step 1:  GET index
         //   - set-cookie actix-session will be in response (session cookie #1)
         //   - response should be: {"counter": 0, "user_id": None}
-        let req_1a = srv.get("/").send();
-        let mut resp_1 = req_1a.await.unwrap();
+        let request = srv.get("/").send();
+        let mut resp_1 = request.await.unwrap();
         let cookie_1 = resp_1
             .cookies()
             .unwrap()
@@ -306,7 +304,9 @@ mod test {
             .unwrap();
 
         let now = time::OffsetDateTime::now_utc();
-        assert!(now.year() != cookie_4.expires().map(|t| t.year()).unwrap());
+        assert_ne!(
+            now.year(), cookie_4.expires().unwrap().datetime().unwrap().year()
+        );
 
         // Step 10: GET index, including session cookie #2 in request
         //   - set-cookie actix-session will be in response (session cookie #3)
