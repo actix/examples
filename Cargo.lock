@@ -50,7 +50,7 @@ dependencies = [
 
 [[package]]
 name = "actix-casbin-example"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "casbin",
@@ -593,7 +593,7 @@ dependencies = [
 
 [[package]]
 name = "actix-todo"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-files 0.3.0",
  "actix-session 0.4.1",
@@ -1097,7 +1097,7 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-demo"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "async-graphql",
@@ -1180,7 +1180,7 @@ dependencies = [
 
 [[package]]
 name = "async_data_factory"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "num_cpus",
@@ -1190,7 +1190,7 @@ dependencies = [
 
 [[package]]
 name = "async_db"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -1206,7 +1206,7 @@ dependencies = [
 
 [[package]]
 name = "async_ex2"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -1216,7 +1216,7 @@ dependencies = [
 
 [[package]]
 name = "async_pg"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "config",
@@ -1317,7 +1317,7 @@ dependencies = [
 
 [[package]]
 name = "awc_examples"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "env_logger 0.8.4",
@@ -1330,7 +1330,7 @@ dependencies = [
 
 [[package]]
 name = "awc_https"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "awc 3.0.0-beta.20",
@@ -1386,7 +1386,7 @@ checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
 
 [[package]]
 name = "basics"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-files 0.6.0-beta.16",
  "actix-session 0.5.0-beta.7",
@@ -1853,7 +1853,7 @@ dependencies = [
 
 [[package]]
 name = "cookie-auth"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-identity",
  "actix-web 3.3.3",
@@ -2298,7 +2298,7 @@ checksum = "212d0f5754cb6769937f4501cc0e67f4f4483c8d2c3e1e922ee9edbe4ab4c7c0"
 
 [[package]]
 name = "docker_sample"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -2823,7 +2823,7 @@ dependencies = [
 
 [[package]]
 name = "hello-world"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -2947,7 +2947,7 @@ dependencies = [
 
 [[package]]
 name = "http-proxy"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "clap",
@@ -3220,7 +3220,7 @@ checksum = "078e285eafdfb6c4b434e0d31e8cfcb5115b651496faca5749b88fafd4f23bfd"
 
 [[package]]
 name = "json-example"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -3232,7 +3232,7 @@ dependencies = [
 
 [[package]]
 name = "json_decode_error"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "serde 1.0.136",
@@ -3250,7 +3250,7 @@ dependencies = [
 
 [[package]]
 name = "jsonrpc-example"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "bytes 0.5.6",
@@ -3285,7 +3285,7 @@ dependencies = [
 
 [[package]]
 name = "juniper-advanced"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "dotenv",
@@ -3302,7 +3302,7 @@ dependencies = [
 
 [[package]]
 name = "juniper-example"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "actix-cors 0.4.1",
  "actix-web 3.3.3",
@@ -3562,7 +3562,7 @@ checksum = "308cc39be01b73d0d18f82a0e7b2a3df85245f84af96fdddc5d202d27e47b86a"
 
 [[package]]
 name = "middleware-example"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -3572,7 +3572,7 @@ dependencies = [
 
 [[package]]
 name = "middleware-ext-mut"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -3581,7 +3581,7 @@ dependencies = [
 
 [[package]]
 name = "middleware-http-to-https"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "futures",
@@ -3700,7 +3700,7 @@ dependencies = [
 
 [[package]]
 name = "mongodb"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-rt 2.6.0",
  "actix-web 4.0.0-rc.1",
@@ -3777,7 +3777,7 @@ dependencies = [
 
 [[package]]
 name = "multipart-example"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "actix-multipart",
  "actix-web 4.0.0-rc.1",
@@ -3788,7 +3788,7 @@ dependencies = [
 
 [[package]]
 name = "multipart-s3"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-multipart",
  "actix-web 4.0.0-rc.1",
@@ -4059,7 +4059,7 @@ dependencies = [
 
 [[package]]
 name = "openssl-example"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -4491,7 +4491,7 @@ dependencies = [
 
 [[package]]
 name = "protobuf-example"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "actix",
  "actix-protobuf",
@@ -4693,7 +4693,7 @@ dependencies = [
 
 [[package]]
 name = "redis_session"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-http 2.2.2",
  "actix-redis",
@@ -4863,7 +4863,7 @@ dependencies = [
 
 [[package]]
 name = "run-in-thread"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "env_logger 0.8.4",
@@ -5405,7 +5405,7 @@ checksum = "43b2853a4d09f215c24cc5489c992ce46052d359b5109343cbafbf26bc62f8a3"
 
 [[package]]
 name = "shutdown-server"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -5424,7 +5424,7 @@ dependencies = [
 
 [[package]]
 name = "simple-auth-server"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-identity",
  "actix-web 3.3.3",
@@ -5625,7 +5625,7 @@ dependencies = [
 
 [[package]]
 name = "sqlx_todo"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "anyhow",
@@ -5649,7 +5649,7 @@ dependencies = [
 
 [[package]]
 name = "state"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "env_logger 0.9.0",
@@ -5669,7 +5669,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "static_index"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-files 0.6.0-beta.16",
  "actix-web 4.0.0-rc.1",
@@ -5830,7 +5830,7 @@ dependencies = [
 
 [[package]]
 name = "template-askama"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-web 3.3.3",
  "askama",
@@ -5839,7 +5839,7 @@ dependencies = [
 
 [[package]]
 name = "template-tera"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-http 2.2.2",
  "actix-web 3.3.3",
@@ -5849,7 +5849,7 @@ dependencies = [
 
 [[package]]
 name = "template-tinytemplate"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix-http 2.2.2",
  "actix-web 3.3.3",
@@ -5870,7 +5870,7 @@ dependencies = [
 
 [[package]]
 name = "template_yarte"
-version = "0.0.1"
+version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.1",
  "derive_more",
@@ -6922,7 +6922,7 @@ dependencies = [
 
 [[package]]
 name = "websocket"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix",
  "actix-codec 0.3.0",
@@ -6937,7 +6937,7 @@ dependencies = [
 
 [[package]]
 name = "websocket-autobahn"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix",
  "actix-web 3.3.3",
@@ -6947,7 +6947,7 @@ dependencies = [
 
 [[package]]
 name = "websocket-chat-broker"
-version = "0.1.1"
+version = "1.0.0"
 dependencies = [
  "actix",
  "actix-broker",
@@ -6963,7 +6963,7 @@ dependencies = [
 
 [[package]]
 name = "websocket-example"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix",
  "actix-files 0.3.0",
@@ -6980,7 +6980,7 @@ dependencies = [
 
 [[package]]
 name = "websocket-tcp-example"
-version = "2.0.0"
+version = "1.0.0"
 dependencies = [
  "actix",
  "actix-codec 0.3.0",

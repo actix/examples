@@ -1,6 +1,6 @@
 [package]
 name = "template_yarte"
-version = "0.0.1"
+version = "1.0.0"
 publish = false
 edition = "2021"
 
