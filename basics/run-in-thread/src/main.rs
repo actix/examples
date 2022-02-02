@@ -1,18 +1,17 @@
 use std::sync::mpsc;
 use std::{thread, time};
 
-use actix_web::{dev::Server, middleware, rt, web, App, HttpRequest, HttpServer};
+use actix_web::dev::ServerHandle;
+use actix_web::{middleware, rt, web, App, HttpRequest, HttpServer};
 
 async fn index(req: HttpRequest) -> &'static str {
-    println!("REQ: {:?}", req);
+    log::info!("REQ: {:?}", req);
     "Hello world!"
 }
 
-fn run_app(tx: mpsc::Sender<Server>) -> std::io::Result<()> {
-    let mut sys = rt::System::new("test");
-
+async fn run_app(tx: mpsc::Sender<ServerHandle>) -> std::io::Result<()> {
     // srv is server controller type, `dev::Server`
-    let srv = HttpServer::new(|| {
+    let server = HttpServer::new(|| {
         App::new()
             // enable logger
             .wrap(middleware::Logger::default())
@@ -22,11 +21,9 @@ fn run_app(tx: mpsc::Sender<Server>) -> std::io::Result<()> {
     .bind("127.0.0.1:8080")?
     .run();
 
-    // send server controller to main thread
-    let _ = tx.send(srv.clone());
-
-    // run future
-    sys.block_on(srv)
+    // Send server handle back to the main thread
+    let _ = tx.send(server.handle());
+    server.await
 }
 
 fn main() {
@@ -35,17 +32,18 @@ fn main() {
 
     let (tx, rx) = mpsc::channel();
 
-    println!("START SERVER");
+    log::info!("START SERVER");
     thread::spawn(move || {
-        let _ = run_app(tx);
+        let future = run_app(tx);
+        rt::System::new().block_on(future)
     });
 
-    let srv = rx.recv().unwrap();
+    let server_handle = rx.recv().unwrap();
 
-    println!("WAITING 10 SECONDS");
+    log::info!("WAITING 10 SECONDS");
     thread::sleep(time::Duration::from_secs(10));
 
-    println!("STOPPING SERVER");
-    // init stop server and wait until server gracefully exit
-    rt::System::new("").block_on(srv.stop(true));
+    log::info!("STOPPING SERVER");
+    // Send a stop signal to the server, waiting for it to exit gracefully
+    rt::System::new().block_on(server_handle.stop(true));
 }
