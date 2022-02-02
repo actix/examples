@@ -1,7 +1,6 @@
 [package]
 name = "multipart-example"
 version = "0.3.0"
-authors = ["Bevan Hunt <bevan@bevanhunt.com>"]
 edition = "2021"
 license = "MIT"
 description = "Simple file uploader in Actix Web with Async/Await"

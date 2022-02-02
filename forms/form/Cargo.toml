@@ -1,7 +1,6 @@
 [package]
 name = "form-example"
 version = "1.0.0"
-authors = ["Gorm Casper <gcasper@gmail.com>"]
 edition = "2021"
 
 [dependencies]

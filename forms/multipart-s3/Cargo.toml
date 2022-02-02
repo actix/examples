@@ -1,7 +1,6 @@
 [package]
 name = "multipart-s3"
 version = "0.1.0"
-authors = ["cheolgyu <38715510+cheolgyu@users.noreply.github.com>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

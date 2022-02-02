@@ -1,7 +1,6 @@
 [package]
 name = "awc_https"
 version = "0.1.0"
-authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2021"
 
 [dependencies]

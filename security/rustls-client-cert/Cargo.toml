@@ -1,7 +1,6 @@
 [package]
 name = "rustls-client-cert"
 version = "1.0.0"
-authors = ["Rob Ede <robjtede@icloud.com>"]
 edition = "2021"
 
 [dependencies]

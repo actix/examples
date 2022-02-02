@@ -1,7 +1,6 @@
 [package]
 name = "actix-web-cors"
 version = "1.0.0"
-authors = ["krircc <krircc@aliyun.com>"]
 edition = "2021"
 
 [dependencies]

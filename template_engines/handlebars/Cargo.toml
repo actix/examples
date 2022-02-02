@@ -1,7 +1,6 @@
 [package]
 name = "template_handlebars"
 version = "1.0.0"
-authors = ["Alexandru Tiniuc <tiniuc.alexandru@gmail.com>"]
 edition = "2021"
 
 [dependencies]

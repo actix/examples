@@ -1,7 +1,6 @@
 [package]
 name = "mongodb"
 version = "0.1.0"
-authors = ["Isabel Atkinson <isabel.atkinson@mongodb.com>"]
 edition = "2021"
 
 [dependencies]

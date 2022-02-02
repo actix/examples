@@ -1,7 +1,6 @@
 [package]
 name = "template-askama"
 version = "2.0.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2021"
 
 [dependencies]

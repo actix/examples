@@ -1,7 +1,6 @@
 [package]
 name = "websocket-autobahn"
 version = "2.0.0"
-authors = ["Mark Lodato <mlodato517@gmail.com"]
 edition = "2021"
 
 [[bin]]

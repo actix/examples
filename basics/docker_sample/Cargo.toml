@@ -1,7 +1,6 @@
 [package]
 name = "docker_sample"
 version = "0.1.0"
-authors = ["docker_sample <docker_sample@sample.com>"]
 edition = "2021"
 
 [dependencies]

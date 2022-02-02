@@ -1,7 +1,6 @@
 [package]
 name = "async-graphql-demo"
 version = "0.1.0"
-authors = ["sunli <scott_s829@163.com>"]
 edition = "2021"
 
 [dependencies]

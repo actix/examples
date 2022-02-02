@@ -1,7 +1,6 @@
 [package]
 name = "middleware-example"
 version = "2.0.0"
-authors = ["Gorm Casper <gcasper@gmail.com>", "Sven-Hendrik Haase <svenstaro@gmail.com>"]
 edition = "2021"
 
 [dependencies]

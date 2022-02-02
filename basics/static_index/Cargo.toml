@@ -1,7 +1,6 @@
 [package]
 name = "static_index"
 version = "2.0.0"
-authors = ["Jose Marinez <digeratus@gmail.com>"]
 edition = "2021"
 
 [dependencies]

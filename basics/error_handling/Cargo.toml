@@ -1,7 +1,6 @@
 [package]
 name = "error_handling"
 version = "1.0.0"
-authors = ["dowwie <dkcdkg@gmail.com>"]
 edition = "2021"
 
 [dependencies]

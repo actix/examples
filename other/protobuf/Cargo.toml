@@ -1,7 +1,6 @@
 [package]
 name = "protobuf-example"
 version = "0.2.0"
-authors = ["kingxsp <jin.hb.zh@outlook.com>, Yuki Okushi <huyuumi.dev@gmail.com>"]
 edition = "2021"
 
 [dependencies]

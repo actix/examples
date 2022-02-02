@@ -1,7 +1,6 @@
 [package]
 name = "async_db"
 version = "2.0.0"
-authors = ["Darin Gordon <dkcdkg@gmail.com>"]
 edition = "2021"
 
 [dependencies]

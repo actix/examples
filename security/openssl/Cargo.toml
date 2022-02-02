@@ -1,7 +1,6 @@
 [package]
 name = "openssl-example"
 version = "0.2.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 edition = "2021"
 
 [dependencies]

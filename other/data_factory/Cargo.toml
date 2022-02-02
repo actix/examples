@@ -1,7 +1,6 @@
 [package]
 name = "async_data_factory"
 version = "0.1.0"
-authors = ["fakeshadow <24548779@qq.com>"]
 edition = "2021"
 
 [dependencies]
