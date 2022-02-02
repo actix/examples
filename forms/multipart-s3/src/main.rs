@@ -29,7 +29,7 @@ async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().into())
 }
 
-fn index() -> HttpResponse {
+async fn index() -> HttpResponse {
     let html = r#"<html>
         <head><title>Upload Test</title></head>
         <body>

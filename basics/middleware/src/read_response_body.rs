@@ -1,22 +1,21 @@
 use std::future::Future;
+use std::future::{ready, Ready};
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use actix_service::{Service, Transform};
-use actix_web::body::{BodySize, MessageBody, ResponseBody};
+use actix_web::body::{BodySize, MessageBody};
+use actix_web::dev::{self, Service, Transform};
 use actix_web::web::{Bytes, BytesMut};
 use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error};
-use futures::future::{ok, Ready};
 
 pub struct Logging;
 
-impl<S: 'static, B> Transform<S> for Logging
+impl<S: 'static, B> Transform<S, ServiceRequest> for Logging
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     B: MessageBody + 'static,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<BodyLogger<B>>;
     type Error = Error;
     type InitError = ();
@@ -24,7 +23,7 @@ where
     type Future = Ready<Result<Self::Transform, Self::InitError>>;
 
     fn new_transform(&self, service: S) -> Self::Future {
-        ok(LoggingMiddleware { service })
+        ready(Ok(LoggingMiddleware { service }))
     }
 }
 
@@ -32,21 +31,18 @@ pub struct LoggingMiddleware<S> {
     service: S,
 }
 
-impl<S, B> Service for LoggingMiddleware<S>
+impl<S, B> Service<ServiceRequest> for LoggingMiddleware<S>
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     B: MessageBody,
 {
-    type Request = ServiceRequest;
     type Response = ServiceResponse<BodyLogger<B>>;
     type Error = Error;
     type Future = WrapperStream<S, B>;
 
-    fn poll_ready(&mut self, cx: &mut Context) -> Poll<Result<(), Self::Error>> {
-        self.service.poll_ready(cx)
-    }
+    dev::forward_ready!(service);
 
-    fn call(&mut self, req: ServiceRequest) -> Self::Future {
+    fn call(&self, req: ServiceRequest) -> Self::Future {
         WrapperStream {
             fut: self.service.call(req),
             _t: PhantomData,
@@ -58,7 +54,7 @@ where
 pub struct WrapperStream<S, B>
 where
     B: MessageBody,
-    S: Service,
+    S: Service<ServiceRequest>,
 {
     #[pin]
     fut: S::Future,
@@ -68,7 +64,7 @@ where
 impl<S, B> Future for WrapperStream<S, B>
 where
     B: MessageBody,
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
 {
     type Output = Result<ServiceResponse<BodyLogger<B>>, Error>;
 
@@ -76,11 +72,9 @@ where
         let res = futures::ready!(self.project().fut.poll(cx));
 
         Poll::Ready(res.map(|res| {
-            res.map_body(move |_, body| {
-                ResponseBody::Body(BodyLogger {
-                    body,
-                    body_accum: BytesMut::new(),
-                })
+            res.map_body(move |_, body| BodyLogger {
+                body,
+                body_accum: BytesMut::new(),
             })
         }))
     }
@@ -89,7 +83,7 @@ where
 #[pin_project::pin_project(PinnedDrop)]
 pub struct BodyLogger<B> {
     #[pin]
-    body: ResponseBody<B>,
+    body: B,
     body_accum: BytesMut,
 }
 
@@ -101,6 +95,8 @@ impl<B> PinnedDrop for BodyLogger<B> {
 }
 
 impl<B: MessageBody> MessageBody for BodyLogger<B> {
+    type Error = B::Error;
+
     fn size(&self) -> BodySize {
         self.body.size()
     }
@@ -108,7 +104,7 @@ impl<B: MessageBody> MessageBody for BodyLogger<B> {
     fn poll_next(
         self: Pin<&mut Self>,
         cx: &mut Context<'_>,
-    ) -> Poll<Option<Result<Bytes, Error>>> {
+    ) -> Poll<Option<Result<Bytes, Self::Error>>> {
         let this = self.project();
 
         match this.body.poll_next(cx) {

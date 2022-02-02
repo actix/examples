@@ -1,8 +1,7 @@
 [package]
 name = "template-tinytemplate"
-version = "2.0.0"
-authors = ["Hanif Bin Ariffin <hanif.ariffin.4326@gmail.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
 env_logger = "0.8"

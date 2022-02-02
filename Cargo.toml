@@ -36,7 +36,6 @@ members = [
    "other/data_factory",
    "other/protobuf",
    "other/server-sent-events",
-   "other/udp-echo",
    "other/unix-socket",
    "security/awc_https",
    "security/casbin",

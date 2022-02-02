@@ -1,8 +1,7 @@
 [package]
 name = "awc_examples"
-version = "2.0.0"
-authors = ["dowwie <dkcdkg@gmail.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
 actix-web = { version = "3", features = ["openssl"] }
