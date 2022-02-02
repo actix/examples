@@ -2,7 +2,7 @@
 name = "docker_sample"
 version = "0.1.0"
 authors = ["docker_sample <docker_sample@sample.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-beta.21"

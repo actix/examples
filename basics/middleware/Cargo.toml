@@ -2,7 +2,7 @@
 name = "middleware-example"
 version = "2.0.0"
 authors = ["Gorm Casper <gcasper@gmail.com>", "Sven-Hendrik Haase <svenstaro@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-rc.1"

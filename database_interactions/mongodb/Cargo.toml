@@ -2,7 +2,7 @@
 name = "mongodb"
 version = "0.1.0"
 authors = ["Isabel Atkinson <isabel.atkinson@mongodb.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-rt = "2.2.0"

@@ -3,7 +3,7 @@ name = "template_yarte"
 version = "0.0.1"
 authors = ["Juan Aguilar Santillana <mhpoin@gmail.com>"]
 publish = false
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-rc.1"

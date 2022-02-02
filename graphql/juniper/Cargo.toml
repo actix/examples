@@ -2,7 +2,7 @@
 name = "juniper-example"
 version = "0.2.0"
 authors = ["pyros2097 <pyros2097@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-web = "3"

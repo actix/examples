@@ -5,7 +5,7 @@ authors = [
   "Nikolay Kim <fafhrd91@gmail.com>",
   "Rob Ede <robjtede@icloud.com>",
 ]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-beta.21"

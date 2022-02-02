@@ -2,7 +2,7 @@
 name = "middleware-ext-mut"
 version = "0.1.0"
 authors = ["Eric McCarthy <ericmccarthy7@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-rc.1"
