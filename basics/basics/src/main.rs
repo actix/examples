@@ -1,23 +1,28 @@
-use actix_files as fs;
+use std::convert::Infallible;
+use std::io;
+
+use actix_files::{Files, NamedFile};
 use actix_session::{CookieSession, Session};
-use actix_web::http::{header, Method, StatusCode};
 use actix_web::{
-    error, get, middleware, web, App, Either, Error, HttpRequest, HttpResponse,
-    HttpServer, Result,
+    error, get,
+    http::{
+        header::{self, ContentType},
+        Method, StatusCode,
+    },
+    middleware, web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder,
+    Result,
 };
-use std::{env, io};
-use tokio::sync::mpsc;
-use tokio_stream::wrappers::UnboundedReceiverStream;
+use async_stream::stream;
 
 /// favicon handler
 #[get("/favicon")]
-async fn favicon() -> Result<fs::NamedFile> {
-    Ok(fs::NamedFile::open("static/favicon.ico")?)
+async fn favicon() -> Result<impl Responder> {
+    Ok(NamedFile::open("static/favicon.ico")?)
 }
 
 /// simple index handler
 #[get("/welcome")]
-async fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
+async fn welcome(req: HttpRequest, session: Session) -> Result<HttpResponse> {
     println!("{:?}", req);
 
     // session
@@ -32,16 +37,14 @@ async fn welcome(session: Session, req: HttpRequest) -> Result<HttpResponse> {
 
     // response
     Ok(HttpResponse::build(StatusCode::OK)
-        .content_type("text/html; charset=utf-8")
+        .content_type(ContentType::plaintext())
         .body(include_str!("../static/welcome.html")))
 }
 
-async fn default_handler(
-    request: HttpRequest,
-) -> Result<Either<fs::NamedFile, HttpResponse>> {
-    match *request.method() {
-        actix_web::http::Method::GET => {
-            let file = fs::NamedFile::open("static/404.html")?
+async fn default_handler(req_method: Method) -> Result<impl Responder> {
+    match req_method {
+        Method::GET => {
+            let file = NamedFile::open("static/404.html")?
                 .set_status_code(StatusCode::NOT_FOUND);
             Ok(Either::Left(file))
         }
@@ -51,12 +54,13 @@ async fn default_handler(
 
 /// response body
 async fn response_body(path: web::Path<String>) -> HttpResponse {
-    let text = format!("Hello {}!", *path);
+    let name = path.into_inner();
 
-    let (tx, rx_body) = mpsc::unbounded_channel();
-    let _ = tx.send(Ok::<_, Error>(web::Bytes::from(text)));
-
-    HttpResponse::Ok().streaming(UnboundedReceiverStream::from(rx_body))
+    HttpResponse::Ok().streaming(stream! {
+        yield Ok::<_, Infallible>(web::Bytes::from("Hello "));
+        yield Ok::<_, Infallible>(web::Bytes::from(name));
+        yield Ok::<_, Infallible>(web::Bytes::from("!"));
+    })
 }
 
 /// handler with path parameters like `/user/{name}/`
@@ -64,17 +68,20 @@ async fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpRespons
     println!("{:?}", req);
 
     HttpResponse::Ok()
-        .content_type("text/plain")
+        .content_type(ContentType::plaintext())
         .body(format!("Hello {}!", path.0))
 }
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()
+            // enable automatic response compression - usually register this first
+            .wrap(middleware::Compress::default())
             // cookie session middleware
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
             // enable logger - always register actix-web Logger middleware last
@@ -103,18 +110,21 @@ async fn main() -> io::Result<()> {
                 )
             }))
             // static files
-            .service(fs::Files::new("/static", "static").show_files_listing())
+            .service(Files::new("/static", "static").show_files_listing())
             // redirect
-            .service(web::resource("/").route(web::get().to(|req: HttpRequest| {
-                println!("{:?}", req);
-                HttpResponse::Found()
-                    .insert_header((header::LOCATION, "static/welcome.html"))
-                    .finish()
-            })))
+            .service(web::resource("/").route(web::get().to(
+                |req: HttpRequest| async move {
+                    println!("{:?}", req);
+                    HttpResponse::Found()
+                        .insert_header((header::LOCATION, "static/welcome.html"))
+                        .finish()
+                },
+            )))
             // default
-            .default_service(web::route().to(default_handler))
+            .default_service(web::to(default_handler))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
+    .workers(2)
     .run()
     .await
 }
