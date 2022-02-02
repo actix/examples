@@ -1,0 +1,11 @@
+[package]
+name = "run-in-thread"
+version = "1.0.0"
+edition = "2021"
+description = "Run Actix Web in separate thread"
+
+[dependencies]
+actix-web = "4.0.0-rc.1"
+
+env_logger = "0.9"
+log = "0.4"

@@ -1,8 +1,7 @@
 [package]
 name = "server-sent-events"
 version = "1.0.0"
-authors = ["Arve Seljebu"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 actix-web = "3"
