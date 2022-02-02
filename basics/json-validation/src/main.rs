@@ -52,9 +52,7 @@ async fn step_x(
         .send_json(&data)
         .await
         // <- convert SendRequestError to an InternalError, a type that implements the ResponseError trait
-        .map_err(|e| {
-            actix_web::error::InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
-        })?; // <- convert it into an actix_web::Error
+        .map_err(actix_web::error::ErrorInternalServerError)?; // <- convert it into an actix_web::Error
 
     let mut body = BytesMut::new();
     while let Some(chunk) = res.next().await {
