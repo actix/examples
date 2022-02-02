@@ -9,14 +9,14 @@ docker build -t docker_sample .
 ## Run built image
 
 ```shell
-docker run -d -p 5000:5000 docker_sample
+docker run -d -p 8080:8080 docker_sample
 # and the server should start instantly
-curl http://localhost:5000
+curl http://localhost:8080
 ```
 
 ## Running unit tests
 
 ```shell
-docker build -t docker_sample:test --target base .
+docker build -t docker_sample:test .
 docker run --rm docker_sample:test
 ```

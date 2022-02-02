@@ -119,7 +119,7 @@ impl ImplNetwork for ObjNetwork {
         d: u64,
     ) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>> {
         async move {
-            actix_web::rt::time::delay_for(Duration::from_secs(d)).await;
+            actix_web::rt::time::sleep(Duration::from_secs(d)).await;
             Ok(String::from("pong"))
         }
         .boxed_local()
@@ -155,7 +155,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let app_state = AppState::new(network.clone());
         App::new()
-            .data(app_state)
+            .app_data(web::Data::new(app_state))
             .wrap(middleware::Logger::default())
             .service(web::resource("/").route(web::post().to(rpc_handler)))
     })

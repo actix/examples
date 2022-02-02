@@ -1,8 +1,7 @@
 [package]
 name = "simple-auth-server"
-version = "2.0.0"
-authors = ["mygnu <tech@hgill.io>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 workspace = "../.."
 
 [dependencies]

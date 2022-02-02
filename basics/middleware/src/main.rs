@@ -1,8 +1,5 @@
-#![allow(clippy::type_complexity)]
-
-use actix_service::Service;
-use actix_web::{web, App, HttpServer};
-use futures::future::FutureExt;
+use actix_web::{dev::Service, web, App, HttpServer};
+use futures::FutureExt as _;
 
 #[allow(dead_code)]
 mod read_request_body;
