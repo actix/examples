@@ -1,7 +1,6 @@
 use crate::utils::s3::Client;
 use actix_multipart::{Field, Multipart};
-use actix_web::{web, Error};
-use bytes::Bytes;
+use actix_web::{web, web::Bytes, Error};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::convert::From;
@@ -63,13 +62,13 @@ impl Tmpfile {
     }
 }
 
-pub async fn split_payload(payload: &mut Multipart) -> (bytes::Bytes, Vec<Tmpfile>) {
+pub async fn split_payload(payload: &mut Multipart) -> (Bytes, Vec<Tmpfile>) {
     let mut tmp_files: Vec<Tmpfile> = Vec::new();
     let mut data = Bytes::new();
 
     while let Some(item) = payload.next().await {
         let mut field: Field = item.expect(" split_payload err");
-        let content_type = field.content_disposition().unwrap();
+        let content_type = field.content_disposition();
         let name = content_type.get_name().unwrap();
         if name == "data" {
             while let Some(chunk) = field.next().await {
@@ -82,11 +81,13 @@ pub async fn split_payload(payload: &mut Multipart) -> (bytes::Bytes, Vec<Tmpfil
                     let tmp_path = tmp_file.tmp_path.clone();
                     let mut f = web::block(move || std::fs::File::create(&tmp_path))
                         .await
+                        .unwrap()
                         .unwrap();
                     while let Some(chunk) = field.next().await {
                         let data = chunk.unwrap();
                         f = web::block(move || f.write_all(&data).map(|_| f))
                             .await
+                            .unwrap()
                             .unwrap();
                     }
                     tmp_files.push(tmp_file.clone());

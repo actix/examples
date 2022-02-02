@@ -29,7 +29,7 @@ async fn main() -> std::io::Result<()> {
     let server = HttpServer::new(move || {
         // give the server a Sender in .data
         App::new()
-            .data(tx.clone())
+            .app_data(web::Data::new(tx.clone()))
             .wrap(middleware::Logger::default())
             .service(hello)
             .service(stop)
@@ -38,7 +38,7 @@ async fn main() -> std::io::Result<()> {
     .run();
 
     // clone the Server handle
-    let srv = server.clone();
+    let srv = server.handle();
     thread::spawn(move || {
         // wait for shutdown signal
         rx.recv().unwrap();
