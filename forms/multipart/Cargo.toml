@@ -11,7 +11,7 @@ readme = "README.md"
 
 [dependencies]
 actix-multipart = "0.4.0-beta.12"
-actix-web = "4.0.0-beta.21"
+actix-web = "4.0.0-rc.1"
 
 futures-util = "0.3"
 sanitize-filename = "0.3"

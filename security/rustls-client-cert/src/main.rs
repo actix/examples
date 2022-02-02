@@ -19,6 +19,7 @@ const CA_CERT: &str = "certs/rootCA.pem";
 const SERVER_CERT: &str = "certs/server-cert.pem";
 const SERVER_KEY: &str = "certs/server-key.pem";
 
+#[allow(dead_code)] // it is debug printed
 #[derive(Debug, Clone)]
 struct ConnectionInfo {
     bind: SocketAddr,

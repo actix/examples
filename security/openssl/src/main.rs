@@ -32,7 +32,7 @@ async fn main() -> io::Result<()> {
             // register simple handler, handle all methods
             .service(web::resource("/index.html").to(index))
             // with path parameters
-            .service(web::resource("/").route(web::get().to(|| {
+            .service(web::resource("/").route(web::get().to(|| async {
                 HttpResponse::Found()
                     .append_header(("LOCATION", "/index.html"))
                     .finish()
