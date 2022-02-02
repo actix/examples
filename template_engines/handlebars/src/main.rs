@@ -101,9 +101,9 @@ fn get_error_response<B>(
                 Ok(body) => HttpResponse::build(res.status())
                     .content_type(ContentType::html())
                     .body(body),
-                Err(_) => fallback(error).into(),
+                Err(_) => fallback(error),
             }
         }
-        None => fallback(error).into(),
+        None => fallback(error),
     }
 }
