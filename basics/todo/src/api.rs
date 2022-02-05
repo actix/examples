@@ -1,9 +1,9 @@
 use actix_files::NamedFile;
 use actix_session::Session;
-use actix_web::{
-    dev, error, http, middleware::ErrorHandlerResponse, web, Error, HttpResponse, Result,
-};
+use actix_web::middleware::ErrorHandlerResponse;
+use actix_web::{dev, error, http, web, Error, HttpResponse, Result};
 use serde::Deserialize;
+use sqlx::postgres::PgPool;
 use tera::{Context, Tera};
 
 use crate::{
@@ -12,11 +12,13 @@ use crate::{
 };
 
 pub async fn index(
-    pool: web::Data<db::PgPool>,
+    pool: web::Data<PgPool>,
     tmpl: web::Data<Tera>,
     session: Session,
 ) -> Result<HttpResponse, Error> {
-    let tasks = web::block(move || db::get_all_tasks(&pool)).await?;
+    let tasks = db::get_all_tasks(&pool)
+        .await
+        .map_err(error::ErrorInternalServerError)?;
 
     let mut context = Context::new();
     context.insert("tasks", &tasks);
@@ -42,7 +44,7 @@ pub struct CreateForm {
 
 pub async fn create(
     params: web::Form<CreateForm>,
-    pool: web::Data<db::PgPool>,
+    pool: web::Data<PgPool>,
     session: Session,
 ) -> Result<HttpResponse, Error> {
     if params.description.is_empty() {
@@ -52,8 +54,8 @@ pub async fn create(
         )?;
         Ok(redirect_to("/"))
     } else {
-        web::block(move || db::create_task(params.into_inner().description, &pool))
-            .await?
+        db::create_task(params.into_inner().description, &pool)
+            .await
             .map_err(error::ErrorInternalServerError)?;
         session::set_flash(&session, FlashMessage::success("Task successfully added"))?;
         Ok(redirect_to("/"))
@@ -71,7 +73,7 @@ pub struct UpdateForm {
 }
 
 pub async fn update(
-    db: web::Data<db::PgPool>,
+    db: web::Data<PgPool>,
     params: web::Path<UpdateParams>,
     form: web::Form<UpdateForm>,
     session: Session,
@@ -87,22 +89,22 @@ pub async fn update(
 }
 
 async fn toggle(
-    pool: web::Data<db::PgPool>,
+    pool: web::Data<PgPool>,
     params: web::Path<UpdateParams>,
 ) -> Result<HttpResponse, Error> {
-    web::block(move || db::toggle_task(params.id, &pool))
-        .await?
+    db::toggle_task(params.id, &pool)
+        .await
         .map_err(error::ErrorInternalServerError)?;
     Ok(redirect_to("/"))
 }
 
 async fn delete(
-    pool: web::Data<db::PgPool>,
+    pool: web::Data<PgPool>,
     params: web::Path<UpdateParams>,
     session: Session,
 ) -> Result<HttpResponse, Error> {
-    web::block(move || db::delete_task(params.id, &pool))
-        .await?
+    db::delete_task(params.id, &pool)
+        .await
         .map_err(error::ErrorInternalServerError)?;
     session::set_flash(&session, FlashMessage::success("Task was deleted."))?;
     Ok(redirect_to("/"))

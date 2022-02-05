@@ -19,22 +19,23 @@ cd basics/todo
 
 ## Set up the database
 
-Install the [diesel](http://diesel.rs) command-line tool including the `postgres` feature:
+Install the [sqlx](https://github.com/launchbadge/sqlx) command-line tool including the `postgres` feature:
 
 ```bash
-cargo install diesel_cli --no-default-features --features postgres
+cargo install sqlx-cli --no-default-features --features postgres
 ```
 
 Check the contents of the `.env` file. If your database requires a password, update `DATABASE_URL` to be of the form:
 
 ```.env
-DATABASE_URL=postgres://username:password@localhost/actix_todo
+DATABASE_URL=postgres://username:password@localhost:5432/actix_todo
 ```
 
 Then to create and set-up the database run:
 
 ```bash
-diesel database setup
+sqlx database create
+sqlx migrate run
 ```
 
 ## Run the application
@@ -45,4 +46,4 @@ To run the application execute:
 cargo run
 ```
 
-Then to view it in your browser navigate to: [http://localhost:8080/](http://localhost:8080/)
+Then to view it in your browser navigate to: [http://localhost:8088/](http://localhost:8088/)
