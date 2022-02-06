@@ -1,62 +1,51 @@
-use actix_web::{rt::System, web, App, HttpRequest, HttpServer, Responder};
+use std::{fs, time::Duration};
+
+use acme_micro::{create_p384_key, Certificate, Directory, DirectoryUrl};
 use actix_files::Files;
+use actix_web::{rt, web, App, HttpRequest, HttpServer, Responder};
+use anyhow::anyhow;
 use openssl::{
-    ssl::{SslAcceptor, SslMethod},
     pkey::PKey,
+    ssl::{SslAcceptor, SslMethod},
     x509::X509,
 };
-use std::sync::mpsc;
-use std::thread;
-use acme_micro::{Error, Certificate, Directory, DirectoryUrl};
-use acme_micro::create_p384_key;
-use std::time::Duration;
-use futures::executor;
-use std::fs;
 
-
-pub fn gen_tls_cert(
+pub async fn gen_tls_cert(
     user_email: &str,
     user_domain: &str,
-) -> Result<Certificate, Error> {
-
-    // Create acme-challenge dir
+) -> anyhow::Result<Certificate> {
+    // Create acme-challenge dir.
     fs::create_dir("./acme-challenge").unwrap();
 
-    // Create temporary Actix server for ACME challenge
-    let (tx, rx) = mpsc::channel();
     let domain = user_domain.to_string();
-    thread::spawn(move || {
-        let sys = System::new("http-server");
 
-        let srv = HttpServer::new(|| {
-            App::new()
-                .service(
-                    Files::new(
-                        // HTTP route
-                        "/.well-known/acme-challenge",
-                        // Server's dir
-                        "acme-challenge",
-                    ).show_files_listing()
-                )
-        })
-        .bind((domain, 80))?
-        .shutdown_timeout(0)  // seconds to shutdown after stop signal: 0
-        .run();
+    // Create temporary Actix Web server for ACME challenge.
+    let srv = HttpServer::new(|| {
+        App::new().service(
+            Files::new(
+                // HTTP route
+                "/.well-known/acme-challenge",
+                // Server's dir
+                "acme-challenge",
+            )
+            .show_files_listing(),
+        )
+    })
+    .bind((domain, 80))?
+    .shutdown_timeout(0)
+    .run();
 
-        let _ = tx.send(srv);
-        sys.run()
-    });
-    let srv = rx.recv().unwrap();
+    let srv_handle = srv.handle();
+    let srv_task = rt::spawn(srv);
 
-    // Use DirectoryUrl::LetsEncrypStaging for dev/testing.
+    // Use DirectoryUrl::LetsEncryptStaging for dev/testing.
     let url = DirectoryUrl::LetsEncrypt;
 
     // Create a directory entrypoint.
     let dir = Directory::from_url(url)?;
 
     // Our contact addresses; note the `mailto:`
-    let user_email_mailto: String = "mailto:{email}"
-        .replace("{email}", user_email);
+    let user_email_mailto: String = "mailto:{email}".replace("{email}", user_email);
     let contact = vec![user_email_mailto];
 
     // Generate a private key and register an account with our ACME provider.
@@ -93,7 +82,9 @@ pub fn gen_tls_cert(
         // certificate for:
         //
         // http://mydomain.io/.well-known/acme-challenge/<token>
-        let chall = auths[0].http_challenge().unwrap();
+        let chall = auths[0]
+            .http_challenge()
+            .ok_or(anyhow!("no HTTP challenge accessible"))?;
 
         // The token is the filename.
         let token = chall.http_token();
@@ -128,70 +119,80 @@ pub fn gen_tls_cert(
     // state of "processing" that must be polled until the
     // certificate is either issued or rejected. Again we poll
     // for the status change.
-    let ord_cert = ord_csr
-        .finalize_pkey(pkey_pri, Duration::from_millis(5000))?;
+    let ord_cert = ord_csr.finalize_pkey(pkey_pri, Duration::from_millis(5000))?;
 
     // Now download the certificate. Also stores the cert in
     // the persistence.
     let cert = ord_cert.download_cert()?;
 
     // Stop temporary server for ACME challenge
-    executor::block_on(srv.stop(true));
+    srv_handle.stop(true).await;
+    srv_task.await??;
 
     // Delete acme-challenge dir
-    fs::remove_dir_all("./acme-challenge").unwrap();
+    fs::remove_dir_all("./acme-challenge")?;
 
     Ok(cert)
-
 }
-
 
 // "Hello world" example
 async fn index(_req: HttpRequest) -> impl Responder {
     "Hello world!"
 }
 
-
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> anyhow::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     // IMPORTANT: Use your own email and domain!
     let email = "example@example.com";
     let domain = "mydomain.io";
 
-    //                 Load SSL keys
+    //   Load keys
     // ==============================================
     // = IMPORTANT:                                 =
     // = This process has to be repeated            =
     // = before the certificate expires (< 90 days) =
     // ==============================================
-    // Obtain TLS/SSL certificate
-    let cert = gen_tls_cert(email, domain).unwrap();
-    let mut ssl_builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())
-        .unwrap();
+    // Obtain TLS certificate
+    let cert = gen_tls_cert(email, domain).await?;
+    let mut ssl_builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
+
     // Get and add private key
-    let pkey_der = PKey::private_key_from_der(
-        &cert.private_key_der().unwrap()
-    ).unwrap();
-    ssl_builder.set_private_key(&pkey_der).unwrap();
+    let pkey_der = PKey::private_key_from_der(&cert.private_key_der()?)?;
+    ssl_builder.set_private_key(&pkey_der)?;
+
     // Get and add certificate
-    let cert_der = X509::from_der(
-        &cert.certificate_der().unwrap()
-    ).unwrap();
-    ssl_builder.set_certificate(&cert_der).unwrap();
+    let cert_der = X509::from_der(&cert.certificate_der()?)?;
+    ssl_builder.set_certificate(&cert_der)?;
+
     // Get and add intermediate certificate to the chain
-    let icert_url =
-        "https://letsencrypt.org/certs/lets-encrypt-r3.der";
-    let icert_bytes = reqwest::blocking::get(icert_url)
-        .unwrap().bytes().unwrap();
-    let intermediate_cert = X509::from_der(&icert_bytes).unwrap();
-    ssl_builder.add_extra_chain_cert(intermediate_cert).unwrap();
+    let icert_url = "https://letsencrypt.org/certs/lets-encrypt-r3.der";
+    let icert_bytes = reqwest::get(icert_url).await?.bytes().await?;
+    let intermediate_cert = X509::from_der(&icert_bytes)?;
+    ssl_builder.add_extra_chain_cert(intermediate_cert)?;
+
     // NOTE:
     // Storing pkey_der, cert_der and intermediate_cert somewhere
     // (in order to avoid unnecessarily regeneration of TLS/SSL) is recommended
 
-    // Start server!
-    HttpServer::new(|| App::new().route("/", web::get().to(index)))
+    log::info!("starting HTTP server at http://localhost:443");
+
+    // Start HTTP server!
+    let srv = HttpServer::new(|| App::new().route("/", web::get().to(index)))
         .bind_openssl((domain, 443), ssl_builder)?
-        .run()
-        .await
+        .run();
+
+    let srv_handle = srv.handle();
+
+    let _auto_shutdown_task = rt::spawn(async move {
+        // Shutdown server every 4 weeks so that TLS certs can be regenerated if needed.
+        // This is only appropriate in contexts like Kubernetes which can orchestrate restarts.
+        rt::time::sleep(Duration::from_secs(60 * 60 * 24 * 28)).await;
+        srv_handle.stop(true).await;
+    });
+
+    srv.await?;
+
+    Ok(())
 }

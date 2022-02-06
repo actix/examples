@@ -39,6 +39,7 @@ members = [
    "security/awc_https",
    "security/casbin",
    "security/openssl",
+   "security/openssl-auto-le",
    "security/rustls-client-cert",
    "security/rustls",
    "security/web-cors/backend",

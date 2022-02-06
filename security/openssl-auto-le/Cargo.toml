@@ -1,16 +1,16 @@
 [package]
-name = "openssl-auto-le-example"
+name = "openssl-auto-le"
 version = "1.0.0"
 edition = "2021"
 
-[[bin]]
-name = "openssl-auto-le-server"
-path = "src/main.rs"
-
 [dependencies]
-actix-web = { version = "3", features = ["openssl"] }
-actix-files = "0.5.0"
+actix-web = { version = "4.0.0-rc.2", features = ["openssl"] }
+actix-files = "0.6.0-beta.16"
+
+acme-micro = "0.12"
+anyhow = "1"
+env_logger = "0.9"
+futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
+log = "0.4"
 openssl = { version = "0.10", features = ["v110"] }
-futures = "0.3.19"
-acme-micro = "0.12.0"
-reqwest = {version = "0.11.9", features = ["blocking"]}
+reqwest = "0.11"
