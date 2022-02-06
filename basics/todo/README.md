@@ -1,15 +1,12 @@
-# actix-todo
+# Todo
 
-A port of the [Rocket Todo example](https://github.com/SergioBenitez/Rocket/tree/master/examples/todo) into [actix-web](https://actix.rs/). Except this uses PostgreSQL instead of SQLite.
-
-# Usage
+A simple Todo project using a SQLite database.
 
 ## Prerequisites
 
-* Rust >= 1.26
-* PostgreSQL >= 9.5
+- SQLite 3
 
-## Change into the project sub-directory
+## Change Into This Project Sub Directory
 
 All instructions assume you have changed into this folder:
 
@@ -17,33 +14,35 @@ All instructions assume you have changed into this folder:
 cd basics/todo
 ```
 
-## Set up the database
+## Set Up The Database
 
-Install the [sqlx](https://github.com/launchbadge/sqlx) command-line tool including the `postgres` feature:
+Install the [sqlx](https://github.com/launchbadge/sqlx/tree/HEAD/sqlx-cli) command-line tool with the required features:
 
-```bash
-cargo install sqlx-cli --no-default-features --features postgres
-```
-
-Check the contents of the `.env` file. If your database requires a password, update `DATABASE_URL` to be of the form:
-
-```.env
-DATABASE_URL=postgres://username:password@localhost:5432/actix_todo
+```sh
+cargo install sqlx-cli --no-default-features --features=rustls,sqlite
 ```
 
 Then to create and set-up the database run:
 
-```bash
+```sh
 sqlx database create
 sqlx migrate run
 ```
 
-## Run the application
+## Run The Application
 
-To run the application execute:
+Start the application with:
 
-```bash
+```sh
 cargo run
 ```
 
-Then to view it in your browser navigate to: [http://localhost:8088/](http://localhost:8088/)
+The app will be viewable in the browser at <http://localhost:8080>.
+
+## Modifying The Example Database
+
+For simplicity, this example uses SQLx's offline mode. If you make any changes to the database schema, this must be turned off or the `sqlx-data.json` file regenerated using the following command:
+
+```sh
+DATABASE_URL="sqlite://$(pwd)/todo.db" cargo sqlx prepare
+```

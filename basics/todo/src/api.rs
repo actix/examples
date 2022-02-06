@@ -1,9 +1,10 @@
 use actix_files::NamedFile;
 use actix_session::Session;
-use actix_web::middleware::ErrorHandlerResponse;
-use actix_web::{dev, error, http, web, Error, HttpResponse, Result};
+use actix_web::{
+    dev, error, http, middleware::ErrorHandlerResponse, web, Error, HttpResponse, Result,
+};
 use serde::Deserialize;
-use sqlx::postgres::PgPool;
+use sqlx::SqlitePool;
 use tera::{Context, Tera};
 
 use crate::{
@@ -12,7 +13,7 @@ use crate::{
 };
 
 pub async fn index(
-    pool: web::Data<PgPool>,
+    pool: web::Data<SqlitePool>,
     tmpl: web::Data<Tera>,
     session: Session,
 ) -> Result<HttpResponse, Error> {
@@ -44,7 +45,7 @@ pub struct CreateForm {
 
 pub async fn create(
     params: web::Form<CreateForm>,
-    pool: web::Data<PgPool>,
+    pool: web::Data<SqlitePool>,
     session: Session,
 ) -> Result<HttpResponse, Error> {
     if params.description.is_empty() {
@@ -73,7 +74,7 @@ pub struct UpdateForm {
 }
 
 pub async fn update(
-    db: web::Data<PgPool>,
+    db: web::Data<SqlitePool>,
     params: web::Path<UpdateParams>,
     form: web::Form<UpdateForm>,
     session: Session,
@@ -89,7 +90,7 @@ pub async fn update(
 }
 
 async fn toggle(
-    pool: web::Data<PgPool>,
+    pool: web::Data<SqlitePool>,
     params: web::Path<UpdateParams>,
 ) -> Result<HttpResponse, Error> {
     db::toggle_task(params.id, &pool)
@@ -99,7 +100,7 @@ async fn toggle(
 }
 
 async fn delete(
-    pool: web::Data<PgPool>,
+    pool: web::Data<SqlitePool>,
     params: web::Path<UpdateParams>,
     session: Session,
 ) -> Result<HttpResponse, Error> {
