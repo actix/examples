@@ -14,7 +14,8 @@ members = [
    "basics/static_index",
    "basics/todo",
    "database_interactions/basic",
-   "database_interactions/diesel",
+   # example uses incompatible libsqlite-sys to other examples
+   # "database_interactions/diesel",
    "database_interactions/mongodb",
    "database_interactions/pg",
    "database_interactions/redis",

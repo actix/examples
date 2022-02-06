@@ -2255,24 +2255,8 @@ dependencies = [
  "byteorder",
  "chrono",
  "diesel_derives",
- "libsqlite3-sys 0.9.1",
  "pq-sys",
  "r2d2",
- "uuid",
-]
-
-[[package]]
-name = "diesel-example"
-version = "1.0.0"
-dependencies = [
- "actix-web 4.0.0-rc.2",
- "diesel",
- "dotenv",
- "env_logger 0.9.0",
- "failure",
- "futures",
- "serde 1.0.136",
- "serde_json",
  "uuid",
 ]
 
@@ -3473,16 +3457,6 @@ name = "libc"
 version = "0.2.116"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "565dbd88872dbe4cc8a46e527f26483c1d1f7afa6b884a3bd6cd893d4f98da74"
-
-[[package]]
-name = "libsqlite3-sys"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e9eb7b8e152b6a01be6a4a2917248381875758250dc3df5d46caf9250341dda"
-dependencies = [
- "pkg-config",
- "vcpkg",
-]
 
 [[package]]
 name = "libsqlite3-sys"
@@ -5053,7 +5027,7 @@ dependencies = [
  "fallible-iterator",
  "fallible-streaming-iterator",
  "hashlink",
- "libsqlite3-sys 0.23.2",
+ "libsqlite3-sys",
  "memchr",
  "smallvec",
 ]
@@ -5659,7 +5633,7 @@ dependencies = [
  "indexmap",
  "itoa 1.0.1",
  "libc",
- "libsqlite3-sys 0.23.2",
+ "libsqlite3-sys",
  "log",
  "memchr",
  "once_cell",
