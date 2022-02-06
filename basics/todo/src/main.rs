@@ -20,16 +20,14 @@ static SESSION_SIGNING_KEY: &[u8] = &[0; 32];
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     dotenv().ok();
-
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    println!("{}", database_url);
     let pool = db::init_pool(&database_url)
         .await
         .expect("Failed to create pool");
 
-    log::info!("starting HTTP serer at http://localhost:8088");
+    log::info!("starting HTTP serer at http://localhost:8080");
 
     HttpServer::new(move || {
         log::debug!("Constructing the App");
@@ -59,7 +57,8 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/todo/{id}").route(web::post().to(api::update)))
             .service(Files::new("/static", "./static/"))
     })
-    .bind(("127.0.0.1", 8088))?
+    .bind(("127.0.0.1", 8080))?
+    .workers(2)
     .run()
     .await
 }
