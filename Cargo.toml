@@ -17,7 +17,6 @@ members = [
    "database_interactions/diesel",
    "database_interactions/mongodb",
    "database_interactions/pg",
-   "database_interactions/r2d2",
    "database_interactions/redis",
    "database_interactions/simple-auth-server",
    "forms/form",

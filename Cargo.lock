@@ -1548,7 +1548,7 @@ dependencies = [
  "rand 0.7.3",
  "serde 1.0.136",
  "serde_json",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -1567,7 +1567,7 @@ dependencies = [
  "serde 1.0.136",
  "serde_bytes",
  "serde_json",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -2258,7 +2258,7 @@ dependencies = [
  "libsqlite3-sys 0.9.1",
  "pq-sys",
  "r2d2",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -2273,7 +2273,7 @@ dependencies = [
  "futures",
  "serde 1.0.136",
  "serde_json",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -3357,7 +3357,7 @@ dependencies = [
  "smartstring",
  "static_assertions 1.1.0",
  "url",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -3374,7 +3374,7 @@ dependencies = [
  "r2d2_mysql",
  "serde 1.0.136",
  "serde_json",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -3830,7 +3830,7 @@ dependencies = [
  "trust-dns-proto 0.20.4",
  "trust-dns-resolver 0.20.4",
  "typed-builder",
- "uuid 0.8.2",
+ "uuid",
  "version_check 0.9.4",
  "webpki 0.21.4",
  "webpki-roots 0.21.1",
@@ -3862,7 +3862,7 @@ dependencies = [
  "actix-web 4.0.0-rc.2",
  "futures-util",
  "sanitize-filename",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -3930,7 +3930,7 @@ dependencies = [
  "sha2 0.8.2",
  "time 0.1.43",
  "twox-hash",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -4620,18 +4620,6 @@ dependencies = [
  "log",
  "parking_lot",
  "scheduled-thread-pool",
-]
-
-[[package]]
-name = "r2d2-example"
-version = "1.0.0"
-dependencies = [
- "actix-web 4.0.0-rc.2",
- "env_logger 0.9.0",
- "r2d2",
- "r2d2_sqlite",
- "rusqlite",
- "uuid 1.0.0-alpha.1",
 ]
 
 [[package]]
@@ -5535,7 +5523,7 @@ dependencies = [
  "serde_json",
  "sparkpost",
  "time 0.3.7",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -6691,15 +6679,6 @@ checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
 dependencies = [
  "getrandom 0.2.4",
  "serde 1.0.136",
-]
-
-[[package]]
-name = "uuid"
-version = "1.0.0-alpha.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb3ab47baa004111b323696c6eaa2752e7356f7f77cf6b6dc7a2087368ce1ca4"
-dependencies = [
- "getrandom 0.2.4",
 ]
 
 [[package]]

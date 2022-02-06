@@ -26,7 +26,7 @@ pub fn insert_new_user(
     nm: &str,
     conn: &SqliteConnection,
 ) -> Result<models::User, DbError> {
-    // It is common when using Diesel with Actix web to import schema-related
+    // It is common when using Diesel with Actix Web to import schema-related
     // modules inside a function's scope (rather than the normal module's scope)
     // to prevent import collisions and namespace pollution.
     use crate::schema::users::dsl::*;
