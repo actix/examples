@@ -8,7 +8,7 @@ async fn index(req: HttpRequest) -> &'static str {
 }
 
 async fn run_app(tx: mpsc::Sender<ServerHandle>) -> std::io::Result<()> {
-    log::info!("starting HTTP serer at http://localhost:8080");
+    log::info!("starting HTTP server at http://localhost:8080");
 
     // srv is server controller type, `dev::Server`
     let server = HttpServer::new(|| {

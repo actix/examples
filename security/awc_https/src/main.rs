@@ -41,7 +41,7 @@ async fn main() -> std::io::Result<()> {
 
     let client_tls_config = Arc::new(rustls_config());
 
-    log::info!("starting HTTP serer at http://localhost:8080");
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         // create client _inside_ `HttpServer::new` closure to have one per worker thread

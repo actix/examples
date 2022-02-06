@@ -69,7 +69,7 @@ async fn main() -> std::io::Result<()> {
     let forward_url = Url::parse(&forward_url).unwrap();
 
     log::info!(
-        "starting HTTP serer at http://{}:{}",
+        "starting HTTP server at http://{}:{}",
         &args.listen_addr,
         args.listen_port
     );

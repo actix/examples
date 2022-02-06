@@ -1258,9 +1258,8 @@ version = "1.0.0"
 dependencies = [
  "actix-web 4.0.0-rc.2",
  "env_logger 0.9.0",
- "failure",
- "futures",
- "num_cpus",
+ "futures-util",
+ "log",
  "r2d2",
  "r2d2_sqlite",
  "rusqlite",
@@ -2256,7 +2255,7 @@ dependencies = [
  "byteorder",
  "chrono",
  "diesel_derives",
- "libsqlite3-sys",
+ "libsqlite3-sys 0.9.1",
  "pq-sys",
  "r2d2",
  "uuid 0.8.2",
@@ -2371,6 +2370,9 @@ name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
+dependencies = [
+ "serde 1.0.136",
+]
 
 [[package]]
 name = "encoding_rs"
@@ -2501,6 +2503,18 @@ dependencies = [
  "libc",
  "libz-sys",
  "miniz_oxide",
+]
+
+[[package]]
+name = "flume"
+version = "0.10.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d04dafd11240188e146b6f6476a898004cace3be31d4ec5e08e216bf4947ac0"
+dependencies = [
+ "futures-core",
+ "futures-sink",
+ "pin-project 1.0.10",
+ "spin 0.9.2",
 ]
 
 [[package]]
@@ -3462,9 +3476,19 @@ checksum = "565dbd88872dbe4cc8a46e527f26483c1d1f7afa6b884a3bd6cd893d4f98da74"
 
 [[package]]
 name = "libsqlite3-sys"
-version = "0.22.2"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "290b64917f8b0cb885d9de0f9959fe1f775d7fa12f1da2db9001c1c8ab60f89d"
+checksum = "0e9eb7b8e152b6a01be6a4a2917248381875758250dc3df5d46caf9250341dda"
+dependencies = [
+ "pkg-config",
+ "vcpkg",
+]
+
+[[package]]
+name = "libsqlite3-sys"
+version = "0.23.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2cafc7c74096c336d9d27145f7ebd4f4b6f95ba16aa5a282387267e6925cb58"
 dependencies = [
  "cc",
  "pkg-config",
@@ -4622,9 +4646,9 @@ dependencies = [
 
 [[package]]
 name = "r2d2_sqlite"
-version = "0.18.0"
+version = "0.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d24607049214c5e42d3df53ac1d8a23c34cc6a5eefe3122acb2c72174719959"
+checksum = "54ca3c9468a76fc2ad724c486a59682fc362efeac7b18d1c012958bc19f34800"
 dependencies = [
  "r2d2",
  "rusqlite",
@@ -5033,15 +5057,15 @@ dependencies = [
 
 [[package]]
 name = "rusqlite"
-version = "0.25.4"
+version = "0.26.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c4b1eaf239b47034fb450ee9cdedd7d0226571689d8823030c4b6c2cb407152"
+checksum = "4ba4d3462c8b2e4d7f4fcfcf2b296dc6b65404fbbc7b63daa37fd485c149daf7"
 dependencies = [
  "bitflags",
  "fallible-iterator",
  "fallible-streaming-iterator",
  "hashlink",
- "libsqlite3-sys",
+ "libsqlite3-sys 0.23.2",
  "memchr",
  "smallvec",
 ]
@@ -5595,6 +5619,9 @@ name = "spin"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "511254be0c5bcf062b019a6c89c01a664aa359ded62f78aa72c6fc137c0590e5"
+dependencies = [
+ "lock_api",
+]
 
 [[package]]
 name = "sqlformat"
@@ -5609,9 +5636,9 @@ dependencies = [
 
 [[package]]
 name = "sqlx"
-version = "0.5.9"
+version = "0.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7911b0031a0247af40095838002999c7a52fba29d9739e93326e71a5a1bc9d43"
+checksum = "692749de69603d81e016212199d73a2e14ee20e2def7d7914919e8db5d4d48b9"
 dependencies = [
  "sqlx-core",
  "sqlx-macros",
@@ -5619,9 +5646,9 @@ dependencies = [
 
 [[package]]
 name = "sqlx-core"
-version = "0.5.9"
+version = "0.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aec89bfaca8f7737439bad16d52b07f1ccd0730520d3bf6ae9d069fe4b641fb1"
+checksum = "518be6f6fff5ca76f985d434f9c37f3662af279642acf730388f271dff7b9016"
 dependencies = [
  "ahash",
  "atoi",
@@ -5633,22 +5660,25 @@ dependencies = [
  "crossbeam-queue",
  "crossbeam-utils 0.8.6",
  "either",
+ "flume",
  "futures-channel",
  "futures-core",
+ "futures-executor",
  "futures-intrusive",
  "futures-util",
  "hashlink",
  "hex",
  "indexmap",
- "itoa 0.4.8",
+ "itoa 1.0.1",
  "libc",
- "libsqlite3-sys",
+ "libsqlite3-sys 0.23.2",
  "log",
  "memchr",
  "once_cell",
  "parking_lot",
  "percent-encoding",
  "rustls 0.19.1",
+ "serde 1.0.136",
  "sha2 0.9.9",
  "smallvec",
  "sqlformat",
@@ -5659,21 +5689,23 @@ dependencies = [
  "url",
  "webpki 0.21.4",
  "webpki-roots 0.21.1",
- "whoami",
 ]
 
 [[package]]
 name = "sqlx-macros"
-version = "0.5.9"
+version = "0.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "584866c833511b1a152e87a7ee20dee2739746f60c858b3c5209150bc4b466f5"
+checksum = "38e45140529cf1f90a5e1c2e561500ca345821a1c513652c8f486bbf07407cc8"
 dependencies = [
  "dotenv",
  "either",
  "heck 0.3.3",
+ "hex",
  "once_cell",
  "proc-macro2",
  "quote",
+ "serde 1.0.136",
+ "serde_json",
  "sha2 0.9.9",
  "sqlx-core",
  "sqlx-rt",
@@ -5687,25 +5719,9 @@ version = "0.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8061cbaa91ee75041514f67a09398c65a64efed72c90151ecd47593bad53da99"
 dependencies = [
- "actix-rt 2.6.0",
  "once_cell",
  "tokio 1.16.1",
  "tokio-rustls 0.22.0",
-]
-
-[[package]]
-name = "sqlx_todo"
-version = "1.0.0"
-dependencies = [
- "actix-web 4.0.0-rc.2",
- "anyhow",
- "dotenv",
- "env_logger 0.9.0",
- "futures",
- "log",
- "serde 1.0.136",
- "serde_json",
- "sqlx",
 ]
 
 [[package]]
@@ -6124,13 +6140,13 @@ dependencies = [
  "actix-files 0.6.0-beta.16",
  "actix-session 0.5.0-beta.7",
  "actix-web 4.0.0-rc.2",
- "diesel",
  "dotenv",
  "env_logger 0.9.0",
- "futures",
+ "futures-util",
  "log",
  "serde 1.0.136",
  "serde_json",
+ "sqlx",
  "tera",
 ]
 
@@ -7068,16 +7084,6 @@ dependencies = [
  "serde_json",
  "tokio 0.2.25",
  "tokio-util 0.3.1",
-]
-
-[[package]]
-name = "whoami"
-version = "1.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "524b58fa5a20a2fb3014dd6358b70e6579692a56ef6fce928834e488f42f65e8"
-dependencies = [
- "wasm-bindgen",
- "web-sys",
 ]
 
 [[package]]
