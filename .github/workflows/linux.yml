@@ -36,14 +36,14 @@ jobs:
       - name: Cache Dependencies
         uses: Swatinem/rust-cache@v1.2.0
 
-      - name: create test db for sqlx
+      - name: Create test DBs
         run: |
           sudo apt-get update && sudo apt-get install sqlite3
           cargo install sqlx-cli --no-default-features --features=rustls,sqlite
           cd basics/todo
-          sqlx database create
+          DATABASE_URL="sqlite://./todo.db" sqlx database create
           chmod a+rwx todo.db
-          sqlx migrate run
+          DATABASE_URL="sqlite://./todo.db" sqlx migrate run
 
       - name: cargo check
         uses: actions-rs/cargo@v1
