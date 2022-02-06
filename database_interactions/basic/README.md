@@ -1,4 +1,4 @@
-Getting started using databases with Actix web, asynchronously.
+Getting started using databases with Actix Web, asynchronously.
 
 ## Usage
 

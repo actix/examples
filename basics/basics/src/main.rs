@@ -84,7 +84,7 @@ async fn main() -> io::Result<()> {
             .wrap(middleware::Compress::default())
             // cookie session middleware
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
-            // enable logger - always register actix-web Logger middleware last
+            // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             // register favicon
             .service(favicon)

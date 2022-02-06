@@ -1,4 +1,4 @@
-People developing rbatis have an example on usage with actix-web.
+People developing rbatis have an example on usage with Actix Web.
 <br/>
 You can find the example in the [rbatis/example/src/actix_web](https://github.com/rbatis/rbatis/blob/master/example/src/actix_web/main.rs) directory.
 <br/>
