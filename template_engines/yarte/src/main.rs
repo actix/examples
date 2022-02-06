@@ -43,10 +43,10 @@ mod test {
 
     #[actix_web::test]
     async fn test() {
-        let mut app = atest::init_service(App::new().service(index)).await;
+        let app = atest::init_service(App::new().service(index)).await;
 
         let req = atest::TestRequest::with_uri("/").to_request();
-        let resp = atest::call_service(&mut app, req).await;
+        let resp = atest::call_service(&app, req).await;
 
         assert!(resp.status().is_success());
 
@@ -60,7 +60,7 @@ mod test {
             bytes,
             Bytes::from_static(
                 "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Actix \
-                 web</title></head><body><h1 id=\"welcome\" \
+                 Web</title></head><body><h1 id=\"welcome\" \
                  class=\"welcome\">Welcome!</h1><div><h3>What is your name?</h3><form>Name: \
                  <input type=\"text\" name=\"name\"><br>Last name: <input type=\"text\" \
                  name=\"lastname\"><br><p><input type=\"submit\"></p></form></div></body></html>"
@@ -69,7 +69,7 @@ mod test {
         );
 
         let req = atest::TestRequest::with_uri("/?name=foo&lastname=bar").to_request();
-        let resp = atest::call_service(&mut app, req).await;
+        let resp = atest::call_service(&app, req).await;
 
         assert!(resp.status().is_success());
 
@@ -90,7 +90,7 @@ mod test {
         );
 
         let req = atest::TestRequest::with_uri("/?name=foo").to_request();
-        let resp = atest::call_service(&mut app, req).await;
+        let resp = atest::call_service(&app, req).await;
 
         assert!(resp.status().is_server_error());
 
@@ -99,7 +99,7 @@ mod test {
         assert_eq!(bytes, Bytes::from_static("Bad query".as_ref()));
 
         let req = atest::TestRequest::with_uri("/?lastname=bar").to_request();
-        let resp = atest::call_service(&mut app, req).await;
+        let resp = atest::call_service(&app, req).await;
 
         assert!(resp.status().is_success());
 

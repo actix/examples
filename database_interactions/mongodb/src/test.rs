@@ -22,7 +22,7 @@ async fn test() {
         .await
         .expect("drop collection should succeed");
 
-    let mut app = init_service(
+    let app = init_service(
         App::new()
             .app_data(web::Data::new(client))
             .service(add_user)
@@ -42,13 +42,13 @@ async fn test() {
         .set_form(&user)
         .to_request();
 
-    let response = call_and_read_body(&mut app, req).await;
+    let response = call_and_read_body(&app, req).await;
     assert_eq!(response, Bytes::from_static(b"user added"));
 
     let req = TestRequest::get()
         .uri(&format!("/get_user/{}", &user.username))
         .to_request();
 
-    let response: User = call_and_read_body_json(&mut app, req).await;
+    let response: User = call_and_read_body_json(&app, req).await;
     assert_eq!(response, user);
 }
