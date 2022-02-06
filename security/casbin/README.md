@@ -1,6 +1,6 @@
 # Casbin
 
-Basic integration of [Casbin-RS](https://github.com/casbin/casbin-rs) with [RBAC](https://en.wikipedia.org/wiki/Role-based_access_control) for Actix web.
+Basic integration of [Casbin-RS](https://github.com/casbin/casbin-rs) with [RBAC](https://en.wikipedia.org/wiki/Role-based_access_control) for Actix Web.
 
 ## Usage
 

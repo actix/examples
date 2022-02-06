@@ -1,4 +1,4 @@
-//! Actix web Diesel integration example
+//! Actix Web Diesel integration example
 //!
 //! Diesel does not support tokio, so we have to run it in separate threads using the web::block
 //! function which offloads blocking code (like Diesel's) in order to not block the server's thread.

@@ -1,6 +1,6 @@
 # json
 
-Json's `Getting Started` guide using json (serde-json or json-rust) for Actix web
+Json's `Getting Started` guide using json (serde-json or json-rust) for Actix Web
 
 ## Usage
 

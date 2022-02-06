@@ -1,6 +1,6 @@
 # diesel
 
-Basic integration of [Diesel](https://diesel.rs/) using SQLite for Actix web.
+Basic integration of [Diesel](https://diesel.rs/) using SQLite for Actix Web.
 
 ## Usage
 
