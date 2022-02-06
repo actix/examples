@@ -27,7 +27,7 @@ async fn main() -> io::Result<()> {
         .await
         .expect("Failed to create pool");
 
-    log::info!("starting HTTP serer at http://localhost:8080");
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         log::debug!("Constructing the App");
