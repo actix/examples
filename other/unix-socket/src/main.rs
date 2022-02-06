@@ -12,7 +12,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            // enable logger - always register actix-web Logger middleware last
+            // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(
                 web::resource("/index.html")

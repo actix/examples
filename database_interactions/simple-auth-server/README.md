@@ -1,4 +1,4 @@
-## Auth Web Microservice with rust using Actix-Web 1.0
+## Auth Web Microservice with Rust using Actix Web
 
 ### Flow of the event would look like this:
 

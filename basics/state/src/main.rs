@@ -10,7 +10,7 @@
 //!
 //! We retrieve our app state within our handlers with a `state: Data<...>` argument.
 //!
-//! By default, `actix-web` runs one [`App`] per logical cpu core.
+//! By default, Actix Web runs one [`App`] per logical cpu core.
 //! When running on `<N>` cores, we see that the example will increment `counter_mutex` (global state via
 //! Mutex) and `counter_atomic` (global state via Atomic variable) each time the endpoint is called,
 //! but only appear to increment `counter_cell` every Nth time on average (thread-local state). This

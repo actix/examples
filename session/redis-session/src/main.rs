@@ -85,7 +85,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             // redis session middleware
             .wrap(RedisSession::new("127.0.0.1:6379", &private_key.master()))
-            // enable logger - always register actix-web Logger middleware last
+            // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(resource("/").route(get().to(index)))
             .service(resource("/do_something").route(post().to(do_something)))
