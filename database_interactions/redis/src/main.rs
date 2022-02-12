@@ -34,8 +34,14 @@ async fn cache_stuff(
             .await
             .into_iter()
             .map(|item| {
-                item.map_err(AWError::from)
-                    .and_then(|res| res.map_err(AWError::from))
+                item.map_err(|e| {
+                    let error = actix_web::error::InternalError::from_response(
+                        e,
+                        HttpResponse::InternalServerError().finish(),
+                    );
+                    AWError::from(error)
+                })
+                .and_then(|res| res.map_err(AWError::from))
             })
             .collect();
 
@@ -58,7 +64,14 @@ async fn del_stuff(redis: web::Data<Addr<RedisActor>>) -> Result<HttpResponse, A
             "mydomain:two",
             "mydomain:three"
         ]))
-        .await?;
+        .await
+        .map_err(|e| {
+            let error = actix_web::error::InternalError::from_response(
+                e,
+                HttpResponse::InternalServerError().finish(),
+            );
+            AWError::from(error)
+        })?;
 
     match res {
         Ok(RespValue::Integer(x)) if x == 3 => {
@@ -80,7 +93,7 @@ async fn main() -> std::io::Result<()> {
         let redis_addr = RedisActor::start("127.0.0.1:6379");
 
         App::new()
-            .data(redis_addr)
+            .app_data(web::Data::new(redis_addr))
             .wrap(middleware::Logger::default())
             .service(
                 web::resource("/stuff")
