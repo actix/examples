@@ -1,6 +1,6 @@
 const http = require('http')
 
-let drop_goal = 100_000;
+let drop_goal = 5_000;
 let dropped = 0;
 
 let query = {

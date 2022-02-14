@@ -15,7 +15,7 @@ curl 127.0.0.1:8080/broadcast/my_message
 *my_message* should appear in the browser with a timestamp.
 
 ## Performance
-This implementation serve thousands of clients on a 2021 macbook with no problems.
+This implementation can serve thousands of clients on a 2021 MacBook with no problems.
 
 Run [benchmark.js](benchmark.js) to benchmark your own system:
 

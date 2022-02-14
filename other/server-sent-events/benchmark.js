@@ -1,6 +1,6 @@
 const http = require('http')
 
-const n = 1000;
+const n = 120;
 let connected = 0;
 let messages = 0;
 let start = Date.now();
@@ -8,7 +8,7 @@ let phase = 'connecting';
 let connection_time;
 let broadcast_time;
 
-let message = process.argv[2] || 'msg';
+let message = process.argv[2] || 'msg';
 let expected_data = "data: " + message;
 
 for (let i = 0; i < n; i++) {
