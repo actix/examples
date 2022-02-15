@@ -1,10 +1,10 @@
 const http = require('http')
 
-let drop_goal = 10_000;
+let drop_goal = 5_000;
 let dropped = 0;
 
 let query = {
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 8080,
     path: '/events'
 }
@@ -25,7 +25,7 @@ setInterval(() => {
 }, 1)
 
 setInterval(() => {
-    http.get('http://localhost:8080/', () => print_status(true))
+    http.get('http://127.0.0.1:8080/', () => print_status(true))
         .setTimeout(100, () => print_status(false))
         .on('error', () => {})
 }, 20)

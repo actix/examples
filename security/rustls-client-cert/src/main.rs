@@ -1,12 +1,12 @@
 //! This example shows how to use `actix_web::HttpServer::on_connect` to access client certificates
-//! pass them to a handler through request-local data.
+//! pass them to a handler through connection-local data.
 
 use std::{any::Any, env, fs::File, io::BufReader, net::SocketAddr};
 
-use actix_tls::accept::rustls::reexports::ServerConfig;
-use actix_tls::accept::rustls::TlsStream;
+use actix_tls::accept::rustls::{reexports::ServerConfig, TlsStream};
 use actix_web::{
-    dev::Extensions, rt::net::TcpStream, web, App, HttpResponse, HttpServer, Responder,
+    dev::Extensions, rt::net::TcpStream, web, App, HttpRequest, HttpResponse,
+    HttpServer, Responder,
 };
 use log::info;
 use rustls::{
@@ -27,10 +27,10 @@ struct ConnectionInfo {
     ttl: Option<u32>,
 }
 
-async fn route_whoami(
-    conn_info: web::ReqData<ConnectionInfo>,
-    client_cert: Option<web::ReqData<Certificate>>,
-) -> impl Responder {
+async fn route_whoami(req: HttpRequest) -> impl Responder {
+    let conn_info = req.conn_data::<ConnectionInfo>().unwrap();
+    let client_cert = req.conn_data::<Certificate>();
+
     if let Some(cert) = client_cert {
         HttpResponse::Ok().body(format!("{:?}\n\n{:?}", &conn_info, &cert))
     } else {

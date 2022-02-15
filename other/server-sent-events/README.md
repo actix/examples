@@ -6,22 +6,22 @@ cd other/server-sent-events
 cargo run
 ```
 
-Open http://localhost:8080/ with a browser, then send events with another HTTP client:
+Open http://127.0.0.1:8080/ with a browser, then send events with another HTTP client:
 
 ```sh
-curl localhost:8080/broadcast/my_message
+curl 127.0.0.1:8080/broadcast/my_message
 ```
 
 *my_message* should appear in the browser with a timestamp.
 
 ## Performance
-This implementation serve thousands of clients on a 2013 macbook air without problems.
+This implementation can serve thousands of clients on a 2021 MacBook with no problems.
 
 Run [benchmark.js](benchmark.js) to benchmark your own system:
 
 ```sh
 $ node benchmark.js
-Connected: 1000, connection time: 867 ms, total broadcast time: 23 ms^C⏎
+Connected: 1000, connection time: 201 ms, total broadcast time: 20 ms^C⏎
 ```
 
 ### Error *Too many open files*
@@ -35,7 +35,7 @@ Test maximum number of open connections with [drain.js](drain.js):
 
 ```sh
 $ node drain.js
-Connections dropped: 5957, accepting connections: false^C⏎
+Connections dropped: 10450, accepting connections: false^C⏎
 ```
 
 _Accepting connections_ indicates whether resources for the server have been exhausted.
