@@ -61,5 +61,5 @@ At any time, verify the contents of Redis using its CLI:
 echo "MGET mydomain:one mydomain:two mydomain:three" | redis-cli
 ```
 
-[httpie]: https://httpie.org
-[curl]: https://curl.haxx.se
+[HTTPie]: https://httpie.org
+[cURL]: https://curl.haxx.se
