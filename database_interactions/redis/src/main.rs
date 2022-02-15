@@ -28,7 +28,7 @@ async fn cache_stuff(
     // all other futures will be canceled and an error will be returned immediately. If all futures
     // complete successfully, however, then the returned future will succeed with a `Vec` of all the
     // successful results.
-    let res = try_join_all(vec![one, two, three].into_iter())
+    let res = try_join_all([one, two, three])
         .await
         .map_err(error::ErrorInternalServerError)?
         .into_iter()
