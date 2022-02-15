@@ -7,11 +7,8 @@ edition = "2021"
 actix = "0.12"
 actix-web = "4.0.0-rc.3"
 actix-redis = "0.10.0-beta.6"
-futures = "0.3"
+futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
+log = "0.4"
+redis-async = { version = "0.8", default_features = false, features = ["tokio10"] }
 serde = { version = "1", features = ["derive"] }
 env_logger = "0.9"
-
-[dependencies.redis-async]
-version = "0.8.1"
-default_features = false
-features = ["tokio10"]
