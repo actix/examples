@@ -14,17 +14,19 @@ path = "src/client.rs"
 
 [dependencies]
 actix = "0.12"
-actix-web = "4.0.0-beta.15"
-actix-web-actors = "4.0.0-beta.8"
-actix-files = "0.6.0-beta.10"
 actix-codec = "0.4.1"
+actix-files = "0.6.0-beta.16"
+actix-web = "4.0.0-rc.3"
+actix-web-actors = "4.0.0-beta.11"
 
-rand = "0.7"
-bytes = "0.5.3"
 byteorder = "1.2"
+bytes = "1"
+env_logger = "0.9"
 futures = "0.3"
-env_logger = "0.8"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-tokio = "1"
-tokio-util = "0.6.9"
+log = "0.4"
+rand = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.6", features = ["codec"] }
+tokio-stream = "0.1.8"

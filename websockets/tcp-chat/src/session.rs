@@ -1,18 +1,23 @@
 //! `ClientSession` is an actor, it manages peer tcp connection and
 //! proxies commands from peer to `ChatServer`.
-use std::str::FromStr;
-use std::time::{Duration, Instant};
-use std::{io, net};
 
-use futures::StreamExt;
-use tokio::io::{AsyncReadExt, split, WriteHalf};
-use tokio::net::{TcpListener, TcpStream};
+use std::{
+    io, net,
+    str::FromStr,
+    time::{Duration, Instant},
+};
+
+use actix::{prelude::*, spawn};
+use tokio::{
+    io::{split, WriteHalf},
+    net::{TcpListener, TcpStream},
+};
 use tokio_util::codec::FramedRead;
 
-use actix::prelude::*;
-
-use crate::codec::{ChatCodec, ChatRequest, ChatResponse};
-use crate::server::{self, ChatServer};
+use crate::{
+    codec::{ChatCodec, ChatRequest, ChatResponse},
+    server::{self, ChatServer},
+};
 
 /// Chat server sends this messages to session
 #[derive(Message)]
@@ -170,24 +175,21 @@ impl ChatSession {
     }
 }
 
-/// Define tcp server that will accept incoming tcp connection and create
+/// Define TCP server that will accept incoming TCP connection and create
 /// chat actors.
 pub fn tcp_server(_s: &str, server: Addr<ChatServer>) {
     // Create server listener
     let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
 
-    actix_web::rt::spawn(async move {
-        let server = server.clone();
-        let mut listener = TcpListener::bind(&addr).await.unwrap();
+    spawn(async move {
+        let listener = TcpListener::bind(&addr).await.unwrap();
+
         while let Ok((stream, _)) = listener.accept().await {
             let server = server.clone();
             ChatSession::create(|ctx| {
                 let (r, w) = split(stream);
                 ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
-                ChatSession::new(
-                    server,
-                    actix::io::FramedWrite::new(w, ChatCodec, ctx),
-                )
+                ChatSession::new(server, actix::io::FramedWrite::new(w, ChatCodec, ctx))
             });
         }
     });
