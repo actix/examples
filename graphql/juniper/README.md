@@ -1,4 +1,4 @@
-# Juniper
+# GraphQL using Juniper
 
 [Juniper](https://github.com/graphql-rust/juniper) integration for Actix Web.
 If you want more advanced example, see also the [juniper-advanced example].

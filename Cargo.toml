@@ -23,7 +23,7 @@ members = [
    "forms/form",
    "forms/multipart-s3",
    "forms/multipart",
-   "graphql/graphql-demo",
+   "graphql/async-graphql",
    "graphql/juniper-advanced",
    "graphql/juniper",
    "json/json_decode_error",

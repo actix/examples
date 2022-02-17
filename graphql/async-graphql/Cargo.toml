@@ -1,0 +1,16 @@
+[package]
+name = "async-graphql-demo"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.0.0-rc.3"
+actix-web-lab = "0.10"
+actix-cors = "0.6.0-beta.10"
+
+async-graphql = "3"
+async-graphql-actix-web = "3"
+
+env_logger = "0.9"
+log = "0.4"
+slab = "0.4.2"

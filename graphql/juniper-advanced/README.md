@@ -1,4 +1,4 @@
-# juniper-advanced
+# GraphQL using Juniper and MySQL
 
 GraphQL Implementation in Rust using Actix, Juniper, and MySQL as Database
 

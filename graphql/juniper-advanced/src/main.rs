@@ -18,7 +18,7 @@ async fn main() -> std::io::Result<()> {
     let pool = get_db_pool();
 
     log::info!("starting HTTP server on port 8080");
-    log::info!("the GraphiQL interface HTTP server at http://localhost:8080/graphiql");
+    log::info!("GraphiQL playground: http://localhost:8080/graphiql");
 
     HttpServer::new(move || {
         App::new()
