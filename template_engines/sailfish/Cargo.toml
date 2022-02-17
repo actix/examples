@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "3"
+actix-web = "4.0.0-rc.3"
 sailfish = "0.3.4"
