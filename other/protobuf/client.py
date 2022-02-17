@@ -48,7 +48,7 @@ async def fetch(session):
     obj = test_pb2.MyObj()
     obj.number = 9
     obj.name = 'USB'
-    async with session.post('http://127.0.0.1:8081/', data=obj.SerializeToString(),
+    async with session.post('http://127.0.0.1:8080/', data=obj.SerializeToString(),
         headers={"content-type": "application/protobuf"}) as resp:
         print(resp.status)
         data = await resp.read()

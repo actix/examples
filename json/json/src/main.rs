@@ -78,7 +78,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/mjsonrust").route(web::post().to(index_mjsonrust)))
             .service(web::resource("/").route(web::post().to(index)))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

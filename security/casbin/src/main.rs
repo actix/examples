@@ -49,7 +49,7 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/success").to(success))
             .service(web::resource("/fail").to(fail))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

@@ -36,7 +36,7 @@ async fn main() -> std::io::Result<()> {
                 "Hello, middleware! Check the console where the server is run."
             }))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

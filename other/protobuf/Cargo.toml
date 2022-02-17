@@ -4,11 +4,10 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix = "0.10"
-actix-protobuf = "0.6"
-actix-web = "3"
-
-bytes = "0.5.4"
+actix = "0.12"
+actix-protobuf = "0.7.0-beta.5"
+actix-web = "4.0.0-rc.3"
 env_logger = "0.9"
-prost = "0.6"
-prost-derive = "0.6"
+log = "0.4"
+prost = "0.9"
+prost-derive = "0.9"

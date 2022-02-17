@@ -92,7 +92,7 @@ async fn main() -> std::io::Result<()> {
             .service(resource("/login").route(post().to(login)))
             .service(resource("/logout").route(post().to(logout)))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

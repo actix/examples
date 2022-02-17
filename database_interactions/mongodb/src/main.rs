@@ -71,7 +71,7 @@ async fn main() -> std::io::Result<()> {
             .service(add_user)
             .service(get_user)
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

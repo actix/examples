@@ -18,7 +18,7 @@ async fn main() -> std::io::Result<()> {
             // path then the service for the static images would never be reached.
             .service(Files::new("/", "./static/root/").index_file("index.html"))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

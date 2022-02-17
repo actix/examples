@@ -52,7 +52,7 @@ async fn main() -> io::Result<()> {
             .service(index)
             .service(user)
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

@@ -48,7 +48,7 @@ async fn main() -> std::io::Result<()> {
             .service(pool_shared_prebuilt)
             .service(pool_local)
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

@@ -426,13 +426,11 @@ dependencies = [
 
 [[package]]
 name = "actix-protobuf"
-version = "0.6.0"
+version = "0.7.0-beta.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af362615b2f93a278580d218b6485cb2afa4e7a22cbc9ab36e44ba3d79c66967"
+checksum = "c142e6182e45703d7197aaeb1e0096b21e9abe9626836b50eab6899d2f753bac"
 dependencies = [
- "actix-rt 1.1.1",
- "actix-web 3.3.3",
- "bytes 0.5.6",
+ "actix-web 4.0.0-rc.3",
  "derive_more",
  "futures-util",
  "prost",
@@ -3209,15 +3207,6 @@ checksum = "68f2d64f2edebec4ce84ad108148e67e1064789bee435edc5b60ad398714a3a9"
 
 [[package]]
 name = "itertools"
-version = "0.8.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f56a2d0bc861f9165be4eb3442afd3c236d8a98afd426f65d92324ae1091a484"
-dependencies = [
- "either",
-]
-
-[[package]]
-name = "itertools"
 version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a9a9d19fa1e79b6215ff29b9d6880b706147f16e9b1dbb1e4e5947b5b02bc5e3"
@@ -4547,22 +4536,22 @@ dependencies = [
 
 [[package]]
 name = "prost"
-version = "0.6.1"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce49aefe0a6144a45de32927c77bd2859a5f7677b55f220ae5b744e87389c212"
+checksum = "444879275cb4fd84958b1a1d5420d15e6fcf7c235fe47f053c9c2a80aceb6001"
 dependencies = [
- "bytes 0.5.6",
+ "bytes 1.1.0",
  "prost-derive",
 ]
 
 [[package]]
 name = "prost-derive"
-version = "0.6.1"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "537aa19b95acde10a12fec4301466386f757403de4cd4e5b4fa78fb5ecb18f72"
+checksum = "f9cc1a3263e07e0bf68e96268f37665207b49560d98739662cdfaae215c720fe"
 dependencies = [
  "anyhow",
- "itertools 0.8.2",
+ "itertools",
  "proc-macro2",
  "quote",
  "syn",
@@ -4572,11 +4561,11 @@ dependencies = [
 name = "protobuf-example"
 version = "1.0.0"
 dependencies = [
- "actix 0.10.0",
+ "actix 0.12.0",
  "actix-protobuf",
- "actix-web 3.3.3",
- "bytes 0.5.6",
+ "actix-web 4.0.0-rc.3",
  "env_logger 0.9.0",
+ "log",
  "prost",
  "prost-derive",
 ]
@@ -5684,7 +5673,7 @@ version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4b7922be017ee70900be125523f38bdd644f4f06a1b16e8fa5a8ee8c34bffd4"
 dependencies = [
- "itertools 0.10.3",
+ "itertools",
  "nom 7.1.0",
  "unicode_categories",
 ]

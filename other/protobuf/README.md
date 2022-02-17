@@ -6,10 +6,6 @@
 
 ```shell
 cd other/protobuf
-# From workspace
-cargo run --bin protobuf-example
-
-# From ./protobuf
 cargo run
 ```
 
@@ -25,5 +21,6 @@ pip3 install --upgrade pip
 pip3 install aiohttp
 
 # Client
+cd ../..
 python3 client.py
 ```

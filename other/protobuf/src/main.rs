@@ -14,22 +14,23 @@ pub struct MyObj {
 }
 
 async fn index(msg: ProtoBuf<MyObj>) -> Result<HttpResponse> {
-    println!("model: {:?}", msg);
+    log::info!("model: {:?}", msg);
     HttpResponse::Ok().protobuf(msg.0) // <- send response
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=debug,actix_server=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()
-            .wrap(middleware::Logger::default())
             .service(web::resource("/").route(web::post().to(index)))
+            .wrap(middleware::Logger::default())
     })
-    .bind("127.0.0.1:8081")?
-    .shutdown_timeout(1)
+    .workers(1)
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

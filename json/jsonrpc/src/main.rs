@@ -159,7 +159,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .service(web::resource("/").route(web::post().to(rpc_handler)))
     })
-    .bind("127.0.0.1:8080")
+    .bind(("127.0.0.1", 8080))
     .unwrap()
     .run()
     .await

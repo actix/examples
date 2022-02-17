@@ -76,7 +76,7 @@ async fn main() -> io::Result<()> {
             // register simple handler
             .service(web::resource("/").to(index))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

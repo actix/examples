@@ -23,7 +23,7 @@ async fn main() -> std::io::Result<()> {
     // create a channel
     let (tx, rx) = mpsc::channel::<()>();
 
-    let bind = "127.0.0.1:8080";
+    let bind = ("127.0.0.1", 8080);
 
     // start server as normal but don't .await after .run() yet
     let server = HttpServer::new(move || {

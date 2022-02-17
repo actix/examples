@@ -22,7 +22,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
         .init();
 
-    let addr = "127.0.0.1:8080";
+    let addr = ("127.0.0.1", 8080);
 
     let srv = HttpServer::new(move || {
         App::new()
