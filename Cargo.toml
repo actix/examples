@@ -51,6 +51,7 @@ members = [
    "template_engines/tera",
    "template_engines/tinytemplate",
    "template_engines/yarte",
+   "template_engines/sailfish",
    "websockets/autobahn",
    "websockets/chat-broker",
    "websockets/chat",
