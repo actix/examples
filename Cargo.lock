@@ -856,6 +856,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-web-lab"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2cd7a15518fb68eb657abc5b6b16c387f99b6db7f549f4884c72d05165139b8"
+dependencies = [
+ "actix-files 0.6.0-beta.16",
+ "actix-http 3.0.0-rc.3",
+ "actix-service 2.0.2",
+ "actix-utils 3.0.0",
+ "actix-web 4.0.0-rc.3",
+ "bytes 1.1.0",
+ "csv",
+ "derive_more",
+ "digest 0.10.3",
+ "futures-core",
+ "futures-util",
+ "hmac 0.12.1",
+ "local-channel",
+ "log",
+ "mime",
+ "once_cell",
+ "pin-project-lite 0.2.8",
+ "serde 1.0.136",
+ "serde_json",
+ "serde_urlencoded",
+ "tokio 1.17.0",
+]
+
+[[package]]
 name = "actix_derive"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1546,7 +1575,10 @@ version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba3569f383e8f1598449f1a423e72e99569137b47740b1da11ef19af3d5c3223"
 dependencies = [
+ "lazy_static",
  "memchr",
+ "regex-automata",
+ "serde 1.0.136",
 ]
 
 [[package]]
@@ -2035,6 +2067,28 @@ checksum = "b1d1a86f49236c215f271d40892d5fc950490551400b02ef360692c29815c714"
 dependencies = [
  "generic-array 0.14.5",
  "subtle",
+]
+
+[[package]]
+name = "csv"
+version = "1.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "22813a6dc45b335f9bade10bf7271dc477e81113e89eb251a0bc2a8a81c536e1"
+dependencies = [
+ "bstr",
+ "csv-core",
+ "itoa 0.4.8",
+ "ryu",
+ "serde 1.0.136",
+]
+
+[[package]]
+name = "csv-core"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b2466559f260f48ad25fe6317b3c8dac77b5bdb5763ac7d9d6103530663bc90"
+dependencies = [
+ "memchr",
 ]
 
 [[package]]
@@ -4772,6 +4826,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "regex-automata"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c230d73fb8d8c1b9c0b3135c5142a8acee3a0558fb8db5cf1cb65f8d7862132"
+
+[[package]]
 name = "regex-syntax"
 version = "0.6.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5945,6 +6005,9 @@ name = "template_sailfish"
 version = "0.1.0"
 dependencies = [
  "actix-web 4.0.0-rc.3",
+ "actix-web-lab",
+ "env_logger 0.9.0",
+ "log",
  "sailfish",
 ]
 

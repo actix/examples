@@ -5,4 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-rc.3"
-sailfish = "0.3.4"
+actix-web-lab = "0.10"
+env_logger = "0.9"
+log = "0.4"
+sailfish = "0.3"

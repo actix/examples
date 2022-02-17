@@ -1,11 +1,15 @@
 # Handlebars
 
-This is an example of how to use Actix Web with the [Handlebars templating language](https://crates.io/crates/handlebars), which is currently the most popular crate that achieves this. After starting the server with `cargo run`, you may visit the following pages:
+This is an example of how to use Actix Web with the [Handlebars](https://crates.io/crates/handlebars) templating language, which is currently the most popular crate that achieves this.
+
+## Usage
 
 ```bash
 cd template_engines/handlebars
 cargo run
 ```
+
+After starting the server, you may visit the following pages:
 
 - http://localhost:8080
 - http://localhost:8080/Emma/documents

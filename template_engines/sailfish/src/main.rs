@@ -1,6 +1,9 @@
-use actix_web::error::InternalError;
-use actix_web::http::StatusCode;
-use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{
+    error, get,
+    middleware::{Compress, Logger},
+    web, App, HttpServer, Responder,
+};
+use actix_web_lab::respond::Html;
 use sailfish::TemplateOnce;
 
 #[derive(TemplateOnce)]
@@ -15,54 +18,45 @@ struct Page<'a> {
     id: &'a i32,
 }
 
-async fn greet(req: HttpRequest) -> actix_web::Result<HttpResponse> {
-    let name = req.match_info().get("name").unwrap_or("World");
-    let body = Greet { name }
+#[get("/{name}")]
+async fn greet(params: web::Path<(String,)>) -> actix_web::Result<impl Responder> {
+    let body = Greet { name: &params.0 }
         .render_once()
-        .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
+        .map_err(error::ErrorInternalServerError)?;
 
-    Ok(HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
-        .body(body))
+    Ok(Html(body))
 }
 
-async fn page(req: HttpRequest) -> actix_web::Result<HttpResponse> {
-    let id_string = req.match_info().get("id").unwrap().to_string();
-    let id = &id_string.parse::<i32>().unwrap();
-    let body = Page { id }
+#[get("/page-{id:\\d+}")]
+async fn page(params: web::Path<(i32,)>) -> actix_web::Result<impl Responder> {
+    let body = Page { id: &params.0 }
         .render_once()
-        .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
+        .map_err(error::ErrorInternalServerError)?;
 
-    Ok(HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
-        .body(body))
+    Ok(Html(body))
 }
 
 #[get("/")]
 async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+    Html("<p>Hello world!</p>".to_string())
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
+
     HttpServer::new(|| {
         App::new()
             .service(hello)
-            .service(echo)
-            .route("/hey", web::get().to(manual_hello))
-            .route("/page-{id}", web::get().to(page))
-            .route("/{name}", web::get().to(greet))
+            .service(page)
+            .service(greet)
+            .wrap(Compress::default())
+            .wrap(Logger::default())
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
+    .workers(1)
     .run()
     .await
 }
