@@ -1,139 +1,114 @@
-use actix::prelude::*;
-use std::str::FromStr;
-use std::time::Duration;
-use std::{io, net, thread};
-use tokio::io::{split, WriteHalf};
-use tokio::net::TcpStream;
-use tokio_util::codec::FramedRead;
+use std::{io, thread};
+
+use futures::{SinkExt, StreamExt};
+use tokio::{net::TcpStream, select, sync::mpsc};
+use tokio_stream::wrappers::UnboundedReceiverStream;
 
 mod codec;
 
 #[actix_web::main]
 async fn main() {
-    // Connect to server
-    let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     println!("Running chat client");
 
-    let stream = TcpStream::connect(&addr).await.unwrap();
+    let (cmd_tx, cmd_rx) = mpsc::unbounded_channel();
+    let mut cmd_rx = UnboundedReceiverStream::new(cmd_rx);
 
-    let addr = ChatClient::create(|ctx| {
-        let (r, w) = split(stream);
-        ChatClient::add_stream(FramedRead::new(r, codec::ClientChatCodec), ctx);
-        ChatClient {
-            framed: actix::io::FramedWrite::new(w, codec::ClientChatCodec, ctx),
-        }
-    });
+    // run blocking terminal input reader on separate thread
+    let input_thread = thread::spawn(move || loop {
+        let mut cmd = String::with_capacity(32);
 
-    // start console loop
-    thread::spawn(move || loop {
-        let mut cmd = String::new();
         if io::stdin().read_line(&mut cmd).is_err() {
-            println!("error");
+            log::error!("error reading line");
             return;
         }
 
-        addr.do_send(ClientCommand(cmd));
+        if cmd == "/exit" {
+            println!("exiting input loop");
+            return;
+        }
+
+        cmd_tx.send(cmd).unwrap();
     });
-}
 
-struct ChatClient {
-    framed: actix::io::FramedWrite<
-        codec::ChatRequest,
-        WriteHalf<TcpStream>,
-        codec::ClientChatCodec,
-    >,
-}
+    let io = TcpStream::connect(("127.0.0.1", 12345)).await.unwrap();
+    let mut framed = actix_codec::Framed::new(io, codec::ClientChatCodec);
 
-#[derive(Message)]
-#[rtype(result = "()")]
-struct ClientCommand(String);
-
-impl Actor for ChatClient {
-    type Context = Context<Self>;
-
-    fn started(&mut self, ctx: &mut Context<Self>) {
-        // start heartbeats otherwise server will disconnect after 10 seconds
-        self.hb(ctx)
-    }
-
-    fn stopped(&mut self, _: &mut Context<Self>) {
-        println!("Disconnected");
-
-        // Stop application on disconnect
-        System::current().stop();
-    }
-}
-
-impl ChatClient {
-    fn hb(&self, ctx: &mut Context<Self>) {
-        ctx.run_later(Duration::new(1, 0), |act, ctx| {
-            act.framed.write(codec::ChatRequest::Ping);
-            act.hb(ctx);
-
-            // client should also check for a timeout here, similar to the
-            // server code
-        });
-    }
-}
-
-impl actix::io::WriteHandler<io::Error> for ChatClient {}
-
-/// Handle stdin commands
-impl Handler<ClientCommand> for ChatClient {
-    type Result = ();
-
-    fn handle(&mut self, msg: ClientCommand, _: &mut Context<Self>) {
-        let m = msg.0.trim();
-        if m.is_empty() {
-            return;
-        }
-
-        // we check for /sss type of messages
-        if m.starts_with('/') {
-            let v: Vec<&str> = m.splitn(2, ' ').collect();
-            match v[0] {
-                "/list" => {
-                    self.framed.write(codec::ChatRequest::List);
-                }
-                "/join" => {
-                    if v.len() == 2 {
-                        self.framed.write(codec::ChatRequest::Join(v[1].to_owned()));
-                    } else {
-                        println!("!!! room name is required");
+    loop {
+        select! {
+            Some(msg) = framed.next() => {
+                match msg {
+                    Ok(codec::ChatResponse::Message(ref msg)) => {
+                        println!("message: {}", msg);
                     }
+                    Ok(codec::ChatResponse::Joined(ref msg)) => {
+                        println!("!!! joined: {}", msg);
+                    }
+
+                    Ok(codec::ChatResponse::Rooms(rooms)) => {
+                        println!("!!! Available rooms:");
+                        for room in rooms {
+                        println!("{}", room);
+                        }
+                    }
+
+                    // respond to pings with a "pong"
+                    Ok(codec::ChatResponse::Ping) => { framed.send(codec::ChatRequest::Ping).await.unwrap(); },
+
+                    _ => { eprintln!("{:?}", msg); }
                 }
-                _ => println!("!!! unknown command"),
             }
-        } else {
-            self.framed.write(codec::ChatRequest::Message(m.to_owned()));
+
+            Some(cmd) = cmd_rx.next() => {
+                if cmd.is_empty() {
+                    continue;
+                }
+
+                if cmd == "/exit" {
+                    println!("exiting recv loop");
+                    return;
+                }
+
+                if let Some(req) = parse_client_command(&cmd) {
+                    // submit client command
+                    framed.send(req).await.unwrap();
+                }
+            }
+
+            else => break
         }
     }
+
+    input_thread.join().unwrap();
 }
 
-/// Server communication
+fn parse_client_command(msg: &str) -> Option<codec::ChatRequest> {
+    let m = msg.trim();
 
-impl StreamHandler<Result<codec::ChatResponse, io::Error>> for ChatClient {
-    fn handle(
-        &mut self,
-        msg: Result<codec::ChatResponse, io::Error>,
-        ctx: &mut Context<Self>,
-    ) {
-        match msg {
-            Ok(codec::ChatResponse::Message(ref msg)) => {
-                println!("message: {}", msg);
-            }
-            Ok(codec::ChatResponse::Joined(ref msg)) => {
-                println!("!!! joined: {}", msg);
-            }
-            Ok(codec::ChatResponse::Rooms(rooms)) => {
-                println!("\n!!! Available rooms:");
-                for room in rooms {
-                    println!("{}", room);
+    if m.is_empty() {
+        return None;
+    }
+
+    // we check for /sss type of messages
+    if m.starts_with('/') {
+        let v: Vec<&str> = m.splitn(2, ' ').collect();
+        match v[0] {
+            "/list" => Some(codec::ChatRequest::List),
+            "/join" => {
+                if v.len() == 2 {
+                    Some(codec::ChatRequest::Join(v[1].to_owned()))
+                } else {
+                    println!("!!! room name is required");
+                    None
                 }
-                println!();
             }
-            _ => ctx.stop(),
+            _ => {
+                println!("!!! unknown command");
+                None
+            }
         }
+    } else {
+        Some(codec::ChatRequest::Message(m.to_owned()))
     }
 }
