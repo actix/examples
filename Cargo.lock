@@ -170,18 +170,6 @@ dependencies = [
 
 [[package]]
 name = "actix-cors"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3e5c769e4d332bfad27f11b8139b5818c4bbddb02c385b8f16344d93ff1a8eb"
-dependencies = [
- "actix-service 1.0.6",
- "actix-web 3.3.3",
- "derive_more",
- "futures-util",
-]
-
-[[package]]
-name = "actix-cors"
 version = "0.6.0-beta.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8debd30414af03e9411186aac95e0230b0bb1e91146f48015dfab5c049940223"
@@ -845,7 +833,7 @@ dependencies = [
 name = "actix-web-cors"
 version = "1.0.0"
 dependencies = [
- "actix-cors 0.6.0-beta.10",
+ "actix-cors",
  "actix-web 4.0.0-rc.3",
  "env_logger 0.9.0",
  "futures",
@@ -3340,9 +3328,11 @@ dependencies = [
 name = "juniper-advanced"
 version = "1.0.0"
 dependencies = [
- "actix-web 3.3.3",
+ "actix-cors",
+ "actix-web 4.0.0-rc.3",
+ "actix-web-lab",
  "dotenv",
- "env_logger 0.8.4",
+ "env_logger 0.9.0",
  "juniper",
  "log",
  "mysql",
@@ -3357,12 +3347,13 @@ dependencies = [
 name = "juniper-example"
 version = "1.0.0"
 dependencies = [
- "actix-cors 0.4.1",
- "actix-web 3.3.3",
- "env_logger 0.8.4",
+ "actix-cors",
+ "actix-web 4.0.0-rc.3",
+ "actix-web-lab",
+ "env_logger 0.9.0",
  "juniper",
+ "log",
  "serde 1.0.136",
- "serde_derive",
  "serde_json",
 ]
 

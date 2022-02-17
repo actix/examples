@@ -17,9 +17,9 @@ mod schema;
 
 use crate::schema::{create_schema, Schema};
 
-/// GraphiQL UI
+/// GraphiQL playground UI
 #[get("/graphiql")]
-async fn graphiql() -> impl Responder {
+async fn graphql_playground() -> impl Responder {
     Html(graphiql_source("/graphql", None))
 }
 
@@ -47,7 +47,7 @@ async fn main() -> io::Result<()> {
         App::new()
             .app_data(Data::from(schema.clone()))
             .service(graphql)
-            .service(graphiql)
+            .service(graphql_playground)
             // the graphiql UI requires CORS to be enabled
             .wrap(Cors::permissive())
             .wrap(middleware::Logger::default())

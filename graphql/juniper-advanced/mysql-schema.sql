@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.16, for osx10.14 (x86_64)
 --
--- Host: 127.0.0.1    Database: rust_graphql
+-- Host: 127.0.0.1    Database: graphql_testing
 -- ------------------------------------------------------
 -- Server version	8.0.15
 
