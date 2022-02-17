@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use actix::*;
 use actix_files as fs;
-use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{http::header, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_actors::ws;
 
 mod codec;
@@ -221,7 +221,7 @@ impl WsChatSession {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // Start chat server actor
     let server = server::ChatServer::default().start();
@@ -230,16 +230,15 @@ async fn main() -> std::io::Result<()> {
     let srv = server.clone();
     session::tcp_server("127.0.0.1:12345", srv);
 
-    println!("Started http server: 127.0.0.1:8080");
+    log::info!("starting HTTP+WebSocket server at http://localhost:8080");
 
-    // Create Http server with websocket support
     HttpServer::new(move || {
         App::new()
-            .data(server.clone())
+            .app_data(web::Data::new(server.clone()))
             // redirect to websocket.html
-            .service(web::resource("/").route(web::get().to(|| {
+            .service(web::resource("/").route(web::get().to(|| async {
                 HttpResponse::Found()
-                    .header("LOCATION", "/static/websocket.html")
+                    .insert_header((header::LOCATION, "/static/websocket.html"))
                     .finish()
             })))
             // websocket
@@ -247,7 +246,8 @@ async fn main() -> std::io::Result<()> {
             // static resources
             .service(fs::Files::new("/static/", "static/"))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
+    .workers(1)
     .run()
     .await
 }
