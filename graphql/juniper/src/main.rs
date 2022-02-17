@@ -1,6 +1,6 @@
-//! Actix web juniper example
+//! Actix Web juniper example
 //!
-//! A simple example integrating juniper in actix-web
+//! A simple example integrating juniper in Actix Web
 use std::io;
 use std::sync::Arc;
 

@@ -1,6 +1,6 @@
 # MongoDB
 
-Simple example of MongoDB usage with Actix web. For more information on the MongoDB Rust driver,
+Simple example of MongoDB usage with Actix Web. For more information on the MongoDB Rust driver,
 visit the [documentation](https://docs.rs/mongodb/2.0.0/mongodb/index.html) and
 [source code](https://github.com/mongodb/mongo-rust-driver).
 
@@ -22,4 +22,3 @@ MongoDB manual.
 ### Run the example
 
 To execute the example code, run `cargo run` in the `database_interactions/mongodb` directory.
-

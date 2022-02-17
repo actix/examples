@@ -12,12 +12,16 @@ async fn index(id: Identity) -> String {
 
 async fn login(id: Identity) -> HttpResponse {
     id.remember("user1".to_owned());
-    HttpResponse::Found().header("location", "/").finish()
+    HttpResponse::Found()
+        .insert_header(("location", "/"))
+        .finish()
 }
 
 async fn logout(id: Identity) -> HttpResponse {
     id.forget();
-    HttpResponse::Found().header("location", "/").finish()
+    HttpResponse::Found()
+        .insert_header(("location", "/"))
+        .finish()
 }
 
 #[actix_web::main]
@@ -36,7 +40,7 @@ async fn main() -> std::io::Result<()> {
                     .name("auth-example")
                     .secure(false),
             ))
-            // enable logger - always register actix-web Logger middleware last
+            // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(web::resource("/login").route(web::post().to(login)))
             .service(web::resource("/logout").to(logout))

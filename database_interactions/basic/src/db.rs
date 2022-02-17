@@ -1,7 +1,5 @@
-use actix_web::{web, Error as AWError};
-use failure::Error;
-use futures::{Future, TryFutureExt};
-use rusqlite::{Statement, NO_PARAMS};
+use actix_web::{error, web, Error};
+use rusqlite::Statement;
 use serde::{Deserialize, Serialize};
 use std::{thread::sleep, time::Duration};
 
@@ -23,24 +21,26 @@ pub enum Queries {
     GetTopTenColdestMonths,
 }
 
-pub fn execute(
-    pool: &Pool,
-    query: Queries,
-) -> impl Future<Output = Result<Vec<WeatherAgg>, AWError>> {
+pub async fn execute(pool: &Pool, query: Queries) -> Result<Vec<WeatherAgg>, Error> {
     let pool = pool.clone();
+
+    let conn = web::block(move || pool.get())
+        .await?
+        .map_err(error::ErrorInternalServerError)?;
+
     web::block(move || {
         // simulate an expensive query, see comments at top of main.rs
         sleep(Duration::from_secs(2));
 
-        let result = match query {
-            Queries::GetTopTenHottestYears => get_hottest_years(pool.get()?),
-            Queries::GetTopTenColdestYears => get_coldest_years(pool.get()?),
-            Queries::GetTopTenHottestMonths => get_hottest_months(pool.get()?),
-            Queries::GetTopTenColdestMonths => get_coldest_months(pool.get()?),
-        };
-        result.map_err(Error::from)
+        match query {
+            Queries::GetTopTenHottestYears => get_hottest_years(conn),
+            Queries::GetTopTenColdestYears => get_coldest_years(conn),
+            Queries::GetTopTenHottestMonths => get_hottest_months(conn),
+            Queries::GetTopTenColdestMonths => get_coldest_months(conn),
+        }
     })
-    .map_err(AWError::from)
+    .await?
+    .map_err(error::ErrorInternalServerError)
 }
 
 fn get_hottest_years(conn: Connection) -> WeatherAggResult {
@@ -73,7 +73,7 @@ fn get_coldest_years(conn: Connection) -> WeatherAggResult {
 
 fn get_rows_as_annual_agg(mut statement: Statement) -> WeatherAggResult {
     statement
-        .query_map(NO_PARAMS, |row| {
+        .query_map([], |row| {
             Ok(WeatherAgg::AnnualAgg {
                 year: row.get(0)?,
                 total: row.get(1)?,
@@ -112,7 +112,7 @@ fn get_coldest_months(conn: Connection) -> WeatherAggResult {
 
 fn get_rows_as_month_agg(mut statement: Statement) -> WeatherAggResult {
     statement
-        .query_map(NO_PARAMS, |row| {
+        .query_map([], |row| {
             Ok(WeatherAgg::MonthAgg {
                 year: row.get(0)?,
                 month: row.get(1)?,

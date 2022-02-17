@@ -1,12 +1,10 @@
 [package]
 name = "mongodb"
-version = "0.1.0"
-authors = ["Isabel Atkinson <isabel.atkinson@mongodb.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
-actix-rt = "2.2.0"
-actix-web = "4.0.0-beta.8"
+actix-web = "4.0.0-beta.21"
 futures-util = "0.3.17"
 mongodb = "2.0.0"
 serde = { version = "1.0", features = ["derive"] }

@@ -33,7 +33,7 @@ pub enum CustomError {
 
 impl Distribution<CustomError> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> CustomError {
-        match rng.gen_range(0, 4) {
+        match rng.gen_range(0..4) {
             0 => CustomError::CustomOne,
             1 => CustomError::CustomTwo,
             2 => CustomError::CustomThree,
@@ -42,7 +42,7 @@ impl Distribution<CustomError> for Standard {
     }
 }
 
-/// Actix web uses `ResponseError` for conversion of errors to a response
+/// Actix Web uses `ResponseError` for conversion of errors to a response
 impl ResponseError for CustomError {
     fn error_response(&self) -> HttpResponse {
         match self {

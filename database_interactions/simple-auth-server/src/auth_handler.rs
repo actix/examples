@@ -1,8 +1,5 @@
 use actix_identity::Identity;
-use actix_web::{
-    dev::Payload, error::BlockingError, web, Error, FromRequest, HttpRequest,
-    HttpResponse,
-};
+use actix_web::{dev::Payload, web, Error, FromRequest, HttpRequest, HttpResponse};
 use diesel::prelude::*;
 use diesel::PgConnection;
 use futures::future::{err, ok, Ready};
@@ -23,7 +20,6 @@ pub struct AuthData {
 pub type LoggedUser = SlimUser;
 
 impl FromRequest for LoggedUser {
-    type Config = ();
     type Error = Error;
     type Future = Ready<Result<LoggedUser, Error>>;
 
@@ -48,20 +44,12 @@ pub async fn login(
     auth_data: web::Json<AuthData>,
     id: Identity,
     pool: web::Data<Pool>,
-) -> Result<HttpResponse, ServiceError> {
-    let res = web::block(move || query(auth_data.into_inner(), pool)).await;
+) -> Result<HttpResponse, actix_web::Error> {
+    let user = web::block(move || query(auth_data.into_inner(), pool)).await??;
 
-    match res {
-        Ok(user) => {
-            let user_string = serde_json::to_string(&user).unwrap();
-            id.remember(user_string);
-            Ok(HttpResponse::Ok().finish())
-        }
-        Err(err) => match err {
-            BlockingError::Error(service_error) => Err(service_error),
-            BlockingError::Canceled => Err(ServiceError::InternalServerError),
-        },
-    }
+    let user_string = serde_json::to_string(&user).unwrap();
+    id.remember(user_string);
+    Ok(HttpResponse::Ok().finish())
 }
 
 pub async fn get_me(logged_user: LoggedUser) -> HttpResponse {

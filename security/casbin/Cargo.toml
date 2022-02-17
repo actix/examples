@@ -1,10 +1,10 @@
 [package]
 name = "actix-casbin-example"
-version = "0.1.0"
-authors = ["Chojan Shang <psiace@outlook.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
-actix-web = "3"
-casbin = "2"
+actix-web = "4.0.0-beta.21"
+casbin = "2.0.9"
 loge = {version = "0.4", default-features = false, features = ["colored", "chrono"]}
+tokio = { version = "1.16.1", features = ["sync"] }

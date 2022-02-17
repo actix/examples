@@ -19,7 +19,7 @@ mkcert 127.0.0.1 localhost
 ```
 
 For `rsa` keys use `rsa_private_keys` function instead `pkcs8_private_keys`
-```
+```rs
 let mut keys = pkcs8_private_keys(key_file).unwrap(); // pkcs8
 let mut keys = rsa_private_keys(key_file).unwrap(); // rsa
 ```

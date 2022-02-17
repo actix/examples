@@ -1,4 +1,4 @@
-This is a contrived example intended to illustrate a few important actix-web features.
+This is a contrived example intended to illustrate a few important Actix Web features.
 
 *Imagine* that you have a process that involves 3 steps. The steps here
 are dumb in that they do nothing other than call an HTTP endpoint that
@@ -10,7 +10,7 @@ Actix Web features illustrated here include:
 
     1. handling json input param
     2. validating user-submitted parameters using the 'validator' crate
-    2. actix-web client features:
+    2. `awc` client features:
           - POSTing json body
     3. chaining futures into a single response used by an asynch endpoint
 

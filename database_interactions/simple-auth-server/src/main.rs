@@ -37,7 +37,7 @@ async fn main() -> std::io::Result<()> {
     // Start http server
     HttpServer::new(move || {
         App::new()
-            .data(pool.clone())
+            .app_data(web::Data::new(pool.clone()))
             // enable logger
             .wrap(middleware::Logger::default())
             .wrap(IdentityService::new(
@@ -45,10 +45,10 @@ async fn main() -> std::io::Result<()> {
                     .name("auth")
                     .path("/")
                     .domain(domain.as_str())
-                    .max_age_time(Duration::days(1))
+                    .max_age(Duration::days(1))
                     .secure(false), // this can only be true if you have https
             ))
-            .data(web::JsonConfig::default().limit(4096))
+            .app_data(web::JsonConfig::default().limit(4096))
             // everything under '/api/' route
             .service(
                 web::scope("/api")

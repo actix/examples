@@ -1,47 +1,82 @@
-use diesel::pg::PgConnection;
-use diesel::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use sqlx::SqlitePool;
 
-use crate::schema::{
-    tasks,
-    tasks::dsl::{completed as task_completed, tasks as all_tasks},
-};
-
-#[derive(Debug, Insertable)]
-#[table_name = "tasks"]
+#[derive(Debug)]
 pub struct NewTask {
     pub description: String,
 }
 
-#[derive(Debug, Queryable, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Task {
-    pub id: i32,
+    pub id: i64,
     pub description: String,
     pub completed: bool,
 }
 
 impl Task {
-    pub fn all(conn: &PgConnection) -> QueryResult<Vec<Task>> {
-        all_tasks.order(tasks::id.desc()).load::<Task>(conn)
+    pub async fn all(connection: &SqlitePool) -> Result<Vec<Task>, sqlx::Error> {
+        let tasks = sqlx::query_as!(
+            Task,
+            r#"
+            SELECT *
+            FROM tasks
+            "#
+        )
+        .fetch_all(connection)
+        .await?;
+
+        Ok(tasks)
     }
 
-    pub fn insert(todo: NewTask, conn: &PgConnection) -> QueryResult<usize> {
-        diesel::insert_into(tasks::table)
-            .values(&todo)
-            .execute(conn)
+    pub async fn insert(
+        todo: NewTask,
+        connection: &SqlitePool,
+    ) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            r#"
+            INSERT INTO tasks (description)
+            VALUES ($1)
+            "#,
+            todo.description,
+        )
+        .execute(connection)
+        .await?;
+
+        Ok(())
     }
 
-    pub fn toggle_with_id(id: i32, conn: &PgConnection) -> QueryResult<usize> {
-        let task = all_tasks.find(id).get_result::<Task>(conn)?;
+    pub async fn toggle_with_id(
+        id: i32,
+        connection: &SqlitePool,
+    ) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            r#"
+            UPDATE tasks
+            SET completed = NOT completed
+            WHERE id = $1
+            "#,
+            id
+        )
+        .execute(connection)
+        .await?;
 
-        let new_status = !task.completed;
-        let updated_task = diesel::update(all_tasks.find(id));
-        updated_task
-            .set(task_completed.eq(new_status))
-            .execute(conn)
+        Ok(())
     }
 
-    pub fn delete_with_id(id: i32, conn: &PgConnection) -> QueryResult<usize> {
-        diesel::delete(all_tasks.find(id)).execute(conn)
+    pub async fn delete_with_id(
+        id: i32,
+        connection: &SqlitePool,
+    ) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            r#"
+            DELETE FROM tasks
+            WHERE id = $1
+            "#,
+            id
+        )
+        .execute(connection)
+        .await?;
+
+        Ok(())
     }
 }

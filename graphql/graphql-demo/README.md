@@ -1,4 +1,4 @@
-Getting started using [Async-graphql](https://github.com/async-graphql/async-graphql) with Actix web.
+Getting started using [Async-graphql](https://github.com/async-graphql/async-graphql) with Actix Web.
 
 ## Run
 

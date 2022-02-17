@@ -1,8 +1,9 @@
 [package]
 name = "docker_sample"
-version = "0.1.0"
-authors = ["docker_sample <docker_sample@sample.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
-actix-web = "3"
+actix-web = "4.0.0-beta.21"
+env_logger = "0.9"
+log = "0.4"

@@ -11,7 +11,6 @@ use actix_web::{
     web::{get, post, resource},
     App, HttpResponse, HttpServer, Result,
 };
-use rand::Rng;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -36,7 +35,7 @@ async fn do_something(session: Session) -> Result<HttpResponse> {
         .get::<i32>("counter")
         .unwrap_or(Some(0))
         .map_or(1, |inner| inner + 1);
-    session.set("counter", counter)?;
+    session.insert("counter", counter)?;
 
     Ok(HttpResponse::Ok().json(IndexResponse { user_id, counter }))
 }
@@ -48,7 +47,7 @@ struct Identity {
 
 async fn login(user_id: web::Json<Identity>, session: Session) -> Result<HttpResponse> {
     let id = user_id.into_inner().user_id;
-    session.set("user_id", &id)?;
+    session.insert("user_id", &id)?;
     session.renew();
 
     let counter: i32 = session
@@ -62,11 +61,11 @@ async fn login(user_id: web::Json<Identity>, session: Session) -> Result<HttpRes
     }))
 }
 
-async fn logout(session: Session) -> Result<HttpResponse> {
+async fn logout(session: Session) -> Result<String> {
     let id: Option<String> = session.get("user_id")?;
     if let Some(x) = id {
         session.purge();
-        Ok(format!("Logged out: {}", x).into())
+        Ok(format!("Logged out: {}", x))
     } else {
         Ok("Could not log out anonymous user".into())
     }
@@ -80,13 +79,13 @@ async fn main() -> std::io::Result<()> {
     // Generate a random 32 byte key. Note that it is important to use a unique
     // private key for every project. Anyone with access to the key can generate
     // authentication cookies for any user!
-    let private_key = rand::thread_rng().gen::<[u8; 32]>();
+    let private_key = actix_web::cookie::Key::generate();
 
     HttpServer::new(move || {
         App::new()
             // redis session middleware
-            .wrap(RedisSession::new("127.0.0.1:6379", &private_key))
-            // enable logger - always register actix-web Logger middleware last
+            .wrap(RedisSession::new("127.0.0.1:6379", private_key.master()))
+            // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(resource("/").route(get().to(index)))
             .service(resource("/do_something").route(post().to(do_something)))
@@ -101,51 +100,20 @@ async fn main() -> std::io::Result<()> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use actix_http::httpmessage::HttpMessage;
     use actix_web::{
-        middleware, test,
+        middleware,
         web::{get, post, resource},
         App,
     };
     use serde_json::json;
 
-    #[actix_rt::test]
+    #[actix_web::test]
     async fn test_workflow() {
-        // Step 1:  GET index
-        //   - set-cookie actix-session will be in response (session cookie #1)
-        //   - response should be: {"counter": 0, "user_id": None}
-        // Step 2:  GET index, including session cookie #1 in request
-        //   - set-cookie will *not* be in response
-        //   - response should be: {"counter": 0, "user_id": None}
-        // Step 3: POST to do_something, including session cookie #1 in request
-        //   - adds new session state in redis:  {"counter": 1}
-        //   - response should be: {"counter": 1, "user_id": None}
-        // Step 4: POST again to do_something, including session cookie #1 in request
-        //   - updates session state in redis:  {"counter": 2}
-        //   - response should be: {"counter": 2, "user_id": None}
-        // Step 5: POST to login, including session cookie #1 in request
-        //   - set-cookie actix-session will be in response  (session cookie #2)
-        //   - updates session state in redis: {"counter": 2, "user_id": "ferris"}
-        // Step 6: GET index, including session cookie #2 in request
-        //   - response should be: {"counter": 2, "user_id": "ferris"}
-        // Step 7: POST again to do_something, including session cookie #2 in request
-        //   - updates session state in redis: {"counter": 3, "user_id": "ferris"}
-        //   - response should be: {"counter": 2, "user_id": None}
-        // Step 8: GET index, including session cookie #1 in request
-        //   - set-cookie actix-session will be in response (session cookie #3)
-        //   - response should be: {"counter": 0, "user_id": None}
-        // Step 9: POST to logout, including session cookie #2
-        //   - set-cookie actix-session will be in response with session cookie #2
-        //     invalidation logic
-        // Step 10: GET index, including session cookie #2 in request
-        //   - set-cookie actix-session will be in response (session cookie #3)
-        //   - response should be: {"counter": 0, "user_id": None}
-
-        let private_key = rand::thread_rng().gen::<[u8; 32]>();
-        let srv = test::start(move || {
+        let private_key = actix_web::cookie::Key::generate();
+        let srv = actix_test::start(move || {
             App::new()
                 .wrap(
-                    RedisSession::new("127.0.0.1:6379", &private_key)
+                    RedisSession::new("127.0.0.1:6379", private_key.master())
                         .cookie_name("test-session"),
                 )
                 .wrap(middleware::Logger::default())
@@ -156,17 +124,11 @@ mod test {
         });
 
         // Step 1:  GET index
-        //   - set-cookie actix-session will be in response (session cookie #1)
+        //   - set-cookie actix-session should NOT be in response (session data is empty)
         //   - response should be: {"counter": 0, "user_id": None}
-        let req_1a = srv.get("/").send();
-        let mut resp_1 = req_1a.await.unwrap();
-        let cookie_1 = resp_1
-            .cookies()
-            .unwrap()
-            .clone()
-            .into_iter()
-            .find(|c| c.name() == "test-session")
-            .unwrap();
+        let request = srv.get("/").send();
+        let mut resp_1 = request.await.unwrap();
+        assert!(resp_1.cookies().unwrap().is_empty());
         let result_1 = resp_1.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_1,
@@ -176,24 +138,18 @@ mod test {
             }
         );
 
-        // Step 2:  GET index, including session cookie #1 in request
-        //   - set-cookie will *not* be in response
-        //   - response should be: {"counter": 0, "user_id": None}
-        let req_2 = srv.get("/").cookie(cookie_1.clone()).send();
-        let resp_2 = req_2.await.unwrap();
-        let cookie_2 = resp_2
+        // Step 2: POST to do_something, including session cookie #1 in request
+        //   - adds new session state in redis:  {"counter": 1}
+        //   - response should be: {"counter": 1, "user_id": None}
+        let req_3 = srv.post("/do_something").send();
+        let mut resp_3 = req_3.await.unwrap();
+        let cookie_1 = resp_3
             .cookies()
             .unwrap()
             .clone()
             .into_iter()
-            .find(|c| c.name() == "test-session");
-        assert_eq!(cookie_2, None);
-
-        // Step 3: POST to do_something, including session cookie #1 in request
-        //   - adds new session state in redis:  {"counter": 1}
-        //   - response should be: {"counter": 1, "user_id": None}
-        let req_3 = srv.post("/do_something").cookie(cookie_1.clone()).send();
-        let mut resp_3 = req_3.await.unwrap();
+            .find(|c| c.name() == "test-session")
+            .unwrap();
         let result_3 = resp_3.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_3,
@@ -203,7 +159,7 @@ mod test {
             }
         );
 
-        // Step 4: POST again to do_something, including session cookie #1 in request
+        // Step 3: POST again to do_something, including session cookie #1 in request
         //   - updates session state in redis:  {"counter": 2}
         //   - response should be: {"counter": 2, "user_id": None}
         let req_4 = srv.post("/do_something").cookie(cookie_1.clone()).send();
@@ -217,7 +173,7 @@ mod test {
             }
         );
 
-        // Step 5: POST to login, including session cookie #1 in request
+        // Step 4: POST to login, including session cookie #1 in request
         //   - set-cookie actix-session will be in response  (session cookie #2)
         //   - updates session state in redis: {"counter": 2, "user_id": "ferris"}
         let req_5 = srv
@@ -243,7 +199,7 @@ mod test {
             }
         );
 
-        // Step 6: GET index, including session cookie #2 in request
+        // Step 5: GET index, including session cookie #2 in request
         //   - response should be: {"counter": 2, "user_id": "ferris"}
         let req_6 = srv.get("/").cookie(cookie_2.clone()).send();
         let mut resp_6 = req_6.await.unwrap();
@@ -256,7 +212,7 @@ mod test {
             }
         );
 
-        // Step 7: POST again to do_something, including session cookie #2 in request
+        // Step 6: POST again to do_something, including session cookie #2 in request
         //   - updates session state in redis: {"counter": 3, "user_id": "ferris"}
         //   - response should be: {"counter": 2, "user_id": None}
         let req_7 = srv.post("/do_something").cookie(cookie_2.clone()).send();
@@ -270,18 +226,12 @@ mod test {
             }
         );
 
-        // Step 8: GET index, including session cookie #1 in request
+        // Step 7: GET index, including session cookie #1 in request
         //   - set-cookie actix-session will be in response (session cookie #3)
         //   - response should be: {"counter": 0, "user_id": None}
         let req_8 = srv.get("/").cookie(cookie_1.clone()).send();
         let mut resp_8 = req_8.await.unwrap();
-        let cookie_3 = resp_8
-            .cookies()
-            .unwrap()
-            .clone()
-            .into_iter()
-            .find(|c| c.name() == "test-session")
-            .unwrap();
+        assert!(resp_8.cookies().unwrap().is_empty());
         let result_8 = resp_8.json::<IndexResponse>().await.unwrap();
         assert_eq!(
             result_8,
@@ -290,9 +240,8 @@ mod test {
                 counter: 0
             }
         );
-        assert_ne!(cookie_3.value(), cookie_2.value());
 
-        // Step 9: POST to logout, including session cookie #2
+        // Step 8: POST to logout, including session cookie #2
         //   - set-cookie actix-session will be in response with session cookie #2
         //     invalidation logic
         let req_9 = srv.post("/logout").cookie(cookie_2.clone()).send();
@@ -306,9 +255,12 @@ mod test {
             .unwrap();
 
         let now = time::OffsetDateTime::now_utc();
-        assert!(now.year() != cookie_4.expires().map(|t| t.year()).unwrap());
+        assert_ne!(
+            now.year(),
+            cookie_4.expires().unwrap().datetime().unwrap().year()
+        );
 
-        // Step 10: GET index, including session cookie #2 in request
+        // Step 9: GET index, including session cookie #2 in request
         //   - set-cookie actix-session will be in response (session cookie #3)
         //   - response should be: {"counter": 0, "user_id": None}
         let req_10 = srv.get("/").cookie(cookie_2.clone()).send();
@@ -321,14 +273,5 @@ mod test {
                 counter: 0
             }
         );
-
-        let cookie_5 = resp_10
-            .cookies()
-            .unwrap()
-            .clone()
-            .into_iter()
-            .find(|c| c.name() == "test-session")
-            .unwrap();
-        assert_ne!(cookie_5.value(), cookie_2.value());
     }
 }

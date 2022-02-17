@@ -1,28 +1,27 @@
-/* Actix-Web Asynchronous Database Example
+//! Actix Web Asynchronous Database Example
+//!
+//! This project illustrates expensive and blocking database requests that runs
+//! in a thread-pool using `web::block` with two examples:
+//!
+//!     1. An asynchronous handler that executes 4 queries in *sequential order*,
+//!        collecting the results and returning them as a single serialized json object
+//!
+//!     2. An asynchronous handler that executes 4 queries in *parallel*,
+//!        collecting the results and returning them as a single serialized json object
+//!
+//!     Note: The use of sleep(Duration::from_secs(2)); in db.rs is to make performance
+//!           improvement with parallelism more obvious.
 
-This project illustrates expensive and blocking database requests that runs
-in a thread-pool using `web::block` with two examples:
-
-    1. An asynchronous handler that executes 4 queries in *sequential order*,
-       collecting the results and returning them as a single serialized json object
-
-    2. An asynchronous handler that executes 4 queries in *parallel*,
-       collecting the results and returning them as a single serialized json object
-
-    Note: The use of sleep(Duration::from_secs(2)); in db.rs is to make performance
-          improvement with parallelism more obvious.
- */
 use std::io;
 
 use actix_web::{middleware, web, App, Error as AWError, HttpResponse, HttpServer};
-use futures::future::join_all;
+use futures_util::future::join_all;
 use r2d2_sqlite::{self, SqliteConnectionManager};
 
 mod db;
 use db::{Pool, Queries};
 
 /// Version 1: Calls 4 queries in sequential order, as an asynchronous handler
-#[allow(clippy::eval_order_dependence)] // it's FP?
 async fn asyncio_weather(db: web::Data<Pool>) -> Result<HttpResponse, AWError> {
     let result = vec![
         db::execute(&db, Queries::GetTopTenHottestYears).await?,
@@ -50,18 +49,19 @@ async fn parallel_weather(db: web::Data<Pool>) -> Result<HttpResponse, AWError> 
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    // Start N db executor actors (N = number of cores avail)
+    // connect to SQLite DB
     let manager = SqliteConnectionManager::file("weather.db");
     let pool = Pool::new(manager).unwrap();
 
-    // Start http server
+    log::info!("starting HTTP server at http://localhost:8080");
+
+    // start HTTP server
     HttpServer::new(move || {
         App::new()
             // store db pool as Data object
-            .data(pool.clone())
+            .app_data(web::Data::new(pool.clone()))
             .wrap(middleware::Logger::default())
             .service(
                 web::resource("/asyncio_weather").route(web::get().to(asyncio_weather)),
@@ -71,7 +71,8 @@ async fn main() -> io::Result<()> {
                     .route(web::get().to(parallel_weather)),
             )
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", 8080))?
+    .workers(2)
     .run()
     .await
 }

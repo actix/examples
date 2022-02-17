@@ -1,17 +1,16 @@
 [package]
 name = "async_db"
-version = "2.0.0"
-authors = ["Darin Gordon <dkcdkg@gmail.com>"]
-edition = "2018"
+version = "1.0.0"
+edition = "2021"
 
 [dependencies]
-actix-web = "3"
-env_logger = "0.8"
-failure = "0.1.7"
-futures = "0.3.1"
-num_cpus = "1.13"
-r2d2 = "0.8.2"
-r2d2_sqlite = "0.14"
-rusqlite = "0.21"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+actix-web = "4.0.0-rc.2"
+
+env_logger = "0.9"
+futures-util = { version = "0.3", default-features = false, features = ["std"] }
+log = "0.4"
+r2d2 = "0.8"
+r2d2_sqlite = "0.19"
+rusqlite = "0.26"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
