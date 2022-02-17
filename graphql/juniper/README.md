@@ -7,17 +7,16 @@ If you want more advanced example, see also the [juniper-advanced example].
 
 ## Usage
 
-### server
+### Server
 
-```bash
+```sh
 cd graphql/juniper
-cargo run (or ``cargo watch -x run``)
-# Started http server: 127.0.0.1:8080
+cargo run
 ```
 
-### web client
+### Web Client
 
-[http://127.0.0.1:8080/graphiql](http://127.0.0.1:8080/graphiql)
+Go to <http://localhost:8080/graphiql> in your browser.
 
 _Query example:_
 

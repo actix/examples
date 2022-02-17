@@ -1,62 +1,58 @@
 //! Actix Web juniper example
 //!
 //! A simple example integrating juniper in Actix Web
-use std::io;
-use std::sync::Arc;
+
+use std::{io, sync::Arc};
 
 use actix_cors::Cors;
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
-use juniper::http::graphiql::graphiql_source;
-use juniper::http::GraphQLRequest;
+use actix_web::{
+    get, middleware, route,
+    web::{self, Data},
+    App, HttpResponse, HttpServer, Responder,
+};
+use actix_web_lab::respond::Html;
+use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 
 mod schema;
 
 use crate::schema::{create_schema, Schema};
 
-async fn graphiql() -> HttpResponse {
-    let html = graphiql_source("http://127.0.0.1:8080/graphql", None);
-    HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
-        .body(html)
+/// GraphiQL UI
+#[get("/graphiql")]
+async fn graphiql() -> impl Responder {
+    Html(graphiql_source("/graphql", None))
 }
 
+/// GraphQL endpoint
+#[route("/graphql", method = "GET", method = "POST")]
 async fn graphql(
-    st: web::Data<Arc<Schema>>,
+    st: web::Data<Schema>,
     data: web::Json<GraphQLRequest>,
-) -> Result<HttpResponse, Error> {
-    let user = web::block(move || {
-        let res = data.execute_sync(&st, &());
-        serde_json::to_string(&res)
-    })
-    .await?;
-    Ok(HttpResponse::Ok()
-        .content_type("application/json")
-        .body(user))
+) -> impl Responder {
+    let user = data.execute(&st, &()).await;
+    HttpResponse::Ok().json(user)
 }
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // Create Juniper schema
-    let schema = std::sync::Arc::new(create_schema());
+    let schema = Arc::new(create_schema());
 
-    // Start http server
+    log::info!("starting HTTP server at http://localhost:8080");
+
+    // Start HTTP server
     HttpServer::new(move || {
         App::new()
-            .data(schema.clone())
+            .app_data(Data::from(schema.clone()))
+            .service(graphql)
+            .service(graphiql)
+            // the graphiql UI requires CORS to be enabled
+            .wrap(Cors::permissive())
             .wrap(middleware::Logger::default())
-            .wrap(
-                Cors::new()
-                    .allowed_methods(vec!["POST", "GET"])
-                    .supports_credentials()
-                    .max_age(3600)
-                    .finish(),
-            )
-            .service(web::resource("/graphql").route(web::post().to(graphql)))
-            .service(web::resource("/graphiql").route(web::get().to(graphiql)))
     })
+    .workers(2)
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
