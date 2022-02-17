@@ -1,8 +1,7 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, HttpRequest};
 use actix_web::error::InternalError;
 use actix_web::http::StatusCode;
+use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use sailfish::TemplateOnce;
-
 
 #[derive(TemplateOnce)]
 #[template(path = "actix.stpl")]
@@ -30,7 +29,7 @@ async fn greet(req: HttpRequest) -> actix_web::Result<HttpResponse> {
 async fn page(req: HttpRequest) -> actix_web::Result<HttpResponse> {
     let id_string = req.match_info().get("id").unwrap().to_string();
     let id = &id_string.parse::<i32>().unwrap();
-    let body = Page { id  }
+    let body = Page { id }
         .render_once()
         .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
 
@@ -63,7 +62,7 @@ async fn main() -> std::io::Result<()> {
             .route("/page-{id}", web::get().to(page))
             .route("/{name}", web::get().to(greet))
     })
-        .bind("127.0.0.1:8080")?
-        .run()
-        .await
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }
