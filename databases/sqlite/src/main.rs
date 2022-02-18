@@ -37,10 +37,10 @@ async fn asyncio_weather(db: web::Data<Pool>) -> Result<HttpResponse, AWError> {
 /// Returning Error types turn into None values in the response
 async fn parallel_weather(db: web::Data<Pool>) -> Result<HttpResponse, AWError> {
     let fut_result = vec![
-        Box::pin(db::execute(&db, Queries::GetTopTenHottestYears)),
-        Box::pin(db::execute(&db, Queries::GetTopTenColdestYears)),
-        Box::pin(db::execute(&db, Queries::GetTopTenHottestMonths)),
-        Box::pin(db::execute(&db, Queries::GetTopTenColdestMonths)),
+        db::execute(&db, Queries::GetTopTenHottestYears),
+        db::execute(&db, Queries::GetTopTenColdestYears),
+        db::execute(&db, Queries::GetTopTenHottestMonths),
+        db::execute(&db, Queries::GetTopTenColdestMonths),
     ];
     let result: Result<Vec<_>, _> = join_all(fut_result).await.into_iter().collect();
 

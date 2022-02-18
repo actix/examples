@@ -30,7 +30,7 @@ pub async fn execute(pool: &Pool, query: Queries) -> Result<Vec<WeatherAgg>, Err
 
     web::block(move || {
         // simulate an expensive query, see comments at top of main.rs
-        sleep(Duration::from_secs(2));
+        sleep(Duration::from_secs(1));
 
         match query {
             Queries::GetTopTenHottestYears => get_hottest_years(conn),

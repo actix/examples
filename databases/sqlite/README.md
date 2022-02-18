@@ -17,8 +17,7 @@ This creates a sqlite database, weather.db, in the root.
 ```bash
 # if ubuntu : sudo apt-get install libsqlite3-dev
 # if fedora : sudo dnf install libsqlite3x-devel
-cargo run (or ``cargo watch -x run``)
-# Started http server: 127.0.0.1:8080
+cargo run
 ```
 
 ### web client
