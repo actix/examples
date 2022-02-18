@@ -17,9 +17,9 @@ cd forms/multipart-s3
 cd forms/multipart-s3
 cargo run (or ``cargo watch -x run``)
 ```
-http://localhost:3000   
+http://localhost:3000
 
 
 # using other regions
-https://www.rusoto.org/regions.html    
-https://docs.rs/rusoto_core/0.42.0/rusoto_core/enum.Region.html
+- https://www.rusoto.org/regions.html
+- https://docs.rs/rusoto_core/0.42.0/rusoto_core/enum.Region.html

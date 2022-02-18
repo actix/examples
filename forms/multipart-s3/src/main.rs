@@ -1,12 +1,12 @@
+use std::{borrow::BorrowMut, env};
+
 use actix_multipart::Multipart;
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{middleware::Logger, web, App, Error, HttpResponse, HttpServer};
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
-use std::borrow::BorrowMut;
-use std::env;
-use utils::upload::{save_file as upload_save_file, split_payload, UploadFile};
 
 mod utils;
+use self::utils::upload::{save_file as upload_save_file, split_payload, UploadFile};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct InpAdd {
@@ -77,6 +77,8 @@ async fn index() -> HttpResponse {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     let aws_access_key_id =
         env::var("AWS_ACCESS_KEY_ID").expect("AWS_ACCESS_KEY_ID must be set");
     let aws_secret_access_key =
@@ -84,23 +86,24 @@ async fn main() -> std::io::Result<()> {
     let aws_s3_bucket_name =
         env::var("AWS_S3_BUCKET_NAME").expect("AWS_S3_BUCKET_NAME must be set");
 
-    println!("{}", aws_access_key_id);
-    println!("{}", aws_secret_access_key);
-    println!("{}", aws_s3_bucket_name);
+    log::info!("aws_access_key_id:     {}", aws_access_key_id);
+    log::info!("aws_secret_access_key: {}", aws_secret_access_key);
+    log::info!("aws_s3_bucket_name:    {}", aws_s3_bucket_name);
 
-    std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();
 
-    let ip = "0.0.0.0:3000";
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
-        App::new().wrap(middleware::Logger::default()).service(
-            web::resource("/")
-                .route(web::get().to(index))
-                .route(web::post().to(save_file)),
-        )
+        App::new()
+            .service(
+                web::resource("/")
+                    .route(web::get().to(index))
+                    .route(web::post().to(save_file)),
+            )
+            .wrap(Logger::default())
     })
-    .bind(ip)?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

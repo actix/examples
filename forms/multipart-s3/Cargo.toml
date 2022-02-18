@@ -6,10 +6,13 @@ edition = "2021"
 [dependencies]
 actix-web = "4.0.0-rc.1"
 actix-multipart = "0.4.0-beta.12"
+
+dotenv = "0.15.0"
+env_logger = "0.9"
 futures = "0.3.1"
-rusoto_s3 = "0.47.0"
+log = "0.4"
 rusoto_core = "0.47.0"
+rusoto_s3 = "0.47.0"
+sanitize-filename = "0.3"
 serde = { version = "1.0.104", features = ["derive"] }
 serde_json = "1.0"
-dotenv = "0.15.0"
-sanitize-filename = "0.3"

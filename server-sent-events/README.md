@@ -17,7 +17,7 @@ curl 127.0.0.1:8080/broadcast/my_message
 ## Performance
 This implementation can serve thousands of clients on a 2021 MacBook with no problems.
 
-Run [benchmark.js](benchmark.js) to benchmark your own system:
+Run `node ./benchmark.js` to benchmark your own system:
 
 ```sh
 $ node benchmark.js
@@ -31,7 +31,7 @@ You may be limited to a maximal number of connections (open file descriptors). S
 ulimit -n 2048
 ```
 
-Test maximum number of open connections with [drain.js](drain.js):
+Test maximum number of open connections with `node ./drain.js`:
 
 ```sh
 $ node drain.js
