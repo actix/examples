@@ -5,7 +5,7 @@ This is an example of how to use Actix Web with the [Sailfish](https://sailfish.
 ## Usage
 
 ```bash
-cd template_engines/sailfish
+cd templating/sailfish
 cargo run
 ```
 

@@ -61,7 +61,7 @@ jobs:
       - name: run diesel migrations
         run: |
           cargo install diesel_cli
-          cd database_interactions/diesel
+          cd databases/diesel
           diesel migration run
           chmod a+rwx test.db
 

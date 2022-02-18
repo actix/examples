@@ -5,7 +5,7 @@ This project illustrates how to send multiple cache requests to Redis in bulk, a
 ## Start Server
 
 ```sh
-cd database_interactions/redis
+cd databases/redis
 cargo run
 ```
 

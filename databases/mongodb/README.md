@@ -21,4 +21,4 @@ MongoDB manual.
 
 ### Run the example
 
-To execute the example code, run `cargo run` in the `database_interactions/mongodb` directory.
+To execute the example code, run `cargo run` in the `databases/mongodb` directory.
