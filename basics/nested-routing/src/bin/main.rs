@@ -1,6 +1,6 @@
 use actix_web::{middleware, App, HttpServer};
 
-use async_ex2::appconfig::config_app;
+use nested_routing::app_config::config_app;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

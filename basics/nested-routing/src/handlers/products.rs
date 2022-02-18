@@ -24,7 +24,7 @@ pub async fn remove_product(_id: web::Path<String>) -> Result<HttpResponse, Erro
 
 #[cfg(test)]
 mod tests {
-    use crate::appconfig::config_app;
+    use crate::app_config::config_app;
     use actix_web::dev::Service;
     use actix_web::{
         http::{header, StatusCode},

@@ -913,16 +913,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "async_ex2"
-version = "1.0.0"
-dependencies = [
- "actix-web",
- "env_logger",
- "serde 1.0.136",
- "serde_json",
-]
-
-[[package]]
 name = "async_pg"
 version = "1.0.0"
 dependencies = [
@@ -3416,6 +3406,16 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "tempfile",
+]
+
+[[package]]
+name = "nested-routing"
+version = "1.0.0"
+dependencies = [
+ "actix-web",
+ "env_logger",
+ "serde 1.0.136",
+ "serde_json",
 ]
 
 [[package]]

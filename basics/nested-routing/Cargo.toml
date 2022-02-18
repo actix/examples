@@ -1,5 +1,5 @@
 [package]
-name = "async_ex2"
+name = "nested-routing"
 version = "1.0.0"
 edition = "2021"
 
