@@ -1,13 +1,7 @@
-use std::fs::File;
-use std::io::BufReader;
+use std::{fs::File, io::BufReader};
 
-use actix_web::dev::Service;
-use futures::future::FutureExt;
-
-use actix_web::{get, App, HttpServer};
-use actix_web::{http, HttpResponse};
-use futures::future;
-use futures::future::Either;
+use actix_web::{dev::Service, get, http, App, HttpResponse, HttpServer};
+use futures::future::{self, Either, FutureExt};
 use rustls::{Certificate, PrivateKey, ServerConfig};
 use rustls_pemfile::{certs, pkcs8_private_keys};
 
@@ -65,8 +59,8 @@ async fn main() -> std::io::Result<()> {
             })
             .service(index)
     })
-    .bind("0.0.0.0:80")? // Port 80 to listen for http request
-    .bind_rustls("0.0.0.0:443", config)? // Port 443 to listen for https request
+    .bind("127.0.0.1:80")? // Port 80 to listen for HTTP request
+    .bind_rustls("127.0.0.1:443", config)? // Port 443 to listen for HTTPS request
     .run()
     .await
 }

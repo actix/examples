@@ -2,14 +2,14 @@
 
 ## Run Server
 ```sh
-cd secutiy/web-cors/backend
+cd cors/backend
 cargo run
 ```
 
 ## Run Frontend
 In a separate terminal, also run:
 ```sh
-cd secutiy/web-cors/frontend
+cd cors/frontend
 npm install
 npm run serve
 ```

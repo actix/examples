@@ -1,7 +1,7 @@
 # cookie-auth
 
 ```sh
-cd session/cookie-auth
+cd auth/cookie-auth
 cargo run
 # Starting http server: 127.0.0.1:8080
 ```

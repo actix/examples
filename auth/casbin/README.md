@@ -5,7 +5,7 @@ Basic integration of [Casbin-RS](https://github.com/casbin/casbin-rs) with [RBAC
 ## Usage
 
 ```sh
-cd security/casbin
+cd auth/casbin
 ```
 
 Modify the files in the `rbac` directory and the code in the `src` directory as required.
@@ -13,7 +13,7 @@ Modify the files in the `rbac` directory and the code in the `src` directory as 
 ## Running Server
 
 ```sh
-cd security/casbin
+cd auth/casbin
 cargo run (or ``cargo watch -x run``)
 
 # Started http server: 127.0.0.1:8080

@@ -1,6 +1,6 @@
-# middleware examples
+# Middleware: Add/Retrieve Request-Local Data
 
-This example showcases a middleware that adds and retrieves request-local data. See also the [Middleware guide](https://actix.rs/docs/middleware/).
+This example showcases a middleware that adds and retrieves request-local data. See also the [middleware guide](https://actix.rs/docs/middleware/).
 
 ## Usage
 
