@@ -1,5 +1,5 @@
 [package]
-name = "static_index"
+name = "static-files"
 version = "1.0.0"
 edition = "2021"
 

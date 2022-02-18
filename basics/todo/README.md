@@ -10,7 +10,7 @@ A simple Todo project using a SQLite database.
 
 All instructions assume you have changed into this folder:
 
-```bash
+```sh
 cd basics/todo
 ```
 

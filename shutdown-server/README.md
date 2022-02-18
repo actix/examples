@@ -11,7 +11,7 @@ Demonstrates how to shutdown the web server in a couple of ways:
 
 ### Running The Server
 
-```bash
+```sh
 cd basics/shutdown-server
 cargo run --bin shutdown-server
 

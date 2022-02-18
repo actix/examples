@@ -2,7 +2,7 @@
 
 ### Run
 
-```bash
+```sh
 cd forms/multipart
 cargo run
 ```

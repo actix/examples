@@ -8,13 +8,13 @@ We put the self-signed certificate in this directory as an example
 but your browser would complain that it isn't secure.
 So we recommend to use [`mkcert`] to trust it. To use local CA, you should run:
 
-```bash
+```sh
 mkcert -install
 ```
 
 If you want to generate your own cert/private key file, then run:
 
-```bash
+```sh
 mkcert 127.0.0.1
 ```
 
@@ -22,7 +22,7 @@ mkcert 127.0.0.1
 
 ### server
 
-```bash
+```sh
 cd security/openssl
 cargo run (or ``cargo watch -x run``)
 # Started http server: 127.0.0.1:8443

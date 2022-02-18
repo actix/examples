@@ -1,6 +1,6 @@
 ## Unix domain socket example
 
-```bash
+```sh
 cd unix-socket
 cargo run
 

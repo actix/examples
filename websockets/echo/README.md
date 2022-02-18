@@ -6,7 +6,7 @@ Simple echo websocket server.
 
 ### server
 
-```bash
+```sh
 cd websockets/websocket
 cargo run --bin websocket-server
 # Started http server: 127.0.0.1:8080
@@ -18,7 +18,7 @@ cargo run --bin websocket-server
 
 ### rust client
 
-```bash
+```sh
 cd websockets/websocket
 cargo run --bin websocket-client
 ```

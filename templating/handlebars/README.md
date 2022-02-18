@@ -4,7 +4,7 @@ This is an example of how to use Actix Web with the [Handlebars](https://crates.
 
 ## Usage
 
-```bash
+```sh
 cd templating/handlebars
 cargo run
 ```

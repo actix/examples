@@ -3,7 +3,7 @@ The endpoints do nothing.
 
 ## Usage
 
-```bash
+```sh
 cd basics/nested-routing
 cargo run
 # Started http server: 127.0.0.1:8080

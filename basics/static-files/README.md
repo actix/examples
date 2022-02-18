@@ -1,4 +1,4 @@
-# static_index
+# Static Files
 
 Demonstrates how to serve static files. Inside the `./static` folder you will find 2 subfolders:
 
@@ -8,13 +8,12 @@ Demonstrates how to serve static files. Inside the `./static` folder you will fi
 
 ## Usage
 
-```bash
-$ cd basics/static_index
-$ cargo run
+```sh
+cd basics/static-files
+cargo run
 ```
 
 ### Available Routes
 
 - [GET /](http://localhost:8080/)
 - [GET /images](http://localhost:8080/images)
-

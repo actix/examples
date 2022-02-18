@@ -6,7 +6,7 @@ WebSocket server for the [Autobahn WebSocket protocol testsuite](https://github.
 
 ### Server
 
-```bash
+```sh
 cd websockets/autobahn
 cargo run
 ```
@@ -17,7 +17,7 @@ Running the autobahn test suite is easiest using the docker image as explained o
 
 After starting the server, in the same directory, run the test suite in "fuzzing client" mode:
 
-```bash
+```sh
 docker run -it --rm \
     -v "${PWD}/config:/config" \
     -v "${PWD}/reports:/reports" \

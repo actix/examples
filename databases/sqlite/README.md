@@ -5,7 +5,7 @@ Getting started using databases with Actix Web, asynchronously.
 ### init database sqlite
 
 From the root directory of this project:
-```bash
+```sh
 bash db/setup_db.sh
 ```
 
@@ -14,7 +14,7 @@ This creates a sqlite database, weather.db, in the root.
 
 ### server
 
-```bash
+```sh
 # if ubuntu : sudo apt-get install libsqlite3-dev
 # if fedora : sudo dnf install libsqlite3x-devel
 cargo run
@@ -29,7 +29,7 @@ cargo run
 
 ### sqlite client
 
-```bash
+```sh
 # if ubuntu : sudo apt-get install sqlite3
 # if fedora : sudo dnf install sqlite3x
 sqlite3 weather.db

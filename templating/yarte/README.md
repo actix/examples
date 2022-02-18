@@ -2,7 +2,7 @@
 
 Minimal example of using template [yarte](https://github.com/botika/yarte) that displays a form.
 
-```bash
+```sh
 cd templating/yarte
 cargo test
 cargo run

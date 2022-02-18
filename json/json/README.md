@@ -6,7 +6,7 @@ Json's `Getting Started` guide using json (serde-json or json-rust) for Actix We
 
 ### server
 
-```bash
+```sh
 cd json/json
 cargo run
 # Started http server: 127.0.0.1:8080

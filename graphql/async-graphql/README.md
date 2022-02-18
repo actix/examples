@@ -4,7 +4,7 @@
 
 ## Usage
 
-```bash
+```sh
 cd graphql/graphql-demo
 cargo run
 ```

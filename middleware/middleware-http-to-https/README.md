@@ -8,7 +8,7 @@ Now, the only problem left to solve is, to listen to **HTTP** connections as wel
 
 ## Usage
 
-```bash
+```sh
 cd middleware/middleware-http-to-https
 cargo run
 ```

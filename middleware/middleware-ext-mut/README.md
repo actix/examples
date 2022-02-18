@@ -4,7 +4,7 @@ This example showcases a middleware that adds and retrieves request-local data. 
 
 ## Usage
 
-```bash
+```sh
 cd middleware/middleware-ext-mut
 cargo run
 ```
