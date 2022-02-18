@@ -1,8 +1,10 @@
 use std::time::{Duration, Instant};
 
-use actix::*;
-use actix_files as fs;
-use actix_web::{http::header, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix::prelude::*;
+use actix_files::NamedFile;
+use actix_web::{
+    middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder,
+};
 use actix_web_actors::ws;
 
 mod codec;
@@ -11,15 +13,20 @@ mod session;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
+
 /// How long before lack of client response causes a timeout
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
+
+async fn index() -> impl Responder {
+    NamedFile::open_async("./static/index.html").await.unwrap()
+}
 
 /// Entry point for our route
 async fn chat_route(
     req: HttpRequest,
     stream: web::Payload,
     srv: web::Data<Addr<server::ChatServer>>,
-) -> Result<HttpResponse, Error> {
+) -> Result<impl Responder, Error> {
     ws::start(
         WsChatSession {
             id: 0,
@@ -109,7 +116,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
             Ok(msg) => msg,
         };
 
-        println!("WEBSOCKET MESSAGE: {:?}", msg);
+        log::debug!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
             ws::Message::Ping(msg) => {
                 self.hb = Instant::now();
@@ -235,19 +242,14 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(server.clone()))
-            // redirect to websocket.html
-            .service(web::resource("/").route(web::get().to(|| async {
-                HttpResponse::Found()
-                    .insert_header((header::LOCATION, "/static/websocket.html"))
-                    .finish()
-            })))
+            // WebSocket UI HTML file
+            .service(web::resource("/").to(index))
             // websocket
-            .service(web::resource("/ws/").to(chat_route))
-            // static resources
-            .service(fs::Files::new("/static/", "static/"))
+            .service(web::resource("/ws").to(chat_route))
+            .wrap(Logger::default())
     })
     .bind(("127.0.0.1", 8080))?
-    .workers(1)
+    .workers(2)
     .run()
     .await
 }

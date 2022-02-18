@@ -55,7 +55,7 @@ async fn main() -> io::Result<()> {
             .service(web::resource("/").route(web::get().to(api::index)))
             .service(web::resource("/todo").route(web::post().to(api::create)))
             .service(web::resource("/todo/{id}").route(web::post().to(api::update)))
-            .service(Files::new("/static", "./static/"))
+            .service(Files::new("/static", "./static"))
     })
     .bind(("127.0.0.1", 8080))?
     .workers(2)

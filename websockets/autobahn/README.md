@@ -1,22 +1,21 @@
-# websocket
+# WebSocket Autobahn Test Server
 
-Websocket server for autobahn suite testing.
+WebSocket server for the [Autobahn WebSocket protocol testsuite](https://github.com/crossbario/autobahn-testsuite).
 
 ## Usage
 
-### server
+### Server
 
 ```bash
 cd websockets/autobahn
-cargo run --bin websocket-autobahn-server
+cargo run
 ```
 
 ### Running Autobahn Test Suite
 
-Running the autobahn test suite is easiest using the docker image
-as explained on the [autobahn-testsuite repo](https://github.com/crossbario/autobahn-testsuite#using-the-testsuite-docker-image).
+Running the autobahn test suite is easiest using the docker image as explained on the [autobahn test suite repo](https://github.com/crossbario/autobahn-testsuite#using-the-testsuite-docker-image).
 
-First, start a server (see above). Then, run the test suite in fuzzingclient mode:
+After starting the server, in the same directory, run the test suite in "fuzzing client" mode:
 
 ```bash
 docker run -it --rm \

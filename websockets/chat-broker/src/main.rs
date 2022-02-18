@@ -1,7 +1,7 @@
-use log::info;
-
-use actix_files::Files;
-use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_files::{Files, NamedFile};
+use actix_web::{
+    middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder,
+};
 use actix_web_actors::ws;
 
 mod message;
@@ -10,28 +10,32 @@ mod session;
 
 use session::WsChatSession;
 
-async fn chat_route(
+async fn index() -> impl Responder {
+    NamedFile::open_async("./static/index.html").await.unwrap()
+}
+
+async fn chat_ws(
     req: HttpRequest,
     stream: web::Payload,
-) -> Result<HttpResponse, Error> {
+) -> Result<impl Responder, Error> {
     ws::start(WsChatSession::default(), &req, stream)
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
-        .init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let addr = ("127.0.0.1", 8080);
+    log::info!("starting HTTP server at http://localhost:8080");
 
-    let srv = HttpServer::new(move || {
+    HttpServer::new(move || {
         App::new()
-            .service(web::resource("/ws/").to(chat_route))
-            .service(Files::new("/", "./static/").index_file("index.html"))
+            .service(web::resource("/").to(index))
+            .service(web::resource("/ws").to(chat_ws))
+            .service(Files::new("/static", "./static"))
+            .wrap(Logger::default())
     })
-    .bind(&addr)?;
-
-    info!("Starting http server: {}", &addr);
-
-    srv.run().await
+    .workers(2)
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }

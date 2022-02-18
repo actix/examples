@@ -1,12 +1,11 @@
-use log::{debug, info};
-
-use actix::fut;
-use actix::prelude::*;
+use actix::{fut, prelude::*};
 use actix_broker::BrokerIssue;
 use actix_web_actors::ws;
 
-use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
-use crate::server::WsChatServer;
+use crate::{
+    message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage},
+    server::WsChatServer,
+};
 
 #[derive(Default)]
 pub struct WsChatSession {
@@ -84,7 +83,7 @@ impl Actor for WsChatSession {
     }
 
     fn stopped(&mut self, _ctx: &mut Self::Context) {
-        info!(
+        log::info!(
             "WsChatSession closed for {}({}) in room {}",
             self.name.clone().unwrap_or_else(|| "anon".to_string()),
             self.id,
@@ -115,7 +114,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
             Ok(msg) => msg,
         };
 
-        debug!("WEBSOCKET MESSAGE: {:?}", msg);
+        log::debug!("WEBSOCKET MESSAGE: {:?}", msg);
 
         match msg {
             ws::Message::Text(text) => {

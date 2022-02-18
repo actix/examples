@@ -1,7 +1,7 @@
+use std::collections::HashMap;
+
 use actix::prelude::*;
 use actix_broker::BrokerSubscribe;
-
-use std::collections::HashMap;
 
 use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
 

@@ -3,18 +3,17 @@ use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServ
 use actix_web_actors::ws;
 
 async fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    ws::start(WebSocket::new(), &r, stream)
+    ws::start(AutobahnWebSocket::default(), &r, stream)
 }
 
-struct WebSocket {}
+#[derive(Debug, Clone, Default)]
+struct AutobahnWebSocket;
 
-impl Actor for WebSocket {
+impl Actor for AutobahnWebSocket {
     type Context = ws::WebsocketContext<Self>;
-
-    fn started(&mut self, _ctx: &mut Self::Context) {}
 }
 
-impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WebSocket {
+impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for AutobahnWebSocket {
     fn handle(
         &mut self,
         msg: Result<ws::Message, ws::ProtocolError>,
@@ -37,23 +36,19 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WebSocket {
     }
 }
 
-impl WebSocket {
-    fn new() -> Self {
-        Self {}
-    }
-}
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:9001");
 
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Logger::default())
             .service(web::resource("/").route(web::get().to(ws_index)))
     })
-    .bind("127.0.0.1:9001")?
+    .workers(2)
+    .bind(("127.0.0.1", 9001))?
     .run()
     .await
 }

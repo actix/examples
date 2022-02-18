@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Websocket Chat Broker</title>
+    <title>Chat!</title>
 
     <style>
       :root {
@@ -53,6 +53,7 @@
       }
     </style>
   </head>
+
   <body>
     <h1>Chat!</h1>
 
@@ -73,38 +74,30 @@
 
     <section>
       <h2>Commands</h2>
-      <table style="border-spacing: 0.5em;">
+      <table style="border-spacing: 0.5em">
         <tr>
           <td>
             <code>/list</code>
           </td>
-          <td>
-            list all available rooms
-          </td>
+          <td>list all available rooms</td>
         </tr>
         <tr>
           <td>
             <code>/join name</code>
           </td>
-          <td>
-            join room, if room does not exist, create new one
-          </td>
+          <td>join room, if room does not exist, create new one</td>
         </tr>
         <tr>
           <td>
             <code>/name name</code>
           </td>
-          <td>
-            set session name
-          </td>
+          <td>set session name</td>
         </tr>
         <tr>
           <td>
             <code>some message</code>
           </td>
-          <td>
-            just string, send message to all peers in same room
-          </td>
+          <td>just string, send message to all peers in same room</td>
         </tr>
       </table>
     </section>
@@ -199,6 +192,7 @@
       })
 
       updateConnectionStatus()
+
     </script>
   </body>
 </html>

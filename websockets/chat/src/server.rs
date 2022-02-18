@@ -2,15 +2,16 @@
 //! And manages available rooms. Peers send messages to other peers in same
 //! room through `ChatServer`.
 
-use actix::prelude::*;
-use rand::{self, rngs::ThreadRng, Rng};
-
-use std::sync::{
-    atomic::{AtomicUsize, Ordering},
-    Arc,
+use std::{
+    collections::{HashMap, HashSet},
+    sync::{
+        atomic::{AtomicUsize, Ordering},
+        Arc,
+    },
 };
 
-use std::collections::{HashMap, HashSet};
+use actix::prelude::*;
+use rand::{self, rngs::ThreadRng, Rng};
 
 /// Chat server sends this messages to session
 #[derive(Message)]
@@ -56,14 +57,17 @@ impl actix::Message for ListRooms {
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct Join {
-    /// Client id
+    /// Client ID
     pub id: usize,
+
     /// Room name
     pub name: String,
 }
 
-/// `ChatServer` manages chat rooms and responsible for coordinating chat
-/// session. implementation is super primitive
+/// `ChatServer` manages chat rooms and responsible for coordinating chat session.
+///
+/// Implementation is very naïve.
+#[derive(Debug)]
 pub struct ChatServer {
     sessions: HashMap<usize, Recipient<Message>>,
     rooms: HashMap<String, HashSet<usize>>,
@@ -118,7 +122,7 @@ impl Handler<Connect> for ChatServer {
         println!("Someone joined");
 
         // notify all users in same room
-        self.send_message(&"Main".to_owned(), "Someone joined", 0);
+        self.send_message("Main", "Someone joined", 0);
 
         // register session with random id
         let id = self.rng.gen::<usize>();

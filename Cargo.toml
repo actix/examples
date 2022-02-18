@@ -53,8 +53,8 @@ members = [
    "template_engines/yarte",
    "template_engines/sailfish",
    "websockets/autobahn",
-   "websockets/chat-broker",
    "websockets/chat",
-   "websockets/tcp-chat",
-   "websockets/websocket",
+   "websockets/chat-broker",
+   "websockets/chat-tcp",
+   "websockets/echo",
 ]
