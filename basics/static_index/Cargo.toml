@@ -4,6 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.0.0-rc.1"
+actix-web = "4.0.0-rc.3"
 actix-files = "0.6.0-beta.15"
 env_logger = "0.9.0"
+log = "0.4"

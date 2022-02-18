@@ -5279,6 +5279,7 @@ dependencies = [
  "actix-files",
  "actix-web",
  "env_logger",
+ "log",
 ]
 
 [[package]]

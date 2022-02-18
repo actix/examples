@@ -1,3 +1,7 @@
+//! Since Actix Web v4, this method is not necessary in order to spawn additional servers alongside
+//! your web server since the `Server` object can simply be `spawn`ed. This is kept to illustrate
+//! how to run Actix Web from a sync context.
+
 use std::{sync::mpsc, thread, time};
 
 use actix_web::{dev::ServerHandle, middleware, rt, web, App, HttpRequest, HttpServer};
