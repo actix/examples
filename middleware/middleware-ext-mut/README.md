@@ -5,9 +5,8 @@ This example showcases a middleware that adds and retrieves request-local data. 
 ## Usage
 
 ```bash
-cd basics/middleware-ext-mut
+cd middleware/middleware-ext-mut
 cargo run
-# Started http server: 127.0.0.1:8080
 ```
 
 Look in `src/add_msg.rs` to see how it works.

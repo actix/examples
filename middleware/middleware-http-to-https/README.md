@@ -6,6 +6,13 @@ You might have already implemented TLS (using one of the ways mentioned in the e
 
 Now, the only problem left to solve is, to listen to **HTTP** connections as well and redirect them to use **HTTPS**
 
+## Usage
+
+```bash
+cd middleware/middleware-http-to-https
+cargo run
+```
+
 ## Notes
 
 Also see [`redirect_to_https`](https://docs.rs/actix-web-lab/0/actix_web_lab/middleware/fn.redirect_to_https.html) from [`actix-web-lab`](https://crates.io/crates/actix-web-lab).
