@@ -1,6 +1,4 @@
-use actix_web::{
-    error, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder,
-};
+use actix_web::{error, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -18,9 +16,7 @@ fn json_error_handler(err: error::JsonPayloadError, _req: &HttpRequest) -> error
 
     let detail = err.to_string();
     let resp = match &err {
-        JsonPayloadError::ContentType => {
-            HttpResponse::UnsupportedMediaType().body(detail)
-        }
+        JsonPayloadError::ContentType => HttpResponse::UnsupportedMediaType().body(detail),
         JsonPayloadError::Deserialize(json_err) if json_err.is_data() => {
             HttpResponse::UnprocessableEntity().body(detail)
         }

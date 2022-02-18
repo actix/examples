@@ -14,10 +14,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
-            .service(
-                web::resource("/index.html")
-                    .route(web::get().to(|| async { "Hello world!" })),
-            )
+            .service(web::resource("/index.html").route(web::get().to(|| async { "Hello world!" })))
             .service(web::resource("/").to(index))
     })
     .bind_uds("/tmp/actix-uds.socket")?

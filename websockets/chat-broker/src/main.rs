@@ -1,7 +1,5 @@
 use actix_files::{Files, NamedFile};
-use actix_web::{
-    middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder,
-};
+use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder};
 use actix_web_actors::ws;
 
 mod message;
@@ -14,10 +12,7 @@ async fn index() -> impl Responder {
     NamedFile::open_async("./static/index.html").await.unwrap()
 }
 
-async fn chat_ws(
-    req: HttpRequest,
-    stream: web::Payload,
-) -> Result<impl Responder, Error> {
+async fn chat_ws(req: HttpRequest, stream: web::Payload) -> Result<impl Responder, Error> {
     ws::start(WsChatSession::default(), &req, stream)
 }
 

@@ -23,8 +23,7 @@ impl ResponseError for Error {
     // builds the actual response to send back when an error occurs
     fn error_response(&self) -> web::HttpResponse {
         let err_json = json!({ "error": self.msg });
-        web::HttpResponse::build(StatusCode::from_u16(self.status).unwrap())
-            .json(err_json)
+        web::HttpResponse::build(StatusCode::from_u16(self.status).unwrap()).json(err_json)
     }
 }
 
@@ -40,11 +39,9 @@ async fn main() -> io::Result<()> {
     let ip_address = "127.0.0.1:8000";
     println!("Running server on {}", ip_address);
 
-    HttpServer::new(|| {
-        App::new().service(web::resource("/").route(web::get().to(index)))
-    })
-    .bind(ip_address)
-    .expect("Can not bind to port 8000")
-    .run()
-    .await
+    HttpServer::new(|| App::new().service(web::resource("/").route(web::get().to(index))))
+        .bind(ip_address)
+        .expect("Can not bind to port 8000")
+        .run()
+        .await
 }

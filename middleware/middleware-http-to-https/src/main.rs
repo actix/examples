@@ -7,9 +7,7 @@ use rustls_pemfile::{certs, pkcs8_private_keys};
 
 #[get("/")]
 async fn index() -> String {
-    String::from(
-        "<html><head><title>FOO BAR</title></head><body><h1>FOO BAR</h1></body></html>",
-    )
+    String::from("<html><head><title>FOO BAR</title></head><body><h1>FOO BAR</h1></body></html>")
 }
 
 #[actix_web::main]

@@ -46,9 +46,7 @@ async fn cache_stuff(
     }
 }
 
-async fn del_stuff(
-    redis: web::Data<Addr<RedisActor>>,
-) -> actix_web::Result<HttpResponse> {
+async fn del_stuff(redis: web::Data<Addr<RedisActor>>) -> actix_web::Result<HttpResponse> {
     let res = redis
         .send(Command(resp_array![
             "DEL",

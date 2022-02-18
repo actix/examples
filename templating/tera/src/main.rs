@@ -33,8 +33,7 @@ async fn main() -> std::io::Result<()> {
 
     println!("Listening on: 127.0.0.1:8080, open browser and visit have a try!");
     HttpServer::new(|| {
-        let tera =
-            Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();
+        let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();
 
         App::new()
             .app_data(web::Data::new(tera))

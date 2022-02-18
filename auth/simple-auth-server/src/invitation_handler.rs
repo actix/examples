@@ -15,8 +15,7 @@ pub async fn post_invitation(
     pool: web::Data<Pool>,
 ) -> Result<HttpResponse, actix_web::Error> {
     // run diesel blocking code
-    web::block(move || create_invitation(invitation_data.into_inner().email, pool))
-        .await??;
+    web::block(move || create_invitation(invitation_data.into_inner().email, pool)).await??;
 
     Ok(HttpResponse::Ok().finish())
 }
@@ -30,10 +29,7 @@ fn create_invitation(
 }
 
 /// Diesel query
-fn query(
-    eml: String,
-    pool: web::Data<Pool>,
-) -> Result<Invitation, crate::errors::ServiceError> {
+fn query(eml: String, pool: web::Data<Pool>) -> Result<Invitation, crate::errors::ServiceError> {
     use crate::schema::invitations::dsl::invitations;
 
     let new_invitation: Invitation = eml.into();

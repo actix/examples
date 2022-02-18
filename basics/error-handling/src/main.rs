@@ -93,8 +93,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     HttpServer::new(move || {
-        App::new()
-            .service(web::resource("/something").route(web::get().to(do_something)))
+        App::new().service(web::resource("/something").route(web::get().to(do_something)))
     })
     .bind("127.0.0.1:8088")?
     .run()

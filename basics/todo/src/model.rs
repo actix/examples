@@ -28,10 +28,7 @@ impl Task {
         Ok(tasks)
     }
 
-    pub async fn insert(
-        todo: NewTask,
-        connection: &SqlitePool,
-    ) -> Result<(), sqlx::Error> {
+    pub async fn insert(todo: NewTask, connection: &SqlitePool) -> Result<(), sqlx::Error> {
         sqlx::query!(
             r#"
             INSERT INTO tasks (description)
@@ -45,10 +42,7 @@ impl Task {
         Ok(())
     }
 
-    pub async fn toggle_with_id(
-        id: i32,
-        connection: &SqlitePool,
-    ) -> Result<(), sqlx::Error> {
+    pub async fn toggle_with_id(id: i32, connection: &SqlitePool) -> Result<(), sqlx::Error> {
         sqlx::query!(
             r#"
             UPDATE tasks
@@ -63,10 +57,7 @@ impl Task {
         Ok(())
     }
 
-    pub async fn delete_with_id(
-        id: i32,
-        connection: &SqlitePool,
-    ) -> Result<(), sqlx::Error> {
+    pub async fn delete_with_id(id: i32, connection: &SqlitePool) -> Result<(), sqlx::Error> {
         sqlx::query!(
             r#"
             DELETE FROM tasks

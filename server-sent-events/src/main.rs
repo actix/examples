@@ -46,10 +46,7 @@ async fn new_client(broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
         .streaming(rx)
 }
 
-async fn broadcast(
-    msg: Path<String>,
-    broadcaster: Data<Mutex<Broadcaster>>,
-) -> impl Responder {
+async fn broadcast(msg: Path<String>, broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
     broadcaster.lock().send(&msg.into_inner());
     HttpResponse::Ok().body("msg sent")
 }

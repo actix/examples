@@ -20,12 +20,7 @@ impl WsChatServer {
         Some(room)
     }
 
-    fn add_client_to_room(
-        &mut self,
-        room_name: &str,
-        id: Option<usize>,
-        client: Client,
-    ) -> usize {
+    fn add_client_to_room(&mut self, room_name: &str, id: Option<usize>, client: Client) -> usize {
         let mut id = id.unwrap_or_else(rand::random::<usize>);
 
         if let Some(room) = self.rooms.get_mut(room_name) {
@@ -50,12 +45,7 @@ impl WsChatServer {
         id
     }
 
-    fn send_chat_message(
-        &mut self,
-        room_name: &str,
-        msg: &str,
-        _src: usize,
-    ) -> Option<()> {
+    fn send_chat_message(&mut self, room_name: &str, msg: &str, _src: usize) -> Option<()> {
         let mut room = self.take_room(room_name)?;
 
         for (id, client) in room.drain() {

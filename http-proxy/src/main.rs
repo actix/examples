@@ -1,8 +1,6 @@
 use std::net::ToSocketAddrs;
 
-use actix_web::{
-    error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
-};
+use actix_web::{error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use awc::Client;
 use clap::StructOpt;
 use url::Url;
@@ -23,9 +21,7 @@ async fn forward(
         .request_from(new_url.as_str(), req.head())
         .no_decompress();
     let forwarded_req = match req.head().peer_addr {
-        Some(addr) => {
-            forwarded_req.insert_header(("x-forwarded-for", format!("{}", addr.ip())))
-        }
+        Some(addr) => forwarded_req.insert_header(("x-forwarded-for", format!("{}", addr.ip()))),
         None => forwarded_req,
     };
 
@@ -37,9 +33,7 @@ async fn forward(
     let mut client_resp = HttpResponse::build(res.status());
     // Remove `Connection` as per
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection#Directives
-    for (header_name, header_value) in
-        res.headers().iter().filter(|(h, _)| *h != "connection")
-    {
+    for (header_name, header_value) in res.headers().iter().filter(|(h, _)| *h != "connection") {
         client_resp.insert_header((header_name.clone(), header_value.clone()));
     }
 

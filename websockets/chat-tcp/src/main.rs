@@ -2,9 +2,7 @@ use std::time::{Duration, Instant};
 
 use actix::prelude::*;
 use actix_files::NamedFile;
-use actix_web::{
-    middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder,
-};
+use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder};
 use actix_web_actors::ws;
 
 mod codec;
@@ -103,11 +101,7 @@ impl Handler<session::Message> for WsChatSession {
 
 /// WebSocket message handler
 impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
-    fn handle(
-        &mut self,
-        msg: Result<ws::Message, ws::ProtocolError>,
-        ctx: &mut Self::Context,
-    ) {
+    fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         let msg = match msg {
             Err(_) => {
                 ctx.stop();

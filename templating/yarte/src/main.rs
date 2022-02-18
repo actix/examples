@@ -13,9 +13,7 @@ impl ResponseError for MyErr {}
 
 #[allow(unused_must_use)] // ywrite_min causes warning: unused borrow that must be used
 #[get("/")]
-async fn index(
-    query: web::Query<HashMap<String, String>>,
-) -> Result<HttpResponse, Error> {
+async fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpResponse, Error> {
     // `ywrite_min` is work in progress check your templates before put in production
     // or use `ywrite_html`
     Ok(HttpResponse::Ok()

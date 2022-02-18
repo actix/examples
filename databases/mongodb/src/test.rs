@@ -9,8 +9,7 @@ use super::*;
 #[actix_web::test]
 #[ignore = "requires MongoDB instance running"]
 async fn test() {
-    let uri = std::env::var("MONGODB_URI")
-        .unwrap_or_else(|_| "mongodb://localhost:27017".into());
+    let uri = std::env::var("MONGODB_URI").unwrap_or_else(|_| "mongodb://localhost:27017".into());
 
     let client = Client::with_uri_str(uri).await.expect("failed to connect");
 

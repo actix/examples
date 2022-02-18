@@ -5,10 +5,7 @@ use tokio::sync::RwLock;
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 
 /// simple handle
-async fn success(
-    enforcer: web::Data<RwLock<Enforcer>>,
-    req: HttpRequest,
-) -> HttpResponse {
+async fn success(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpResponse {
     let mut e = enforcer.write().await;
     println!("{:?}", req);
     assert_eq!(vec!["data2_admin"], e.get_roles_for_user("alice", None));

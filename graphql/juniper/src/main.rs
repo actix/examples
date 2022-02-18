@@ -25,10 +25,7 @@ async fn graphql_playground() -> impl Responder {
 
 /// GraphQL endpoint
 #[route("/graphql", method = "GET", method = "POST")]
-async fn graphql(
-    st: web::Data<Schema>,
-    data: web::Json<GraphQLRequest>,
-) -> impl Responder {
+async fn graphql(st: web::Data<Schema>, data: web::Json<GraphQLRequest>) -> impl Responder {
     let user = data.execute(&st, &()).await;
     HttpResponse::Ok().json(user)
 }

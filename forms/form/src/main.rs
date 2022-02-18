@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use actix_web::{
-    middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result,
-};
+use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
 
 struct AppState {
     foo: String,

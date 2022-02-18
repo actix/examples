@@ -18,10 +18,7 @@ use serde_json::Value;
 mod convention;
 
 /// The main handler for JSONRPC server.
-async fn rpc_handler(
-    body: Bytes,
-    app_state: web::Data<AppState>,
-) -> Result<HttpResponse, Error> {
+async fn rpc_handler(body: Bytes, app_state: web::Data<AppState>) -> Result<HttpResponse, Error> {
     let reqjson: convention::Request = match serde_json::from_slice(body.as_ref()) {
         Ok(ok) => ok,
         Err(_) => {
@@ -90,10 +87,7 @@ async fn rpc_select(
 
 pub trait ImplNetwork {
     fn ping(&self) -> String;
-    fn wait(
-        &self,
-        d: u64,
-    ) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>>;
+    fn wait(&self, d: u64) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>>;
 
     fn get(&self) -> u32;
     fn inc(&mut self);
@@ -114,10 +108,7 @@ impl ImplNetwork for ObjNetwork {
         String::from("pong")
     }
 
-    fn wait(
-        &self,
-        d: u64,
-    ) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>> {
+    fn wait(&self, d: u64) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>> {
         async move {
             actix_web::rt::time::sleep(Duration::from_secs(d)).await;
             Ok(String::from("pong"))

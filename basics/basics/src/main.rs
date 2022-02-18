@@ -9,8 +9,7 @@ use actix_web::{
         header::{self, ContentType},
         Method, StatusCode,
     },
-    middleware, web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder,
-    Result,
+    middleware, web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder, Result,
 };
 use async_stream::stream;
 
@@ -44,8 +43,7 @@ async fn welcome(req: HttpRequest, session: Session) -> Result<HttpResponse> {
 async fn default_handler(req_method: Method) -> Result<impl Responder> {
     match req_method {
         Method::GET => {
-            let file = NamedFile::open("static/404.html")?
-                .set_status_code(StatusCode::NOT_FOUND);
+            let file = NamedFile::open("static/404.html")?.set_status_code(StatusCode::NOT_FOUND);
             Ok(Either::Left(file))
         }
         _ => Ok(Either::Right(HttpResponse::MethodNotAllowed().finish())),
@@ -93,9 +91,7 @@ async fn main() -> io::Result<()> {
             // with path parameters
             .service(web::resource("/user/{name}").route(web::get().to(with_param)))
             // async response body
-            .service(
-                web::resource("/async-body/{name}").route(web::get().to(response_body)),
-            )
+            .service(web::resource("/async-body/{name}").route(web::get().to(response_body)))
             .service(
                 web::resource("/test").to(|req: HttpRequest| match *req.method() {
                     Method::GET => HttpResponse::Ok(),
@@ -112,14 +108,14 @@ async fn main() -> io::Result<()> {
             // static files
             .service(Files::new("/static", "static").show_files_listing())
             // redirect
-            .service(web::resource("/").route(web::get().to(
-                |req: HttpRequest| async move {
+            .service(
+                web::resource("/").route(web::get().to(|req: HttpRequest| async move {
                     println!("{:?}", req);
                     HttpResponse::Found()
                         .insert_header((header::LOCATION, "static/welcome.html"))
                         .finish()
-                },
-            )))
+                })),
+            )
             // default
             .default_service(web::to(default_handler))
     })

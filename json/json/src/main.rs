@@ -1,6 +1,4 @@
-use actix_web::{
-    error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
-};
+use actix_web::{error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use futures::StreamExt;
 use json::JsonValue;
 use serde::{Deserialize, Serialize};
@@ -92,10 +90,9 @@ mod tests {
 
     #[actix_web::test]
     async fn test_index() {
-        let app = test::init_service(
-            App::new().service(web::resource("/").route(web::post().to(index))),
-        )
-        .await;
+        let app =
+            test::init_service(App::new().service(web::resource("/").route(web::post().to(index))))
+                .await;
 
         let req = test::TestRequest::post()
             .uri("/")

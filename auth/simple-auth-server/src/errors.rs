@@ -20,14 +20,11 @@ pub enum ServiceError {
 impl ResponseError for ServiceError {
     fn error_response(&self) -> HttpResponse {
         match self {
-            ServiceError::InternalServerError => HttpResponse::InternalServerError()
-                .json("Internal Server Error, Please try later"),
-            ServiceError::BadRequest(ref message) => {
-                HttpResponse::BadRequest().json(message)
+            ServiceError::InternalServerError => {
+                HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
             }
-            ServiceError::Unauthorized => {
-                HttpResponse::Unauthorized().json("Unauthorized")
-            }
+            ServiceError::BadRequest(ref message) => HttpResponse::BadRequest().json(message),
+            ServiceError::Unauthorized => HttpResponse::Unauthorized().json("Unauthorized"),
         }
     }
 }
@@ -47,8 +44,7 @@ impl From<DBError> for ServiceError {
         match error {
             DBError::DatabaseError(kind, info) => {
                 if let DatabaseErrorKind::UniqueViolation = kind {
-                    let message =
-                        info.details().unwrap_or_else(|| info.message()).to_string();
+                    let message = info.details().unwrap_or_else(|| info.message()).to_string();
                     return ServiceError::BadRequest(message);
                 }
                 ServiceError::InternalServerError

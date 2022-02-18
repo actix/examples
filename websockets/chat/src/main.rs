@@ -9,8 +9,7 @@ use std::{
 use actix::*;
 use actix_files::{Files, NamedFile};
 use actix_web::{
-    middleware::Logger, web, App, Error, HttpRequest, HttpResponse, HttpServer,
-    Responder,
+    middleware::Logger, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder,
 };
 use actix_web_actors::ws;
 

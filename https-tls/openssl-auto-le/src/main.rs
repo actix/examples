@@ -10,10 +10,7 @@ use openssl::{
     x509::X509,
 };
 
-pub async fn gen_tls_cert(
-    user_email: &str,
-    user_domain: &str,
-) -> anyhow::Result<Certificate> {
+pub async fn gen_tls_cert(user_email: &str, user_domain: &str) -> anyhow::Result<Certificate> {
     // Create acme-challenge dir.
     fs::create_dir("./acme-challenge").unwrap();
 

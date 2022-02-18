@@ -23,8 +23,7 @@ async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     //make key
     let s3_upload_key = format!("projects/{}/", "posts_id");
     //create tmp file and upload s3 and remove tmp file
-    let upload_files: Vec<UploadFile> =
-        upload_save_file(pl.1, s3_upload_key).await.unwrap();
+    let upload_files: Vec<UploadFile> = upload_save_file(pl.1, s3_upload_key).await.unwrap();
     println!("upload_files={:#?}", upload_files);
     Ok(HttpResponse::Ok().into())
 }
@@ -79,8 +78,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let aws_access_key_id =
-        env::var("AWS_ACCESS_KEY_ID").expect("AWS_ACCESS_KEY_ID must be set");
+    let aws_access_key_id = env::var("AWS_ACCESS_KEY_ID").expect("AWS_ACCESS_KEY_ID must be set");
     let aws_secret_access_key =
         env::var("AWS_SECRET_ACCESS_KEY").expect("AWS_SECRET_ACCESS_KEY must be set");
     let aws_s3_bucket_name =

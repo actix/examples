@@ -49,10 +49,7 @@ pub async fn create(
     session: Session,
 ) -> Result<HttpResponse, Error> {
     if params.description.is_empty() {
-        session::set_flash(
-            &session,
-            FlashMessage::error("Description cannot be empty"),
-        )?;
+        session::set_flash(&session, FlashMessage::error("Description cannot be empty"))?;
         Ok(redirect_to("/"))
     } else {
         db::create_task(params.into_inner().description, &pool)
@@ -133,9 +130,7 @@ pub fn not_found<B>(res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse
     Ok(ErrorHandlerResponse::Response(res.into_response(new_resp)))
 }
 
-pub fn internal_server_error<B>(
-    res: dev::ServiceResponse<B>,
-) -> Result<ErrorHandlerResponse<B>> {
+pub fn internal_server_error<B>(res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
     let new_resp = NamedFile::open("static/errors/500.html")?
         .set_status_code(res.status())
         .into_response(res.request())

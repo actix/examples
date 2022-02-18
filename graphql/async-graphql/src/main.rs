@@ -12,10 +12,7 @@ use self::star_wars::{QueryRoot, StarWars, StarWarsSchema};
 
 /// GraphQL endpoint
 #[route("/graphql", method = "GET", method = "POST")]
-async fn graphql(
-    schema: web::Data<StarWarsSchema>,
-    req: GraphQLRequest,
-) -> GraphQLResponse {
+async fn graphql(schema: web::Data<StarWarsSchema>, req: GraphQLRequest) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
 }
 

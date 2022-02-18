@@ -32,8 +32,7 @@ async fn main() -> io::Result<()> {
     HttpServer::new(move || {
         log::debug!("Constructing the App");
 
-        let mut templates =
-            Tera::new("templates/**/*").expect("errors in tera templates");
+        let mut templates = Tera::new("templates/**/*").expect("errors in tera templates");
         templates.autoescape_on(vec!["tera"]);
 
         let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);

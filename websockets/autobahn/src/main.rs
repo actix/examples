@@ -14,11 +14,7 @@ impl Actor for AutobahnWebSocket {
 }
 
 impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for AutobahnWebSocket {
-    fn handle(
-        &mut self,
-        msg: Result<ws::Message, ws::ProtocolError>,
-        ctx: &mut Self::Context,
-    ) {
+    fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         if let Ok(msg) = msg {
             match msg {
                 ws::Message::Text(text) => ctx.text(text),

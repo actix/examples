@@ -20,10 +20,7 @@ async fn index(hb: web::Data<Handlebars<'_>>) -> HttpResponse {
 }
 
 #[get("/{user}/{data}")]
-async fn user(
-    hb: web::Data<Handlebars<'_>>,
-    path: web::Path<(String, String)>,
-) -> HttpResponse {
+async fn user(hb: web::Data<Handlebars<'_>>, path: web::Path<(String, String)>) -> HttpResponse {
     let info = path.into_inner();
     let data = json!({
         "user": info.0,
@@ -72,10 +69,7 @@ fn not_found<B>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<BoxBody>
 }
 
 // Generic error handler.
-fn get_error_response<B>(
-    res: &ServiceResponse<B>,
-    error: &str,
-) -> HttpResponse<BoxBody> {
+fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> HttpResponse<BoxBody> {
     let request = res.request();
 
     // Provide a fallback to a simple plain text response in case an error occurs during the

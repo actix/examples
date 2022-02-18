@@ -63,13 +63,8 @@ async fn main() -> io::Result<()> {
             // store db pool as Data object
             .app_data(web::Data::new(pool.clone()))
             .wrap(middleware::Logger::default())
-            .service(
-                web::resource("/asyncio_weather").route(web::get().to(asyncio_weather)),
-            )
-            .service(
-                web::resource("/parallel_weather")
-                    .route(web::get().to(parallel_weather)),
-            )
+            .service(web::resource("/asyncio_weather").route(web::get().to(asyncio_weather)))
+            .service(web::resource("/parallel_weather").route(web::get().to(parallel_weather)))
     })
     .bind(("127.0.0.1", 8080))?
     .workers(2)
