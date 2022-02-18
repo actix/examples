@@ -58,12 +58,12 @@ jobs:
         with:
           redis-version: 6
 
-      - name: run diesel migrations
-        run: |
-          cargo install diesel_cli
-          cd databases/diesel
-          diesel migration run
-          chmod a+rwx test.db
+      # - name: run diesel migrations
+      #   run: |
+      #     cargo install diesel_cli --no-default-features --features sqlite
+      #     cd databases/diesel
+      #     diesel migration run
+      #     chmod a+rwx test.db
 
       - name: cargo test
         uses: actions-rs/cargo@v1

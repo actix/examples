@@ -23,7 +23,7 @@ brew install sqlite3
 ### Initialize SQLite Database
 
 ```sh
-cd examples/diesel
+cd databases/diesel
 cargo install diesel_cli --no-default-features --features sqlite
 
 echo "DATABASE_URL=test.db" > .env
@@ -35,7 +35,7 @@ There will now be a database file at `./test.db`.
 ### Running Server
 
 ```sh
-cd examples/diesel
+cd databases/diesel
 cargo run (or ``cargo watch -x run``)
 
 # Started http server: 127.0.0.1:8080
