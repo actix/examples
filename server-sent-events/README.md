@@ -2,7 +2,7 @@
 Example of server-sent events, aka `EventSource`, with actix web.
 
 ```sh
-cd other/server-sent-events
+cd server-sent-events
 cargo run
 ```
 

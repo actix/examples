@@ -1,7 +1,7 @@
 ## Unix domain socket example
 
 ```bash
-cd other/unix-socket
+cd unix-socket
 cargo run
 
 # in another shell

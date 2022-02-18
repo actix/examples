@@ -5,7 +5,7 @@
 ### Server
 
 ```shell
-cd other/protobuf
+cd protobuf
 cargo run
 ```
 
