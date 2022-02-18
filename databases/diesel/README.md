@@ -36,7 +36,7 @@ There will now be a database file at `./test.db`.
 
 ```sh
 cd databases/diesel
-cargo run (or ``cargo watch -x run``)
+cargo run
 
 # Started http server: 127.0.0.1:8080
 ```

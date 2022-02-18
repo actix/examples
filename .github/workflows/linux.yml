@@ -70,5 +70,4 @@ jobs:
         timeout-minutes: 30
         with:
           command: test
-          # TODO: remove exclude protobuf-example when upgraded; currently fails on nightly
-          args: --workspace --all-features --no-fail-fast --exclude protobuf-example -- --nocapture
+          args: --workspace --all-features --no-fail-fast -- --nocapture
