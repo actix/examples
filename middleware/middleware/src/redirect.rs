@@ -12,6 +12,7 @@ impl<S, B> Transform<S, ServiceRequest> for CheckLogin
 where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
@@ -31,6 +32,7 @@ impl<S, B> Service<ServiceRequest> for CheckLoginMiddleware<S>
 where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
     S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
@@ -38,26 +40,28 @@ where
 
     dev::forward_ready!(service);
 
-    fn call(&self, req: ServiceRequest) -> Self::Future {
+    fn call(&self, request: ServiceRequest) -> Self::Future {
         // We only need to hook into the `start` for this middleware.
         let is_logged_in = false; // Change this to see the change in outcome in the browser
-        let (request, payload) = req.into_parts();
-        let svc_response = self
-            .service
-            .call(ServiceRequest::from_parts(request.clone(), payload));
+
+        // Don't forward to /login if we are already on /login
+        if is_logged_in || request.path() == "/login" {
+            let (request, _pl) = request.into_parts();
+
+            let response = HttpResponse::Found()
+                .insert_header((http::header::LOCATION, "/login"))
+                .finish()
+                // constructed responses map to "right" body
+                .map_into_right_body();
+
+            return Box::pin(async { Ok(ServiceResponse::new(request, response)) });
+        }
+
+        let res = self.service.call(request);
 
         Box::pin(async move {
-            // Don't forward to /login if we are already on /login
-            if is_logged_in || request.path() == "/login" {
-                svc_response.await.map(ServiceResponse::map_into_left_body)
-            } else {
-                let response = HttpResponse::Found()
-                    .insert_header((http::header::LOCATION, "/login"))
-                    .finish()
-                    .map_into_right_body();
-
-                Ok(ServiceResponse::new(request, response))
-            }
+            // forwarded responses map to "left" body
+            res.await.map(ServiceResponse::map_into_left_body)
         })
     }
 }
