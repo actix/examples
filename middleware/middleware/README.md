@@ -30,3 +30,7 @@ A middleware demonstrating how to read out the outgoing response body.
 
 A minimal middleware demonstrating the sequence of operations in an actix middleware.
 There is a second version of the same middleware using `wrap_fn` which shows how easily a middleware can be implemented in actix.
+
+## See Also
+
+- The `from_fn` middleware constructor from [`actix-web-lab`](https://crates.io/crates/actix-web-lab).

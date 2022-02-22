@@ -6,5 +6,6 @@ edition = "2021"
 [dependencies]
 actix-web = "4.0.0-rc.3"
 env_logger = "0.9"
-futures = "0.3.7"
+futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
+log = "0.4"
 pin-project = "1"

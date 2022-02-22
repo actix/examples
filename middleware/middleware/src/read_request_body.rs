@@ -3,11 +3,12 @@ use std::{
     rc::Rc,
 };
 
-use actix_web::dev::{self, Service, Transform};
-use actix_web::web::BytesMut;
-use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error, HttpMessage};
-use futures::future::LocalBoxFuture;
-use futures::stream::StreamExt;
+use actix_web::{
+    dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
+    web::BytesMut,
+    Error, HttpMessage,
+};
+use futures_util::{future::LocalBoxFuture, stream::StreamExt};
 
 pub struct Logging;
 

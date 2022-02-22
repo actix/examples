@@ -1,13 +1,16 @@
-use std::future::Future;
-use std::future::{ready, Ready};
-use std::marker::PhantomData;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{
+    future::{ready, Future, Ready},
+    marker::PhantomData,
+    pin::Pin,
+    task::{Context, Poll},
+};
 
-use actix_web::body::{BodySize, MessageBody};
-use actix_web::dev::{self, Service, Transform};
-use actix_web::web::{Bytes, BytesMut};
-use actix_web::{dev::ServiceRequest, dev::ServiceResponse, Error};
+use actix_web::{
+    body::{BodySize, MessageBody},
+    dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
+    web::{Bytes, BytesMut},
+    Error,
+};
 
 pub struct Logging;
 
@@ -69,7 +72,7 @@ where
     type Output = Result<ServiceResponse<BodyLogger<B>>, Error>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let res = futures::ready!(self.project().fut.poll(cx));
+        let res = futures_util::ready!(self.project().fut.poll(cx));
 
         Poll::Ready(res.map(|res| {
             res.map_body(move |_, body| BodyLogger {

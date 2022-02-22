@@ -3118,7 +3118,8 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
- "futures",
+ "futures-util",
+ "log",
  "pin-project",
 ]
 
@@ -3136,7 +3137,9 @@ name = "middleware-http-to-https"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "futures",
+ "env_logger",
+ "futures-util",
+ "log",
  "rustls 0.20.3",
  "rustls-pemfile",
 ]

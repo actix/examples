@@ -1,7 +1,7 @@
 use std::{fs::File, io::BufReader};
 
 use actix_web::{dev::Service, get, http, App, HttpResponse, HttpServer};
-use futures::future::{self, Either, FutureExt};
+use futures_util::future::{self, Either, FutureExt};
 use rustls::{Certificate, PrivateKey, ServerConfig};
 use rustls_pemfile::{certs, pkcs8_private_keys};
 
@@ -12,6 +12,8 @@ async fn index() -> String {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
     let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
 
@@ -31,6 +33,8 @@ async fn main() -> std::io::Result<()> {
         .with_no_client_auth()
         .with_single_cert(cert_chain, keys.remove(0))
         .unwrap();
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()

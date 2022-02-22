@@ -1,19 +1,16 @@
 use actix_web::{dev::Service, web, App, HttpServer};
-use futures::FutureExt as _;
+use futures_util::FutureExt as _;
 
-#[allow(dead_code)]
 mod read_request_body;
-#[allow(dead_code)]
 mod read_response_body;
-#[allow(dead_code)]
 mod redirect;
-#[allow(dead_code)]
 mod simple;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=debug");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()

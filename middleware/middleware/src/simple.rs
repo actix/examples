@@ -4,7 +4,7 @@ use actix_web::{
     dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
     Error,
 };
-use futures::future::LocalBoxFuture;
+use futures_util::future::LocalBoxFuture;
 
 // There are two steps in middleware processing.
 // 1. Middleware initialization, middleware factory gets called with

@@ -4,7 +4,7 @@ use actix_web::body::EitherBody;
 use actix_web::dev::{self, ServiceRequest, ServiceResponse};
 use actix_web::dev::{Service, Transform};
 use actix_web::{http, Error, HttpResponse};
-use futures::future::LocalBoxFuture;
+use futures_util::future::LocalBoxFuture;
 
 pub struct CheckLogin;
 
@@ -41,11 +41,12 @@ where
     dev::forward_ready!(service);
 
     fn call(&self, request: ServiceRequest) -> Self::Future {
-        // We only need to hook into the `start` for this middleware.
-        let is_logged_in = false; // Change this to see the change in outcome in the browser
+        // Change this to see the change in outcome in the browser.
+        // Usually this boolean would be acquired from a password check or other auth verification.
+        let is_logged_in = false;
 
-        // Don't forward to /login if we are already on /login
-        if is_logged_in || request.path() == "/login" {
+        // Don't forward to `/login` if we are already on `/login`.
+        if !is_logged_in && request.path() != "/login" {
             let (request, _pl) = request.into_parts();
 
             let response = HttpResponse::Found()
