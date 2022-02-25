@@ -9,7 +9,7 @@ repository = "https://github.com/actix/examples"
 readme = "README.md"
 
 [dependencies]
-actix-multipart = "0.4.0-beta.12"
+actix-multipart = "0.4"
 actix-web = "4"
 
 futures-util = "0.3"

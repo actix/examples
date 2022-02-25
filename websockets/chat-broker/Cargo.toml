@@ -12,7 +12,7 @@ actix = "0.12"
 actix-broker = "0.4"
 actix-files = "0.6"
 actix-web = "4"
-actix-web-actors = "4.0.0-beta.12"
+actix-web-actors = "4"
 
 env_logger = "0.9"
 log = "0.4"
