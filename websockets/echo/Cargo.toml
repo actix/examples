@@ -14,9 +14,9 @@ path = "src/client.rs"
 [dependencies]
 actix = "0.12"
 actix-codec = "0.5"
-actix-files = "0.6.0-beta.16"
+actix-files = "0.6"
 actix-rt = "2"
-actix-web = "4.0.0-rc.3"
+actix-web = "4"
 actix-web-actors = "4.0.0-beta.12"
 awc = "3.0.0-beta.21"
 

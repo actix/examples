@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { version = "4.0.0-beta.21", features = ["rustls"] }
+actix-web = { version = "4", features = ["rustls"] }
 env_logger = "0.9"
 futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
 log = "0.4"

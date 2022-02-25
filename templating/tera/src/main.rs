@@ -15,8 +15,8 @@ async fn index(
     let s = if let Some(name) = query.get("name") {
         // submitted form
         let mut ctx = tera::Context::new();
-        ctx.insert("name", &name.to_owned());
-        ctx.insert("text", &"Welcome!".to_owned());
+        ctx.insert("name", name);
+        ctx.insert("text", "Welcome!");
         tmpl.render("user.html", &ctx)
             .map_err(|_| error::ErrorInternalServerError("Template error"))?
     } else {

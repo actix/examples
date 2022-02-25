@@ -1,9 +1,11 @@
-// This example is meant to show how to automatically generate a json error response when something goes wrong.
-use std::fmt::{Display, Formatter, Result as FmtResult};
-use std::io;
+//! This example is meant to show how to automatically generate a json error response when something goes wrong.
 
-use actix_web::http::StatusCode;
-use actix_web::{web, App, HttpServer, ResponseError};
+use std::{
+    fmt::{Display, Formatter, Result as FmtResult},
+    io,
+};
+
+use actix_web::{http::StatusCode, web, App, HttpResponse, HttpServer, ResponseError};
 use serde::Serialize;
 use serde_json::{json, to_string_pretty};
 
@@ -21,13 +23,13 @@ impl Display for Error {
 
 impl ResponseError for Error {
     // builds the actual response to send back when an error occurs
-    fn error_response(&self) -> web::HttpResponse {
+    fn error_response(&self) -> HttpResponse {
         let err_json = json!({ "error": self.msg });
-        web::HttpResponse::build(StatusCode::from_u16(self.status).unwrap()).json(err_json)
+        HttpResponse::build(StatusCode::from_u16(self.status).unwrap()).json(err_json)
     }
 }
 
-async fn index() -> Result<web::HttpResponse, Error> {
+async fn index() -> Result<HttpResponse, Error> {
     Err(Error {
         msg: "an example error message".to_string(),
         status: 400,

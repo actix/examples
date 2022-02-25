@@ -4,6 +4,6 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.0.0-beta.21"
+actix-web = "4"
 handlebars = { version = "4.2.1", features = ["dir_source"] }
 serde_json = "1.0"

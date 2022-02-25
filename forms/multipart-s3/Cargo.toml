@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.0.0-rc.3"
+actix-web = "4"
 actix-multipart = "0.4.0-beta.12"
 
 dotenv = "0.15.0"

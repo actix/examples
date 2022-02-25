@@ -107,7 +107,7 @@ impl Handler<Connect> for ChatServer {
         println!("Someone joined");
 
         // notify all users in same room
-        self.send_message(&"Main".to_owned(), "Someone joined", 0);
+        self.send_message("Main", "Someone joined", 0);
 
         // register session with random id
         let id = self.rng.gen::<usize>();
