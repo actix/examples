@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 actix-files = "0.6"
-actix-session = "0.5.0-beta.7"
+actix-session = "0.5"
 
 async-stream = "0.3"
 env_logger = "0.9"

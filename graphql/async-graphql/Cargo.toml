@@ -4,9 +4,10 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
+actix = "0.12"
 actix-web = "4"
 actix-web-lab = "0.10"
-actix-cors = "0.6.0-beta.10"
+actix-cors = "0.6"
 
 async-graphql = "3"
 async-graphql-actix-web = "3"

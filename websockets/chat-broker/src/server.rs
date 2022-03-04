@@ -49,7 +49,7 @@ impl WsChatServer {
         let mut room = self.take_room(room_name)?;
 
         for (id, client) in room.drain() {
-            if client.do_send(ChatMessage(msg.to_owned())).is_ok() {
+            if client.try_send(ChatMessage(msg.to_owned())).is_ok() {
                 self.add_client_to_room(room_name, Some(id), client);
             }
         }

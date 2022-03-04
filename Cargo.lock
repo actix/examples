@@ -100,23 +100,6 @@ dependencies = [
 
 [[package]]
 name = "actix-codec"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a36c014a3e811624313b51a227b775ecba55d36ef9462bbaac7d4f13e54c9271"
-dependencies = [
- "bitflags",
- "bytes 1.1.0",
- "futures-core",
- "futures-sink",
- "log",
- "memchr",
- "pin-project-lite 0.2.8",
- "tokio 1.17.0",
- "tokio-util 0.6.9",
-]
-
-[[package]]
-name = "actix-codec"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57a7559404a7f3573127aab53c08ce37a6c6a315c374a31070f3c91cd1b4a7fe"
@@ -177,7 +160,7 @@ version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5753ed977cb402da7f63445cfcca2f3e514189d516bd0b0d8cd1e24979bfcd3c"
 dependencies = [
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-rt",
  "actix-service",
  "actix-tls",
@@ -215,7 +198,7 @@ version = "3.0.0-beta.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "09594b8a7eaa15da5cfd0e25c779d4b1d6ded62d4a79904f1d91b0dcf97c78e7"
 dependencies = [
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-rt",
  "actix-server",
  "actix-service",
@@ -393,7 +376,7 @@ version = "0.1.0-beta.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7919a113ef74b5d52218ea0bd310d0d1b0d2be822994716754e265f20734d601"
 dependencies = [
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-http",
  "actix-http-test",
  "actix-rt",
@@ -416,7 +399,7 @@ version = "3.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9fde0cf292f7cdc7f070803cb9a0d45c018441321a78b1042ffbbb81ec333297"
 dependencies = [
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-rt",
  "actix-service",
  "actix-utils",
@@ -447,7 +430,7 @@ version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f4e5ebffd51d50df56a3ae0de0e59487340ca456f05dd0b90c0a7a6dd6a74d31"
 dependencies = [
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-http",
  "actix-macros",
  "actix-router",
@@ -489,7 +472,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "31efe7896f3933ce03dd4710be560254272334bb321a18fd8ff62b1a557d9d19"
 dependencies = [
  "actix 0.13.0",
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-http",
  "actix-web",
  "bytes 1.1.0",
@@ -778,9 +761,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql"
-version = "3.0.31"
+version = "3.0.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d1a994a60389a32a31304e46d437a11db46d5bbeb8c26de3dbfa309efd8b93e4"
+checksum = "0963d76eb680488eb844e0ff9b0bb6249d5d293d3b322a4e6d6e7db4f9e13819"
 dependencies = [
  "async-graphql-derive",
  "async-graphql-parser",
@@ -808,11 +791,11 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-actix-web"
-version = "3.0.31"
+version = "3.0.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb7df7399ff10b17ced5104c1046152ec8a05f3c8facb3b671fbe72ffed0c3ad"
+checksum = "a9985cd828b76cf9d29a0eb23285809905f789da484a4d47a19adfd14c2ea50f"
 dependencies = [
- "actix 0.12.0",
+ "actix 0.13.0",
  "actix-http",
  "actix-web",
  "actix-web-actors",
@@ -829,6 +812,7 @@ dependencies = [
 name = "async-graphql-demo"
 version = "1.0.0"
 dependencies = [
+ "actix 0.12.0",
  "actix-cors",
  "actix-web",
  "actix-web-lab",
@@ -841,9 +825,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-derive"
-version = "3.0.31"
+version = "3.0.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71011bef5fef3019016b17fb8ba588d562c128d2d7ea93c86093352d5fd51ccf"
+checksum = "f907d2577211fd0e542439e70e2ad17533fcf0208a2c84b47ff6e7eeb4d9b4fa"
 dependencies = [
  "Inflector",
  "async-graphql-parser",
@@ -857,9 +841,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-parser"
-version = "3.0.31"
+version = "3.0.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13b4caccb492c65240591a193c3e90ac11018dd25670544ce07360b7116c6153"
+checksum = "759f63930ab8203f285c2f2821d311d31210819a4b1f0626b5a2b554e92095bf"
 dependencies = [
  "async-graphql-value",
  "pest",
@@ -870,9 +854,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-value"
-version = "3.0.31"
+version = "3.0.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30cd0d73a5a13fe9d1a7d5dd67c6394663dd531afb26a0c50c5da5b29cf7ba1f"
+checksum = "35d22aaffb19bce9f28f3e614aa7a029e612e9042e36bd665882856dc4c7cb79"
 dependencies = [
  "bytes 1.1.0",
  "indexmap",
@@ -984,7 +968,7 @@ version = "3.0.0-beta.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d91ad5074d7d2d8be6ef74d4ecb79c0f4d5f58bdc7ec896d5fbaa9f2fb9bfa5e"
 dependencies = [
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-http",
  "actix-rt",
  "actix-service",
@@ -4067,7 +4051,7 @@ dependencies = [
 name = "protobuf-example"
 version = "1.0.0"
 dependencies = [
- "actix 0.12.0",
+ "actix 0.13.0",
  "actix-protobuf",
  "actix-web",
  "env_logger",
@@ -6487,7 +6471,7 @@ name = "websocket"
 version = "1.0.0"
 dependencies = [
  "actix 0.13.0",
- "actix-codec 0.5.0",
+ "actix-codec",
  "actix-files",
  "actix-rt",
  "actix-web",
@@ -6545,7 +6529,7 @@ name = "websocket-tcp-example"
 version = "1.0.0"
 dependencies = [
  "actix 0.13.0",
- "actix-codec 0.4.2",
+ "actix-codec",
  "actix-files",
  "actix-web",
  "actix-web-actors",
@@ -6559,7 +6543,7 @@ dependencies = [
  "serde_json",
  "tokio 1.17.0",
  "tokio-stream",
- "tokio-util 0.6.9",
+ "tokio-util 0.7.0",
 ]
 
 [[package]]
