@@ -8,9 +8,9 @@ name = "websocket-autobahn-server"
 path = "src/main.rs"
 
 [dependencies]
-actix = "0.12"
+actix = "0.13"
 actix-web = "4"
-actix-web-actors = "4"
+actix-web-actors = "4.1"
 
 env_logger = "0.9"
 log = "0.4"
