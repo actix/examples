@@ -25,6 +25,7 @@ members = [
    "graphql/async-graphql",
    "graphql/juniper-advanced",
    "graphql/juniper",
+   "guards",
    "http-proxy",
    "https-tls/awc-https",
    "https-tls/openssl-auto-le",

@@ -2319,6 +2319,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "guards"
+version = "1.0.0"
+dependencies = [
+ "actix-web",
+]
+
+[[package]]
 name = "h2"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
