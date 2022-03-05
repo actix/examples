@@ -11,7 +11,7 @@ use actix_web::{
 };
 use futures_util::Stream;
 use parking_lot::Mutex;
-use tokio::sync::mpsc::{channel, Sender, Receiver};
+use tokio::sync::mpsc::{channel, Receiver, Sender};
 
 pub struct Broadcaster {
     inner: Mutex<BroadcasterInner>,
