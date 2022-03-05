@@ -4,7 +4,6 @@ use actix_web::{
     web::{self, Data, Path},
     App, HttpResponse, HttpServer, Responder,
 };
-use parking_lot::Mutex;
 
 mod broadcast;
 use broadcast::Broadcaster;
@@ -38,15 +37,15 @@ async fn index() -> impl Responder {
         .body(index_html)
 }
 
-async fn new_client(broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
-    let rx = broadcaster.lock().new_client();
+async fn new_client(broadcaster: Data<Broadcaster>) -> impl Responder {
+    let rx = broadcaster.new_client();
 
     HttpResponse::Ok()
         .append_header((header::CONTENT_TYPE, "text/event-stream"))
         .streaming(rx)
 }
 
-async fn broadcast(msg: Path<String>, broadcaster: Data<Mutex<Broadcaster>>) -> impl Responder {
-    broadcaster.lock().send(&msg.into_inner());
+async fn broadcast(msg: Path<String>, broadcaster: Data<Broadcaster>) -> impl Responder {
+    broadcaster.send(&msg.into_inner());
     HttpResponse::Ok().body("msg sent")
 }
