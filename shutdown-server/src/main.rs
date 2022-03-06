@@ -16,13 +16,12 @@ async fn stop(stopper: web::Data<mpsc::Sender<()>>) -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_server=debug,actix_web=debug");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // create a channel
     let (tx, rx) = mpsc::channel::<()>();
 
-    let bind = ("127.0.0.1", 8080);
+    log::info!("starting HTTP server at http://localhost:8080");
 
     // start server as normal but don't .await after .run() yet
     let server = HttpServer::new(move || {
@@ -33,7 +32,7 @@ async fn main() -> std::io::Result<()> {
             .service(hello)
             .service(stop)
     })
-    .bind(&bind)?
+    .bind(("127.0.0.1", 8080))?
     .run();
 
     // clone the server handle

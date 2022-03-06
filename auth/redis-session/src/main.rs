@@ -73,8 +73,10 @@ async fn logout(session: Session) -> Result<String> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info,actix_redis=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    
+    log::info!("starting HTTP server at http://localhost:8080");
+
 
     // Generate a random 32 byte key. Note that it is important to use a unique
     // private key for every project. Anyone with access to the key can generate

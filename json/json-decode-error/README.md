@@ -11,7 +11,7 @@ representation of the error.
 ```shell
 cd json/json_decode_error
 cargo run
-# Started HTTP server: 127.0.0.1:8088
+# Started HTTP server: 127.0.0.1:8080
 ```
 
 ## Examples
@@ -23,7 +23,7 @@ ellipsis `...`.
 - A well-formed request
 
   ```shell
-  $ curl -i 127.0.0.1:8088 -H 'Content-Type: application/json' -d '{"name": "Alice"}'
+  $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"name": "Alice"}'
   HTTP/1.1 200 OK
   ...
 
@@ -33,7 +33,7 @@ ellipsis `...`.
 - Missing `Content-Type` header
 
   ```shell
-  $ curl -i 127.0.0.1:8088 -d '{"name": "Bob"}'
+  $ curl -i 127.0.0.1:8080 -d '{"name": "Bob"}'
   HTTP/1.1 415 Unsupported Media Type
   ...
 
@@ -43,7 +43,7 @@ ellipsis `...`.
 - Malformed JSON
 
   ```shell
-  $ curl -i 127.0.0.1:8088 -H 'Content-Type: application/json' -d '{"name": "Eve}'
+  $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"name": "Eve}'
   HTTP/1.1 400 Bad Request
   ...
 
@@ -53,7 +53,7 @@ ellipsis `...`.
 - JSON value of wrong type
 
   ```shell
-  $ curl -i 127.0.0.1:8088 -H 'Content-Type: application/json' -d '{"name": 350}'
+  $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"name": 350}'
   HTTP/1.1 422 Unprocessable Entity
   ...
 
@@ -63,7 +63,7 @@ ellipsis `...`.
 - Wrong JSON key
 
   ```shell
-  $ curl -i 127.0.0.1:8088 -H 'Content-Type: application/json' -d '{"namn": "John"}'
+  $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"namn": "John"}'
   HTTP/1.1 422 Unprocessable Entity
   ...
 

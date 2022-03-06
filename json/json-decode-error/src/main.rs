@@ -27,6 +27,10 @@ fn json_error_handler(err: error::JsonPayloadError, _req: &HttpRequest) -> error
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
+
     HttpServer::new(|| {
         App::new().service(greet).app_data(
             web::JsonConfig::default()
@@ -34,7 +38,7 @@ async fn main() -> std::io::Result<()> {
                 .error_handler(json_error_handler),
         )
     })
-    .bind("127.0.0.1:8088")?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }

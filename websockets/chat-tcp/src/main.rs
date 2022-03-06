@@ -224,10 +224,10 @@ impl WsChatSession {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    // Start chat server actor
+    // start chat server actor
     let server = server::ChatServer::default().start();
 
-    // Start tcp server in separate thread
+    // start TCP server in separate thread
     let srv = server.clone();
     session::tcp_server("127.0.0.1:12345", srv);
 

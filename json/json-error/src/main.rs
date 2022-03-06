@@ -38,12 +38,12 @@ async fn index() -> Result<HttpResponse, Error> {
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    let ip_address = "127.0.0.1:8000";
-    println!("Running server on {}", ip_address);
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| App::new().service(web::resource("/").route(web::get().to(index))))
-        .bind(ip_address)
-        .expect("Can not bind to port 8000")
+        .bind(("127.0.0.1", 8080))?
         .run()
         .await
 }

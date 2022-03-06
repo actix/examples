@@ -535,6 +535,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-web-lab"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "034cda5de08616dcc7d261977d337eb1f7dead34a788905b0b04af7fc0f4260f"
+dependencies = [
+ "actix-files",
+ "actix-http",
+ "actix-router",
+ "actix-service",
+ "actix-utils",
+ "actix-web",
+ "ahash",
+ "bytes 1.1.0",
+ "csv",
+ "derive_more",
+ "digest 0.10.3",
+ "futures-core",
+ "futures-util",
+ "hmac 0.12.1",
+ "local-channel",
+ "log",
+ "matchit",
+ "mime",
+ "once_cell",
+ "pin-project-lite 0.2.8",
+ "serde 1.0.136",
+ "serde_json",
+ "serde_urlencoded",
+ "subtle",
+ "tokio 1.17.0",
+]
+
+[[package]]
 name = "actix_derive"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -814,7 +847,7 @@ dependencies = [
  "actix 0.12.0",
  "actix-cors",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.10.0",
  "async-graphql",
  "async-graphql-actix-web",
  "env_logger",
@@ -1940,6 +1973,7 @@ dependencies = [
  "actix-web",
  "derive_more",
  "env_logger",
+ "log",
  "rand 0.8.5",
 ]
 
@@ -2795,6 +2829,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "json",
+ "log",
  "serde 1.0.136",
  "serde_json",
 ]
@@ -2819,6 +2854,8 @@ name = "json_decode_error"
 version = "1.0.0"
 dependencies = [
  "actix-web",
+ "env_logger",
+ "log",
  "serde 1.0.136",
 ]
 
@@ -2827,6 +2864,8 @@ name = "json_error"
 version = "1.0.0"
 dependencies = [
  "actix-web",
+ "env_logger",
+ "log",
  "serde 1.0.136",
  "serde_json",
 ]
@@ -2872,7 +2911,7 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.10.0",
  "dotenv",
  "env_logger",
  "juniper",
@@ -2891,7 +2930,7 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.10.0",
  "env_logger",
  "juniper",
  "log",
@@ -3102,6 +3141,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a3e378b66a060d48947b590737b30a1be76706c8dd7b8ba0f2fe3989c68a853f"
 
 [[package]]
+name = "matchit"
+version = "0.4.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9376a4f0340565ad675d11fc1419227faf5f60cd7ac9cb2e7185a471f30af833"
+
+[[package]]
 name = "md-5"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3152,6 +3197,7 @@ name = "middleware-http-to-https"
 version = "1.0.0"
 dependencies = [
  "actix-web",
+ "actix-web-lab 0.13.0",
  "env_logger",
  "futures-util",
  "log",
@@ -4260,6 +4306,7 @@ dependencies = [
  "actix-test",
  "actix-web",
  "env_logger",
+ "log",
  "serde 1.0.136",
  "serde_json",
  "time 0.3.7",
@@ -5039,6 +5086,7 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
+ "log",
  "tokio 1.17.0",
 ]
 
@@ -5483,7 +5531,7 @@ name = "template_sailfish"
 version = "0.1.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.10.0",
  "env_logger",
  "log",
  "sailfish",

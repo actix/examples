@@ -1,7 +1,7 @@
 //! This example shows how to use `actix_web::HttpServer::on_connect` to access client certificates
 //! pass them to a handler through connection-local data.
 
-use std::{any::Any, env, fs::File, io::BufReader, net::SocketAddr};
+use std::{any::Any, fs::File, io::BufReader, net::SocketAddr};
 
 use actix_tls::accept::rustls::{reexports::ServerConfig, TlsStream};
 use actix_web::{
@@ -69,11 +69,7 @@ fn get_client_cert(connection: &dyn Any, data: &mut Extensions) {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    if env::var("RUST_LOG").is_err() {
-        env::set_var("RUST_LOG", "info");
-    }
-
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let mut cert_store = RootCertStore::empty();
 
@@ -107,7 +103,8 @@ async fn main() -> std::io::Result<()> {
         .collect();
     let config = config.with_single_cert(cert_chain, keys.remove(0)).unwrap();
 
-    // start server
+    log::info!("starting HTTP server at http://localhost:8080 and http://localhost:8443");
+
     HttpServer::new(|| App::new().default_service(web::to(route_whoami)))
         .on_connect(get_client_cert)
         .bind(("localhost", 8080))?

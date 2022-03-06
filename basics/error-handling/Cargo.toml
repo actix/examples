@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-derive_more = "0.99.2"
-rand = "0.8"
+
+derive_more = "0.99.5"
 env_logger = "0.9"
+log = "0.4"
+rand = "0.8"
