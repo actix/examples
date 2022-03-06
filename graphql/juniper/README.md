@@ -1,7 +1,6 @@
 # GraphQL using Juniper
 
-[Juniper](https://github.com/graphql-rust/juniper) integration for Actix Web.
-If you want more advanced example, see also the [juniper-advanced example].
+[Juniper](https://github.com/graphql-rust/juniper) integration for Actix Web. If you want more advanced example, see also the [juniper-advanced example].
 
 [juniper-advanced example]: https://github.com/actix/examples/tree/master/graphql/juniper-advanced
 
@@ -37,9 +36,7 @@ _Result:_
   "data": {
     "human": {
       "name": "Luke",
-      "appearsIn": [
-        "NEW_HOPE"
-      ],
+      "appearsIn": ["NEW_HOPE"],
       "homePlanet": "Mars"
     }
   }
@@ -50,7 +47,9 @@ _Mutation example:_
 
 ```graphql
 mutation {
-  createHuman(newHuman: {name: "Fresh Kid Ice", appearsIn: EMPIRE, homePlanet: "earth"}) {
+  createHuman(
+    newHuman: { name: "Fresh Kid Ice", appearsIn: EMPIRE, homePlanet: "earth" }
+  ) {
     id
     name
     appearsIn
@@ -67,9 +66,7 @@ _Result:_
     "createHuman": {
       "id": "1234",
       "name": "Fresh Kid Ice",
-      "appearsIn": [
-        "EMPIRE"
-      ],
+      "appearsIn": ["EMPIRE"],
       "homePlanet": "earth"
     }
   }

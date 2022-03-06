@@ -48,30 +48,35 @@ cargo run
 Inserts a new user into the SQLite DB.
 
 Provide a JSON payload with a name. Eg:
+
 ```json
 { "name": "bill" }
 ```
 
 On success, a response like the following is returned:
+
 ```json
 {
-    "id": "9e46baba-a001-4bb3-b4cf-4b3e5bab5e97",
-    "name": "bill"
+  "id": "9e46baba-a001-4bb3-b4cf-4b3e5bab5e97",
+  "name": "bill"
 }
 ```
 
 <details>
   <summary>Client Examples</summary>
 
-  Using [HTTPie](https://httpie.org/):
-  ```sh
-  http POST localhost:8080/user name=bill
-  ```
+Using [HTTPie](https://httpie.org/):
 
-  Using cURL:
-  ```sh
-  curl -S -X POST --header "Content-Type: application/json" --data '{"name":"bill"}' http://localhost:8080/user
-  ```
+```sh
+http POST localhost:8080/user name=bill
+```
+
+Using cURL:
+
+```sh
+curl -S -X POST --header "Content-Type: application/json" --data '{"name":"bill"}' http://localhost:8080/user
+```
+
 </details>
 
 #### `GET /user/{user_uid}`
@@ -81,15 +86,18 @@ Gets a user from the DB using its UID (returned from the insert request or taken
 <details>
   <summary>Client Examples</summary>
 
-  Using [HTTPie](https://httpie.org/):
-  ```sh
-  http localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
-  ```
+Using [HTTPie](https://httpie.org/):
 
-  Using cURL:
-  ```sh
-  curl -S http://localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
-  ```
+```sh
+http localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
+```
+
+Using cURL:
+
+```sh
+curl -S http://localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
+```
+
 </details>
 
 ### Explore The SQLite DB
@@ -102,7 +110,6 @@ sqlite3 test.db
 sqlite> .tables
 sqlite> SELECT * FROM users;
 ```
-
 
 ## Using Other Databases
 

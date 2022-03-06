@@ -44,6 +44,7 @@
 - [Mozilla Services Skeleton App](https://github.com/mozilla-services/skeleton)
 
 ## Paid Resources
+
 - [book] [Zero2prod by Luca Palmieri](https://algoluca.gumroad.com/l/zero2prod): Takes you on a journey to discover the world of backend development in Rust.
 
 ## Contribute

@@ -17,7 +17,6 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "metho
 # {"jsonrpc":"2.0","result":"pong","error":null,"id":1}
 ```
 
-
 **python**
 
 ```sh

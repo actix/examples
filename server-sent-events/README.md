@@ -1,4 +1,5 @@
 # actix-sse
+
 Example of server-sent events, aka `EventSource`, with actix web.
 
 ```sh
@@ -12,9 +13,10 @@ Open http://127.0.0.1:8080/ with a browser, then send events with another HTTP c
 curl 127.0.0.1:8080/broadcast/my_message
 ```
 
-*my_message* should appear in the browser with a timestamp.
+_my_message_ should appear in the browser with a timestamp.
 
 ## Performance
+
 This implementation can serve thousands of clients on a 2021 MacBook with no problems.
 
 Run `node ./benchmark.js` to benchmark your own system:
@@ -24,7 +26,8 @@ $ node benchmark.js
 Connected: 1000, connection time: 201 ms, total broadcast time: 20 ms^C⏎
 ```
 
-### Error *Too many open files*
+### Error _Too many open files_
+
 You may be limited to a maximal number of connections (open file descriptors). Setting maximum number of open file descriptors to 2048:
 
 ```sh

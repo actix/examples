@@ -28,8 +28,7 @@ A middleware demonstrating how to read out the outgoing response body.
 
 ### `simple::SayHi`
 
-A minimal middleware demonstrating the sequence of operations in an actix middleware.
-There is a second version of the same middleware using `wrap_fn` which shows how easily a middleware can be implemented in actix.
+A minimal middleware demonstrating the sequence of operations in an actix middleware. There is a second version of the same middleware using `wrap_fn` which shows how easily a middleware can be implemented in actix.
 
 ## See Also
 

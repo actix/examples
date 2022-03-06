@@ -25,10 +25,10 @@ cargo run --bin websocket-client
 
 ### python client
 
-- ``pip install aiohttp``
-- ``python websocket-client.py``
+- `pip install aiohttp`
+- `python websocket-client.py`
 
 if ubuntu :
 
-- ``pip3 install aiohttp``
-- ``python3 websocket-client.py``
+- `pip3 install aiohttp`
+- `python3 websocket-client.py`

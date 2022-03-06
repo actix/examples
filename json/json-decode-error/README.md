@@ -1,10 +1,6 @@
 # JSON decode errors
 
-This example demonstrates how to return useful error messages to the client
-when the server receives a request with invalid JSON, or which cannot be
-deserialized to the expected model. By configuring an `error_handler` on the
-route, we can set appropriate response codes and return the string
-representation of the error.
+This example demonstrates how to return useful error messages to the client when the server receives a request with invalid JSON, or which cannot be deserialized to the expected model. By configuring an `error_handler` on the route, we can set appropriate response codes and return the string representation of the error.
 
 ## Usage
 
@@ -16,9 +12,7 @@ cargo run
 
 ## Examples
 
-The examples use `curl -i` in order to show the status line with the response
-code. The response headers have been omitted for brevity, and replaced with an
-ellipsis `...`.
+The examples use `curl -i` in order to show the status line with the response code. The response headers have been omitted for brevity, and replaced with an ellipsis `...`.
 
 - A well-formed request
 
@@ -27,7 +21,7 @@ ellipsis `...`.
   HTTP/1.1 200 OK
   ...
 
-  Hello Alice! 
+  Hello Alice!
   ```
 
 - Missing `Content-Type` header

@@ -1,6 +1,7 @@
 # guards
 
 Shows how to set up custom routing guards.
+
 - Routing different API versions using a header instead of path.
 
 ## Usage
@@ -30,5 +31,5 @@ Using [cURL]:
 curl 'localhost:8080/api/hello' -H 'accept-version: 1'
 ```
 
-[HTTPie]: https://httpie.org
-[cURL]: https://curl.haxx.se
+[httpie]: https://httpie.org
+[curl]: https://curl.haxx.se

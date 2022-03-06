@@ -7,4 +7,5 @@ cd templating/yarte
 cargo test
 cargo run
 ```
+
 > open `localhost:8080`

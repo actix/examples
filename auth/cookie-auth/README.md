@@ -26,7 +26,7 @@ Now with the cookie `auth-example` sent in a GET request, the `user1` is recogni
         > GET / HTTP/1.1
         > Host: localhost:8080
         > Cookie: auth-example=GRm2Vku0UpFbJ3CNTKbndzIYHVGi8wc8eoXm/Axtf2BO
-        > 
+        >
         < HTTP/1.1 200 OK
-        < 
+        <
         Hello user1
