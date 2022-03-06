@@ -10,7 +10,6 @@ actix-files = "0.6"
 acme-micro = "0.12"
 anyhow = "1"
 env_logger = "0.9"
-futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
 log = "0.4"
 openssl = { version = "0.10", features = ["v110"] }
 reqwest = "0.11"

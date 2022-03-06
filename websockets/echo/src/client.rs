@@ -4,7 +4,7 @@ use std::{io, thread};
 
 use actix_web::web::Bytes;
 use awc::ws;
-use futures::{SinkExt as _, StreamExt as _};
+use futures_util::{SinkExt as _, StreamExt as _};
 use tokio::{select, sync::mpsc};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 

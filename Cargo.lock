@@ -501,7 +501,6 @@ dependencies = [
  "actix-cors",
  "actix-web",
  "env_logger",
- "futures",
  "serde 1.0.136",
  "serde_json",
 ]
@@ -2794,7 +2793,7 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
- "futures",
+ "futures-util",
  "json",
  "serde 1.0.136",
  "serde_json",
@@ -2807,7 +2806,7 @@ dependencies = [
  "actix-web",
  "awc",
  "env_logger",
- "futures",
+ "futures-util",
  "log",
  "serde 1.0.136",
  "serde_json",
@@ -2828,7 +2827,6 @@ name = "json_error"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "failure",
  "serde 1.0.136",
  "serde_json",
 ]
@@ -3251,7 +3249,6 @@ name = "mongodb"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "futures-util",
  "mongodb 2.1.0",
  "serde 1.0.136",
 ]
@@ -3341,7 +3338,7 @@ dependencies = [
  "actix-web",
  "dotenv",
  "env_logger",
- "futures",
+ "futures-util",
  "log",
  "rusoto_core",
  "rusoto_s3",
@@ -3615,7 +3612,6 @@ dependencies = [
  "actix-web",
  "anyhow",
  "env_logger",
- "futures-util",
  "log",
  "openssl",
  "reqwest 0.11.9",
@@ -4058,7 +4054,6 @@ dependencies = [
 name = "protobuf-example"
 version = "1.0.0"
 dependencies = [
- "actix 0.13.0",
  "actix-protobuf",
  "actix-web",
  "env_logger",
@@ -5044,7 +5039,6 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
- "futures",
  "tokio 1.17.0",
 ]
 
@@ -5068,7 +5062,6 @@ dependencies = [
  "diesel",
  "dotenv",
  "env_logger",
- "futures",
  "lazy_static",
  "r2d2",
  "rust-argon2",
@@ -5684,7 +5677,6 @@ dependencies = [
  "actix-web",
  "dotenv",
  "env_logger",
- "futures-util",
  "log",
  "serde 1.0.136",
  "serde_json",
@@ -6485,7 +6477,7 @@ dependencies = [
  "actix-web-actors",
  "awc",
  "env_logger",
- "futures",
+ "futures-util",
  "log",
  "tokio 1.17.0",
  "tokio-stream",
@@ -6543,7 +6535,7 @@ dependencies = [
  "byteorder",
  "bytes 1.1.0",
  "env_logger",
- "futures",
+ "futures-util",
  "log",
  "rand 0.8.5",
  "serde 1.0.136",

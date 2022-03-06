@@ -5,6 +5,5 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-futures-util = "0.3.17"
 mongodb = "2.0.0"
 serde = { version = "1.0", features = ["derive"] }

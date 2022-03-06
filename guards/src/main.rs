@@ -71,3 +71,23 @@ async fn main() -> std::io::Result<()> {
         .run()
         .await
 }
+
+#[cfg(test)]
+mod tests {
+    use actix_web::test::{self, TestRequest};
+
+    use super::*;
+
+    #[actix_web::test]
+    async fn api_versioning() {
+        let app = test::init_service(create_app()).await;
+
+        let req = TestRequest::with_uri("/api/hello").insert_header(("Accept-Version", "1"));
+        let res = test::call_and_read_body(&app, req.to_request()).await;
+        assert_eq!(res, "Hello World from v1 API!");
+
+        let req = TestRequest::with_uri("/api/hello").insert_header(("Accept-Version", "2"));
+        let res = test::call_and_read_body(&app, req.to_request()).await;
+        assert_eq!(res, "Hello World from the awesome new v2 API!");
+    }
+}

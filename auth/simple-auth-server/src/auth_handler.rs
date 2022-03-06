@@ -1,8 +1,9 @@
+use std::future::{ready, Ready};
+
 use actix_identity::Identity;
 use actix_web::{dev::Payload, web, Error, FromRequest, HttpRequest, HttpResponse};
 use diesel::prelude::*;
 use diesel::PgConnection;
-use futures::future::{err, ok, Ready};
 use serde::Deserialize;
 
 use crate::errors::ServiceError;
@@ -27,11 +28,12 @@ impl FromRequest for LoggedUser {
         if let Ok(identity) = Identity::from_request(req, pl).into_inner() {
             if let Some(user_json) = identity.identity() {
                 if let Ok(user) = serde_json::from_str(&user_json) {
-                    return ok(user);
+                    return ready(Ok(user));
                 }
             }
         }
-        err(ServiceError::Unauthorized.into())
+
+        ready(Err(ServiceError::Unauthorized.into()))
     }
 }
 

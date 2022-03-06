@@ -1,5 +1,4 @@
 use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer};
-use futures::executor;
 use std::{sync::mpsc, thread};
 
 #[get("/hello")]
@@ -37,16 +36,16 @@ async fn main() -> std::io::Result<()> {
     .bind(&bind)?
     .run();
 
-    // clone the Server handle
+    // clone the server handle
     let srv = server.handle();
     thread::spawn(move || {
         // wait for shutdown signal
         rx.recv().unwrap();
 
-        // stop server gracefully
-        executor::block_on(srv.stop(true))
+        // send stop server gracefully command
+        srv.stop(true)
     });
 
-    // run server
+    // run server until stopped (either by ctrl-c or stop endpoint)
     server.await
 }

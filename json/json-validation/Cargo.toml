@@ -8,7 +8,7 @@ actix-web = "4"
 awc = { version = "3.0.0-beta.21", features = ["openssl"] }
 
 env_logger = "0.9"
-futures = "0.3.1"
+futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
 log = "0.4"
 serde = { version = "1.0.43", features = ["derive"] }
 serde_json = "1.0.16"

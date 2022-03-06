@@ -1,5 +1,5 @@
 use actix_web::{error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
-use futures::StreamExt;
+use futures_util::StreamExt as _;
 use json::JsonValue;
 use serde::{Deserialize, Serialize};
 

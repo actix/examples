@@ -1,7 +1,7 @@
 use crate::utils::s3::Client;
 use actix_multipart::{Field, Multipart};
 use actix_web::{web, web::Bytes, Error};
-use futures::StreamExt;
+use futures_util::StreamExt as _;
 use serde::{Deserialize, Serialize};
 use std::convert::From;
 use std::io::Write;

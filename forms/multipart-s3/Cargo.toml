@@ -9,7 +9,7 @@ actix-multipart = "0.4"
 
 dotenv = "0.15.0"
 env_logger = "0.9"
-futures = "0.3.1"
+futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
 log = "0.4"
 rusoto_core = "0.47.0"
 rusoto_s3 = "0.47.0"

@@ -1,6 +1,6 @@
 use std::{io, thread};
 
-use futures::{SinkExt, StreamExt};
+use futures_util::{SinkExt as _, StreamExt as _};
 use tokio::{net::TcpStream, select, sync::mpsc};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 

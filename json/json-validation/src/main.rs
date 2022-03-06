@@ -21,7 +21,7 @@ use actix_web::{
     App, Error, HttpResponse, HttpServer,
 };
 use awc::Client;
-use futures::StreamExt;
+use futures_util::StreamExt as _;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 use validator_derive::Validate;
