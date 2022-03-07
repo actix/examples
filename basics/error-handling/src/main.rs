@@ -90,9 +90,8 @@ async fn do_something() -> Result<HttpResponse, Error> {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-    
-    log::info!("starting HTTP server at http://localhost:8080");
 
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new().service(web::resource("/something").route(web::get().to(do_something)))
