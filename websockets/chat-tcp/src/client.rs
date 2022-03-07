@@ -49,7 +49,7 @@ async fn main() {
                     Ok(codec::ChatResponse::Rooms(rooms)) => {
                         println!("!!! Available rooms:");
                         for room in rooms {
-                        println!("{}", room);
+                            println!("{}", room);
                         }
                     }
 
