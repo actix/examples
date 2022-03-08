@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This script could be used for actix-web multipart example test
+# This script could be used for Actix Web multipart example test
 # just start server and run client.py
 
 import json
