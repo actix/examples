@@ -567,6 +567,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-web-lab"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "277bee594fb4c95da23aee37864e78ff06b427b480ecca7c205c8b630a090acf"
+dependencies = [
+ "actix-files",
+ "actix-http",
+ "actix-router",
+ "actix-service",
+ "actix-utils",
+ "actix-web",
+ "ahash",
+ "bytes 1.1.0",
+ "csv",
+ "derive_more",
+ "digest 0.10.3",
+ "futures-core",
+ "futures-util",
+ "hmac 0.12.1",
+ "local-channel",
+ "log",
+ "matchit",
+ "mime",
+ "once_cell",
+ "pin-project-lite 0.2.8",
+ "serde 1.0.136",
+ "serde_json",
+ "serde_urlencoded",
+ "subtle",
+ "tokio 1.17.0",
+]
+
+[[package]]
 name = "actix_derive"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3201,7 +3234,7 @@ dependencies = [
  "futures-util",
  "log",
  "rustls 0.20.4",
- "rustls-pemfile",
+ "rustls-pemfile 0.2.1",
 ]
 
 [[package]]
@@ -3324,7 +3357,7 @@ dependencies = [
  "percent-encoding",
  "rand 0.8.5",
  "rustls 0.19.1",
- "rustls-pemfile",
+ "rustls-pemfile 0.2.1",
  "serde 1.0.136",
  "serde_bytes",
  "serde_with",
@@ -4699,7 +4732,7 @@ dependencies = [
  "env_logger",
  "log",
  "rustls 0.20.4",
- "rustls-pemfile",
+ "rustls-pemfile 0.2.1",
 ]
 
 [[package]]
@@ -4708,9 +4741,11 @@ version = "1.0.0"
 dependencies = [
  "actix-files",
  "actix-web",
+ "actix-web-lab 0.15.0",
  "env_logger",
+ "log",
  "rustls 0.20.4",
- "rustls-pemfile",
+ "rustls-pemfile 0.3.0",
 ]
 
 [[package]]
@@ -4718,6 +4753,15 @@ name = "rustls-pemfile"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5eebeaeb360c87bfb72e84abdb3447159c0eaececf1bef2aecd65a8be949d1c9"
+dependencies = [
+ "base64 0.13.0",
+]
+
+[[package]]
+name = "rustls-pemfile"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1ee86d63972a7c661d1536fefe8c3c8407321c3df668891286de28abcd087360"
 dependencies = [
  "base64 0.13.0",
 ]

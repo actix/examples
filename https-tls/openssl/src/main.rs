@@ -18,7 +18,7 @@ async fn main() -> io::Result<()> {
 
     println!("Started http server: 127.0.0.1:8443");
 
-    // load ssl keys
+    // load TLS keys
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
     builder
         .set_private_key_file("key.pem", SslFiletype::PEM)

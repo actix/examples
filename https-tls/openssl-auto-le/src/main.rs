@@ -81,7 +81,7 @@ pub async fn gen_tls_cert(user_email: &str, user_domain: &str) -> anyhow::Result
         // http://mydomain.io/.well-known/acme-challenge/<token>
         let chall = auths[0]
             .http_challenge()
-            .ok_or(anyhow!("no HTTP challenge accessible"))?;
+            .ok_or_else(|| anyhow!("no HTTP challenge accessible"))?;
 
         // The token is the filename.
         let token = chall.http_token();
