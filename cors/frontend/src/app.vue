@@ -14,7 +14,7 @@
           <div id="user-info">
               <p>Click Above 'Sign up' Button <br> Then Get Your Signup Info!</p>
               <p>email : {{ email }}</p>
-              <p>username ：{{ username }}</p>
+              <p>username : {{ username }}</p>
               <p>password : {{ password }}</p>
           </div>
     </div>
