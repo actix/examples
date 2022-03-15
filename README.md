@@ -12,6 +12,7 @@
 - [lemmy](https://github.com/dessalines/lemmy): A federated alternative to reddit in Rust.
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
 - [tokei.rs](https://github.com/XAMPPRocky/tokei_rs): The tokei.rs server code.
+- [Monrinth](https://github.com/modrinth/labrinth): Rust-based backend to serve the `modrinth` API.
 - [Barricade](https://github.com/purton-tech/barricade): Quickly add user registration and logon to any application.
 - [Bloom](https://github.com/skerkour/bloom): The simplest way to de-Google your life and business: Inbox, Calendar, Files, Contacts & much more.
 - [GitArena](https://github.com/mellowagain/gitarena): Software development platform with built-in VCS, issue tracking and code review.
