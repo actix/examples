@@ -7,7 +7,7 @@ Simple echo websocket server.
 ### server
 
 ```sh
-cd websockets/websocket
+cd websockets/echo
 cargo run --bin websocket-server
 # Started http server: 127.0.0.1:8080
 ```
