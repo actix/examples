@@ -4,8 +4,7 @@
 //! At login, the session key changes and session state in cache re-assigns.
 //! At logout, session state in cache is removed and cookie is invalidated.
 //!
-use actix_redis::RedisSession;
-use actix_session::Session;
+use actix_session::{storage::RedisActorSessionStore, Session, SessionMiddleware};
 use actix_web::{
     middleware, web,
     web::{get, post, resource},
@@ -85,7 +84,13 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             // redis session middleware
-            .wrap(RedisSession::new("127.0.0.1:6379", private_key.master()))
+            .wrap(
+                SessionMiddleware::builder(
+                    RedisActorSessionStore::new("127.0.0.1:6379"),
+                    private_key.clone(),
+                )
+                .build(),
+            )
             // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(resource("/").route(get().to(index)))
@@ -114,8 +119,12 @@ mod test {
         let srv = actix_test::start(move || {
             App::new()
                 .wrap(
-                    RedisSession::new("127.0.0.1:6379", private_key.master())
-                        .cookie_name("test-session"),
+                    SessionMiddleware::builder(
+                        RedisActorSessionStore::new("127.0.0.1:6379"),
+                        private_key.clone(),
+                    )
+                    .cookie_name("test-session".to_string())
+                    .build(),
                 )
                 .wrap(middleware::Logger::default())
                 .service(resource("/").route(get().to(index)))
