@@ -30,6 +30,7 @@
 - [RCOS Telescope](https://github.com/rcos/Telescope): The RCOS website and Discord bot.
 - [WebThings Registration Server](https://github.com/WebThingsIO/registration_server): Exposes an HTTP API that lets you register a WebThings Gateway for tunneling support.
 - [pict-rs](https://git.asonix.dog/asonix/pict-rs): An image host API service
+- [rustypaste](https://github.com/orhun/rustypaste): A minimal file upload/pastebin service
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 
