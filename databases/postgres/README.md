@@ -12,7 +12,7 @@
 1. Create database user
 
    ```shell
-   createuser -P test_user
+   sudo -u postgres createuser -P test_user
    ```
 
    Enter a password of your choice. The following instructions assume you used `testing` as password.
@@ -22,18 +22,29 @@
 2. Create database
 
    ```shell
-   createdb -O test_user testing_db
+   sudo -u postgres createdb -O test_user testing_db
    ```
 
 3. Initialize database
 
    ```shell
-   psql -f sql/schema.sql testing_db
+   sudo -u postgres psql -f sql/schema.sql testing_db
    ```
 
    This step can be repeated and clears the database as it drops and recreates the schema `testing` which is used within the database.
 
-4. Create `.env` file:
+4. Grant privileges to new user
+
+   ```shell
+   sudo -u postgres psql testing_db
+   ```
+   ```sql
+   GRANT ALL PRIVILEGES ON SCHEMA testing TO test_user;
+   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA testing TO test_user;
+   GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA testing TO test_user;
+   ``` 
+
+5. Create `.env` file:
 
    ```ini
    SERVER_ADDR=127.0.0.1:8080
@@ -45,13 +56,13 @@
    PG.POOL.MAX_SIZE=16
    ```
 
-5. Run the server:
+6. Run the server:
 
    ```shell
    cargo run
    ```
 
-6. Using a different terminal send an HTTP POST request to the running server:
+7. Using a different terminal send an HTTP POST request to the running server:
 
    ```shell
    echo '{"email": "ferris@thecrab.com", "first_name": "ferris", "last_name": "crab", "username": "ferreal"}' | http -f --json --print h POST http://127.0.0.1:8080/users
@@ -60,7 +71,7 @@
    **...or using curl...**
 
    ```shell
-   curl -d '{"email": "ferris@thecrab.com", "first_name": "ferris", "last_name": "crab", "username": "ferreal"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/users
+   curl -i -d '{"email": "ferris@thecrab.com", "first_name": "ferris", "last_name": "crab", "username": "ferreal"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/users
    ```
 
    A unique constraint exists for username, so sending this request twice will return an internal server error (HTTP 500).
