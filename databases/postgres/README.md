@@ -9,35 +9,47 @@
 
 ## Instructions
 
+### NOTE:
+
+You may need to ensure that you are running the commands with the correct SQL user.
+On many Linux distributions you may prefix the shell commands with `sudo -u postgres`
+
 1. Create database user
 
    ```shell
-   sudo -u postgres createuser -P test_user
+   createuser -P test_user
    ```
 
    Enter a password of your choice. The following instructions assume you used `testing` as password.
 
    This step is **optional** and you can also use an existing database user for that. Just make sure to replace `test_user` by the database user of your choice in the following steps and change the `.env` file containing the configuration accordingly.
 
+   An alternative using SQL:
+   ```sql
+   CREATE USER test_user WITH PASSWORD 'testing';
+   ```
+
 2. Create database
 
    ```shell
-   sudo -u postgres createdb -O test_user testing_db
+   createdb -O test_user testing_db
+   ```
+
+   An alternative using SQL:
+   ```sql
+   CREATE DATABASE testing_db OWNER test_user;
    ```
 
 3. Initialize database
 
    ```shell
-   sudo -u postgres psql -f sql/schema.sql testing_db
+   psql -f sql/schema.sql testing_db
    ```
 
    This step can be repeated and clears the database as it drops and recreates the schema `testing` which is used within the database.
 
 4. Grant privileges to new user
 
-   ```shell
-   sudo -u postgres psql testing_db
-   ```
    ```sql
    GRANT ALL PRIVILEGES ON SCHEMA testing TO test_user;
    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA testing TO test_user;
