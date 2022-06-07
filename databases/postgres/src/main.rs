@@ -1,17 +1,9 @@
 mod config {
-    pub use ::config::ConfigError;
     use serde::Deserialize;
-    #[derive(Deserialize)]
-    pub struct Config {
+    #[derive(Debug, Default, Deserialize)]
+    pub struct ExampleConfig {
         pub server_addr: String,
         pub pg: deadpool_postgres::Config,
-    }
-    impl Config {
-        pub fn from_env() -> Result<Self, ConfigError> {
-            let mut cfg = ::config::Config::new();
-            cfg.merge(::config::Environment::new())?;
-            cfg.try_into()
-        }
     }
 }
 
@@ -106,6 +98,8 @@ mod handlers {
     }
 }
 
+use crate::config::ExampleConfig;
+use ::config::Config;
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use handlers::add_user;
@@ -115,7 +109,13 @@ use tokio_postgres::NoTls;
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
-    let config = crate::config::Config::from_env().unwrap();
+    let config_ = Config::builder()
+        .add_source(::config::Environment::default())
+        .build()
+        .unwrap();
+
+    let config: ExampleConfig = config_.try_deserialize().unwrap();
+
     let pool = config.pg.create_pool(None, NoTls).unwrap();
 
     let server = HttpServer::new(move || {
