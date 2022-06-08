@@ -10,12 +10,12 @@ use actix_web::{middleware::Logger, web, App, HttpRequest, HttpServer, Result};
 
 /// simple index handler with session
 async fn index(session: Session, req: HttpRequest) -> Result<&'static str> {
-    log::info!("{:?}", req);
+    log::info!("{req:?}");
 
     // RequestSession trait is used for session access
     let mut counter = 1;
     if let Some(count) = session.get::<i32>("counter")? {
-        log::info!("SESSION value: {}", count);
+        log::info!("SESSION value: {count}");
         counter = count + 1;
         session.insert("counter", counter)?;
     } else {

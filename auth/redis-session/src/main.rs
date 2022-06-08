@@ -65,7 +65,7 @@ async fn logout(session: Session) -> Result<String> {
     let id: Option<String> = session.get("user_id")?;
     if let Some(x) = id {
         session.purge();
-        Ok(format!("Logged out: {}", x))
+        Ok(format!("Logged out: {x}"))
     } else {
         Ok("Could not log out anonymous user".into())
     }

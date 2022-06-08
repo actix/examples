@@ -11,7 +11,7 @@ use rustls_pemfile::{certs, pkcs8_private_keys};
 
 /// simple handle
 async fn index(req: HttpRequest) -> HttpResponse {
-    debug!("{:?}", req);
+    debug!("{req:?}");
 
     HttpResponse::Ok().content_type(ContentType::html()).body(
         "<!DOCTYPE html><html><body>\

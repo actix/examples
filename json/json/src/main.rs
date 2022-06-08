@@ -17,8 +17,8 @@ async fn index(item: web::Json<MyObj>) -> HttpResponse {
 
 /// This handler uses json extractor with limit
 async fn extract_item(item: web::Json<MyObj>, req: HttpRequest) -> HttpResponse {
-    println!("request: {:?}", req);
-    println!("model: {:?}", item);
+    println!("request: {req:?}");
+    println!("model: {item:?}");
 
     HttpResponse::Ok().json(item.0) // <- send json response
 }

@@ -59,7 +59,7 @@ async fn main() -> std::io::Result<()> {
         .next()
         .expect("given forwarding address was not valid");
 
-    let forward_url = format!("http://{}", forward_socket_addr);
+    let forward_url = format!("http://{forward_socket_addr}");
     let forward_url = Url::parse(&forward_url).unwrap();
 
     log::info!(

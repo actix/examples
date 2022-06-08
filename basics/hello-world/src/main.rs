@@ -1,7 +1,7 @@
 use actix_web::{middleware, web, App, HttpRequest, HttpServer};
 
 async fn index(req: HttpRequest) -> &'static str {
-    println!("REQ: {:?}", req);
+    println!("REQ: {req:?}");
     "Hello world!"
 }
 

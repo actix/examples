@@ -59,7 +59,7 @@ async fn step_x(data: SomeData, client: &Client) -> actix_web::Result<SomeData> 
 
     let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
 
-    println!("{:?}", body);
+    println!("{body:?}");
 
     Ok(body.json)
 }

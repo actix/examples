@@ -14,7 +14,7 @@ pub struct MyObj {
 }
 
 async fn index(msg: ProtoBuf<MyObj>) -> Result<HttpResponse> {
-    log::info!("model: {:?}", msg);
+    log::info!("model: {msg:?}");
     HttpResponse::Ok().protobuf(msg.0) // <- send response
 }
 

@@ -135,7 +135,7 @@ impl Handler<Connect> for ChatServer {
             .insert(id);
 
         let count = self.visitor_count.fetch_add(1, Ordering::SeqCst);
-        self.send_message("Main", &format!("Total visitors {}", count), 0);
+        self.send_message("Main", &format!("Total visitors {count}"), 0);
 
         // send id back
         id

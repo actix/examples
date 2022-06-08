@@ -80,7 +80,7 @@ pub async fn update(
         "put" => toggle(db, params).await,
         "delete" => delete(db, params, session).await,
         unsupported_method => {
-            let msg = format!("Unsupported HTTP method: {}", unsupported_method);
+            let msg = format!("Unsupported HTTP method: {unsupported_method}");
             Err(error::ErrorBadRequest(msg))
         }
     }

@@ -24,10 +24,9 @@ impl Client {
 
     pub fn url(&self, key: &str) -> String {
         format!(
-            "https://{}.s3.{}.amazonaws.com/{}",
+            "https://{}.s3.{}.amazonaws.com/{key}",
             std::env::var("AWS_S3_BUCKET_NAME").unwrap(),
             std::env::var("AWS_REGION").unwrap(),
-            key
         )
     }
 

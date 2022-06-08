@@ -34,7 +34,7 @@ async fn get_user(client: web::Data<Client>, username: web::Path<String>) -> Htt
     {
         Ok(Some(user)) => HttpResponse::Ok().json(user),
         Ok(None) => {
-            HttpResponse::NotFound().body(format!("No user found with username {}", username))
+            HttpResponse::NotFound().body(format!("No user found with username {username}"))
         }
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
