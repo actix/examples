@@ -22,12 +22,12 @@ async fn favicon() -> Result<impl Responder> {
 /// simple index handler
 #[get("/welcome")]
 async fn welcome(req: HttpRequest, session: Session) -> Result<HttpResponse> {
-    println!("{:?}", req);
+    println!("{req:?}");
 
     // session
     let mut counter = 1;
     if let Some(count) = session.get::<i32>("counter")? {
-        println!("SESSION value: {}", count);
+        println!("SESSION value: {count}");
         counter = count + 1;
     }
 
@@ -63,7 +63,7 @@ async fn response_body(path: web::Path<String>) -> HttpResponse {
 
 /// handler with path parameters like `/user/{name}/`
 async fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
-    println!("{:?}", req);
+    println!("{req:?}");
 
     HttpResponse::Ok()
         .content_type(ContentType::plaintext())
@@ -110,7 +110,7 @@ async fn main() -> io::Result<()> {
             // redirect
             .service(
                 web::resource("/").route(web::get().to(|req: HttpRequest| async move {
-                    println!("{:?}", req);
+                    println!("{req:?}");
                     HttpResponse::Found()
                         .insert_header((header::LOCATION, "static/welcome.html"))
                         .finish()

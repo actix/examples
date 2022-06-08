@@ -41,7 +41,7 @@ async fn main() -> std::io::Result<()> {
             .wrap_fn(|sreq, srv| {
                 let host = sreq.connection_info().host().to_owned();
                 let uri = sreq.uri().to_owned();
-                let url = format!("https://{}{}", host, uri);
+                let url = format!("https://{host}{uri}");
 
                 // If the scheme is "https" then it will let other services below this wrap_fn
                 // handle the request and if it's "http" then a response with redirect status code

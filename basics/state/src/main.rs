@@ -36,7 +36,7 @@ async fn index(
     counter_atomic: Data<AtomicUsize>,
     req: HttpRequest,
 ) -> HttpResponse {
-    println!("{:?}", req);
+    println!("{req:?}");
 
     // Increment the counters
     *counter_mutex.lock().unwrap() += 1;

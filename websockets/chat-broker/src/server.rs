@@ -75,9 +75,8 @@ impl Handler<JoinRoom> for WsChatServer {
 
         let id = self.add_client_to_room(&room_name, None, client);
         let join_msg = format!(
-            "{} joined {}",
+            "{} joined {room_name}",
             client_name.unwrap_or_else(|| "anon".to_string()),
-            room_name
         );
 
         self.send_chat_message(&room_name, &join_msg, id);

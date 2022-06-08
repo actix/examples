@@ -42,7 +42,7 @@ async fn chat_route(
 /// Displays state
 async fn get_count(count: web::Data<AtomicUsize>) -> impl Responder {
     let current_count = count.load(Ordering::SeqCst);
-    format!("Visitors: {}", current_count)
+    format!("Visitors: {current_count}")
 }
 
 #[actix_web::main]

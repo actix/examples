@@ -81,9 +81,9 @@ async fn main() -> std::io::Result<()> {
     let aws_s3_bucket_name =
         env::var("AWS_S3_BUCKET_NAME").expect("AWS_S3_BUCKET_NAME must be set");
 
-    log::info!("aws_access_key_id:     {}", aws_access_key_id);
-    log::info!("aws_secret_access_key: {}", aws_secret_access_key);
-    log::info!("aws_s3_bucket_name:    {}", aws_s3_bucket_name);
+    log::info!("aws_access_key_id:     {aws_access_key_id}");
+    log::info!("aws_secret_access_key: {aws_secret_access_key}");
+    log::info!("aws_s3_bucket_name:    {aws_s3_bucket_name}");
 
     std::fs::create_dir_all("./tmp").unwrap();
 

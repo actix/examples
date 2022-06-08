@@ -70,7 +70,7 @@ async fn rpc_select(
                 .await
             {
                 Ok(ok) => Ok(Value::from(ok)),
-                Err(e) => Err(convention::ErrorData::new(500, &format!("{:?}", e)[..])),
+                Err(e) => Err(convention::ErrorData::new(500, &format!("{e:?}")[..])),
             }
         }
         "get" => {

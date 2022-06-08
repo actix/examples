@@ -7,7 +7,7 @@ use std::{sync::mpsc, thread, time};
 use actix_web::{dev::ServerHandle, middleware, rt, web, App, HttpRequest, HttpServer};
 
 async fn index(req: HttpRequest) -> &'static str {
-    log::info!("REQ: {:?}", req);
+    log::info!("REQ: {req:?}");
     "Hello world!"
 }
 

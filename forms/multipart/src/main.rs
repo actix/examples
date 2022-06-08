@@ -14,7 +14,7 @@ async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
         let filename = content_disposition
             .get_filename()
             .map_or_else(|| Uuid::new_v4().to_string(), sanitize_filename::sanitize);
-        let filepath = format!("./tmp/{}", filename);
+        let filepath = format!("./tmp/{filename}");
 
         // File::create is blocking operation, use threadpool
         let mut f = web::block(|| std::fs::File::create(filepath)).await??;

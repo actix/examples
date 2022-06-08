@@ -62,7 +62,7 @@ async fn handle_post_2(
 
 /// Request and POST Params
 async fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Responder {
-    println!("Handling POST request: {:?}", req);
+    println!("Handling POST request: {req:?}");
 
     HttpResponse::Ok()
         .content_type("text/plain")
