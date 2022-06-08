@@ -1,4 +1,6 @@
-use juniper::{EmptySubscription, FieldError, FieldResult, RootNode};
+use juniper::{
+    graphql_object, graphql_value, EmptySubscription, FieldError, FieldResult, RootNode,
+};
 use mysql::{from_row, params, Error as DBError, Row};
 
 use crate::db::Pool;
@@ -14,7 +16,7 @@ impl juniper::Context for Context {}
 
 pub struct QueryRoot;
 
-#[juniper::graphql_object(Context = Context)]
+#[graphql_object(Context = Context)]
 impl QueryRoot {
     #[graphql(description = "List of all users")]
     fn users(context: &Context) -> FieldResult<Vec<User>> {
@@ -99,7 +101,7 @@ impl QueryRoot {
 
 pub struct MutationRoot;
 
-#[juniper::graphql_object(Context = Context)]
+#[graphql_object(Context = Context)]
 impl MutationRoot {
     fn create_user(context: &Context, user: UserInput) -> FieldResult<User> {
         let mut conn = context.dbpool.get().unwrap();

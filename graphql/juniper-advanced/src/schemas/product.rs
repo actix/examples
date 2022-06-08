@@ -1,3 +1,4 @@
+use juniper::GraphQLInputObject;
 use mysql::{from_row, params, Error as DBError, Row};
 
 use crate::schemas::root::Context;

@@ -1,3 +1,4 @@
+use juniper::{graphql_object, GraphQLInputObject};
 use mysql::{from_row, params};
 
 use crate::schemas::product::Product;
@@ -18,7 +19,7 @@ pub struct UserInput {
     pub email: String,
 }
 
-#[juniper::graphql_object(Context = Context)]
+#[graphql_object(Context = Context)]
 impl User {
     fn id(&self) -> &str {
         &self.id

@@ -1,8 +1,6 @@
-#[macro_use]
-extern crate prost_derive;
-
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result};
+use prost_derive::Message;
 
 #[derive(Clone, PartialEq, Message)]
 pub struct MyObj {
