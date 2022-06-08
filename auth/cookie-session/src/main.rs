@@ -1,7 +1,7 @@
 //! Example of cookie based session
 //! Session data is stored in cookie, it is limited to 4kb
 //!
-//! [Redis session example](https://github.com/actix/examples/tree/main/redis-session)
+//! [Redis session example](https://github.com/actix/examples/tree/HEAD/auth/redis-session)
 //!
 //! [User guide](https://actix.rs/docs/middleware/#user-sessions)
 
