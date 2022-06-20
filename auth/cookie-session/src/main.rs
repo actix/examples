@@ -5,7 +5,7 @@
 //!
 //! [User guide](https://actix.rs/docs/middleware/#user-sessions)
 
-use actix_session::{SessionMiddleware, storage::CookieSessionStore, Session};
+use actix_session::{storage::CookieSessionStore, Session, SessionMiddleware};
 use actix_web::{cookie::Key, middleware::Logger, web, App, HttpRequest, HttpServer, Result};
 
 /// simple index handler with session
@@ -38,8 +38,8 @@ async fn main() -> std::io::Result<()> {
             // cookie session middleware
             .wrap(
                 SessionMiddleware::builder(CookieSessionStore::default(), Key::from(&[0; 64]))
-                .cookie_secure(false)
-                .build()
+                    .cookie_secure(false)
+                    .build(),
             )
             .service(web::resource("/").to(index))
     })

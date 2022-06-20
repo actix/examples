@@ -281,7 +281,7 @@ dependencies = [
  "actix 0.12.0",
  "actix-rt",
  "actix-service",
- "actix-session",
+ "actix-session 0.5.0",
  "actix-tls",
  "actix-web",
  "backoff",
@@ -367,6 +367,24 @@ dependencies = [
  "serde",
  "serde_json",
  "time 0.3.9",
+]
+
+[[package]]
+name = "actix-session"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c9138a66462f1e65da829f9c0de81b44a96dfe193a4f19bfea32ee2be312368"
+dependencies = [
+ "actix-service",
+ "actix-utils",
+ "actix-web",
+ "anyhow",
+ "async-trait",
+ "derive_more",
+ "serde",
+ "serde_json",
+ "time 0.3.9",
+ "tracing",
 ]
 
 [[package]]
@@ -1125,7 +1143,7 @@ name = "basics"
 version = "1.0.0"
 dependencies = [
  "actix-files",
- "actix-session",
+ "actix-session 0.5.0",
  "actix-web",
  "async-stream",
  "env_logger",
@@ -1597,7 +1615,7 @@ dependencies = [
 name = "cookie-session"
 version = "1.0.0"
 dependencies = [
- "actix-session",
+ "actix-session 0.6.2",
  "actix-web",
  "env_logger",
  "log",
@@ -2125,9 +2143,9 @@ dependencies = [
 
 [[package]]
 name = "flume"
-version = "0.10.12"
+version = "0.10.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "843c03199d0c0ca54bc1ea90ac0d507274c28abcc4f691ae8b4eaa375087c76a"
+checksum = "1ceeb589a3157cac0ab8cc585feb749bd2cea5cb55a6ee802ad72d9fd38303da"
 dependencies = [
  "futures-core",
  "futures-sink",
@@ -2370,9 +2388,9 @@ checksum = "78cc372d058dcf6d5ecd98510e7fbc9e5aec4d21de70f65fea8fecebcd881bd4"
 
 [[package]]
 name = "globset"
-version = "0.4.8"
+version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10463d9ff00a2a068db14231982f5132edebad0d7660cd956a1c30292dbcbfbd"
+checksum = "0a1e17342619edbc21a964c2afbeb6c820c6a2560032872f397bb97ea127bd0a"
 dependencies = [
  "aho-corasick",
  "bstr",
@@ -2450,9 +2468,9 @@ dependencies = [
 
 [[package]]
 name = "handlebars"
-version = "4.3.0"
+version = "4.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d113a9853e5accd30f43003560b5563ffbb007e3f325e8b103fa0d0029c6e6df"
+checksum = "b66d0c1b6e3abfd1e72818798925e16e02ed77e1b47f6c25a95a23b377ee4299"
 dependencies = [
  "log",
  "pest",
@@ -4337,7 +4355,7 @@ name = "redis_session"
 version = "1.0.0"
 dependencies = [
  "actix-redis",
- "actix-session",
+ "actix-session 0.5.0",
  "actix-test",
  "actix-web",
  "env_logger",
@@ -4721,7 +4739,7 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bfa0f585226d2e68097d4f95d113b15b83a82e819ab25717ec0590d9584ef366"
 dependencies = [
- "semver 1.0.9",
+ "semver 1.0.10",
 ]
 
 [[package]]
@@ -4943,9 +4961,9 @@ dependencies = [
 
 [[package]]
 name = "semver"
-version = "1.0.9"
+version = "1.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cb243bdfdb5936c8dc3c45762a19d12ab4550cdc753bc247637d4ec35a040fd"
+checksum = "a41d061efea015927ac527063765e73601444cdc344ba855bc7bd44578b25e1c"
 
 [[package]]
 name = "semver-parser"
@@ -5613,9 +5631,9 @@ dependencies = [
 
 [[package]]
 name = "tera"
-version = "1.15.0"
+version = "1.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d3cac831b615c25bcef632d1cabf864fa05813baad3d526829db18eb70e8b58d"
+checksum = "7c9783d6ff395ae80cf17ed9a25360e7ba37742a79fa8fddabb073c5c7c8856d"
 dependencies = [
  "chrono",
  "chrono-tz",
@@ -5773,7 +5791,7 @@ name = "todo"
 version = "1.0.0"
 dependencies = [
  "actix-files",
- "actix-session",
+ "actix-session 0.5.0",
  "actix-web",
  "dotenv",
  "env_logger",
@@ -6000,9 +6018,9 @@ checksum = "360dfd1d6d30e05fda32ace2c8c70e9c0a9da713275777f5a4dbb8a1893930c6"
 
 [[package]]
 name = "tracing"
-version = "0.1.34"
+version = "0.1.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d0ecdcb44a79f0fe9844f0c4f33a342cbcbb5117de8001e6ba0dc2351327d09"
+checksum = "a400e31aa60b9d44a52a8ee0343b5b18566b03a8321e0d321f695cf56e940160"
 dependencies = [
  "cfg-if 1.0.0",
  "log",
