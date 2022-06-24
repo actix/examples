@@ -35,12 +35,12 @@ mod tests {
         let app = test::init_service(app).await;
 
         let req = test::TestRequest::get().uri("/").to_request();
-        let resp = app.call(req).await.unwrap();
+        let resp = app.call(req).await?;
 
         assert_eq!(resp.status(), http::StatusCode::OK);
 
         let response_body = resp.into_body();
-        assert_eq!(to_bytes(response_body).await.unwrap(), r##"Hello world!"##);
+        assert_eq!(to_bytes(response_body).await?, r##"Hello world!"##);
 
         Ok(())
     }
