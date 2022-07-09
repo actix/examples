@@ -524,38 +524,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web-lab"
-version = "0.10.0"
+version = "0.16.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2cd7a15518fb68eb657abc5b6b16c387f99b6db7f549f4884c72d05165139b8"
-dependencies = [
- "actix-files",
- "actix-http",
- "actix-service",
- "actix-utils",
- "actix-web",
- "bytes 1.1.0",
- "csv",
- "derive_more",
- "digest 0.10.3",
- "futures-core",
- "futures-util",
- "hmac 0.12.1",
- "local-channel",
- "log",
- "mime",
- "once_cell",
- "pin-project-lite 0.2.9",
- "serde",
- "serde_json",
- "serde_urlencoded",
- "tokio 1.19.2",
-]
-
-[[package]]
-name = "actix-web-lab"
-version = "0.13.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "034cda5de08616dcc7d261977d337eb1f7dead34a788905b0b04af7fc0f4260f"
+checksum = "8cf633bf3ced3b374e3c990a9b5d7b09148852178d8be9bbef3706c80b28e151"
 dependencies = [
  "actix-files",
  "actix-http",
@@ -563,39 +534,7 @@ dependencies = [
  "actix-service",
  "actix-utils",
  "actix-web",
- "ahash",
- "bytes 1.1.0",
- "csv",
- "derive_more",
- "digest 0.10.3",
- "futures-core",
- "futures-util",
- "hmac 0.12.1",
- "local-channel",
- "log",
- "matchit",
- "mime",
- "once_cell",
- "pin-project-lite 0.2.9",
- "serde",
- "serde_json",
- "serde_urlencoded",
- "subtle",
- "tokio 1.19.2",
-]
-
-[[package]]
-name = "actix-web-lab"
-version = "0.15.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72943fc490da47f8ca7515f395d6d2aa9b28e244e7a087d801c55a4c058e3b13"
-dependencies = [
- "actix-files",
- "actix-http",
- "actix-router",
- "actix-service",
- "actix-utils",
- "actix-web",
+ "actix-web-lab-derive",
  "ahash",
  "arc-swap",
  "async-trait",
@@ -607,16 +546,29 @@ dependencies = [
  "futures-util",
  "generic-array 0.14.5",
  "hmac 0.12.1",
+ "http",
  "local-channel",
  "mime",
  "once_cell",
  "pin-project-lite 0.2.9",
+ "regex",
  "serde",
+ "serde_html_form",
  "serde_json",
- "serde_urlencoded",
  "subtle",
  "tokio 1.19.2",
  "tracing",
+]
+
+[[package]]
+name = "actix-web-lab-derive"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a44a15d9ddb31a4f41decd22f743a154e519fb326120e8133ef9ea6283335ad2"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -899,7 +851,7 @@ dependencies = [
  "actix 0.12.0",
  "actix-cors",
  "actix-web",
- "actix-web-lab 0.10.0",
+ "actix-web-lab",
  "async-graphql",
  "async-graphql-actix-web",
  "env_logger",
@@ -3000,7 +2952,7 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab 0.10.0",
+ "actix-web-lab",
  "dotenv",
  "env_logger",
  "juniper",
@@ -3019,7 +2971,7 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab 0.10.0",
+ "actix-web-lab",
  "env_logger",
  "juniper",
  "log",
@@ -3218,12 +3170,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a3e378b66a060d48947b590737b30a1be76706c8dd7b8ba0f2fe3989c68a853f"
 
 [[package]]
-name = "matchit"
-version = "0.4.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9376a4f0340565ad675d11fc1419227faf5f60cd7ac9cb2e7185a471f30af833"
-
-[[package]]
 name = "md-5"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3274,7 +3220,7 @@ name = "middleware-http-to-https"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab 0.13.0",
+ "actix-web-lab",
  "env_logger",
  "futures-util",
  "log",
@@ -4796,7 +4742,7 @@ version = "1.0.0"
 dependencies = [
  "actix-files",
  "actix-web",
- "actix-web-lab 0.15.2",
+ "actix-web-lab",
  "env_logger",
  "log",
  "rustls 0.20.6",
@@ -4999,6 +4945,19 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_html_form"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3312ac3bf56e70cb7082a85db89d127940607b6acf39bd537cc06c8212124927"
+dependencies = [
+ "form_urlencoded",
+ "indexmap",
+ "itoa 1.0.2",
+ "ryu",
+ "serde",
 ]
 
 [[package]]
@@ -5614,7 +5573,7 @@ name = "template_sailfish"
 version = "0.1.0"
 dependencies = [
  "actix-web",
- "actix-web-lab 0.10.0",
+ "actix-web-lab",
  "env_logger",
  "log",
  "sailfish",

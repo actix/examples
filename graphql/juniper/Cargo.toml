@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-actix-web-lab = "0.10"
+actix-web-lab = "0.16"
 actix-cors = "0.6"
 
 juniper = "0.15"
