@@ -794,9 +794,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql"
-version = "3.0.38"
+version = "4.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2106123e9c79a8d649bf0f7e9f58462a90ce2ca71ad9a0b69b4f2b67382c376f"
+checksum = "ffffea596a12b6d9ea5c6fc8a5f414cf4e0c8cd6b618ac2c3d4f56d9b5c5520b"
 dependencies = [
  "async-graphql-derive",
  "async-graphql-parser",
@@ -824,9 +824,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-actix-web"
-version = "3.0.38"
+version = "4.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "444088fb3f4faeaf1e235df5e485c0595a4ec3d9f73bcba3ceee4ba6a97a9fdf"
+checksum = "efa4e7d1a4bc86b2f9bad704aefb1493c2eb6edb52706dad3f9551c148e4c284"
 dependencies = [
  "actix 0.13.0",
  "actix-http",
@@ -845,7 +845,7 @@ dependencies = [
 name = "async-graphql-demo"
 version = "1.0.0"
 dependencies = [
- "actix 0.12.0",
+ "actix 0.13.0",
  "actix-cors",
  "actix-web",
  "actix-web-lab",
@@ -858,13 +858,13 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-derive"
-version = "3.0.38"
+version = "4.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a6ec150ac445a660169a3ad5075b953a7351ec75fe28095e639f6282aac9fdb"
+checksum = "7082221cc1dc29edec0e3225420146b1fbc7f18ba534e301eab186501ae84c28"
 dependencies = [
  "Inflector",
  "async-graphql-parser",
- "darling",
+ "darling 0.14.1",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -874,22 +874,21 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-parser"
-version = "3.0.38"
+version = "4.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0302764f05e0e50fd3b381646d4a0ed07d4ce5c9fc1eaf79bbd7745bd4893adb"
+checksum = "c328e2cb0dade64333859f7a7e22c9e19a3767afaad673976a1d855c9bda5ffa"
 dependencies = [
  "async-graphql-value",
  "pest",
- "pest_derive",
  "serde",
  "serde_json",
 ]
 
 [[package]]
 name = "async-graphql-value"
-version = "3.0.38"
+version = "4.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba2e19876bcd2068f597fd0182f4ba602ce3c89cb04c4b8810d7c36f44724e92"
+checksum = "005292494ce718604a0dc1531e5827fe540761e1df44b064085711c5fde70b7c"
 dependencies = [
  "bytes 1.1.0",
  "indexmap",
@@ -1770,8 +1769,18 @@ version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a01d95850c592940db9b8194bc39f4bc0e89dee5c4265e4b1807c34a9aba453c"
 dependencies = [
- "darling_core",
- "darling_macro",
+ "darling_core 0.13.4",
+ "darling_macro 0.13.4",
+]
+
+[[package]]
+name = "darling"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4529658bdda7fd6769b8614be250cdcfc3aeb0ee72fe66f9e41e5e5eb73eac02"
+dependencies = [
+ "darling_core 0.14.1",
+ "darling_macro 0.14.1",
 ]
 
 [[package]]
@@ -1789,12 +1798,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "darling_core"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "649c91bc01e8b1eac09fb91e8dbc7d517684ca6be8ebc75bb9cafc894f9fdb6f"
+dependencies = [
+ "fnv",
+ "ident_case",
+ "proc-macro2",
+ "quote",
+ "strsim 0.10.0",
+ "syn",
+]
+
+[[package]]
 name = "darling_macro"
 version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c972679f83bdf9c42bd905396b6c3588a843a17f0f16dfcfa3e2c5d57441835"
 dependencies = [
- "darling_core",
+ "darling_core 0.13.4",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "darling_macro"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ddfc69c5bfcbd2fc09a0f38451d2daf0e372e367986a83906d1b0dbc88134fb5"
+dependencies = [
+ "darling_core 0.14.1",
  "quote",
  "syn",
 ]
@@ -4214,11 +4248,11 @@ checksum = "dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.36"
+version = "1.0.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7342d5883fbccae1cc37a2353b09c87c9b0f3afd73f5fb9bba687a1f733b029"
+checksum = "dd96a1e8ed2596c337f8eae5f24924ec83f5ad5ab21ea8e455d3566c69fbcaf7"
 dependencies = [
- "unicode-xid",
+ "unicode-ident",
 ]
 
 [[package]]
@@ -5137,7 +5171,7 @@ version = "1.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e182d6ec6f05393cc0e5ed1bf81ad6db3a8feedf8ee515ecdd369809bcce8082"
 dependencies = [
- "darling",
+ "darling 0.13.4",
  "proc-macro2",
  "quote",
  "syn",
@@ -6335,6 +6369,12 @@ name = "unicode-bidi"
 version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "099b7128301d285f79ddd55b9a83d5e6b9e97c92e0ea0daebee7263e932de992"
+
+[[package]]
+name = "unicode-ident"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5bd2fe26506023ed7b5e1e315add59d6f584c621d037f9368fea9cfb988f368c"
 
 [[package]]
 name = "unicode-normalization"
