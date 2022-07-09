@@ -6,6 +6,6 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 num_cpus = "1.13"
-redis = { version = "0.19.0", default-features = false, features = ["tokio-comp"] }
+redis = { version = "0.21", default-features = false, features = ["tokio-comp"] }
 # redis_tang is an redis pool for test purpose
-redis_tang = "0.2"
+redis_tang = "0.3"

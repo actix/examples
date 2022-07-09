@@ -262,9 +262,9 @@ dependencies = [
 
 [[package]]
 name = "actix-protobuf"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "366333404942e5b537495e3c5b5b33c543cd38a50de3cc79126734162bdc4b82"
+checksum = "5395a86526d22c0e01ce119e473ad5b1b006c42ba2f11b2995ea858579f81ad2"
 dependencies = [
  "actix-web",
  "derive_more",
@@ -289,7 +289,7 @@ dependencies = [
  "futures-core",
  "log",
  "rand 0.8.5",
- "redis",
+ "redis 0.19.0",
  "redis-async",
  "serde",
  "serde_json",
@@ -935,7 +935,7 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "num_cpus",
- "redis",
+ "redis 0.21.5",
  "redis_tang",
 ]
 
@@ -4223,9 +4223,9 @@ dependencies = [
 
 [[package]]
 name = "prost"
-version = "0.9.0"
+version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "444879275cb4fd84958b1a1d5420d15e6fcf7c235fe47f053c9c2a80aceb6001"
+checksum = "71adf41db68aa0daaefc69bb30bcd68ded9b9abaad5d1fbb6304c4fb390e083e"
 dependencies = [
  "bytes 1.1.0",
  "prost-derive",
@@ -4233,9 +4233,9 @@ dependencies = [
 
 [[package]]
 name = "prost-derive"
-version = "0.9.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9cc1a3263e07e0bf68e96268f37665207b49560d98739662cdfaae215c720fe"
+checksum = "7b670f45da57fb8542ebdbb6105a925fe571b67f9e7ed9f47a06a84e72b4e7cc"
 dependencies = [
  "anyhow",
  "itertools",
@@ -4431,6 +4431,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "redis"
+version = "0.21.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1a80b5f38d7f5a020856a0e16e40a9cfabf88ae8f0e4c2dcd8a3114c1e470852"
+dependencies = [
+ "async-trait",
+ "bytes 1.1.0",
+ "combine 4.6.4",
+ "dtoa",
+ "futures-util",
+ "itoa 0.4.8",
+ "percent-encoding",
+ "pin-project-lite 0.2.9",
+ "tokio 1.19.2",
+ "tokio-util 0.6.10",
+ "url",
+]
+
+[[package]]
 name = "redis-async"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4462,11 +4481,11 @@ dependencies = [
 
 [[package]]
 name = "redis_tang"
-version = "0.2.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "028e4e2639af069271f0681968c11a34ec2d7b726fddbd087964fde34b52f99a"
+checksum = "dcabf56cf2286df31463567c8f8d67ee582e32acf78aaa6f7303f791006aa75d"
 dependencies = [
- "redis",
+ "redis 0.21.5",
  "tang-rs",
  "tokio 1.19.2",
 ]
