@@ -5766,6 +5766,7 @@ dependencies = [
  "actix-files",
  "actix-session 0.5.0",
  "actix-web",
+ "actix-web-lab",
  "dotenv",
  "env_logger",
  "log",

@@ -62,13 +62,14 @@ async fn rpc_select(
             if params.len() != 1 || !params[0].is_u64() {
                 return Err(convention::ErrorData::std(-32602));
             }
-            match app_state
+
+            let fut = app_state
                 .network
                 .read()
                 .unwrap()
-                .wait(params[0].as_u64().unwrap())
-                .await
-            {
+                .wait(params[0].as_u64().unwrap());
+
+            match fut.await {
                 Ok(ok) => Ok(Value::from(ok)),
                 Err(e) => Err(convention::ErrorData::new(500, &format!("{e:?}")[..])),
             }

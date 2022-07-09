@@ -4,9 +4,10 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4"
 actix-files = "0.6"
 actix-session = "0.5"
+actix-web = "4"
+actix-web-lab = "0.16"
 
 dotenv = "0.15"
 env_logger = "0.9"

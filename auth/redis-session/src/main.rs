@@ -13,7 +13,7 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct IndexResponse {
     user_id: Option<String>,
     counter: i32,

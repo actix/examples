@@ -43,7 +43,9 @@ async fn welcome(req: HttpRequest, session: Session) -> Result<HttpResponse> {
 async fn default_handler(req_method: Method) -> Result<impl Responder> {
     match req_method {
         Method::GET => {
-            let file = NamedFile::open("static/404.html")?.set_status_code(StatusCode::NOT_FOUND);
+            let file = NamedFile::open("static/404.html")?
+                .customize()
+                .with_status(StatusCode::NOT_FOUND);
             Ok(Either::Left(file))
         }
         _ => Ok(Either::Right(HttpResponse::MethodNotAllowed().finish())),
