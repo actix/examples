@@ -8,5 +8,5 @@ actix-tls = "3.0"
 actix-web = { version = "4", features = ["rustls"] }
 env_logger = "0.9"
 log = "0.4"
-rustls = "0.20.2"
-rustls-pemfile = "0.2.1"
+rustls = "0.20"
+rustls-pemfile = "1"

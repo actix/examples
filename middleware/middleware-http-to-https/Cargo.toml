@@ -10,5 +10,5 @@ actix-web-lab = "0.16"
 env_logger = "0.9"
 futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
 log = "0.4"
-rustls = "0.20.2"
-rustls-pemfile = "0.2.1"
+rustls = "0.20"
+rustls-pemfile = "1"

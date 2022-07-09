@@ -24,7 +24,6 @@ use awc::Client;
 use futures_util::StreamExt as _;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use validator_derive::Validate;
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
 struct SomeData {
