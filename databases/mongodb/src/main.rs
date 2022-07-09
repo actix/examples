@@ -5,9 +5,8 @@ mod model;
 mod test;
 
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
-use mongodb::{bson::doc, options::IndexOptions, Client, Collection, IndexModel};
-
 use model::User;
+use mongodb::{bson::doc, options::IndexOptions, Client, Collection, IndexModel};
 
 const DB_NAME: &str = "myApp";
 const COLL_NAME: &str = "users";

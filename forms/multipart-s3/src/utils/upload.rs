@@ -1,10 +1,11 @@
-use crate::utils::s3::Client;
+use std::{convert::From, io::Write};
+
 use actix_multipart::{Field, Multipart};
 use actix_web::{web, web::Bytes, Error};
 use futures_util::StreamExt as _;
 use serde::{Deserialize, Serialize};
-use std::convert::From;
-use std::io::Write;
+
+use crate::utils::s3::Client;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct UploadFile {

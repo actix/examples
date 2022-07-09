@@ -1,7 +1,7 @@
+use std::io::Read as _;
+
 use rusoto_core::Region;
-use rusoto_s3::S3;
-use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client};
-use std::io::Read;
+use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client, S3};
 
 pub struct Client {
     #[allow(dead_code)]

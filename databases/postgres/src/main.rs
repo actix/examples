@@ -51,9 +51,10 @@ mod errors {
 }
 
 mod db {
-    use crate::{errors::MyError, models::User};
     use deadpool_postgres::Client;
     use tokio_pg_mapper::FromTokioPostgresRow;
+
+    use crate::{errors::MyError, models::User};
 
     pub async fn add_user(client: &Client, user_info: User) -> Result<User, MyError> {
         let _stmt = include_str!("../sql/add_user.sql");
@@ -80,9 +81,10 @@ mod db {
 }
 
 mod handlers {
-    use crate::{db, errors::MyError, models::User};
     use actix_web::{web, Error, HttpResponse};
     use deadpool_postgres::{Client, Pool};
+
+    use crate::{db, errors::MyError, models::User};
 
     pub async fn add_user(
         user: web::Json<User>,
@@ -98,12 +100,13 @@ mod handlers {
     }
 }
 
-use crate::config::ExampleConfig;
 use ::config::Config;
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use handlers::add_user;
 use tokio_postgres::NoTls;
+
+use crate::config::ExampleConfig;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

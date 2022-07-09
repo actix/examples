@@ -24,10 +24,11 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use actix_web::body::to_bytes;
     use actix_web::dev::Service;
     use actix_web::{http, test, web, App, Error};
+
+    use super::*;
 
     #[actix_web::test]
     async fn test_index() -> Result<(), Error> {

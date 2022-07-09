@@ -1,8 +1,8 @@
-use casbin::{CoreApi, DefaultModel, Enforcer, FileAdapter, RbacApi};
 use std::io;
-use tokio::sync::RwLock;
 
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
+use casbin::{CoreApi, DefaultModel, Enforcer, FileAdapter, RbacApi};
+use tokio::sync::RwLock;
 
 /// simple handle
 async fn success(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpResponse {

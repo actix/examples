@@ -2,9 +2,10 @@
 //! And manages available rooms. Peers send messages to other peers in same
 //! room through `ChatServer`.
 
+use std::collections::{HashMap, HashSet};
+
 use actix::prelude::*;
 use rand::{self, rngs::ThreadRng, Rng};
-use std::collections::{HashMap, HashSet};
 
 use crate::session;
 

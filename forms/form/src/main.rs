@@ -1,6 +1,5 @@
-use serde::{Deserialize, Serialize};
-
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
+use serde::{Deserialize, Serialize};
 
 struct AppState {
     foo: String,
@@ -71,12 +70,13 @@ async fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Re
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use actix_web::body::to_bytes;
     use actix_web::dev::{Service, ServiceResponse};
     use actix_web::http::{header::HeaderValue, header::CONTENT_TYPE, StatusCode};
     use actix_web::test::{self, TestRequest};
     use actix_web::web::{Bytes, Form};
+
+    use super::*;
 
     trait BodyTest {
         fn as_str(&self) -> &str;

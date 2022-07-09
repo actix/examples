@@ -100,13 +100,14 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use actix_web::{
         middleware,
         web::{get, post, resource},
         App,
     };
     use serde_json::json;
+
+    use super::*;
 
     #[actix_web::test]
     async fn test_workflow() {

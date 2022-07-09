@@ -1,12 +1,15 @@
-use actix_web::body::BoxBody;
-use actix_web::dev::ServiceResponse;
-use actix_web::http::header::ContentType;
-use actix_web::http::StatusCode;
-use actix_web::middleware::{ErrorHandlerResponse, ErrorHandlers};
-use actix_web::{get, web, App, HttpResponse, HttpServer, Result};
+use std::io;
+
+use actix_web::{
+    body::BoxBody,
+    dev::ServiceResponse,
+    get,
+    http::{header::ContentType, StatusCode},
+    middleware::{ErrorHandlerResponse, ErrorHandlers},
+    web, App, HttpResponse, HttpServer, Result,
+};
 use handlebars::Handlebars;
 use serde_json::json;
-use std::io;
 
 // Macro documentation can be found in the actix_web_codegen crate
 #[get("/")]

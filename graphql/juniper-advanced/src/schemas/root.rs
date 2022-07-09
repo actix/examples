@@ -3,10 +3,11 @@ use juniper::{
 };
 use mysql::{from_row, params, Error as DBError, Row};
 
+use super::{
+    product::{Product, ProductInput},
+    user::{User, UserInput},
+};
 use crate::db::Pool;
-
-use super::product::{Product, ProductInput};
-use super::user::{User, UserInput};
 
 pub struct Context {
     pub dbpool: Pool,

@@ -1,5 +1,4 @@
 use actix_web::{middleware, App, HttpServer};
-
 use nested_routing::app_config::config_app;
 
 #[actix_web::main]
