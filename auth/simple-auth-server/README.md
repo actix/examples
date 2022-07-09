@@ -10,7 +10,7 @@
 
 - [GET /](http://localhost:8080/)
 - [POST /api/invitation](http://localhost:8080/api/invitation)
-- [POST /api/invitation/:invitation_id](http://localhost:8080/api/invitation/:invitation_id)
+- [POST /api/register/:invitation_id](http://localhost:8080/api/register/:invitation_id)
 - [GET /api/auth](http://localhost:8080/api/auth)
 - [POST /api/auth](http://localhost:8080/api/auth)
 - [DELETE /api/auth](http://localhost:8080/api/auth)
