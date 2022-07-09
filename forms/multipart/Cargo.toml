@@ -14,4 +14,4 @@ actix-web = "4"
 
 futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
 sanitize-filename = "0.4"
-uuid = { version = "0.8", features = ["v4"] }
+uuid = { version = "1", features = ["v4"] }

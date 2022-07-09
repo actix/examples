@@ -1,3 +1,5 @@
+#![allow(clippy::extra_unused_lifetimes)]
+
 use diesel::{r2d2::ConnectionManager, PgConnection};
 use serde::{Deserialize, Serialize};
 

@@ -46,7 +46,7 @@ members = [
    "shutdown-server",
    "templating/askama",
    "templating/handlebars",
-   # "templating/sailfish",
+   "templating/sailfish",
    "templating/tera",
    "templating/tinytemplate",
    "templating/yarte",

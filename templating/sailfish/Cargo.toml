@@ -1,11 +1,12 @@
 [package]
-name = "template_sailfish"
+name = "templating-sailfish"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 actix-web = "4"
 actix-web-lab = "0.16"
+
 env_logger = "0.9"
 log = "0.4"
-sailfish = "0.3"
+sailfish = "0.4"
