@@ -1,8 +1,7 @@
 use juniper::GraphQLInputObject;
-use mysql::{from_row, params, Error as DBError, Row};
+use mysql::{from_row, params, prelude::*, Error as DBError, Row};
 
-use crate::schemas::root::Context;
-use crate::schemas::user::User;
+use crate::schemas::{root::Context, user::User};
 
 /// Product
 #[derive(Default, Debug)]
@@ -11,6 +10,19 @@ pub struct Product {
     pub user_id: String,
     pub name: String,
     pub price: f64,
+}
+
+impl Product {
+    pub(crate) fn from_row(row: Row) -> Self {
+        let (id, user_id, name, price) = from_row(row);
+
+        Self {
+            id,
+            user_id,
+            name,
+            price,
+        }
+    }
 }
 
 #[juniper::graphql_object(Context = Context)]
@@ -29,8 +41,8 @@ impl Product {
     }
 
     fn user(&self, context: &Context) -> Option<User> {
-        let mut conn = context.dbpool.get().unwrap();
-        let user: Result<Option<Row>, DBError> = conn.first_exec(
+        let mut conn = context.db_pool.get().unwrap();
+        let user: Result<Option<Row>, DBError> = conn.exec_first(
             "SELECT * FROM user WHERE id=:id",
             params! {"id" => &self.user_id},
         );

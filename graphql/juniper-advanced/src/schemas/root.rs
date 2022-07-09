@@ -1,7 +1,7 @@
 use juniper::{
     graphql_object, graphql_value, EmptySubscription, FieldError, FieldResult, RootNode,
 };
-use mysql::{from_row, params, Error as DBError, Row};
+use mysql::{from_row, params, prelude::*, Error as DBError, Row};
 
 use super::{
     product::{Product, ProductInput},
@@ -10,7 +10,7 @@ use super::{
 use crate::db::Pool;
 
 pub struct Context {
-    pub dbpool: Pool,
+    pub db_pool: Pool,
 }
 
 impl juniper::Context for Context {}
@@ -21,28 +21,24 @@ pub struct QueryRoot;
 impl QueryRoot {
     #[graphql(description = "List of all users")]
     fn users(context: &Context) -> FieldResult<Vec<User>> {
-        let mut conn = context.dbpool.get().unwrap();
+        let mut conn = context.db_pool.get().unwrap();
+
         let users = conn
-            .prep_exec("select * from user", ())
-            .map(|result| {
-                result
-                    .map(|x| x.unwrap())
-                    .map(|row| {
-                        let (id, name, email) = from_row(row);
-                        User { id, name, email }
-                    })
-                    .collect()
-            })
-            .unwrap();
+            .exec("SELECT * FROM user", ())
+            .unwrap()
+            .into_iter()
+            .map(User::from_row)
+            .collect();
+
         Ok(users)
     }
 
     #[graphql(description = "Get Single user reference by user ID")]
     fn user(context: &Context, id: String) -> FieldResult<User> {
-        let mut conn = context.dbpool.get().unwrap();
+        let mut conn = context.db_pool.get().unwrap();
 
         let user: Result<Option<Row>, DBError> =
-            conn.first_exec("SELECT * FROM user WHERE id=:id", params! {"id" => id});
+            conn.exec_first("SELECT * FROM user WHERE id=:id", params! {"id" => id});
 
         if let Err(_err) = user {
             return Err(FieldError::new(
@@ -57,32 +53,23 @@ impl QueryRoot {
 
     #[graphql(description = "List of all users")]
     fn products(context: &Context) -> FieldResult<Vec<Product>> {
-        let mut conn = context.dbpool.get().unwrap();
+        let mut conn = context.db_pool.get().unwrap();
+
         let products = conn
-            .prep_exec("select * from product", ())
-            .map(|result| {
-                result
-                    .map(|x| x.unwrap())
-                    .map(|row| {
-                        let (id, user_id, name, price) = from_row(row);
-                        Product {
-                            id,
-                            user_id,
-                            name,
-                            price,
-                        }
-                    })
-                    .collect()
-            })
-            .unwrap();
+            .exec("SELECT * FROM product", ())
+            .unwrap()
+            .into_iter()
+            .map(Product::from_row)
+            .collect();
+
         Ok(products)
     }
 
     #[graphql(description = "Get Single user reference by user ID")]
     fn product(context: &Context, id: String) -> FieldResult<Product> {
-        let mut conn = context.dbpool.get().unwrap();
+        let mut conn = context.db_pool.get().unwrap();
         let product: Result<Option<Row>, DBError> =
-            conn.first_exec("SELECT * FROM user WHERE id=:id", params! {"id" => id});
+            conn.exec_first("SELECT * FROM user WHERE id=:id", params! {"id" => id});
         if let Err(_err) = product {
             return Err(FieldError::new(
                 "Product Not Found",
@@ -105,10 +92,10 @@ pub struct MutationRoot;
 #[graphql_object(Context = Context)]
 impl MutationRoot {
     fn create_user(context: &Context, user: UserInput) -> FieldResult<User> {
-        let mut conn = context.dbpool.get().unwrap();
+        let mut conn = context.db_pool.get().unwrap();
         let new_id = uuid::Uuid::new_v4().to_simple().to_string();
 
-        let insert: Result<Option<Row>, DBError> = conn.first_exec(
+        let insert: Result<Option<Row>, DBError> = conn.exec_first(
             "INSERT INTO user(id, name, email) VALUES(:id, :name, :email)",
             params! {
                 "id" => &new_id,
@@ -137,10 +124,10 @@ impl MutationRoot {
     }
 
     fn create_product(context: &Context, product: ProductInput) -> FieldResult<Product> {
-        let mut conn = context.dbpool.get().unwrap();
+        let mut conn = context.db_pool.get().unwrap();
         let new_id = uuid::Uuid::new_v4().to_simple().to_string();
 
-        let insert: Result<Option<Row>, DBError> = conn.first_exec(
+        let insert: Result<Option<Row>, DBError> = conn.exec_first(
             "INSERT INTO product(id, user_id, name, price) VALUES(:id, :user_id, :name, :price)",
             params! {
                 "id" => &new_id,
