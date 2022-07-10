@@ -45,7 +45,7 @@ members = [
    "server-sent-events",
    "shutdown-server",
    "templating/askama",
-   # "templating/fluent",
+   "templating/fluent",
    "templating/handlebars",
    "templating/sailfish",
    "templating/tera",
@@ -61,11 +61,8 @@ members = [
 exclude = [
    # uses incompatible libsqlite-sys to other examples
    "databases/diesel",
-
-   # takes infinity time to compile for some unknown reason
-   "templating/fluent",
 ]
 
-# [patch.crates-io]
-# fluent-templates = { git = "https://github.com/robjtede/fluent-templates.git", branch = "fix-circ-dep" }
-# fluent-template-macros = { git = "https://github.com/robjtede/fluent-templates.git", branch = "fix-circ-dep" }
+[patch.crates-io]
+fluent-templates = { git = "https://github.com/robjtede/fluent-templates.git", branch = "fix-circ-dep" }
+fluent-template-macros = { git = "https://github.com/robjtede/fluent-templates.git", branch = "fix-circ-dep" }
