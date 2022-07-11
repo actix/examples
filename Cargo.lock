@@ -2447,6 +2447,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc4045962a5a5e935ee2fdedaa4e08284547402885ab326734432bed5d12966b"
 
 [[package]]
+name = "futures-lite"
+version = "1.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7694489acd39452c77daa48516b894c153f192c3578d5a839b62c58099fcbf48"
+dependencies = [
+ "fastrand",
+ "futures-core",
+ "futures-io",
+ "memchr",
+ "parking",
+ "pin-project-lite 0.2.9",
+ "waker-fn",
+]
+
+[[package]]
 name = "futures-macro"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3984,6 +3999,12 @@ name = "os_str_bytes"
 version = "6.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "21326818e99cfe6ce1e524c2a805c189a99b5ae555a35d19f9a284b427d86afa"
+
+[[package]]
+name = "parking"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "427c3892f9e783d91cc128285287e70a59e206ca452770ece88a76f7a3eddd72"
 
 [[package]]
 name = "parking_lot"
@@ -6850,6 +6871,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 
 [[package]]
+name = "waker-fn"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d5b2c62b4012a3e1eca5a7e077d13b3bf498c4073e33ccd58626607748ceeca"
+
+[[package]]
 name = "walkdir"
 version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7034,6 +7061,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "websocket-chat-actorless-example"
+version = "1.0.0"
+dependencies = [
+ "actix-files",
+ "actix-web",
+ "actix-ws",
+ "awc",
+ "derive_more",
+ "env_logger 0.9.0",
+ "futures-util",
+ "log",
+ "rand 0.8.5",
+ "tokio 1.19.2",
+]
+
+[[package]]
 name = "websocket-chat-broker"
 version = "1.0.0"
 dependencies = [
@@ -7056,10 +7099,10 @@ dependencies = [
  "actix-ws",
  "awc",
  "env_logger 0.9.0",
+ "futures-lite",
  "futures-util",
  "log",
  "tokio 1.19.2",
- "tokio-stream",
 ]
 
 [[package]]

@@ -53,6 +53,7 @@ members = [
    "templating/yarte",
    "unix-socket",
    "websockets/autobahn",
+   "websockets/chat-actorless",
    "websockets/chat-broker",
    "websockets/chat-tcp",
    "websockets/chat",
