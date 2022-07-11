@@ -56,6 +56,7 @@ members = [
    "websockets/chat-broker",
    "websockets/chat-tcp",
    "websockets/chat",
+   "websockets/echo-actorless",
    "websockets/echo",
 ]
 exclude = [

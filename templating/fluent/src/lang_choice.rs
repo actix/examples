@@ -18,7 +18,6 @@ impl LangChoice {
         let lang = req
             .get_header::<AcceptLanguage>()
             .and_then(|lang| lang.preference().into_item())
-            .map(|lang| lang.to_string())
             .map_or_else(|| "en".to_owned(), |lang| lang.to_string());
 
         Self(lang)
