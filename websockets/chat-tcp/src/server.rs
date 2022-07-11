@@ -66,7 +66,7 @@ impl Default for ChatServer {
     fn default() -> ChatServer {
         // default room
         let mut rooms = HashMap::new();
-        rooms.insert("Main".to_owned(), HashSet::new());
+        rooms.insert("main".to_owned(), HashSet::new());
 
         ChatServer {
             sessions: HashMap::new(),
@@ -108,14 +108,14 @@ impl Handler<Connect> for ChatServer {
         println!("Someone joined");
 
         // notify all users in same room
-        self.send_message("Main", "Someone joined", 0);
+        self.send_message("main", "Someone joined", 0);
 
         // register session with random id
         let id = self.rng.gen::<usize>();
         self.sessions.insert(id, msg.addr);
 
-        // auto join session to Main room
-        self.rooms.get_mut(&"Main".to_owned()).unwrap().insert(id);
+        // auto join session to main room
+        self.rooms.get_mut("main").unwrap().insert(id);
 
         // send id back
         id

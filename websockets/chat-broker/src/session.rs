@@ -78,7 +78,7 @@ impl Actor for WsChatSession {
     type Context = ws::WebsocketContext<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        self.join_room("Main", ctx);
+        self.join_room("main", ctx);
     }
 
     fn stopped(&mut self, _ctx: &mut Self::Context) {

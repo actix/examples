@@ -147,7 +147,7 @@ impl ChatSession {
             id: 0,
             addr,
             hb: Instant::now(),
-            room: "Main".to_owned(),
+            room: "main".to_owned(),
             framed,
         }
     }

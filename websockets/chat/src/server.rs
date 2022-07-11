@@ -79,7 +79,7 @@ impl ChatServer {
     pub fn new(visitor_count: Arc<AtomicUsize>) -> ChatServer {
         // default room
         let mut rooms = HashMap::new();
-        rooms.insert("Main".to_owned(), HashSet::new());
+        rooms.insert("main".to_owned(), HashSet::new());
 
         ChatServer {
             sessions: HashMap::new(),
@@ -122,20 +122,20 @@ impl Handler<Connect> for ChatServer {
         println!("Someone joined");
 
         // notify all users in same room
-        self.send_message("Main", "Someone joined", 0);
+        self.send_message("main", "Someone joined", 0);
 
         // register session with random id
         let id = self.rng.gen::<usize>();
         self.sessions.insert(id, msg.addr);
 
-        // auto join session to Main room
+        // auto join session to main room
         self.rooms
-            .entry("Main".to_owned())
+            .entry("main".to_owned())
             .or_insert_with(HashSet::new)
             .insert(id);
 
         let count = self.visitor_count.fetch_add(1, Ordering::SeqCst);
-        self.send_message("Main", &format!("Total visitors {count}"), 0);
+        self.send_message("main", &format!("Total visitors {count}"), 0);
 
         // send id back
         id

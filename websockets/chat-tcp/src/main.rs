@@ -29,7 +29,7 @@ async fn chat_route(
         WsChatSession {
             id: 0,
             hb: Instant::now(),
-            room: "Main".to_owned(),
+            room: "main".to_owned(),
             name: None,
             addr: srv.get_ref().clone(),
         },

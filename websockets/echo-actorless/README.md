@@ -12,9 +12,9 @@ cargo run
 # starting HTTP server at http://localhost:8080
 ```
 
-### Web Client
+### Browser Client
 
-Go to <http://localhost:8080/> in a browser.
+Go to <http://localhost:8080> in a browser.
 
 ### CLI Client
 

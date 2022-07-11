@@ -2,8 +2,8 @@ use std::time::{Duration, Instant};
 
 use actix_web::rt;
 use actix_ws::Message;
-use futures_util::stream::StreamExt as _;
-use tokio::select;
+use futures_lite::future;
+use futures_util::{future::Either, stream::StreamExt as _, FutureExt as _};
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -20,12 +20,16 @@ pub async fn echo_heartbeat_ws(
     log::info!("connected");
 
     let mut last_heartbeat = Instant::now();
-
     let mut interval = rt::time::interval(HEARTBEAT_INTERVAL);
 
     loop {
-        select! {
-            Some(Ok(msg)) = msg_stream.next() => {
+        match future::or(
+            msg_stream.next().map(Either::Left),
+            interval.tick().map(Either::Right),
+        )
+        .await
+        {
+            Either::Left(Some(Ok(msg))) => {
                 log::debug!("msg: {msg:?}");
 
                 match msg {
@@ -58,10 +62,14 @@ pub async fn echo_heartbeat_ws(
                 }
             }
 
-            _ = interval.tick() => {
+            Either::Left(_) => {}
+
+            Either::Right(_) => {
                 // if no heartbeat ping/pong received recently, close the connection
                 if Instant::now().duration_since(last_heartbeat) > CLIENT_TIMEOUT {
-                    log::info!("client has not sent heartbeat in over {CLIENT_TIMEOUT:?}; disconnecting");
+                    log::info!(
+                        "client has not sent heartbeat in over {CLIENT_TIMEOUT:?}; disconnecting"
+                    );
                     let _ = session.close(None).await;
                     break;
                 }
