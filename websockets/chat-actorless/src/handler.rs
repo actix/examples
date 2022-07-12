@@ -5,16 +5,9 @@ use futures_util::{
     future::{select, Either},
     StreamExt as _,
 };
-use tokio::{
-    pin,
-    sync::{
-        mpsc::{self, UnboundedSender},
-        oneshot,
-    },
-    time::interval,
-};
+use tokio::{pin, sync::mpsc, time::interval};
 
-use crate::{Command, ConnId, RoomId};
+use crate::{ChatServerHandle, ConnId};
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -25,27 +18,20 @@ const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 /// Echo text & binary messages received from the client, respond to ping messages, and monitor
 /// connection health to detect network issues and free up resources.
 pub async fn chat_ws(
-    server_tx: UnboundedSender<Command>,
+    chat_server: ChatServerHandle,
     mut session: actix_ws::Session,
     mut msg_stream: actix_ws::MessageStream,
 ) {
     log::info!("connected");
 
     let mut name = None;
-    let mut room = "main".to_owned();
     let mut last_heartbeat = Instant::now();
     let mut interval = interval(HEARTBEAT_INTERVAL);
 
     let (conn_tx, mut conn_rx) = mpsc::unbounded_channel();
-    let (res_tx, res_rx) = oneshot::channel();
 
     // unwrap: chat server is not dropped before the HTTP server
-    server_tx
-        .send(Command::Connect { conn_tx, res_tx })
-        .unwrap();
-
-    // unwrap: chat server does not drop our response channel
-    let conn_id = res_rx.await.unwrap();
+    let conn_id = chat_server.connect(conn_tx).await;
 
     let close_reason = loop {
         // most of the futures we process need to be stack-pinned to work with select()
@@ -56,6 +42,7 @@ pub async fn chat_ws(
         let msg_rx = conn_rx.recv();
         pin!(msg_rx);
 
+        // TODO: nested select is pretty gross for readability on the match
         let messages = select(msg_stream.next(), msg_rx);
         pin!(messages);
 
@@ -76,15 +63,8 @@ pub async fn chat_ws(
                     }
 
                     Message::Text(text) => {
-                        process_text_msg(
-                            &server_tx,
-                            &mut session,
-                            &text,
-                            conn_id,
-                            &mut room,
-                            &mut name,
-                        )
-                        .await;
+                        process_text_msg(&chat_server, &mut session, &text, conn_id, &mut name)
+                            .await;
                     }
 
                     Message::Binary(_bin) => {
@@ -113,8 +93,10 @@ pub async fn chat_ws(
                 session.text(chat_msg).await.unwrap();
             }
 
-            // all connection's msg senders were dropped
-            Either::Left((Either::Right((None, _)), _)) => unreachable!(),
+            // all connection's message senders were dropped
+            Either::Left((Either::Right((None, _)), _)) => unreachable!(
+                "all connection message senders were dropped; chat server may have panicked"
+            ),
 
             // heartbeat internal tick
             Either::Right((_inst, _)) => {
@@ -132,16 +114,17 @@ pub async fn chat_ws(
         };
     };
 
+    chat_server.disconnect(conn_id);
+
     // attempt to close connection gracefully
     let _ = session.close(close_reason).await;
 }
 
 async fn process_text_msg(
-    server_tx: &UnboundedSender<Command>,
+    chat_server: &ChatServerHandle,
     session: &mut actix_ws::Session,
     text: &str,
     conn: ConnId,
-    room: &mut RoomId,
     name: &mut Option<String>,
 ) {
     // strip leading and trailing whitespace (spaces, newlines, etc.)
@@ -154,14 +137,9 @@ async fn process_text_msg(
         // unwrap: we have guaranteed non-zero string length already
         match cmd_args.next().unwrap() {
             "/list" => {
-                // Send ListRooms message to chat server and wait for
-                // response
-                log::info!("List rooms");
+                log::info!("conn {conn}: listing rooms");
 
-                let (res_tx, res_rx) = oneshot::channel();
-                server_tx.send(Command::List { res_tx }).unwrap();
-                // unwrap: chat server does not drop our response channel
-                let rooms = res_rx.await.unwrap();
+                let rooms = chat_server.list_rooms().await;
 
                 for room in rooms {
                     session.text(room).await.unwrap();
@@ -169,24 +147,14 @@ async fn process_text_msg(
             }
 
             "/join" => match cmd_args.next() {
-                Some(room_id) => {
-                    *room = room_id.to_owned();
+                Some(room) => {
+                    log::info!("conn {conn}: joining room {room}");
 
-                    let (res_tx, res_rx) = oneshot::channel();
+                    chat_server.join_room(conn, room).await;
 
-                    server_tx
-                        .send(Command::Join {
-                            conn,
-                            room: room.clone(),
-                            res_tx,
-                        })
-                        .unwrap();
-
-                    // unwrap: chat server does not drop our response channel
-                    res_rx.await.unwrap();
-
-                    session.text(format!("joined {room_id}")).await.unwrap();
+                    session.text(format!("joined {room}")).await.unwrap();
                 }
+
                 None => {
                     session.text("!!! room name is required").await.unwrap();
                 }
@@ -194,6 +162,7 @@ async fn process_text_msg(
 
             "/name" => match cmd_args.next() {
                 Some(new_name) => {
+                    log::info!("conn {conn}: setting name to: {new_name}");
                     name.replace(new_name.to_owned());
                 }
                 None => {
@@ -215,20 +184,6 @@ async fn process_text_msg(
             None => msg.to_owned(),
         };
 
-        let (res_tx, res_rx) = oneshot::channel();
-
-        // send message to chat server
-        server_tx
-            .send(Command::Message {
-                msg,
-                room: room.clone(),
-                skip: conn,
-                res_tx,
-            })
-            // unwrap: chat server is not dropped before the HTTP server
-            .unwrap();
-
-        // unwrap: chat server does not drop our response channel
-        res_rx.await.unwrap();
+        chat_server.send_message(conn, msg).await
     }
 }

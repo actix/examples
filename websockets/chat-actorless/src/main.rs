@@ -5,17 +5,14 @@
 use actix_files::NamedFile;
 use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
 use tokio::{
-    sync::mpsc::UnboundedSender,
     task::{spawn, spawn_local},
     try_join,
 };
 
-mod command;
 mod handler;
 mod server;
 
-pub use self::command::Command;
-pub use self::server::ChatServer;
+pub use self::server::{ChatServer, ChatServerHandle};
 
 /// Connection ID.
 pub type ConnId = usize;
@@ -34,12 +31,16 @@ async fn index() -> impl Responder {
 async fn chat_ws(
     req: HttpRequest,
     stream: web::Payload,
-    server_tx: web::Data<UnboundedSender<Command>>,
+    chat_server: web::Data<ChatServerHandle>,
 ) -> Result<HttpResponse, Error> {
     let (res, session, msg_stream) = actix_ws::handle(&req, stream)?;
 
     // spawn websocket handler (and don't await it) so that the response is returned immediately
-    spawn_local(handler::chat_ws((**server_tx).clone(), session, msg_stream));
+    spawn_local(handler::chat_ws(
+        (**chat_server).clone(),
+        session,
+        msg_stream,
+    ));
 
     Ok(res)
 }
