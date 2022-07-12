@@ -11,7 +11,7 @@ awc = "3"
 
 derive_more = "0.99.5"
 env_logger = "0.9"
-futures-util = { version = "0.3.17", default-features = false, features = ["std", "sink"] }
+futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"
 rand = "0.8"
 tokio = { version = "1.13.1", features = ["rt", "macros", "sync", "time"] }

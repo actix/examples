@@ -73,6 +73,7 @@ pub async fn echo_heartbeat_ws(
             // client WebSocket stream error
             Either::Left((Some(Err(err)), _)) => {
                 log::error!("{}", err);
+                break None;
             }
 
             // client WebSocket stream ended

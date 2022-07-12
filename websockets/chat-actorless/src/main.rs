@@ -3,10 +3,12 @@
 //! Open `http://localhost:8080/` in browser to test.
 
 use actix_files::NamedFile;
-use actix_web::{
-    middleware, rt, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder,
+use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
+use tokio::{
+    sync::mpsc::UnboundedSender,
+    task::{spawn, spawn_local},
+    try_join,
 };
-use tokio::sync::mpsc::UnboundedSender;
 
 mod command;
 mod handler;
@@ -37,7 +39,7 @@ async fn chat_ws(
     let (res, session, msg_stream) = actix_ws::handle(&req, stream)?;
 
     // spawn websocket handler (and don't await it) so that the response is returned immediately
-    rt::spawn(handler::chat_ws((**server_tx).clone(), session, msg_stream));
+    spawn_local(handler::chat_ws((**server_tx).clone(), session, msg_stream));
 
     Ok(res)
 }
@@ -51,9 +53,9 @@ async fn main() -> std::io::Result<()> {
 
     let (chat_server, server_tx) = ChatServer::new();
 
-    rt::spawn(chat_server.run());
+    let chat_server = spawn(chat_server.run());
 
-    HttpServer::new(move || {
+    let http_server = HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(server_tx.clone()))
             // WebSocket UI HTML file
@@ -65,6 +67,9 @@ async fn main() -> std::io::Result<()> {
     })
     .workers(2)
     .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+    .run();
+
+    try_join!(http_server, async move { chat_server.await.unwrap() })?;
+
+    Ok(())
 }

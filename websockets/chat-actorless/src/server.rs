@@ -2,6 +2,7 @@
 
 use std::{
     collections::{HashMap, HashSet},
+    io,
     sync::{
         atomic::{AtomicUsize, Ordering},
         Arc,
@@ -62,7 +63,8 @@ impl ChatServer {
             for conn_id in sessions {
                 if *conn_id != skip_id {
                     if let Some(tx) = self.sessions.get(conn_id) {
-                        tx.send(msg.clone()).unwrap();
+                        // errors if client disconnected abruptly and hasn't been timed-out yet
+                        let _ = tx.send(msg.clone());
                     }
                 }
             }
@@ -152,12 +154,17 @@ impl ChatServer {
         self.send_message(&room, "Someone connected", conn_id).await;
     }
 
-    pub async fn run(mut self) {
+    pub async fn run(mut self) -> io::Result<()> {
         loop {
-            match self.rx.recv().await.unwrap() {
+            let cmd = match self.rx.recv().await {
+                Some(cmd) => cmd,
+                None => break,
+            };
+
+            match cmd {
                 Command::Connect { conn_tx, res_tx } => {
                     let conn_id = self.connect(conn_tx).await;
-                    res_tx.send(conn_id).unwrap();
+                    let _ = res_tx.send(conn_id);
                 }
 
                 Command::Disconnect { conn } => {
@@ -165,12 +172,12 @@ impl ChatServer {
                 }
 
                 Command::List { res_tx } => {
-                    res_tx.send(self.list_rooms()).unwrap();
+                    let _ = res_tx.send(self.list_rooms());
                 }
 
                 Command::Join { conn, room, res_tx } => {
                     self.join_room(conn, room).await;
-                    res_tx.send(()).unwrap();
+                    let _ = res_tx.send(());
                 }
 
                 Command::Message {
@@ -180,9 +187,11 @@ impl ChatServer {
                     res_tx,
                 } => {
                     self.send_message(&room, msg, skip).await;
-                    res_tx.send(()).unwrap();
+                    let _ = res_tx.send(());
                 }
             }
         }
+
+        Ok(())
     }
 }
