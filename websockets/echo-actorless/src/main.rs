@@ -37,7 +37,8 @@ async fn echo_ws(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse,
     Ok(res)
 }
 
-#[actix_web::main]
+// note that the `actix` based WebSocket handling would NOT work under `tokio::main`
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
