@@ -66,5 +66,5 @@ exclude = [
 ]
 
 [patch.crates-io]
-fluent-templates = { git = "https://github.com/robjtede/fluent-templates.git", branch = "fix-circ-dep" }
-fluent-template-macros = { git = "https://github.com/robjtede/fluent-templates.git", branch = "fix-circ-dep" }
+fluent-templates = { git = "https://github.com/XAMPPRocky/fluent-templates.git"}
+fluent-template-macros = { git = "https://github.com/XAMPPRocky/fluent-templates.git"}
