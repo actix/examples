@@ -1,7 +1,7 @@
 use std::{env, io};
 
 use actix_files::Files;
-use actix_session::CookieSession;
+use actix_session::{storage::CookieSessionStore, SessionMiddleware};
 use actix_web::{
     http,
     middleware::{ErrorHandlers, Logger},
@@ -15,12 +15,15 @@ mod db;
 mod model;
 mod session;
 
-static SESSION_SIGNING_KEY: &[u8] = &[0; 32];
+// NOTE: Not a suitable session key for production.
+static SESSION_SIGNING_KEY: &[u8] = &[0; 64];
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    let key = actix_web::cookie::Key::from(SESSION_SIGNING_KEY);
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = db::init_pool(&database_url)
@@ -35,7 +38,9 @@ async fn main() -> io::Result<()> {
         let mut templates = Tera::new("templates/**/*").expect("errors in tera templates");
         templates.autoescape_on(vec!["tera"]);
 
-        let session_store = CookieSession::signed(SESSION_SIGNING_KEY).secure(false);
+        let session_store = SessionMiddleware::builder(CookieSessionStore::default(), key.clone())
+            .cookie_secure(false)
+            .build();
 
         let error_handlers = ErrorHandlers::new()
             .handler(

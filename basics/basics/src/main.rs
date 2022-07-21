@@ -1,8 +1,7 @@
-use std::convert::Infallible;
-use std::io;
+use std::{convert::Infallible, io};
 
 use actix_files::{Files, NamedFile};
-use actix_session::{CookieSession, Session};
+use actix_session::{storage::CookieSessionStore, Session, SessionMiddleware};
 use actix_web::{
     error, get,
     http::{
@@ -12,6 +11,9 @@ use actix_web::{
     middleware, web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder, Result,
 };
 use async_stream::stream;
+
+// NOTE: Not a suitable session key for production.
+static SESSION_SIGNING_KEY: &[u8] = &[0; 64];
 
 /// favicon handler
 #[get("/favicon")]
@@ -76,14 +78,21 @@ async fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpRespons
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
+    // random key means that restarting server will invalidate existing session cookies
+    let key = actix_web::cookie::Key::from(SESSION_SIGNING_KEY);
+
     log::info!("starting HTTP server at http://localhost:8080");
 
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
             // enable automatic response compression - usually register this first
             .wrap(middleware::Compress::default())
             // cookie session middleware
-            .wrap(CookieSession::signed(&[0; 32]).secure(false))
+            .wrap(
+                SessionMiddleware::builder(CookieSessionStore::default(), key.clone())
+                    .cookie_secure(false)
+                    .build(),
+            )
             // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             // register favicon
