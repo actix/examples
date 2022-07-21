@@ -112,7 +112,7 @@ impl ChatServer {
             .iter()
             .find_map(|(room, participants)| participants.contains(&conn).then_some(room))
         {
-            self.send_system_message(&room, conn, msg).await;
+            self.send_system_message(room, conn, msg).await;
         };
     }
 
@@ -195,12 +195,7 @@ impl ChatServer {
     }
 
     pub async fn run(mut self) -> io::Result<()> {
-        loop {
-            let cmd = match self.cmd_rx.recv().await {
-                Some(cmd) => cmd,
-                None => break,
-            };
-
+        while let Some(cmd) = self.cmd_rx.recv().await {
             match cmd {
                 Command::Connect { conn_tx, res_tx } => {
                     let conn_id = self.connect(conn_tx).await;
