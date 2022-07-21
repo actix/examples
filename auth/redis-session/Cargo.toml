@@ -1,12 +1,11 @@
 [package]
-name = "redis_session"
+name = "redis-session-example"
 version = "1.0.0"
 edition = "2021"
 
 [dependencies]
 actix-web = "4"
-actix-session = "0.5"
-actix-redis = "0.10"
+actix-session = { version = "0.7", features = ["redis-actor-session"] }
 
 env_logger = "0.9"
 log = "0.4"
