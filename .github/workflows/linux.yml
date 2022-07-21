@@ -50,8 +50,7 @@ jobs:
         timeout-minutes: 30
         with:
           command: check
-          # TODO: remove exclude protobuf-example when upgraded; currently fails on nightly
-          args: --workspace --bins --examples --tests --exclude protobuf-example
+          args: --workspace --bins --examples --tests
 
       - name: start redis
         uses: supercharge/redis-github-action@1.1.0

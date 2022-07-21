@@ -40,23 +40,23 @@ async fn main() {
             Some(msg) = framed.next() => {
                 match msg {
                     Ok(codec::ChatResponse::Message(ref msg)) => {
-                        println!("message: {}", msg);
+                        println!("message: {msg}");
                     }
                     Ok(codec::ChatResponse::Joined(ref msg)) => {
-                        println!("!!! joined: {}", msg);
+                        println!("!!! joined: {msg}");
                     }
 
                     Ok(codec::ChatResponse::Rooms(rooms)) => {
                         println!("!!! Available rooms:");
                         for room in rooms {
-                            println!("{}", room);
+                            println!("{room}");
                         }
                     }
 
                     // respond to pings with a "pong"
                     Ok(codec::ChatResponse::Ping) => { framed.send(codec::ChatRequest::Ping).await.unwrap(); },
 
-                    _ => { eprintln!("{:?}", msg); }
+                    _ => { eprintln!("{msg:?}"); }
                 }
             }
 

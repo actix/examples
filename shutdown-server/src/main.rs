@@ -1,5 +1,6 @@
-use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer};
 use std::{sync::mpsc, thread};
+
+use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer};
 
 #[get("/hello")]
 async fn hello() -> &'static str {

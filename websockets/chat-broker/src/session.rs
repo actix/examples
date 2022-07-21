@@ -63,9 +63,8 @@ impl WsChatSession {
 
     pub fn send_msg(&self, msg: &str) {
         let content = format!(
-            "{}: {}",
+            "{}: {msg}",
             self.name.clone().unwrap_or_else(|| "anon".to_string()),
-            msg
         );
 
         let msg = SendMessage(self.room.clone(), self.id, content);
@@ -79,7 +78,7 @@ impl Actor for WsChatSession {
     type Context = ws::WebsocketContext<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        self.join_room("Main", ctx);
+        self.join_room("main", ctx);
     }
 
     fn stopped(&mut self, _ctx: &mut Self::Context) {
@@ -110,7 +109,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
             Ok(msg) => msg,
         };
 
-        log::debug!("WEBSOCKET MESSAGE: {:?}", msg);
+        log::debug!("WEBSOCKET MESSAGE: {msg:?}");
 
         match msg {
             ws::Message::Text(text) => {
@@ -133,13 +132,13 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                         Some("/name") => {
                             if let Some(name) = command.next() {
                                 self.name = Some(name.to_owned());
-                                ctx.text(format!("name changed to: {}", name));
+                                ctx.text(format!("name changed to: {name}"));
                             } else {
                                 ctx.text("!!! name is required");
                             }
                         }
 
-                        _ => ctx.text(format!("!!! unknown command: {:?}", msg)),
+                        _ => ctx.text(format!("!!! unknown command: {msg:?}")),
                     }
 
                     return;

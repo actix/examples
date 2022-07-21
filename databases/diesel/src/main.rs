@@ -36,7 +36,7 @@ async fn get_user(
     if let Some(user) = user {
         Ok(HttpResponse::Ok().json(user))
     } else {
-        let res = HttpResponse::NotFound().body(format!("No user found with uid: {}", user_uid));
+        let res = HttpResponse::NotFound().body(format!("No user found with uid: {user_uid}"));
         Ok(res)
     }
 }
@@ -103,7 +103,7 @@ mod tests {
             .build(manager)
             .expect("Failed to create pool.");
 
-        let mut app = test::init_service(
+        let app = test::init_service(
             App::new()
                 .app_data(web::Data::new(pool.clone()))
                 .wrap(middleware::Logger::default())
@@ -120,7 +120,7 @@ mod tests {
             })
             .to_request();
 
-        let resp: models::User = test::call_and_read_body_json(&mut app, req).await;
+        let resp: models::User = test::call_and_read_body_json(&app, req).await;
 
         assert_eq!(resp.name, "Test user");
 
@@ -129,7 +129,7 @@ mod tests {
             .uri(&format!("/user/{}", resp.id))
             .to_request();
 
-        let resp: models::User = test::call_and_read_body_json(&mut app, req).await;
+        let resp: models::User = test::call_and_read_body_json(&app, req).await;
 
         assert_eq!(resp.name, "Test user");
 

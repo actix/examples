@@ -1,0 +1,12 @@
+[package]
+name = "templating-fluent"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4"
+actix-web-lab = "0.16"
+fluent-templates = { version = "0.7", features = ["handlebars"] }
+handlebars = { version = "4.3", features = ["dir_source"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

@@ -15,7 +15,7 @@ pub async fn graphql(
     data: web::Json<GraphQLRequest>,
 ) -> Result<HttpResponse, Error> {
     let ctx = Context {
-        dbpool: pool.get_ref().to_owned(),
+        db_pool: pool.get_ref().to_owned(),
     };
 
     let res = data.execute(&schema, &ctx).await;

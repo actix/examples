@@ -1,5 +1,5 @@
 [package]
-name = "template-tinytemplate"
+name = "templating-tinytemplate"
 version = "1.0.0"
 edition = "2021"
 

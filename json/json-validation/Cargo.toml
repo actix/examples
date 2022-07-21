@@ -5,12 +5,11 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-awc = { version = "3.0.0-beta.21", features = ["openssl"] }
+awc = { version = "3", features = ["openssl"] }
 
 env_logger = "0.9"
-futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
+futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"
-serde = { version = "1.0.43", features = ["derive"] }
-serde_json = "1.0.16"
-validator = "0.14"
-validator_derive = "0.14"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+validator = { version = "0.15", features = ["derive"] }

@@ -21,7 +21,7 @@ actix-web-actors = "4.1"
 byteorder = "1.2"
 bytes = "1"
 env_logger = "0.9"
-futures-util = { version = "0.3.7", default-features = false, features = ["std", "sink"] }
+futures-util = { version = "0.3.17", default-features = false, features = ["std", "sink"] }
 log = "0.4"
 rand = "0.8"
 serde = { version = "1", features = ["derive"] }

@@ -9,4 +9,4 @@ actix-web = "4"
 
 env_logger = "0.9"
 log = "0.4"
-tokio = { version = "1.16", features = ["signal"] }
+tokio = { version = "1.13.1", features = ["signal"] }

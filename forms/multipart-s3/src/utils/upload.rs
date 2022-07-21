@@ -1,10 +1,11 @@
-use crate::utils::s3::Client;
+use std::{convert::From, io::Write};
+
 use actix_multipart::{Field, Multipart};
 use actix_web::{web, web::Bytes, Error};
 use futures_util::StreamExt as _;
 use serde::{Deserialize, Serialize};
-use std::convert::From;
-use std::io::Write;
+
+use crate::utils::s3::Client;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct UploadFile {
@@ -39,7 +40,7 @@ impl Tmpfile {
     fn new(filename: &str) -> Tmpfile {
         Tmpfile {
             name: filename.to_string(),
-            tmp_path: format!("./tmp/{}", filename),
+            tmp_path: format!("./tmp/{filename}"),
             s3_key: "".to_string(),
             s3_url: "".to_string(),
         }
@@ -51,7 +52,7 @@ impl Tmpfile {
     }
 
     async fn s3_upload(&mut self, s3_upload_key: String) {
-        let key = format!("{}{}", &s3_upload_key, &self.name);
+        let key = format!("{s3_upload_key}{}", &self.name);
         self.s3_key = key.clone();
         let url: String = Client::new().put_object(&self.tmp_path, &key.clone()).await;
         self.s3_url = url;

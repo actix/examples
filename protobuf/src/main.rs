@@ -1,10 +1,8 @@
-#[macro_use]
-extern crate prost_derive;
-
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result};
+use prost_derive::Message;
 
-#[derive(Clone, PartialEq, Message)]
+#[derive(Clone, PartialEq, Eq, Message)]
 pub struct MyObj {
     #[prost(int32, tag = "1")]
     pub number: i32,
@@ -14,7 +12,7 @@ pub struct MyObj {
 }
 
 async fn index(msg: ProtoBuf<MyObj>) -> Result<HttpResponse> {
-    log::info!("model: {:?}", msg);
+    log::info!("model: {msg:?}");
     HttpResponse::Ok().protobuf(msg.0) // <- send response
 }
 

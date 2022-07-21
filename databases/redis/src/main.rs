@@ -64,7 +64,7 @@ async fn del_stuff(redis: web::Data<Addr<RedisActor>>) -> actix_web::Result<Http
         }
 
         _ => {
-            log::error!("{:?}", res);
+            log::error!("{res:?}");
             Ok(HttpResponse::InternalServerError().finish())
         }
     }

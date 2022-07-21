@@ -5,9 +5,8 @@ mod model;
 mod test;
 
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
-use mongodb::{bson::doc, options::IndexOptions, Client, Collection, IndexModel};
-
 use model::User;
+use mongodb::{bson::doc, options::IndexOptions, Client, Collection, IndexModel};
 
 const DB_NAME: &str = "myApp";
 const COLL_NAME: &str = "users";
@@ -34,7 +33,7 @@ async fn get_user(client: web::Data<Client>, username: web::Path<String>) -> Htt
     {
         Ok(Some(user)) => HttpResponse::Ok().json(user),
         Ok(None) => {
-            HttpResponse::NotFound().body(format!("No user found with username {}", username))
+            HttpResponse::NotFound().body(format!("No user found with username {username}"))
         }
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }

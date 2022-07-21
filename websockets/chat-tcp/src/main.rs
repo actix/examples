@@ -29,7 +29,7 @@ async fn chat_route(
         WsChatSession {
             id: 0,
             hb: Instant::now(),
-            room: "Main".to_owned(),
+            room: "main".to_owned(),
             name: None,
             addr: srv.get_ref().clone(),
         },
@@ -110,7 +110,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
             Ok(msg) => msg,
         };
 
-        log::debug!("WEBSOCKET MESSAGE: {:?}", msg);
+        log::debug!("WEBSOCKET MESSAGE: {msg:?}");
         match msg {
             ws::Message::Ping(msg) => {
                 self.hb = Instant::now();
@@ -168,11 +168,11 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                                 ctx.text("!!! name is required");
                             }
                         }
-                        _ => ctx.text(format!("!!! unknown command: {:?}", m)),
+                        _ => ctx.text(format!("!!! unknown command: {m:?}")),
                     }
                 } else {
                     let msg = if let Some(ref name) = self.name {
-                        format!("{}: {}", name, m)
+                        format!("{name}: {m}")
                     } else {
                         m.to_owned()
                     };

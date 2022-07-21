@@ -33,9 +33,8 @@ async fn index() -> HttpResponse {
         <head><title>Upload Test</title></head>
         <body>
             <form target="/" method="post" enctype="multipart/form-data" id="myForm" >
-                <input type="text"  id="text" name="text" value="test_text"/>    
-                <input type="number"  id="number" name="number" value="123123"/>    
-                
+                <input type="text"  id="text" name="text" value="test_text"/>
+                <input type="number"  id="number" name="number" value="123123"/>
                 <input type="button" value="Submit" onclick="myFunction()"></button>
             </form>
             <input type="file" multiple name="file" id="myFile"/>
@@ -45,7 +44,7 @@ async fn index() -> HttpResponse {
         function myFunction(){
             var myForm = document.getElementById('myForm');
             var myFile = document.getElementById('myFile');
-    
+
             let formData = new FormData();
             const obj = {
                 text: document.getElementById('text').value,
@@ -54,17 +53,15 @@ async fn index() -> HttpResponse {
             const json = JSON.stringify(obj);
             console.log(obj);
             console.log(json);
-    
-            
+
             formData.append("data", json);
             formData.append("myFile", myFile.files[0]);
-    
+
             var request = new XMLHttpRequest();
             request.open("POST", "");
             request.send(formData);
         }
-        
-        
+
         </script>
     </html>"#;
 
@@ -84,9 +81,9 @@ async fn main() -> std::io::Result<()> {
     let aws_s3_bucket_name =
         env::var("AWS_S3_BUCKET_NAME").expect("AWS_S3_BUCKET_NAME must be set");
 
-    log::info!("aws_access_key_id:     {}", aws_access_key_id);
-    log::info!("aws_secret_access_key: {}", aws_secret_access_key);
-    log::info!("aws_s3_bucket_name:    {}", aws_s3_bucket_name);
+    log::info!("aws_access_key_id:     {aws_access_key_id}");
+    log::info!("aws_secret_access_key: {aws_secret_access_key}");
+    log::info!("aws_s3_bucket_name:    {aws_s3_bucket_name}");
 
     std::fs::create_dir_all("./tmp").unwrap();
 

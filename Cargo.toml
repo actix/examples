@@ -45,6 +45,7 @@ members = [
    "server-sent-events",
    "shutdown-server",
    "templating/askama",
+   "templating/fluent",
    "templating/handlebars",
    "templating/sailfish",
    "templating/tera",
@@ -52,12 +53,19 @@ members = [
    "templating/yarte",
    "unix-socket",
    "websockets/autobahn",
+   "websockets/chat-actorless",
    "websockets/chat-broker",
    "websockets/chat-tcp",
    "websockets/chat",
+   "websockets/echo-actorless",
    "websockets/echo",
 ]
 exclude = [
    # uses incompatible libsqlite-sys to other examples
    "databases/diesel",
 ]
+
+[patch.crates-io]
+# FIXME: Specify commit until https://github.com/XAMPPRocky/fluent-templates/pull/36 is released
+fluent-templates = { git = "https://github.com/XAMPPRocky/fluent-templates.git", rev = "82b50baf6232e1ce2e9629ce2a8fcc12ab5d942c" }
+fluent-template-macros = { git = "https://github.com/XAMPPRocky/fluent-templates.git", rev = "82b50baf6232e1ce2e9629ce2a8fcc12ab5d942c" }

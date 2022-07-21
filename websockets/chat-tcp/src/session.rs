@@ -102,7 +102,7 @@ impl StreamHandler<Result<ChatRequest, io::Error>> for ChatSession {
                 // so actor wont receive any new messages until it get list of rooms back
             }
             Ok(ChatRequest::Join(name)) => {
-                println!("Join to room: {}", name);
+                println!("Join to room: {name}");
                 self.room = name.clone();
                 self.addr.do_send(server::Join {
                     id: self.id,
@@ -112,7 +112,7 @@ impl StreamHandler<Result<ChatRequest, io::Error>> for ChatSession {
             }
             Ok(ChatRequest::Message(message)) => {
                 // send message to chat server
-                println!("Peer message: {}", message);
+                println!("Peer message: {message}");
                 self.addr.do_send(server::Message {
                     id: self.id,
                     msg: message,
@@ -147,7 +147,7 @@ impl ChatSession {
             id: 0,
             addr,
             hb: Instant::now(),
-            room: "Main".to_owned(),
+            room: "main".to_owned(),
             framed,
         }
     }

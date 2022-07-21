@@ -58,7 +58,7 @@ where
                 body.extend_from_slice(&chunk?);
             }
 
-            println!("request body: {:?}", body);
+            println!("request body: {body:?}");
             let res = svc.call(req).await?;
 
             println!("response: {:?}", res.headers());

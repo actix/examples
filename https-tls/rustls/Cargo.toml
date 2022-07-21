@@ -9,10 +9,10 @@ path = "src/main.rs"
 
 [dependencies]
 actix-web = { version = "4", features = ["rustls"] }
-actix-web-lab = "0.15"
+actix-web-lab = "0.16"
 actix-files = "0.6"
 
 env_logger = "0.9"
 log = "0.4"
 rustls = "0.20.2"
-rustls-pemfile = "0.3"
+rustls-pemfile = "1"

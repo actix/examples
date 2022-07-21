@@ -1,6 +1,9 @@
-use super::schema::*;
+#![allow(clippy::extra_unused_lifetimes)]
+
 use diesel::{r2d2::ConnectionManager, PgConnection};
 use serde::{Deserialize, Serialize};
+
+use super::schema::*;
 
 // type alias to use in multiple places
 pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;

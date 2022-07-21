@@ -12,7 +12,7 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct IndexResponse {
     user_id: Option<String>,
     counter: i32,
@@ -64,7 +64,7 @@ async fn logout(session: Session) -> Result<String> {
     let id: Option<String> = session.get("user_id")?;
     if let Some(x) = id {
         session.purge();
-        Ok(format!("Logged out: {}", x))
+        Ok(format!("Logged out: {x}"))
     } else {
         Ok("Could not log out anonymous user".into())
     }
@@ -105,13 +105,14 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use actix_web::{
         middleware,
         web::{get, post, resource},
         App,
     };
     use serde_json::json;
+
+    use super::*;
 
     #[actix_web::test]
     async fn test_workflow() {

@@ -24,7 +24,6 @@ use awc::Client;
 use futures_util::StreamExt as _;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use validator_derive::Validate;
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
 struct SomeData {
@@ -59,7 +58,7 @@ async fn step_x(data: SomeData, client: &Client) -> actix_web::Result<SomeData> 
 
     let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
 
-    println!("{:?}", body);
+    println!("{body:?}");
 
     Ok(body.json)
 }

@@ -4,14 +4,14 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix = "0.12"
+actix = "0.13"
 actix-web = "4"
-actix-web-lab = "0.10"
+actix-web-lab = "0.16"
 actix-cors = "0.6"
 
-async-graphql = "3"
-async-graphql-actix-web = "3"
+async-graphql = "4"
+async-graphql-actix-web = "4"
 
 env_logger = "0.9"
 log = "0.4"
-slab = "0.4.2"
+slab = "0.4"

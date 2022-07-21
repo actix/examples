@@ -90,7 +90,7 @@ pub async fn gen_tls_cert(user_email: &str, user_domain: &str) -> anyhow::Result
         let proof = chall.http_proof()?;
 
         // Place the file/contents in the correct place.
-        let path = format!("acme-challenge/{}", token);
+        let path = format!("acme-challenge/{token}");
         fs::write(&path, &proof)?;
 
         // After the file is accessible from the web, the calls

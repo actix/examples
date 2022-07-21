@@ -44,7 +44,7 @@ async fn main() {
                 match msg {
                     Ok(ws::Frame::Text(txt)) => {
                         // log echoed messages from server
-                        log::info!("Server: {:?}", txt)
+                        log::info!("Server: {txt:?}")
                     }
 
                     Ok(ws::Frame::Ping(_)) => {

@@ -28,10 +28,14 @@
 - [Atomic-Server](https://github.com/joepio/atomic-data-rust/): Graph database with a dynamic schema, authorization and full text search.
 - [Operator](https://github.com/mkantor/operator): A web server for static and dynamic content.
 - [RCOS Telescope](https://github.com/rcos/Telescope): The RCOS website and Discord bot.
-- [WebThings Registration Server](https://github.com/WebThingsIO/registration_server): Exposes an HTTP API that lets you register a WebThings Gateway for tunneling support.
+- [WebThings Registration Server](https://github.com/WebThingsIO/registration_server): Exposes an HTTP API that lets you register a WebThings Gateway for tunneling support
+- [pict-rs](https://git.asonix.dog/asonix/pict-rs): An image host API service
+- [rustypaste](https://github.com/orhun/rustypaste): A minimal file upload/pastebin service
+- [rustus](https://github.com/s3rius/rustus): A TUS protocol implementation that helps you handle file uploads
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 
+- [create-rust-app](https://github.com/Wulf/create-rust-app): Set up a modern Rust + React web app by running one command.
 - [Jelly Starter](https://github.com/secretkeysio/jelly-actix-web-starter): A starter template for Actix Web projects that feels very Django-esque. Avoid the boring stuff and move faster.
 - [Actix and SQLx User CRUD for MySQL](https://github.com/jamesjmeyer210/actix_sqlx_mysql_user_crud): A User CRUD showcasing MySQL database interaction with full integration test coverage, designed to fit comfortably in a system of micro-services.
 - [Rust, Actix Web & Heroku](https://github.com/emk/rust-buildpack-example-actix): A Heroku buildpack example for Actix Web.

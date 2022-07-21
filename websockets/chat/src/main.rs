@@ -30,7 +30,7 @@ async fn chat_route(
         session::WsChatSession {
             id: 0,
             hb: Instant::now(),
-            room: "Main".to_owned(),
+            room: "main".to_owned(),
             name: None,
             addr: srv.get_ref().clone(),
         },
@@ -42,7 +42,7 @@ async fn chat_route(
 /// Displays state
 async fn get_count(count: web::Data<AtomicUsize>) -> impl Responder {
     let current_count = count.load(Ordering::SeqCst);
-    format!("Visitors: {}", current_count)
+    format!("Visitors: {current_count}")
 }
 
 #[actix_web::main]

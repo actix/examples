@@ -17,8 +17,8 @@ async fn index(item: web::Json<MyObj>) -> HttpResponse {
 
 /// This handler uses json extractor with limit
 async fn extract_item(item: web::Json<MyObj>, req: HttpRequest) -> HttpResponse {
-    println!("request: {:?}", req);
-    println!("model: {:?}", item);
+    println!("request: {req:?}");
+    println!("model: {item:?}");
 
     HttpResponse::Ok().json(item.0) // <- send json response
 }
@@ -84,10 +84,9 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use actix_web::{body::to_bytes, dev::Service, http, test, web, App};
+
     use super::*;
-    use actix_web::body::to_bytes;
-    use actix_web::dev::Service;
-    use actix_web::{http, test, web, App};
 
     #[actix_web::test]
     async fn test_index() {

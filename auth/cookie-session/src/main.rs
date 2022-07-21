@@ -1,21 +1,21 @@
 //! Example of cookie based session
 //! Session data is stored in cookie, it is limited to 4kb
 //!
-//! [Redis session example](https://github.com/actix/examples/tree/master/redis-session)
+//! [Redis session example](https://github.com/actix/examples/tree/HEAD/auth/redis-session)
 //!
 //! [User guide](https://actix.rs/docs/middleware/#user-sessions)
 
-use actix_session::{CookieSession, Session};
-use actix_web::{middleware::Logger, web, App, HttpRequest, HttpServer, Result};
+use actix_session::{storage::CookieSessionStore, Session, SessionMiddleware};
+use actix_web::{cookie::Key, middleware::Logger, web, App, HttpRequest, HttpServer, Result};
 
 /// simple index handler with session
 async fn index(session: Session, req: HttpRequest) -> Result<&'static str> {
-    log::info!("{:?}", req);
+    log::info!("{req:?}");
 
     // RequestSession trait is used for session access
     let mut counter = 1;
     if let Some(count) = session.get::<i32>("counter")? {
-        log::info!("SESSION value: {}", count);
+        log::info!("SESSION value: {count}");
         counter = count + 1;
         session.insert("counter", counter)?;
     } else {
@@ -27,7 +27,7 @@ async fn index(session: Session, req: HttpRequest) -> Result<&'static str> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
+    std::env::set_var("RUST_LOG", "info");
     env_logger::init();
     log::info!("Starting http server: 127.0.0.1:8080");
 
@@ -36,7 +36,11 @@ async fn main() -> std::io::Result<()> {
             // enable logger
             .wrap(Logger::default())
             // cookie session middleware
-            .wrap(CookieSession::signed(&[0; 32]).secure(false))
+            .wrap(
+                SessionMiddleware::builder(CookieSessionStore::default(), Key::from(&[0; 64]))
+                    .cookie_secure(false)
+                    .build(),
+            )
             .service(web::resource("/").to(index))
     })
     .bind(("127.0.0.1", 8080))?

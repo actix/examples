@@ -12,6 +12,6 @@ readme = "README.md"
 actix-multipart = "0.4"
 actix-web = "4"
 
-futures-util = { version = "0.3.7", default-features = false, features = ["std"] }
-sanitize-filename = "0.3"
-uuid = { version = "0.8", features = ["v4"] }
+futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+sanitize-filename = "0.4"
+uuid = { version = "1", features = ["v4"] }

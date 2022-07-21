@@ -5,6 +5,6 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-casbin = "2.0.9"
-loge = {version = "0.4", default-features = false, features = ["colored", "chrono"]}
-tokio = { version = "1.16.1", features = ["sync"] }
+casbin = "2"
+loge = { version = "0.4", default-features = false, features = ["colored", "chrono"] }
+tokio = { version = "1.13.1", features = ["sync"] }
