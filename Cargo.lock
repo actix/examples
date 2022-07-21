@@ -300,11 +300,11 @@ dependencies = [
 
 [[package]]
 name = "actix-redis"
-version = "0.11.0"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dde9fa8bde15d084d459eb59f766c08d00a6f550e7054187878fc9cbaa19115"
+checksum = "38446dc11c743f4f0023b1067c7cfb8f2548f24418e31a193b324e35fa059279"
 dependencies = [
- "actix 0.12.0",
+ "actix 0.13.0",
  "actix-rt",
  "actix-service",
  "actix-tls",
@@ -313,10 +313,10 @@ dependencies = [
  "derive_more",
  "futures-core",
  "log",
- "redis-async 0.12.1",
+ "redis-async 0.13.0",
  "time 0.3.11",
  "tokio 1.20.0",
- "tokio-util 0.6.10",
+ "tokio-util 0.7.3",
 ]
 
 [[package]]
@@ -396,8 +396,26 @@ version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c9138a66462f1e65da829f9c0de81b44a96dfe193a4f19bfea32ee2be312368"
 dependencies = [
- "actix 0.12.0",
- "actix-redis 0.11.0",
+ "actix-service",
+ "actix-utils",
+ "actix-web",
+ "anyhow",
+ "async-trait",
+ "derive_more",
+ "serde",
+ "serde_json",
+ "time 0.3.11",
+ "tracing",
+]
+
+[[package]]
+name = "actix-session"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "861c2463ccba4af8f272936fcf4999af6305492fc939bf0dfe71db86142ae843"
+dependencies = [
+ "actix 0.13.0",
+ "actix-redis 0.12.0",
  "actix-service",
  "actix-utils",
  "actix-web",
@@ -408,7 +426,6 @@ dependencies = [
  "rand 0.8.5",
  "serde",
  "serde_json",
- "time 0.3.11",
  "tracing",
 ]
 
@@ -4652,9 +4669,9 @@ dependencies = [
 
 [[package]]
 name = "redis-async"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76b00c604527d485d7a146d1e324ec1cf0a5ec522acb3d05bf7d51a9c28d7c0c"
+checksum = "2777130e406c74c28b6cddc0194fcdc2553b5a8795eef9f6384bd3b70a07ba3f"
 dependencies = [
  "bytes 1.2.0",
  "futures-channel",
@@ -4662,14 +4679,14 @@ dependencies = [
  "futures-util",
  "log",
  "tokio 1.20.0",
- "tokio-util 0.6.10",
+ "tokio-util 0.7.3",
 ]
 
 [[package]]
-name = "redis_session"
+name = "redis-session-example"
 version = "1.0.0"
 dependencies = [
- "actix-session 0.6.2",
+ "actix-session 0.7.0",
  "actix-test",
  "actix-web",
  "env_logger 0.9.0",
