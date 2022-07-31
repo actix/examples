@@ -93,7 +93,7 @@ pub struct MutationRoot;
 impl MutationRoot {
     fn create_user(context: &Context, user: UserInput) -> FieldResult<User> {
         let mut conn = context.db_pool.get().unwrap();
-        let new_id = uuid::Uuid::new_v4().to_simple().to_string();
+        let new_id = uuid::Uuid::new_v4().simple().to_string();
 
         let insert: Result<Option<Row>, DBError> = conn.exec_first(
             "INSERT INTO user(id, name, email) VALUES(:id, :name, :email)",
@@ -125,7 +125,7 @@ impl MutationRoot {
 
     fn create_product(context: &Context, product: ProductInput) -> FieldResult<Product> {
         let mut conn = context.db_pool.get().unwrap();
-        let new_id = uuid::Uuid::new_v4().to_simple().to_string();
+        let new_id = uuid::Uuid::new_v4().simple().to_string();
 
         let insert: Result<Option<Row>, DBError> = conn.exec_first(
             "INSERT INTO product(id, user_id, name, price) VALUES(:id, :user_id, :name, :price)",
