@@ -1,48 +1,64 @@
 use std::fs;
 
 use actix_multipart::Multipart;
-use actix_web::{middleware::Logger, web, App, Error, HttpResponse, HttpServer, Responder};
+use actix_web::{
+    get, middleware::Logger, post, web, App, Error, HttpResponse, HttpServer, Responder,
+};
 use actix_web_lab::respond::Html;
 use aws_config::meta::region::RegionProviderChain;
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 
+mod client;
+mod temp_file;
+mod upload_file;
 mod utils;
 
-use self::utils::{
-    s3::Client,
-    upload::{save_file as upload_save_file, split_payload, UploadFile},
-};
+use self::client::Client;
+use self::temp_file::TempFile;
+use self::upload_file::UploadedFile;
+use self::utils::split_payload;
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct InpAdd {
-    pub text: String,
-    pub number: i32,
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UploadMeta {
+    namespace: String,
 }
 
-async fn save_file(
+impl Default for UploadMeta {
+    fn default() -> Self {
+        Self {
+            namespace: "default".to_owned(),
+        }
+    }
+}
+
+#[post("/")]
+async fn upload_to_s3(
     s3_client: web::Data<Client>,
     mut payload: Multipart,
-) -> Result<HttpResponse, Error> {
-    let pl = split_payload(&mut payload).await;
-    println!("bytes={:#?}", pl.0);
+) -> Result<impl Responder, Error> {
+    let (data, files) = split_payload(&mut payload).await;
+    log::info!("bytes = {data:?}");
 
-    let inp_info: InpAdd = serde_json::from_slice(&pl.0).unwrap();
-    println!("converter_struct={:#?}", inp_info);
-    println!("tmpfiles={:#?}", pl.1);
+    let upload_meta = serde_json::from_slice::<UploadMeta>(&data).unwrap_or_default();
+    log::info!("converter_struct = {upload_meta:?}");
+    log::info!("tmp_files = {files:?}");
 
-    // make key
-    let s3_upload_key = format!("projects/{}/", "posts_id");
+    // make key prefix (make sure it ends with a forward slash)
+    let s3_key_prefix = format!("uploads/{}/", upload_meta.namespace);
 
     // create tmp file and upload s3 and remove tmp file
-    let upload_files: Vec<UploadFile> = upload_save_file(&s3_client, pl.1, &s3_upload_key)
-        .await
-        .unwrap();
-    println!("upload_files={:#?}", upload_files);
+    let uploaded_files = s3_client.upload_files(files, &s3_key_prefix).await?;
 
-    Ok(HttpResponse::Ok().into())
+    Ok(HttpResponse::Ok().json(json!({
+        "uploadedFiles": uploaded_files,
+        "meta": upload_meta,
+    })))
 }
 
+#[get("/")]
 async fn index() -> impl Responder {
     Html(include_str!("./index.html").to_owned())
 }
@@ -59,6 +75,8 @@ async fn main() -> std::io::Result<()> {
     log::info!("configuring S3 client");
     let aws_region = RegionProviderChain::default_provider().or_else("us-east-1");
     let aws_config = aws_config::from_env().region(aws_region).load().await;
+
+    // create singleton S3 client
     let s3_client = Client::new(&aws_config);
 
     log::info!("using AWS region: {}", aws_config.region().unwrap());
@@ -67,11 +85,8 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .service(
-                web::resource("/")
-                    .route(web::get().to(index))
-                    .route(web::post().to(save_file)),
-            )
+            .service(index)
+            .service(upload_to_s3)
             .wrap(Logger::default())
             .app_data(web::Data::new(s3_client.clone()))
     })

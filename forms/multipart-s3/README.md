@@ -1,7 +1,6 @@
 # Multipart + AWS S3
 
-Upload a file in multipart form to AWS S3 using [AWS S3 SDK](https://crates.io/crates/aws-sdk-s3).  
-Receive multiple data in multipart form in JSON format and receive it as a struct.
+Upload a file in multipart form to AWS S3 using [AWS S3 SDK](https://crates.io/crates/aws-sdk-s3).
 
 # Usage
 
@@ -9,13 +8,31 @@ Receive multiple data in multipart form in JSON format and receive it as a struc
 cd forms/multipart-s3
 ```
 
-1. copy .env.example .env
-1. edit .env AWS_ACCESS_KEY_ID=your_key
-1. edit .env AWS_SECRET_ACCESS_KEY=your_key
-1. edit .env AWS_S3_BUCKET_NAME=your_chosen_region
+1. copy `.env.example` to `.env`
+1. edit `.env` key `AWS_REGION` = your_bucket_region
+1. edit `.env` key `AWS_ACCESS_KEY_ID` = your_key_id
+1. edit `.env` key `AWS_SECRET_ACCESS_KEY` = your_key_secret
+1. edit `.env` key `AWS_S3_BUCKET_NAME` = your_bucket_name
 
 ```sh
 cargo run
 ```
 
-<http://localhost:8080>
+Go to <http://localhost:8080> in you browser.
+
+Or, start the upload using [HTTPie]:
+
+```sh
+http --form POST :8080/ file@Cargo.toml
+http --form POST :8080/ file@Cargo.toml file@README.md meta='{"namespace":"foo"}'
+```
+
+Or, using cURL:
+
+```sh
+curl -X POST http://localhost:8080/ -F 'file=@Cargo.toml'
+curl -X POST http://localhost:8080/ -F 'file=@Cargo.toml' -F 'file=@README.md' -F 'meta={"namespace":"foo"}'
+```
+
+[httpie]: https://httpie.org
+[curl]: https://curl.haxx.se
