@@ -1,9 +1,12 @@
 use std::fs;
 
 use actix_multipart::Multipart;
+use actix_web::body::SizedStream;
+use actix_web::{delete, error};
 use actix_web::{
     get, middleware::Logger, post, web, App, Error, HttpResponse, HttpServer, Responder,
 };
+use actix_web_lab::extract::Path;
 use actix_web_lab::respond::Html;
 use aws_config::meta::region::RegionProviderChain;
 use dotenv::dotenv;
@@ -58,6 +61,31 @@ async fn upload_to_s3(
     })))
 }
 
+#[get("/file/{s3_key}*")]
+async fn fetch_from_s3(
+    s3_client: web::Data<Client>,
+    Path((s3_key,)): Path<(String,)>,
+) -> Result<impl Responder, Error> {
+    let (file_size, file_stream) = s3_client
+        .fetch_file(&s3_key)
+        .await
+        .ok_or_else(|| error::ErrorNotFound("file with specified key not found"))?;
+
+    Ok(HttpResponse::Ok().body(SizedStream::new(file_size, file_stream)))
+}
+
+#[delete("/file/{s3_key}*")]
+async fn delete_from_s3(
+    s3_client: web::Data<Client>,
+    Path((s3_key,)): Path<(String,)>,
+) -> Result<impl Responder, Error> {
+    if s3_client.delete_file(&s3_key).await {
+        Ok(HttpResponse::NoContent().finish())
+    } else {
+        Err(error::ErrorNotFound("file with specified key not found"))
+    }
+}
+
 #[get("/")]
 async fn index() -> impl Responder {
     Html(include_str!("./index.html").to_owned())
@@ -87,6 +115,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .service(index)
             .service(upload_to_s3)
+            .service(fetch_from_s3)
+            .service(delete_from_s3)
             .wrap(Logger::default())
             .app_data(web::Data::new(s3_client.clone()))
     })

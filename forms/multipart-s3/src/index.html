@@ -1,35 +1,38 @@
+<!-- TODO: fix me -->
+
 <html>
-    <head><title>Upload Test</title></head>
-    <body>
-        <form target="/" method="post" enctype="multipart/form-data" id="myForm" >
-            <input type="text" id="text" name="text" value="test_text"/>
-            <input type="number" id="number" name="number" value="123123"/>
-            <input type="button" value="Submit" onclick="myFunction()"></button>
-        </form>
-        <input type="file" multiple name="file" id="myFile"/>
-    </body>
+<head><title>S3 Upload Test</title></head>
+<body>
+    <form target="/" method="post" enctype="multipart/form-data" id="s3UploadForm">
+        <label>
+            Namespace:
+            <input type="text" name="namespace" value="default" />
+        </label>
+        <input type="file" multiple name="file" />
+        <input type="button" value="Submit" onclick="upload()"></button>
+    </form>
+
     <script>
+        async function upload() {
+            var $form = document.getElementById('s3UploadForm');
+            var $files = document.getElementsByName('file')[0];
 
-    function myFunction(){
-        var myForm = document.getElementById('myForm');
-        var myFile = document.getElementById('myFile');
+            const formData = new FormData();
 
-        let formData = new FormData();
-        const obj = {
-            text: document.getElementById('text').value,
-            number: Number(document.getElementById('number').value)
-        };
-        const json = JSON.stringify(obj);
-        console.log(obj);
-        console.log(json);
+            const meta = { namespace: $form.namespace.value };
+            console.log(meta);
 
-        formData.append("data", json);
-        formData.append("myFile", myFile.files[0]);
+            formData.append("meta", JSON.stringify(meta));
 
-        var request = new XMLHttpRequest();
-        request.open("POST", "");
-        request.send(formData);
-    }
+            for (const file in $files.files) {
+                formData.append("file", file);
+            }
 
+            await fetch(new URL(window.location), {
+                method: 'POST',
+                formData
+            });
+        }
     </script>
+</body>
 </html>

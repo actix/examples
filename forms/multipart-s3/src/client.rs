@@ -1,9 +1,9 @@
 use std::env;
 
-use actix_web::Error;
+use actix_web::{error, web::Bytes, Error};
 use aws_config::SdkConfig as AwsConfig;
 use aws_sdk_s3::{types::ByteStream, Client as S3Client};
-use futures_util::{stream, StreamExt as _};
+use futures_util::{stream, Stream, StreamExt as _, TryStreamExt as _};
 use tokio::{fs, io::AsyncReadExt as _};
 
 use crate::{TempFile, UploadedFile};
@@ -30,6 +30,30 @@ impl Client {
             env::var("AWS_S3_BUCKET_NAME").unwrap(),
             env::var("AWS_REGION").unwrap(),
         )
+    }
+
+    pub async fn fetch_file(
+        &self,
+        key: &str,
+    ) -> Option<(u64, impl Stream<Item = Result<Bytes, actix_web::Error>>)> {
+        let object = self
+            .s3
+            .get_object()
+            .bucket(&self.bucket_name)
+            .key(key)
+            .send()
+            .await
+            .ok()?;
+
+        Some((
+            object
+                .content_length()
+                .try_into()
+                .expect("file has invalid size"),
+            object
+                .body
+                .map_err(|err| error::ErrorInternalServerError(err)),
+        ))
     }
 
     pub async fn upload_files(
@@ -82,24 +106,19 @@ impl Client {
             .body(ByteStream::from(contents))
             .send()
             .await
-            .expect("Failed to put test object");
+            .expect("Failed to put object");
 
         self.url(key)
     }
 
-    pub async fn delete_files(&self, keys: Vec<&str>) {
-        for key in keys {
-            self.delete_object(key).await;
-        }
-    }
-
-    async fn delete_object(&self, key: &str) {
+    /// Attempts to deletes object from S3. Returns true if successful.
+    pub async fn delete_file(&self, key: &str) -> bool {
         self.s3
             .delete_object()
             .bucket(&self.bucket_name)
             .key(key)
             .send()
             .await
-            .expect("Couldn't delete object");
+            .is_ok()
     }
 }

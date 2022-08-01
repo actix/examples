@@ -14,6 +14,8 @@ cd forms/multipart-s3
 1. edit `.env` key `AWS_SECRET_ACCESS_KEY` = your_key_secret
 1. edit `.env` key `AWS_S3_BUCKET_NAME` = your_bucket_name
 
+The AWS SDK automatically reads these environment variables to configure the S3 client.
+
 ```sh
 cargo run
 ```
@@ -25,6 +27,8 @@ Or, start the upload using [HTTPie]:
 ```sh
 http --form POST :8080/ file@Cargo.toml
 http --form POST :8080/ file@Cargo.toml file@README.md meta='{"namespace":"foo"}'
+
+http GET :8080/file/<key_from_upload>
 ```
 
 Or, using cURL:
@@ -32,6 +36,8 @@ Or, using cURL:
 ```sh
 curl -X POST http://localhost:8080/ -F 'file=@Cargo.toml'
 curl -X POST http://localhost:8080/ -F 'file=@Cargo.toml' -F 'file=@README.md' -F 'meta={"namespace":"foo"}'
+
+curl http://localhost:8080/file/<key_from_upload>
 ```
 
 [httpie]: https://httpie.org
