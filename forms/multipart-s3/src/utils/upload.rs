@@ -1,4 +1,4 @@
-use std::{convert::From, io::Write};
+use std::{convert::From, fs, io::Write};
 
 use actix_multipart::{Field, Multipart};
 use actix_web::{web, web::Bytes, Error};
@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::s3::Client;
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct UploadFile {
     pub filename: String,
     pub key: String,
@@ -36,6 +36,7 @@ pub struct Tmpfile {
     pub s3_key: String,
     pub s3_url: String,
 }
+
 impl Tmpfile {
     fn new(filename: &str) -> Tmpfile {
         Tmpfile {
@@ -46,25 +47,25 @@ impl Tmpfile {
         }
     }
 
-    async fn s3_upload_and_tmp_remove(&mut self, s3_upload_key: String) {
-        self.s3_upload(s3_upload_key).await;
+    async fn s3_upload_and_tmp_remove(&mut self, client: &Client, s3_upload_key: &str) {
+        self.s3_upload(client, s3_upload_key).await;
         self.tmp_remove();
     }
 
-    async fn s3_upload(&mut self, s3_upload_key: String) {
+    async fn s3_upload(&mut self, client: &Client, s3_upload_key: &str) {
         let key = format!("{s3_upload_key}{}", &self.name);
         self.s3_key = key.clone();
-        let url: String = Client::new().put_object(&self.tmp_path, &key.clone()).await;
+        let url = client.put_object(&self.tmp_path, &key.clone()).await;
         self.s3_url = url;
     }
 
     fn tmp_remove(&self) {
-        std::fs::remove_file(&self.tmp_path).unwrap();
+        fs::remove_file(&self.tmp_path).unwrap();
     }
 }
 
 pub async fn split_payload(payload: &mut Multipart) -> (Bytes, Vec<Tmpfile>) {
-    let mut tmp_files: Vec<Tmpfile> = Vec::new();
+    let mut tmp_files = vec![];
     let mut data = Bytes::new();
 
     while let Some(item) = payload.next().await {
@@ -80,7 +81,7 @@ pub async fn split_payload(payload: &mut Multipart) -> (Bytes, Vec<Tmpfile>) {
                 Some(filename) => {
                     let tmp_file = Tmpfile::new(&sanitize_filename::sanitize(&filename));
                     let tmp_path = tmp_file.tmp_path.clone();
-                    let mut f = web::block(move || std::fs::File::create(&tmp_path))
+                    let mut f = web::block(move || fs::File::create(&tmp_path))
                         .await
                         .unwrap()
                         .unwrap();
@@ -103,24 +104,27 @@ pub async fn split_payload(payload: &mut Multipart) -> (Bytes, Vec<Tmpfile>) {
 }
 
 pub async fn save_file(
+    client: &Client,
     tmp_files: Vec<Tmpfile>,
-    s3_upload_key: String,
+    s3_upload_key: &str,
 ) -> Result<Vec<UploadFile>, Error> {
     let mut arr: Vec<UploadFile> = Vec::with_capacity(tmp_files.len());
 
     for item in tmp_files {
         let mut tmp_file: Tmpfile = item.clone();
+
         tmp_file
-            .s3_upload_and_tmp_remove(s3_upload_key.clone())
+            .s3_upload_and_tmp_remove(client, s3_upload_key)
             .await;
+
         arr.push(UploadFile::from(tmp_file));
     }
     Ok(arr)
 }
 
 #[allow(unused)]
-pub async fn delete_object(list: Vec<String>) {
-    for key in list {
-        Client::new().delete_object(key).await;
+pub async fn delete_object(client: &Client, keys: Vec<&str>) {
+    for key in keys {
+        client.delete_object(key).await;
     }
 }

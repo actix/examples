@@ -1,0 +1,35 @@
+<html>
+    <head><title>Upload Test</title></head>
+    <body>
+        <form target="/" method="post" enctype="multipart/form-data" id="myForm" >
+            <input type="text" id="text" name="text" value="test_text"/>
+            <input type="number" id="number" name="number" value="123123"/>
+            <input type="button" value="Submit" onclick="myFunction()"></button>
+        </form>
+        <input type="file" multiple name="file" id="myFile"/>
+    </body>
+    <script>
+
+    function myFunction(){
+        var myForm = document.getElementById('myForm');
+        var myFile = document.getElementById('myFile');
+
+        let formData = new FormData();
+        const obj = {
+            text: document.getElementById('text').value,
+            number: Number(document.getElementById('number').value)
+        };
+        const json = JSON.stringify(obj);
+        console.log(obj);
+        console.log(json);
+
+        formData.append("data", json);
+        formData.append("myFile", myFile.files[0]);
+
+        var request = new XMLHttpRequest();
+        request.open("POST", "");
+        request.send(formData);
+    }
+
+    </script>
+</html>

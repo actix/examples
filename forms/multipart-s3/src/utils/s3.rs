@@ -1,64 +1,57 @@
-use std::io::Read as _;
+use std::{env, fs, io::Read as _};
 
-use rusoto_core::Region;
-use rusoto_s3::{DeleteObjectRequest, PutObjectRequest, S3Client, S3};
+use aws_config::SdkConfig as AwsConfig;
+use aws_sdk_s3::{types::ByteStream, Client as S3Client};
 
+#[derive(Debug, Clone)]
 pub struct Client {
-    #[allow(dead_code)]
-    region: Region,
     s3: S3Client,
     bucket_name: String,
 }
 
 impl Client {
     // construct S3 testing client
-    pub fn new() -> Client {
-        let region = Region::default();
-
+    pub fn new(config: &AwsConfig) -> Client {
         Client {
-            region: region.to_owned(),
-            s3: S3Client::new(region),
-            bucket_name: std::env::var("AWS_S3_BUCKET_NAME").unwrap(),
+            s3: S3Client::new(config),
+            bucket_name: env::var("AWS_S3_BUCKET_NAME").unwrap(),
         }
     }
 
     pub fn url(&self, key: &str) -> String {
         format!(
             "https://{}.s3.{}.amazonaws.com/{key}",
-            std::env::var("AWS_S3_BUCKET_NAME").unwrap(),
-            std::env::var("AWS_REGION").unwrap(),
+            env::var("AWS_S3_BUCKET_NAME").unwrap(),
+            env::var("AWS_REGION").unwrap(),
         )
     }
 
-    pub async fn put_object(&self, localfilepath: &str, key: &str) -> String {
-        let mut file = std::fs::File::open(localfilepath).unwrap();
-        let mut contents: Vec<u8> = Vec::new();
-        let _ = file.read_to_end(&mut contents);
-        let put_request = PutObjectRequest {
-            bucket: self.bucket_name.to_owned(),
-            key: key.to_owned(),
-            body: Some(contents.into()),
-            ..Default::default()
-        };
+    pub async fn put_object(&self, local_path: &str, key: &str) -> String {
+        let mut file = fs::File::open(local_path).unwrap();
+
+        let mut contents =
+            Vec::with_capacity(file.metadata().map(|md| md.len()).unwrap_or(1024) as usize);
+        file.read_to_end(&mut contents).unwrap();
+
         let _res = self
             .s3
-            .put_object(put_request)
+            .put_object()
+            .bucket(&self.bucket_name)
+            .key(key)
+            .body(ByteStream::from(contents))
+            .send()
             .await
             .expect("Failed to put test object");
 
         self.url(key)
     }
 
-    pub async fn delete_object(&self, key: String) {
-        let delete_object_req = DeleteObjectRequest {
-            bucket: self.bucket_name.to_owned(),
-            key: key.to_owned(),
-            ..Default::default()
-        };
-
-        let _res = self
-            .s3
-            .delete_object(delete_object_req)
+    pub async fn delete_object(&self, key: &str) {
+        self.s3
+            .delete_object()
+            .bucket(&self.bucket_name)
+            .key(key)
+            .send()
             .await
             .expect("Couldn't delete object");
     }
