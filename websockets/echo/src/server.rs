@@ -22,7 +22,7 @@ impl MyWebSocket {
         Self { hb: Instant::now() }
     }
 
-    /// helper method that sends ping to client every second.
+    /// helper method that sends ping to client every 5 seconds (HEARTBEAT_INTERVAL).
     ///
     /// also this method checks heartbeats from client
     fn hb(&self, ctx: &mut <Self as Actor>::Context) {
