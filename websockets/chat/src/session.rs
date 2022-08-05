@@ -31,7 +31,7 @@ pub struct WsChatSession {
 }
 
 impl WsChatSession {
-    /// helper method that sends ping to client every second.
+    /// helper method that sends ping to client every 5 seconds (HEARTBEAT_INTERVAL).
     ///
     /// also this method checks heartbeats from client
     fn hb(&self, ctx: &mut ws::WebsocketContext<Self>) {
