@@ -6,7 +6,9 @@ description = "Send a request to the server to shut it down"
 
 [dependencies]
 actix-web = "4"
+actix-web-lab = "0.16"
 
 env_logger = "0.9"
 log = "0.4"
+parking_lot = "0.12"
 tokio = { version = "1.13.1", features = ["signal"] }

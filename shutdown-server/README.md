@@ -2,26 +2,27 @@
 
 Demonstrates how to shutdown the web server in a couple of ways:
 
-1. remotely, via http request
-   - Created in response to actix/actix-web#1315
+1. remotely, via HTTP request
 1. sending a SIGINT signal to the server (control-c)
-   - actix-server natively supports SIGINT
+   - Actix Web servers support shutdown signals by default. [See here for more info.](https://actix.rs/docs/server#graceful-shutdown)
 
 ## Usage
 
 ### Running The Server
 
-```sh
-cd shutdown-server
-cargo run --bin shutdown-server
-
-# Starting 8 workers
-# Starting "actix-web-service-127.0.0.1:8080" service on 127.0.0.1:8080
+```console
+$ cd shutdown-server
+$ cargo run --bin shutdown-server
+[INFO] starting HTTP server at http://localhost:8080
+[INFO] Starting 2 workers
+[INFO] Actix runtime found; starting in Actix runtime
 ```
 
 ### Available Routes
 
-- [GET /hello](http://localhost:8080/hello)
-  - Regular hello world route
-- [POST /stop](http://localhost:8080/stop)
-  - Calling this will shutdown the server and exit
+- [`GET /hello`](http://localhost:8080/hello)
+  - Test hello world
+- `POST /stop/true`
+  - Gracefully shuts down the server and exit
+- `POST /stop/false`
+  - Forces server shutdown and exits

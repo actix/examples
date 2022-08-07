@@ -5686,8 +5686,10 @@ name = "shutdown-server"
 version = "1.0.0"
 dependencies = [
  "actix-web",
+ "actix-web-lab",
  "env_logger 0.9.0",
  "log",
+ "parking_lot 0.12.1",
  "tokio 1.20.1",
 ]
 
