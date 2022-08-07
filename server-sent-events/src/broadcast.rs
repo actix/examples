@@ -1,98 +1,78 @@
-use std::{
-    pin::Pin,
-    task::{Context, Poll},
-    time::Duration,
-};
+use std::{sync::Arc, time::Duration};
 
-use actix_web::{
-    rt::time::{interval_at, Instant},
-    web::{Bytes, Data},
-    Error,
-};
-use futures_util::Stream;
+use actix_web::rt::time::interval;
+use actix_web_lab::sse::{sse, Sse, SseSender};
+use futures_util::future;
 use parking_lot::Mutex;
-use tokio::sync::mpsc::{channel, Receiver, Sender};
 
 pub struct Broadcaster {
     inner: Mutex<BroadcasterInner>,
 }
 
+#[derive(Debug, Clone, Default)]
 struct BroadcasterInner {
-    clients: Vec<Sender<Bytes>>,
+    clients: Vec<SseSender>,
 }
 
 impl Broadcaster {
-    pub fn create() -> Data<Self> {
-        // Data ~≃ Arc
-        let me = Data::new(Broadcaster {
-            inner: Mutex::new(BroadcasterInner {
-                clients: Vec::new(),
-            }),
+    /// Constructs new broadcaster and spawns ping loop.
+    pub fn create() -> Arc<Self> {
+        let this = Arc::new(Broadcaster {
+            inner: Mutex::new(BroadcasterInner::default()),
         });
 
-        // ping clients every 10 seconds to see if they are alive
-        Broadcaster::spawn_ping(me.clone());
+        Broadcaster::spawn_ping(Arc::clone(&this));
 
-        me
+        this
     }
 
-    fn spawn_ping(me: Data<Self>) {
+    /// Pings clients every 10 seconds to see if they are alive and remove them from the broadcast
+    /// list if not.
+    fn spawn_ping(this: Arc<Self>) {
         actix_web::rt::spawn(async move {
-            let mut interval = interval_at(Instant::now(), Duration::from_secs(10));
+            let mut interval = interval(Duration::from_secs(10));
 
             loop {
                 interval.tick().await;
-                me.remove_stale_clients();
+                this.remove_stale_clients().await;
             }
         });
     }
 
-    fn remove_stale_clients(&self) {
-        let mut inner = self.inner.lock();
+    /// Removes all non-responsive clients from broadcast list.
+    async fn remove_stale_clients(&self) {
+        let clients = self.inner.lock().clients.clone();
 
         let mut ok_clients = Vec::new();
-        for client in inner.clients.iter() {
-            let result = client.clone().try_send(Bytes::from("data: ping\n\n"));
 
-            if let Ok(()) = result {
+        for client in clients {
+            if client.comment("ping").await.is_ok() {
                 ok_clients.push(client.clone());
             }
         }
-        inner.clients = ok_clients;
+
+        self.inner.lock().clients = ok_clients;
     }
 
-    pub fn new_client(&self) -> Client {
-        let (tx, rx) = channel(100);
+    /// Registers client with broadcaster, returning an SSE response body.
+    pub async fn new_client(&self) -> Sse {
+        let (tx, rx) = sse(10);
 
-        tx.try_send(Bytes::from("data: connected\n\n")).unwrap();
+        tx.data("connected").await.unwrap();
 
-        let mut inner = self.inner.lock();
-        inner.clients.push(tx);
+        self.inner.lock().clients.push(tx);
 
-        Client(rx)
+        rx
     }
 
-    pub fn send(&self, msg: &str) {
-        let msg = Bytes::from(["data: ", msg, "\n\n"].concat());
+    /// Broadcasts `msg` to all clients.
+    pub async fn broadcast(&self, msg: &str) {
+        let clients = self.inner.lock().clients.clone();
 
-        let inner = self.inner.lock();
-        for client in inner.clients.iter() {
-            client.clone().try_send(msg.clone()).unwrap_or(());
-        }
-    }
-}
+        let send_futures = clients.iter().map(|client| client.data(msg));
 
-// wrap Receiver in own type, with correct error type
-pub struct Client(Receiver<Bytes>);
-
-impl Stream for Client {
-    type Item = Result<Bytes, Error>;
-
-    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        match Pin::new(&mut self.0).poll_recv(cx) {
-            Poll::Ready(Some(v)) => Poll::Ready(Some(Ok(v))),
-            Poll::Ready(None) => Poll::Ready(None),
-            Poll::Pending => Poll::Pending,
-        }
+        // try to send to all clients, ignoring failures
+        // disconnected clients will get swept up by `remove_stale_clients`
+        let _ = future::join_all(send_futures).await;
     }
 }

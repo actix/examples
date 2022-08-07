@@ -1,15 +1,13 @@
-use actix_web::{
-    http::header::{self, ContentType},
-    middleware,
-    web::{self, Data, Path},
-    App, HttpResponse, HttpServer, Responder,
-};
+use std::{io, sync::Arc};
+
+use actix_web::{get, middleware::Logger, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web_lab::{extract::Path, respond::Html};
 
 mod broadcast;
-use broadcast::Broadcaster;
+use self::broadcast::Broadcaster;
 
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let data = Broadcaster::create();
@@ -18,34 +16,33 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .app_data(data.clone())
-            .wrap(middleware::Logger::default())
-            .route("/", web::get().to(index))
-            .route("/events", web::get().to(new_client))
-            .route("/broadcast/{msg}", web::get().to(broadcast))
+            .app_data(web::Data::from(Arc::clone(&data)))
+            .service(index)
+            .service(event_stream)
+            .service(broadcast_msg)
+            .wrap(Logger::default())
     })
     .bind(("127.0.0.1", 8080))?
+    .workers(2)
     .run()
     .await
 }
 
+#[get("/")]
 async fn index() -> impl Responder {
-    let index_html = include_str!("index.html");
-
-    HttpResponse::Ok()
-        .append_header(ContentType::html())
-        .body(index_html)
+    Html(include_str!("index.html").to_string())
 }
 
-async fn new_client(broadcaster: Data<Broadcaster>) -> impl Responder {
-    let rx = broadcaster.new_client();
-
-    HttpResponse::Ok()
-        .append_header((header::CONTENT_TYPE, "text/event-stream"))
-        .streaming(rx)
+#[get("/events")]
+async fn event_stream(broadcaster: web::Data<Broadcaster>) -> impl Responder {
+    broadcaster.new_client().await
 }
 
-async fn broadcast(msg: Path<String>, broadcaster: Data<Broadcaster>) -> impl Responder {
-    broadcaster.send(&msg.into_inner());
+#[post("/broadcast/{msg}")]
+async fn broadcast_msg(
+    broadcaster: web::Data<Broadcaster>,
+    Path((msg,)): Path<(String,)>,
+) -> impl Responder {
+    broadcaster.broadcast(&msg).await;
     HttpResponse::Ok().body("msg sent")
 }

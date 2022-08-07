@@ -548,9 +548,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web-lab"
-version = "0.16.7"
+version = "0.16.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8d29deb0fe8063f205804af50329301cfa45eee64ede25e436f75839ff79af7"
+checksum = "4caa655398cbfeecd57e639f997b62ee3090a4e88b974130035c2de41393363e"
 dependencies = [
  "actix-files",
  "actix-http",
@@ -563,6 +563,7 @@ dependencies = [
  "arc-swap",
  "async-trait",
  "bytes 1.2.1",
+ "bytestring",
  "csv",
  "derive_more",
  "digest 0.10.3",
@@ -730,9 +731,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.59"
+version = "1.0.60"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c91f1f46651137be86f3a2b9a8359f9ab421d04d941c62b5982e1ca21113adf9"
+checksum = "c794e162a5eff65c72ef524dfe393eb923c354e350bb78b9c7383df13f3bc142"
 
 [[package]]
 name = "arc-swap"
@@ -5224,9 +5225,9 @@ dependencies = [
 
 [[package]]
 name = "rust_decimal"
-version = "1.26.0"
+version = "1.26.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8fc129ab6000ab4037e7718703cdeab82a12c4ee23a238658f55372d80ef2b05"
+checksum = "ee9164faf726e4f3ece4978b25ca877ddc6802fa77f38cdccb32c7f805ecd70c"
 dependencies = [
  "arrayvec 0.7.2",
  "num-traits",
@@ -5604,6 +5605,7 @@ name = "server-sent-events"
 version = "1.0.0"
 dependencies = [
  "actix-web",
+ "actix-web-lab",
  "env_logger 0.9.0",
  "futures-util",
  "log",
