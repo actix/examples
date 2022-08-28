@@ -18,10 +18,14 @@
 //!
 //! Check [user guide](https://actix.rs/docs/application/#state) for more info.
 
-use std::cell::Cell;
-use std::io;
-use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::Mutex;
+use std::{
+    cell::Cell,
+    io,
+    sync::{
+        atomic::{AtomicUsize, Ordering},
+        Mutex,
+    },
+};
 
 use actix_web::{
     middleware,

@@ -1,5 +1,4 @@
-use actix_web::web::Data;
-use actix_web::{get, App, HttpServer};
+use actix_web::{get, web::Data, App, HttpServer};
 use redis_tang::{Builder, Pool, RedisManager};
 
 #[actix_web::main]

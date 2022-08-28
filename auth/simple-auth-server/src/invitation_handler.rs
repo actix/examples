@@ -2,8 +2,10 @@ use actix_web::{web, HttpResponse};
 use diesel::{prelude::*, PgConnection};
 use serde::Deserialize;
 
-use crate::email_service::send_invitation;
-use crate::models::{Invitation, Pool};
+use crate::{
+    email_service::send_invitation,
+    models::{Invitation, Pool},
+};
 
 #[derive(Deserialize)]
 pub struct InvitationData {

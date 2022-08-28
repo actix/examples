@@ -1,9 +1,10 @@
 use std::future::{ready, Ready};
 
-use actix_web::body::EitherBody;
-use actix_web::dev::{self, ServiceRequest, ServiceResponse};
-use actix_web::dev::{Service, Transform};
-use actix_web::{http, Error, HttpResponse};
+use actix_web::{
+    body::EitherBody,
+    dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
+    http, Error, HttpResponse,
+};
 use futures_util::future::LocalBoxFuture;
 
 pub struct CheckLogin;

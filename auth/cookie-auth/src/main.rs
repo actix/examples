@@ -1,5 +1,4 @@
-use actix_identity::Identity;
-use actix_identity::{CookieIdentityPolicy, IdentityService};
+use actix_identity::{CookieIdentityPolicy, Identity, IdentityService};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer};
 use rand::Rng;
 

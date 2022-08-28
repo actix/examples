@@ -1,7 +1,7 @@
 //! JSON-RPC 2.0 Specification
 //! See: https://www.jsonrpc.org/specification
-use std::error;
-use std::fmt;
+
+use std::{error, fmt};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;

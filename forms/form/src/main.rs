@@ -70,11 +70,16 @@ async fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Re
 
 #[cfg(test)]
 mod tests {
-    use actix_web::body::to_bytes;
-    use actix_web::dev::{Service, ServiceResponse};
-    use actix_web::http::{header::HeaderValue, header::CONTENT_TYPE, StatusCode};
-    use actix_web::test::{self, TestRequest};
-    use actix_web::web::{Bytes, Form};
+    use actix_web::{
+        body::to_bytes,
+        dev::{Service, ServiceResponse},
+        http::{
+            header::{HeaderValue, CONTENT_TYPE},
+            StatusCode,
+        },
+        test::{self, TestRequest},
+        web::{Bytes, Form},
+    };
 
     use super::*;
 

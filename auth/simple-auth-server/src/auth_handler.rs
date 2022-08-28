@@ -2,13 +2,14 @@ use std::future::{ready, Ready};
 
 use actix_identity::Identity;
 use actix_web::{dev::Payload, web, Error, FromRequest, HttpRequest, HttpResponse};
-use diesel::prelude::*;
-use diesel::PgConnection;
+use diesel::{prelude::*, PgConnection};
 use serde::Deserialize;
 
-use crate::errors::ServiceError;
-use crate::models::{Pool, SlimUser, User};
-use crate::utils::verify;
+use crate::{
+    errors::ServiceError,
+    models::{Pool, SlimUser, User},
+    utils::verify,
+};
 
 #[derive(Debug, Deserialize)]
 pub struct AuthData {

@@ -3,10 +3,9 @@ use std::{
     task::{Context, Poll},
 };
 
-use actix_web::Error;
 use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse, Transform},
-    HttpMessage,
+    Error, HttpMessage,
 };
 
 #[derive(Debug, Clone)]

@@ -24,9 +24,7 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use actix_web::body::to_bytes;
-    use actix_web::dev::Service;
-    use actix_web::{http, test, web, App, Error};
+    use actix_web::{body::to_bytes, dev::Service, http, test, web, App, Error};
 
     use super::*;
 

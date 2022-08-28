@@ -5,8 +5,14 @@
 //!
 //! [User guide](https://actix.rs/docs/middleware/#user-sessions)
 
-use actix_session::{storage::CookieSessionStore, Session, SessionMiddleware};
-use actix_web::{cookie::Key, middleware::Logger, web, App, HttpRequest, HttpServer, Result};
+use actix_session::{
+    config::PersistentSession, storage::CookieSessionStore, Session, SessionMiddleware,
+};
+use actix_web::{
+    cookie::{self, Key},
+    middleware::Logger,
+    web, App, HttpRequest, HttpServer, Result,
+};
 
 /// simple index handler with session
 async fn index(session: Session, req: HttpRequest) -> Result<&'static str> {
@@ -39,6 +45,10 @@ async fn main() -> std::io::Result<()> {
             .wrap(
                 SessionMiddleware::builder(CookieSessionStore::default(), Key::from(&[0; 64]))
                     .cookie_secure(false)
+                    // customize session and cookie expiration
+                    .session_lifecycle(
+                        PersistentSession::default().session_ttl(cookie::time::Duration::hours(2)),
+                    )
                     .build(),
             )
             .service(web::resource("/").to(index))

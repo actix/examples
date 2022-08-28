@@ -1,5 +1,7 @@
-use r2d2_mysql::mysql::{Opts, OptsBuilder};
-use r2d2_mysql::MysqlConnectionManager;
+use r2d2_mysql::{
+    mysql::{Opts, OptsBuilder},
+    MysqlConnectionManager,
+};
 
 pub type Pool = r2d2::Pool<MysqlConnectionManager>;
 

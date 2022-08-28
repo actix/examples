@@ -1,13 +1,11 @@
 use std::fs;
 
 use actix_multipart::Multipart;
-use actix_web::body::SizedStream;
-use actix_web::{delete, error};
 use actix_web::{
-    get, middleware::Logger, post, web, App, Error, HttpResponse, HttpServer, Responder,
+    body::SizedStream, delete, error, get, middleware::Logger, post, web, App, Error, HttpResponse,
+    HttpServer, Responder,
 };
-use actix_web_lab::extract::Path;
-use actix_web_lab::respond::Html;
+use actix_web_lab::{extract::Path, respond::Html};
 use aws_config::meta::region::RegionProviderChain;
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
@@ -18,10 +16,7 @@ mod temp_file;
 mod upload_file;
 mod utils;
 
-use self::client::Client;
-use self::temp_file::TempFile;
-use self::upload_file::UploadedFile;
-use self::utils::split_payload;
+use self::{client::Client, temp_file::TempFile, upload_file::UploadedFile, utils::split_payload};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

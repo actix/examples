@@ -3,8 +3,10 @@ extern crate diesel;
 
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{middleware, web, App, HttpServer};
-use diesel::prelude::*;
-use diesel::r2d2::{self, ConnectionManager};
+use diesel::{
+    prelude::*,
+    r2d2::{self, ConnectionManager},
+};
 use time::Duration;
 
 mod auth_handler;

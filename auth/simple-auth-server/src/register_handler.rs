@@ -2,9 +2,11 @@ use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::Deserialize;
 
-use crate::errors::ServiceError;
-use crate::models::{Invitation, Pool, SlimUser, User};
-use crate::utils::hash_password;
+use crate::{
+    errors::ServiceError,
+    models::{Invitation, Pool, SlimUser, User},
+    utils::hash_password,
+};
 
 // UserData is used to extract data from a post request by the client
 #[derive(Debug, Deserialize)]
@@ -34,8 +36,10 @@ fn query(
     password: String,
     pool: web::Data<Pool>,
 ) -> Result<SlimUser, crate::errors::ServiceError> {
-    use crate::schema::invitations::dsl::{id, invitations};
-    use crate::schema::users::dsl::users;
+    use crate::schema::{
+        invitations::dsl::{id, invitations},
+        users::dsl::users,
+    };
     let invitation_id = uuid::Uuid::parse_str(&invitation_id)?;
 
     let conn: &PgConnection = &pool.get().unwrap();
