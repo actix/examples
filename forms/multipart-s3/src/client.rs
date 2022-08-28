@@ -50,9 +50,7 @@ impl Client {
                 .content_length()
                 .try_into()
                 .expect("file has invalid size"),
-            object
-                .body
-                .map_err(|err| error::ErrorInternalServerError(err)),
+            object.body.map_err(error::ErrorInternalServerError),
         ))
     }
 

@@ -64,8 +64,3 @@ exclude = [
    # uses incompatible libsqlite-sys to other examples
    "databases/diesel",
 ]
-
-[patch.crates-io]
-# FIXME: Specify commit until https://github.com/XAMPPRocky/fluent-templates/pull/36 is released
-fluent-templates = { git = "https://github.com/XAMPPRocky/fluent-templates.git", rev = "82b50baf6232e1ce2e9629ce2a8fcc12ab5d942c" }
-fluent-template-macros = { git = "https://github.com/XAMPPRocky/fluent-templates.git", rev = "82b50baf6232e1ce2e9629ce2a8fcc12ab5d942c" }

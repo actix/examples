@@ -9,7 +9,7 @@ async fn hello() -> &'static str {
 
 #[post("/stop/{graceful}")]
 async fn stop(Path(graceful): Path<bool>, stop_handle: web::Data<StopHandle>) -> HttpResponse {
-    let _ = stop_handle.stop(graceful);
+    stop_handle.stop(graceful);
     HttpResponse::NoContent().finish()
 }
 
