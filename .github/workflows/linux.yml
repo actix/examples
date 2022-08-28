@@ -9,13 +9,13 @@ on:
 
 jobs:
   build_and_test:
-    name: ${{ matrix.version }}
-    runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
         version: [stable, nightly]
+    
+    name: ${{ matrix.version }}
+    runs-on: ubuntu-latest
 
     env:
       CI: '1'
