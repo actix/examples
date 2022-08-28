@@ -586,6 +586,45 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-web-lab"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e685bb63b29ddb0d5fe646d799a7fc7661876d4fed91c0a07eb2b6e6dbed95ba"
+dependencies = [
+ "actix-files",
+ "actix-http",
+ "actix-router",
+ "actix-service",
+ "actix-utils",
+ "actix-web",
+ "actix-web-lab-derive",
+ "ahash 0.7.6",
+ "arc-swap",
+ "async-trait",
+ "bytes 1.2.1",
+ "bytestring",
+ "csv",
+ "derive_more",
+ "digest 0.10.3",
+ "futures-core",
+ "futures-util",
+ "generic-array",
+ "hmac",
+ "http",
+ "local-channel",
+ "mime",
+ "once_cell",
+ "pin-project-lite 0.2.9",
+ "regex",
+ "serde",
+ "serde_html_form",
+ "serde_json",
+ "subtle",
+ "tokio 1.20.1",
+ "tracing",
+]
+
+[[package]]
 name = "actix-web-lab-derive"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -907,7 +946,7 @@ dependencies = [
  "actix 0.13.0",
  "actix-cors",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "async-graphql",
  "async-graphql-actix-web",
  "env_logger 0.9.0",
@@ -3523,7 +3562,7 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "dotenv",
  "env_logger 0.9.0",
  "juniper",
@@ -3542,7 +3581,7 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "env_logger 0.9.0",
  "juniper",
  "log",
@@ -3806,7 +3845,7 @@ name = "middleware-http-to-https"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "env_logger 0.9.0",
  "futures-util",
  "log",
@@ -3978,7 +4017,7 @@ version = "1.0.0"
 dependencies = [
  "actix-multipart",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "aws-config",
  "aws-sdk-s3",
  "dotenv",
@@ -5335,7 +5374,7 @@ version = "1.0.0"
 dependencies = [
  "actix-files",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "env_logger 0.9.0",
  "log",
  "rustls 0.20.6",
@@ -5629,7 +5668,7 @@ name = "server-sent-events"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.16.9",
  "env_logger 0.9.0",
  "futures-util",
  "log",
@@ -5710,7 +5749,7 @@ name = "shutdown-server"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "env_logger 0.9.0",
  "log",
  "parking_lot 0.12.1",
@@ -6176,7 +6215,7 @@ name = "templating-fluent"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "fluent-templates",
  "handlebars",
  "serde",
@@ -6197,7 +6236,7 @@ name = "templating-sailfish"
 version = "0.1.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "env_logger 0.9.0",
  "log",
  "sailfish",
@@ -6424,7 +6463,7 @@ dependencies = [
  "actix-files",
  "actix-session 0.7.1",
  "actix-web",
- "actix-web-lab",
+ "actix-web-lab 0.17.0",
  "dotenv",
  "env_logger 0.9.0",
  "log",
