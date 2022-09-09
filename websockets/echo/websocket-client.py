@@ -4,15 +4,13 @@ import argparse
 import asyncio
 import signal
 import sys
-
 import aiohttp
 
-
-def start_client(loop, url):
+async def start_client(loop, url):
     name = input('Please enter your name: ')
 
     # send request
-    ws = yield from aiohttp.ClientSession().ws_connect(url, autoclose=False, autoping=False)
+    ws = await aiohttp.ClientSession().ws_connect(url, autoclose=False, autoping=False)
 
     # input reader
     def stdin_callback():
@@ -23,22 +21,21 @@ def start_client(loop, url):
             ws.send_str(name + ': ' + line)
     loop.add_reader(sys.stdin.fileno(), stdin_callback)
 
-    @asyncio.coroutine
-    def dispatch():
+    async def dispatch():
         while True:
-            msg = yield from ws.receive()
+            msg = await ws.receive()
 
             if msg.type == aiohttp.WSMsgType.TEXT:
                 print('Text: ', msg.data.strip())
             elif msg.type == aiohttp.WSMsgType.BINARY:
                 print('Binary: ', msg.data)
             elif msg.type == aiohttp.WSMsgType.PING:
-                ws.pong()
+                await ws.pong()
             elif msg.type == aiohttp.WSMsgType.PONG:
                 print('Pong received')
             else:
                 if msg.type == aiohttp.WSMsgType.CLOSE:
-                    yield from ws.close()
+                    await ws.close()
                 elif msg.type == aiohttp.WSMsgType.ERROR:
                     print('Error during receive %s' % ws.exception())
                 elif msg.type == aiohttp.WSMsgType.CLOSED:
@@ -46,7 +43,7 @@ def start_client(loop, url):
 
                 break
 
-    yield from dispatch()
+    await dispatch()
 
 
 ARGS = argparse.ArgumentParser(
@@ -64,7 +61,7 @@ if __name__ == '__main__':
         args.host, port = args.host.split(':', 1)
         args.port = int(port)
 
-    url = 'http://{}:{}/ws/'.format(args.host, args.port)
+    url = 'http://{}:{}/ws'.format(args.host, args.port)
 
     loop = asyncio.get_event_loop()
     loop.add_signal_handler(signal.SIGINT, loop.stop)
