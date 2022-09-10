@@ -36,16 +36,15 @@ fn query(
     password: String,
     pool: web::Data<Pool>,
 ) -> Result<SlimUser, crate::errors::ServiceError> {
-    use crate::schema::{
-        invitations::dsl::{id, invitations},
-        users::dsl::users,
-    };
+    use crate::schema::{invitations::dsl::*, users::dsl::*};
+
+    let mut conn = pool.get().unwrap();
+
     let invitation_id = uuid::Uuid::parse_str(&invitation_id)?;
 
-    let conn: &PgConnection = &pool.get().unwrap();
     invitations
         .filter(id.eq(invitation_id))
-        .load::<Invitation>(conn)
+        .load::<Invitation>(&mut conn)
         .map_err(|_db_error| ServiceError::BadRequest("Invalid Invitation".into()))
         .and_then(|mut result| {
             if let Some(invitation) = result.pop() {
@@ -54,10 +53,13 @@ fn query(
                     // try hashing the password, else return the error that will be converted to ServiceError
                     let password: String = hash_password(&password)?;
                     dbg!(&password);
+
                     let user = User::from_details(invitation.email, password);
-                    let inserted_user: User =
-                        diesel::insert_into(users).values(&user).get_result(conn)?;
+                    let inserted_user: User = diesel::insert_into(users)
+                        .values(&user)
+                        .get_result(&mut conn)?;
                     dbg!(&inserted_user);
+
                     return Ok(inserted_user.into());
                 }
             }

@@ -9,7 +9,7 @@ actix-identity = "0.4"
 
 chrono = { version = "0.4", features = ["serde"] }
 derive_more = "0.99.5"
-diesel = { version = "1.4", features = ["postgres", "uuidv07", "r2d2", "chrono"] }
+diesel = { version = "2", features = ["postgres", "r2d2", "uuid", "chrono"] }
 dotenv = "0.15"
 env_logger = "0.9"
 r2d2 = "0.8"
@@ -18,5 +18,5 @@ lazy_static = "1.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sparkpost = "0.5"
-uuid = { version = "0.8", features = ["v4", "serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 time = "0.3"

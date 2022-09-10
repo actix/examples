@@ -14,6 +14,7 @@ members = [
    "basics/todo",
    "cors/backend",
    "data-factory",
+   "databases/diesel",
    "databases/mongodb",
    "databases/postgres",
    "databases/redis",
@@ -59,8 +60,4 @@ members = [
    "websockets/chat",
    "websockets/echo-actorless",
    "websockets/echo",
-]
-exclude = [
-   # uses incompatible libsqlite-sys to other examples
-   "databases/diesel",
 ]

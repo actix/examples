@@ -2,7 +2,7 @@ use std::future::{ready, Ready};
 
 use actix_identity::Identity;
 use actix_web::{dev::Payload, web, Error, FromRequest, HttpRequest, HttpResponse};
-use diesel::{prelude::*, PgConnection};
+use diesel::prelude::*;
 use serde::Deserialize;
 
 use crate::{
@@ -52,6 +52,7 @@ pub async fn login(
 
     let user_string = serde_json::to_string(&user).unwrap();
     id.remember(user_string);
+
     Ok(HttpResponse::Ok().finish())
 }
 
@@ -61,10 +62,12 @@ pub async fn get_me(logged_user: LoggedUser) -> HttpResponse {
 /// Diesel query
 fn query(auth_data: AuthData, pool: web::Data<Pool>) -> Result<SlimUser, ServiceError> {
     use crate::schema::users::dsl::{email, users};
-    let conn: &PgConnection = &pool.get().unwrap();
+
+    let mut conn = pool.get().unwrap();
+
     let mut items = users
         .filter(email.eq(&auth_data.email))
-        .load::<User>(conn)?;
+        .load::<User>(&mut conn)?;
 
     if let Some(user) = items.pop() {
         if let Ok(matching) = verify(&user.hash, &auth_data.password) {

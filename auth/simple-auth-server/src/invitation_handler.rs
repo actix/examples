@@ -1,5 +1,5 @@
 use actix_web::{web, HttpResponse};
-use diesel::{prelude::*, PgConnection};
+use diesel::prelude::*;
 use serde::Deserialize;
 
 use crate::{
@@ -34,12 +34,13 @@ fn create_invitation(
 fn query(eml: String, pool: web::Data<Pool>) -> Result<Invitation, crate::errors::ServiceError> {
     use crate::schema::invitations::dsl::invitations;
 
-    let new_invitation: Invitation = eml.into();
-    let conn: &PgConnection = &pool.get().unwrap();
+    let mut conn = pool.get().unwrap();
+
+    let new_invitation = Invitation::from(eml);
 
     let inserted_invitation = diesel::insert_into(invitations)
         .values(&new_invitation)
-        .get_result(conn)?;
+        .get_result(&mut conn)?;
 
     Ok(inserted_invitation)
 }

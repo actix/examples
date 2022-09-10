@@ -9,7 +9,7 @@ use super::schema::*;
 pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
-#[table_name = "users"]
+#[diesel(table_name = users)]
 pub struct User {
     pub email: String,
     pub hash: String,
@@ -27,7 +27,7 @@ impl User {
 }
 
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
-#[table_name = "invitations"]
+#[diesel(table_name = invitations)]
 pub struct Invitation {
     pub id: uuid::Uuid,
     pub email: String,

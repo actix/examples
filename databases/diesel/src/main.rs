@@ -27,8 +27,8 @@ async fn get_user(
 
     // use web::block to offload blocking Diesel code without blocking server thread
     let user = web::block(move || {
-        let conn = pool.get()?;
-        actions::find_user_by_uid(user_uid, &conn)
+        let mut conn = pool.get()?;
+        actions::find_user_by_uid(&mut conn, user_uid)
     })
     .await?
     .map_err(actix_web::error::ErrorInternalServerError)?;
@@ -49,8 +49,8 @@ async fn add_user(
 ) -> Result<HttpResponse, Error> {
     // use web::block to offload blocking Diesel code without blocking server thread
     let user = web::block(move || {
-        let conn = pool.get()?;
-        actions::insert_new_user(&form.name, &conn)
+        let mut conn = pool.get()?;
+        actions::insert_new_user(&mut conn, &form.name)
     })
     .await?
     .map_err(actix_web::error::ErrorInternalServerError)?;
@@ -136,7 +136,7 @@ mod tests {
         // Delete new user from table
         use crate::schema::users::dsl::*;
         diesel::delete(users.filter(id.eq(resp.id)))
-            .execute(&pool.get().expect("couldn't get db connection from pool"))
+            .execute(&mut pool.get().expect("couldn't get db connection from pool"))
             .expect("couldn't delete test user from table");
     }
 }
