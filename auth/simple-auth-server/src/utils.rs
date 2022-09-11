@@ -1,10 +1,10 @@
 use argon2::{self, Config};
+use once_cell::sync::Lazy;
 
 use crate::errors::ServiceError;
 
-lazy_static::lazy_static! {
-    pub static ref SECRET_KEY: String = std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8));
-}
+pub static SECRET_KEY: Lazy<String> =
+    Lazy::new(|| std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8)));
 
 const SALT: &[u8] = b"supersecuresalt";
 

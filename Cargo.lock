@@ -5779,7 +5779,7 @@ dependencies = [
  "diesel",
  "dotenv",
  "env_logger 0.9.0",
- "lazy_static",
+ "once_cell",
  "r2d2",
  "rust-argon2",
  "serde",

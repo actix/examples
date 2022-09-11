@@ -1,12 +1,12 @@
+use once_cell::sync::Lazy;
 use sparkpost::transmission::{
     EmailAddress, Message, Options, Recipient, Transmission, TransmissionResponse,
 };
 
 use crate::{errors::ServiceError, models::Invitation};
 
-lazy_static::lazy_static! {
-static ref API_KEY: String = std::env::var("SPARKPOST_API_KEY").expect("SPARKPOST_API_KEY must be set");
-}
+static API_KEY: Lazy<String> =
+    Lazy::new(|| std::env::var("SPARKPOST_API_KEY").expect("SPARKPOST_API_KEY must be set"));
 
 pub fn send_invitation(invitation: &Invitation) -> Result<(), ServiceError> {
     let tm = Transmission::new_eu(API_KEY.as_str());
