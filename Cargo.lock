@@ -810,6 +810,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "async-data"
+version = "1.0.0"
+dependencies = [
+ "actix-web",
+ "env_logger 0.9.0",
+ "log",
+]
+
+[[package]]
 name = "async-graphql"
 version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -943,16 +952,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "async_data_factory"
-version = "1.0.0"
-dependencies = [
- "actix-web",
- "num_cpus",
- "redis 0.21.6",
- "redis_tang",
 ]
 
 [[package]]
@@ -2111,7 +2110,7 @@ dependencies = [
  "env_logger 0.9.0",
  "futures-util",
  "log",
- "redis 0.22.0",
+ "redis",
  "serde",
 ]
 
@@ -4862,25 +4861,6 @@ dependencies = [
 
 [[package]]
 name = "redis"
-version = "0.21.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "571c252c68d09a2ad3e49edd14e9ee48932f3e0f27b06b4ea4c9b2a706d31103"
-dependencies = [
- "async-trait",
- "bytes 1.2.1",
- "combine 4.6.6",
- "futures-util",
- "itoa 1.0.3",
- "percent-encoding",
- "pin-project-lite 0.2.9",
- "ryu",
- "tokio 1.21.0",
- "tokio-util 0.7.4",
- "url",
-]
-
-[[package]]
-name = "redis"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2e5450e9add55de0ea728a964191669d3707fa20666c5f16753f3a6a51e96231"
@@ -4927,17 +4907,6 @@ dependencies = [
  "serde",
  "serde_json",
  "time 0.3.14",
-]
-
-[[package]]
-name = "redis_tang"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dcabf56cf2286df31463567c8f8d67ee582e32acf78aaa6f7303f791006aa75d"
-dependencies = [
- "redis 0.21.6",
- "tang-rs",
- "tokio 1.21.0",
 ]
 
 [[package]]
@@ -6078,12 +6047,6 @@ name = "take_mut"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f764005d11ee5f36500a149ace24e00e3da98b0158b3e2d53a7495660d3f4d60"
-
-[[package]]
-name = "tang-rs"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b625cb7d76f7bb1887a11d2e7b97677539924010773844ed17252c6ec7877595"
 
 [[package]]
 name = "tap"
