@@ -6242,6 +6242,7 @@ dependencies = [
 name = "templating-minijinja"
 version = "1.0.0"
 dependencies = [
+ "actix-utils",
  "actix-web",
  "actix-web-lab 0.18.5",
  "env_logger 0.9.1",

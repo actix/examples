@@ -1,39 +1,66 @@
+use actix_utils::future::{ready, Ready};
 use std::collections::HashMap;
 
 use actix_web::{
-    dev::ServiceResponse,
+    dev::{self, ServiceResponse},
     error,
     http::{header::ContentType, StatusCode},
     middleware::{ErrorHandlerResponse, ErrorHandlers, Logger},
-    web, App, Error, HttpResponse, HttpServer, Responder, Result,
+    web, App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder, Result,
 };
 use actix_web_lab::respond::Html;
 
-async fn index(
+#[derive(Debug)]
+struct MiniJinjaRenderer {
     tmpl_env: web::Data<minijinja::Environment<'static>>,
+}
+
+impl MiniJinjaRenderer {
+    fn render(
+        &self,
+        tmpl: &str,
+        ctx: impl Into<minijinja::value::Value>,
+    ) -> actix_web::Result<Html> {
+        self.tmpl_env
+            .get_template(tmpl)
+            .map_err(|_| error::ErrorInternalServerError("could not find template"))?
+            .render(ctx.into())
+            .map(Html)
+            .map_err(|err| {
+                log::error!("{err}");
+                error::ErrorInternalServerError("template error")
+            })
+    }
+}
+
+impl FromRequest for MiniJinjaRenderer {
+    type Error = actix_web::Error;
+    type Future = Ready<Result<Self, Self::Error>>;
+
+    fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
+        let tmpl_env = <web::Data<minijinja::Environment<'static>>>::from_request(req, payload)
+            .into_inner()
+            .unwrap();
+
+        ready(Ok(Self { tmpl_env }))
+    }
+}
+
+async fn index(
+    tmpl_env: MiniJinjaRenderer,
     query: web::Query<HashMap<String, String>>,
-) -> Result<impl Responder, Error> {
-    let html = if let Some(name) = query.get("name") {
-        let tmpl = tmpl_env
-            .get_template("user.html")
-            .map_err(|_| error::ErrorInternalServerError("Template error"))?;
-
-        let ctx = minijinja::context! {
-            name,
-            text => "Welcome!",
-        };
-
-        tmpl.render(ctx)
-            .map_err(|_| error::ErrorInternalServerError("Template error"))?
+) -> actix_web::Result<impl Responder> {
+    if let Some(name) = query.get("name") {
+        tmpl_env.render(
+            "user.html",
+            minijinja::context! {
+                name,
+                text => "Welcome!",
+            },
+        )
     } else {
-        tmpl_env
-            .get_template("index.html")
-            .map_err(|_| error::ErrorInternalServerError("Template error"))?
-            .render(())
-            .map_err(|_| error::ErrorInternalServerError("Template error"))?
-    };
-
-    Ok(Html(html))
+        tmpl_env.render("index.html", ())
+    }
 }
 
 #[actix_web::main]
@@ -75,6 +102,8 @@ fn not_found<B>(svc_res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> 
 fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> HttpResponse {
     let req = res.request();
 
+    let tmpl_env = MiniJinjaRenderer::extract(req).into_inner().unwrap();
+
     // Provide a fallback to a simple plain text response in case an error occurs during the
     // rendering of the error page.
     let fallback = |err: &str| {
@@ -88,17 +117,13 @@ fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> HttpResponse 
         status_code => res.status().as_str(),
     };
 
-    match req
-        .app_data::<web::Data<minijinja::Environment>>()
-        .and_then(|tmpl_env| tmpl_env.get_template("error.html").ok())
-        .and_then(|tmpl| tmpl.render(ctx).ok())
-    {
-        Some(body) => Html(body)
+    match tmpl_env.render("error.html", ctx) {
+        Ok(body) => body
             .customize()
             .with_status(res.status())
-            .respond_to(&req)
+            .respond_to(req)
             .map_into_boxed_body(),
 
-        None => fallback(error),
+        Err(_) => fallback(error),
     }
 }

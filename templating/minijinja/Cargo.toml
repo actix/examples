@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 actix-web-lab = "0.18"
+actix-utils = "3"
 
 env_logger = "0.9"
 log = "0.4"

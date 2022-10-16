@@ -32,7 +32,7 @@ async fn main() -> std::io::Result<()> {
                 "/",
                 web::to(|data: web::Data<usize>| async move {
                     assert_eq!(**data, 123);
-                    HttpResponse::NoContent()
+                    HttpResponse::NoContent().finish()
                 }),
             )
     })

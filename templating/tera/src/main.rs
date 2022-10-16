@@ -6,7 +6,7 @@ use actix_web::{
     error,
     http::{header::ContentType, StatusCode},
     middleware::{self, ErrorHandlerResponse, ErrorHandlers},
-    web, App, Error, HttpResponse, HttpServer, Result,
+    web, App, Error, HttpResponse, HttpServer, Responder, Result,
 };
 use actix_web_lab::respond::Html;
 use tera::Tera;
@@ -15,7 +15,7 @@ use tera::Tera;
 async fn index(
     tmpl: web::Data<tera::Tera>,
     query: web::Query<HashMap<String, String>>,
-) -> Result<HttpResponse, Error> {
+) -> Result<impl Responder, Error> {
     let s = if let Some(name) = query.get("name") {
         // submitted form
         let mut ctx = tera::Context::new();
