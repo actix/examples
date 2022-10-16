@@ -7,8 +7,10 @@
 extern crate diesel;
 
 use actix_web::{get, middleware, post, web, App, Error, HttpResponse, HttpServer};
-use diesel::prelude::*;
-use diesel::r2d2::{self, ConnectionManager};
+use diesel::{
+    prelude::*,
+    r2d2::{self, ConnectionManager},
+};
 use uuid::Uuid;
 
 mod actions;
@@ -88,8 +90,9 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use actix_web::test;
+
+    use super::*;
 
     #[actix_web::test]
     async fn user_routes() {
