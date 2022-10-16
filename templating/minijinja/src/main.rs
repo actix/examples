@@ -1,5 +1,6 @@
 use actix_utils::future::{ready, Ready};
-use std::collections::HashMap;
+use minijinja_autoreload::AutoReloader;
+use std::{collections::HashMap, env, path::PathBuf};
 
 use actix_web::{
     dev::{self, ServiceResponse},
@@ -10,9 +11,8 @@ use actix_web::{
 };
 use actix_web_lab::respond::Html;
 
-#[derive(Debug)]
 struct MiniJinjaRenderer {
-    tmpl_env: web::Data<minijinja::Environment<'static>>,
+    tmpl_env: web::Data<minijinja_autoreload::AutoReloader>,
 }
 
 impl MiniJinjaRenderer {
@@ -22,6 +22,8 @@ impl MiniJinjaRenderer {
         ctx: impl Into<minijinja::value::Value>,
     ) -> actix_web::Result<Html> {
         self.tmpl_env
+            .acquire_env()
+            .map_err(|_| error::ErrorInternalServerError("could not acquire template env"))?
             .get_template(tmpl)
             .map_err(|_| error::ErrorInternalServerError("could not find template"))?
             .render(ctx.into())
@@ -37,8 +39,8 @@ impl FromRequest for MiniJinjaRenderer {
     type Error = actix_web::Error;
     type Future = Ready<Result<Self, Self::Error>>;
 
-    fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
-        let tmpl_env = <web::Data<minijinja::Environment<'static>>>::from_request(req, payload)
+    fn from_request(req: &HttpRequest, _pl: &mut dev::Payload) -> Self::Future {
+        let tmpl_env = <web::Data<minijinja_autoreload::AutoReloader>>::extract(req)
             .into_inner()
             .unwrap();
 
@@ -67,17 +69,40 @@ async fn index(
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    // If TEMPLATE_AUTORELOAD is set, then the path tracking is enabled.
+    let enable_template_autoreload = env::var("TEMPLATE_AUTORELOAD").as_deref() == Ok("true");
 
-    let mut env: minijinja::Environment<'static> = minijinja::Environment::new();
-    env.set_source(minijinja::Source::from_path(concat!(
-        env!("CARGO_MANIFEST_DIR"),
-        "/templates"
-    )));
+    if enable_template_autoreload {
+        log::info!("template auto-reloading is enabled");
+    } else {
+        log::info!(
+            "template auto-reloading is disabled; run with TEMPLATE_AUTORELOAD=true to enable"
+        );
+    }
+
+    // The closure is invoked every time the environment is outdated to recreate it.
+    let tmpl_reloader = AutoReloader::new(move |notifier| {
+        let mut env: minijinja::Environment<'static> = minijinja::Environment::new();
+
+        let tmpl_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("templates");
+
+        // if watch_path is never called, no fs watcher is created
+        if enable_template_autoreload {
+            notifier.watch_path(&tmpl_path, true);
+        }
+
+        env.set_source(minijinja::Source::from_path(tmpl_path));
+
+        Ok(env)
+    });
+
+    let tmpl_reloader = web::Data::new(tmpl_reloader);
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(env.clone()))
+            .app_data(tmpl_reloader.clone())
             .service(web::resource("/").route(web::get().to(index)))
             .wrap(ErrorHandlers::new().handler(StatusCode::NOT_FOUND, not_found))
             .wrap(Logger::default())

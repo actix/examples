@@ -6,7 +6,7 @@ Minimal example of using the template engine [MiniJinja](https://github.com/Keat
 
 ```sh
 cd templating/minijinja
-cargo run
+TEMPLATE_AUTORELOAD=true cargo run
 ```
 
 - <http://localhost:8080>
