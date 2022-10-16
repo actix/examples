@@ -9,7 +9,6 @@ use actix_web::{
 };
 use actix_web_lab::respond::Html;
 
-/// store tera template in application state
 async fn index(
     tmpl_env: web::Data<minijinja::Environment<'static>>,
     query: web::Query<HashMap<String, String>>,
