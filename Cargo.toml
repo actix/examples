@@ -48,6 +48,7 @@ members = [
    "templating/askama",
    "templating/fluent",
    "templating/handlebars",
+   "templating/minijinja",
    "templating/sailfish",
    "templating/tera",
    "templating/tinytemplate",
@@ -61,3 +62,4 @@ members = [
    "websockets/echo-actorless",
    "websockets/echo",
 ]
+resolver = "2"

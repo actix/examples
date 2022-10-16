@@ -1,5 +1,5 @@
 [package]
-name = "templating-tera"
+name = "templating-minijinja"
 version = "1.0.0"
 edition = "2021"
 
@@ -8,4 +8,5 @@ actix-web = "4"
 actix-web-lab = "0.18"
 
 env_logger = "0.9"
-tera = "1.8.0"
+log = "0.4"
+minijinja = { version = "0.23", features = ["source"] }

@@ -8,6 +8,7 @@ use actix_web::{
     middleware::{self, ErrorHandlerResponse, ErrorHandlers},
     web, App, Error, HttpResponse, HttpServer, Result,
 };
+use actix_web_lab::respond::Html;
 use tera::Tera;
 
 // store tera template in application state
@@ -26,7 +27,8 @@ async fn index(
         tmpl.render("index.html", &tera::Context::new())
             .map_err(|_| error::ErrorInternalServerError("Template error"))?
     };
-    Ok(HttpResponse::Ok().content_type("text/html").body(s))
+
+    Ok(Html(s))
 }
 
 #[actix_web::main]
