@@ -1,6 +1,6 @@
 # MiniJinja
 
-Minimal example of using the template engine [MiniJinja](https://github.com/Keats/tera) that displays a form.
+Minimal example of using the template engine [MiniJinja](https://github.com/mitsuhiko/minijinja) that displays a form.
 
 ## Usage
 
