@@ -11,7 +11,7 @@ members = [
    "basics/nested-routing",
    "basics/state",
    "basics/static-files",
-   # "basics/todo",
+   "basics/todo",
    "cors/backend",
    "data-factory",
    "databases/diesel",
