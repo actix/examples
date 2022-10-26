@@ -1,7 +1,7 @@
 use std::{sync::Arc, time::Duration};
 
 use actix_web::rt::time::interval;
-use actix_web_lab::sse::{sse, Sse, SseData, SseMessage, SseSender};
+use actix_web_lab::sse::{self, ChannelStream, Sse};
 use futures_util::future;
 use parking_lot::Mutex;
 
@@ -11,7 +11,7 @@ pub struct Broadcaster {
 
 #[derive(Debug, Clone, Default)]
 struct BroadcasterInner {
-    clients: Vec<SseSender>,
+    clients: Vec<sse::Sender>,
 }
 
 impl Broadcaster {
@@ -47,7 +47,7 @@ impl Broadcaster {
 
         for client in clients {
             if client
-                .send(SseMessage::Comment("ping".into()))
+                .send(sse::Event::Comment("ping".into()))
                 .await
                 .is_ok()
             {
@@ -59,10 +59,10 @@ impl Broadcaster {
     }
 
     /// Registers client with broadcaster, returning an SSE response body.
-    pub async fn new_client(&self) -> Sse {
-        let (tx, rx) = sse(10);
+    pub async fn new_client(&self) -> Sse<ChannelStream> {
+        let (tx, rx) = sse::channel(10);
 
-        tx.send(SseData::new("connected")).await.unwrap();
+        tx.send(sse::Data::new("connected")).await.unwrap();
 
         self.inner.lock().clients.push(tx);
 
@@ -73,7 +73,9 @@ impl Broadcaster {
     pub async fn broadcast(&self, msg: &str) {
         let clients = self.inner.lock().clients.clone();
 
-        let send_futures = clients.iter().map(|client| client.send(SseData::new(msg)));
+        let send_futures = clients
+            .iter()
+            .map(|client| client.send(sse::Data::new(msg)));
 
         // try to send to all clients, ignoring failures
         // disconnected clients will get swept up by `remove_stale_clients`

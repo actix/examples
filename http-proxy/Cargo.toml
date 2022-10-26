@@ -7,7 +7,7 @@ edition = "2021"
 actix-web = { version = "4", features = ["openssl"] }
 awc = "3"
 
-clap = { version = "3", features = ["derive"] }
+clap = { version = "4", features = ["derive"] }
 env_logger = "0.9"
 log = "0.4"
 url = "2.2"

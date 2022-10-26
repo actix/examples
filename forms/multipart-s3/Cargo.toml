@@ -6,10 +6,10 @@ edition = "2021"
 [dependencies]
 actix-multipart = "0.4"
 actix-web = "4"
-actix-web-lab = "0.17"
+actix-web-lab = "0.18"
 
-aws-config = "0.46"
-aws-sdk-s3 = "0.16"
+aws-config = "0.49"
+aws-sdk-s3 = "0.19"
 
 dotenv = "0.15"
 env_logger = "0.9"

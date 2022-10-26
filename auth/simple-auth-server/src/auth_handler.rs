@@ -1,7 +1,9 @@
 use std::future::{ready, Ready};
 
 use actix_identity::Identity;
-use actix_web::{dev::Payload, web, Error, FromRequest, HttpRequest, HttpResponse};
+use actix_web::{
+    dev::Payload, web, Error, FromRequest, HttpMessage as _, HttpRequest, HttpResponse,
+};
 use diesel::prelude::*;
 use serde::Deserialize;
 
@@ -27,7 +29,7 @@ impl FromRequest for LoggedUser {
 
     fn from_request(req: &HttpRequest, pl: &mut Payload) -> Self::Future {
         if let Ok(identity) = Identity::from_request(req, pl).into_inner() {
-            if let Some(user_json) = identity.identity() {
+            if let Ok(user_json) = identity.id() {
                 if let Ok(user) = serde_json::from_str(&user_json) {
                     return ready(Ok(user));
                 }
@@ -39,21 +41,21 @@ impl FromRequest for LoggedUser {
 }
 
 pub async fn logout(id: Identity) -> HttpResponse {
-    id.forget();
-    HttpResponse::Ok().finish()
+    id.logout();
+    HttpResponse::NoContent().finish()
 }
 
 pub async fn login(
+    req: HttpRequest,
     auth_data: web::Json<AuthData>,
-    id: Identity,
     pool: web::Data<Pool>,
 ) -> Result<HttpResponse, actix_web::Error> {
     let user = web::block(move || query(auth_data.into_inner(), pool)).await??;
 
     let user_string = serde_json::to_string(&user).unwrap();
-    id.remember(user_string);
+    Identity::login(&req.extensions(), user_string).unwrap();
 
-    Ok(HttpResponse::Ok().finish())
+    Ok(HttpResponse::NoContent().finish())
 }
 
 pub async fn get_me(logged_user: LoggedUser) -> HttpResponse {

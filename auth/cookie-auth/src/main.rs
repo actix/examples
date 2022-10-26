@@ -1,23 +1,28 @@
-use actix_identity::{CookieIdentityPolicy, Identity, IdentityService};
-use actix_web::{middleware, web, App, HttpResponse, HttpServer};
+use actix_identity::{Identity, IdentityMiddleware};
+use actix_session::{storage::CookieSessionStore, SessionMiddleware};
+use actix_web::{
+    cookie::Key, middleware, web, App, HttpMessage as _, HttpRequest, HttpResponse, HttpServer,
+};
 use rand::Rng;
 
 async fn index(id: Identity) -> String {
     format!(
         "Hello {}",
-        id.identity().unwrap_or_else(|| "Anonymous".to_owned())
+        id.id().unwrap_or_else(|_| "Anonymous".to_owned())
     )
 }
 
-async fn login(id: Identity) -> HttpResponse {
-    id.remember("user1".to_owned());
+async fn login(req: HttpRequest) -> HttpResponse {
+    Identity::login(&req.extensions(), "user1".to_owned()).unwrap();
+
     HttpResponse::Found()
         .insert_header(("location", "/"))
         .finish()
 }
 
 async fn logout(id: Identity) -> HttpResponse {
-    id.forget();
+    id.logout();
+
     HttpResponse::Found()
         .insert_header(("location", "/"))
         .finish()
@@ -32,13 +37,16 @@ async fn main() -> std::io::Result<()> {
     // private key for every project. Anyone with access to the key can generate
     // authentication cookies for any user!
     let private_key = rand::thread_rng().gen::<[u8; 32]>();
+
     HttpServer::new(move || {
         App::new()
-            .wrap(IdentityService::new(
-                CookieIdentityPolicy::new(&private_key)
-                    .name("auth-example")
-                    .secure(false),
-            ))
+            .wrap(IdentityMiddleware::default())
+            .wrap(
+                SessionMiddleware::builder(CookieSessionStore::default(), Key::from(&private_key))
+                    .cookie_name("auth-example".to_owned())
+                    .cookie_secure(false)
+                    .build(),
+            )
             // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(web::resource("/login").route(web::post().to(login)))

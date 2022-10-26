@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-actix-web-lab = "0.17"
+actix-web-lab = "0.18"
 fluent-templates = { version = "0.8", features = ["handlebars"] }
 handlebars = { version = "4.3", features = ["dir_source"] }
 serde = { version = "1", features = ["derive"] }

@@ -1,8 +1,9 @@
 #[macro_use]
 extern crate diesel;
 
-use actix_identity::{CookieIdentityPolicy, IdentityService};
-use actix_web::{middleware, web, App, HttpServer};
+use actix_identity::IdentityMiddleware;
+use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
+use actix_web::{cookie::Key, middleware, web, App, HttpServer};
 use diesel::{
     prelude::*,
     r2d2::{self, ConnectionManager},
@@ -39,17 +40,21 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
+            .wrap(IdentityMiddleware::default())
+            .wrap(
+                SessionMiddleware::builder(
+                    CookieSessionStore::default(),
+                    Key::from(utils::SECRET_KEY.as_bytes()),
+                )
+                .session_lifecycle(PersistentSession::default().session_ttl(Duration::days(1)))
+                .cookie_name("auth-example".to_owned())
+                .cookie_secure(false)
+                .cookie_domain(Some(domain.clone()))
+                .cookie_path("/".to_owned())
+                .build(),
+            )
             // enable logger
             .wrap(middleware::Logger::default())
-            .wrap(IdentityService::new(
-                CookieIdentityPolicy::new(utils::SECRET_KEY.as_bytes())
-                    .name("auth")
-                    .path("/")
-                    .domain(domain.as_str())
-                    .max_age(Duration::days(1))
-                    .secure(false), // this can only be true if you have https
-            ))
-            .app_data(web::JsonConfig::default().limit(4096))
             // everything under '/api/' route
             .service(
                 web::scope("/api")

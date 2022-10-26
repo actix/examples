@@ -2,7 +2,7 @@ use std::net::ToSocketAddrs;
 
 use actix_web::{error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use awc::Client;
-use clap::StructOpt;
+use clap::Parser;
 use url::Url;
 
 async fn forward(
