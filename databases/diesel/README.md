@@ -27,6 +27,7 @@ cd databases/diesel
 cargo install diesel_cli --no-default-features --features sqlite
 
 echo "DATABASE_URL=test.db" > .env
+diesel setup
 diesel migration run
 ```
 
