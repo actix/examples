@@ -33,16 +33,16 @@ async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
-    // Generate a random 32 byte key. Note that it is important to use a unique
-    // private key for every project. Anyone with access to the key can generate
-    // authentication cookies for any user!
-    let private_key = rand::thread_rng().gen::<[u8; 32]>();
+    /// Generate a random secret key. Note that it is important to use a unique
+    /// secret key for every project. Anyone with access to the key can generate
+    /// authentication cookies for any user!
+    let secret_key = Key::generate();
 
     HttpServer::new(move || {
         App::new()
             .wrap(IdentityMiddleware::default())
             .wrap(
-                SessionMiddleware::builder(CookieSessionStore::default(), Key::from(&private_key))
+                SessionMiddleware::builder(CookieSessionStore::default(), secret_key)
                     .cookie_name("auth-example".to_owned())
                     .cookie_secure(false)
                     .build(),
