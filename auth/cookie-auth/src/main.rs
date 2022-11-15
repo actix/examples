@@ -33,9 +33,9 @@ async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
 
-    /// Generate a random secret key. Note that it is important to use a unique
-    /// secret key for every project. Anyone with access to the key can generate
-    /// authentication cookies for any user!
+    // Generate a random secret key. Note that it is important to use a unique
+    // secret key for every project. Anyone with access to the key can generate
+    // authentication cookies for any user!
     let secret_key = Key::generate();
 
     HttpServer::new(move || {
