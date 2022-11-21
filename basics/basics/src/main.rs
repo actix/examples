@@ -58,11 +58,13 @@ async fn default_handler(req_method: Method) -> Result<impl Responder> {
 async fn response_body(path: web::Path<String>) -> HttpResponse {
     let name = path.into_inner();
 
-    HttpResponse::Ok().streaming(stream! {
-        yield Ok::<_, Infallible>(web::Bytes::from("Hello "));
-        yield Ok::<_, Infallible>(web::Bytes::from(name));
-        yield Ok::<_, Infallible>(web::Bytes::from("!"));
-    })
+    HttpResponse::Ok()
+        .content_type(ContentType::plaintext())
+        .streaming(stream! {
+            yield Ok::<_, Infallible>(web::Bytes::from("Hello "));
+            yield Ok::<_, Infallible>(web::Bytes::from(name));
+            yield Ok::<_, Infallible>(web::Bytes::from("!"));
+        })
 }
 
 /// handler with path parameters like `/user/{name}/`
