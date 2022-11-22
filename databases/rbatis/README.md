@@ -1,3 +1,5 @@
 The `rbatis` ORM developers keep their own example on usage with Actix Web.
 
-For `rbatis-v4` you can find the example in the [rbatis/abs_admin](https://github.com/rbatis/abs_admin) (from [rbatis-v4 document](https://rbatis.github.io/rbatis.io/#/v4/))
+You can find the example in the [rbatis/example/src/actix_web](https://github.com/rbatis/rbatis/blob/a1c09af45d9827f658e9f7ef5b58419e95b25fe7/example/src/actix_web/main.rs) directory.
+
+See the [`example` folder readme](https://github.com/rbatis/rbatis/tree/master/example) for a guide on how to get started with the example.
