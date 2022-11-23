@@ -3,8 +3,6 @@ use actix_session::{storage::CookieSessionStore, SessionMiddleware};
 use actix_web::{
     cookie::Key, middleware, web, App, HttpMessage as _, HttpRequest, HttpResponse, HttpServer,
 };
-use rand::Rng;
-
 async fn index(id: Identity) -> String {
     format!(
         "Hello {}",
@@ -42,7 +40,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(IdentityMiddleware::default())
             .wrap(
-                SessionMiddleware::builder(CookieSessionStore::default(), secret_key)
+                SessionMiddleware::builder(CookieSessionStore::default(), secret_key.clone())
                     .cookie_name("auth-example".to_owned())
                     .cookie_secure(false)
                     .build(),
