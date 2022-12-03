@@ -91,11 +91,8 @@ impl ContinuationBuffer {
 
                 buffer.push(valid);
 
-                match message_overflow {
-                    Some(message_overflow) => {
-                        _ = overflow.insert(message_overflow);
-                    }
-                    None => {}
+                if let Some(message_overflow) = message_overflow {
+                    _ = overflow.insert(message_overflow);
                 }
 
                 Ok(())
@@ -177,18 +174,15 @@ impl WebsocketActor {
                             overflow: message_overflow,
                         } = validate_utf8_bytes(data)?;
 
-                        match message_overflow {
-                            Some(bytes) => {
-                                return Err(ProtocolError::Io(std::io::Error::new(
-                                    std::io::ErrorKind::Other,
-                                    format!(
-                                        "invalid utf-8 sequence of {} bytes from index {}",
-                                        bytes.len(),
-                                        valid.len()
-                                    ),
-                                )));
-                            }
-                            _ => {}
+                        if let Some(bytes) = message_overflow {
+                            return Err(ProtocolError::Io(std::io::Error::new(
+                                std::io::ErrorKind::Other,
+                                format!(
+                                    "invalid utf-8 sequence of {} bytes from index {}",
+                                    bytes.len(),
+                                    valid.len()
+                                ),
+                            )));
                         }
 
                         ByteString::try_from(valid.clone()).map_err(|e| {

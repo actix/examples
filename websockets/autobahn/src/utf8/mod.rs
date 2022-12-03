@@ -38,9 +38,9 @@ const MAX_ASCII_VALUE: u8 = 0x7Fu8;
 const MIN_CONTINUATION: u8 = 0x80u8;
 const MAX_CONTINUATION: u8 = 0xBFu8;
 
-const ERROR_INVALID_UTF8_SEQUENCE_MESSAGE: &'static str = "invalid utf-8 sequence";
+const ERROR_INVALID_UTF8_SEQUENCE_MESSAGE: &str = "invalid utf-8 sequence";
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum ByteResult {
     Continuation,
     First(usize),
@@ -97,10 +97,7 @@ fn check_overflow(data: &[u8], expected_size: usize) -> bool {
             0x80
         };
 
-        match (raw_1, raw_2) {
-            (0xE0, 0xA0..=0xBF) | (0xE1..=0xEC, 0x80..=0xBF) | (0xED, 0x80..=0x9F) => true,
-            _ => false,
-        }
+        matches!((raw_1, raw_2), (0xE0, 0xA0..=0xBF) | (0xE1..=0xEC, 0x80..=0xBF) | (0xED, 0x80..=0x9F))
     } else {
         let raw_2: u8 = if len >= 2 {
             data[1]
@@ -111,19 +108,18 @@ fn check_overflow(data: &[u8], expected_size: usize) -> bool {
         };
         let raw_3: u8 = if len == 3 { data[2] } else { 0x80 };
 
-        match (raw_1, raw_2, raw_3) {
-            (0xF0, 0x90..=0xBF, 0x80..=0xBF)
-            | (0xF1..=0xF3, 0x80..=0xBF, 0x80..=0xBF)
-            | (0xf4, 0x80..=0x8F, 0x80..=0xBF) => true,
-            _ => false,
-        }
+        matches!((raw_1, raw_2, raw_3), 
+            (0xF0, 0x90..=0xBF, 0x80..=0xBF) |
+            (0xF1..=0xF3, 0x80..=0xBF, 0x80..=0xBF) |
+            (0xf4, 0x80..=0x8F, 0x80..=0xBF)
+        )
     }
 }
 
 fn check_byte(byte: u8) -> ByteResult {
     if byte <= MAX_ASCII_VALUE {
         ByteResult::Ok
-    } else if byte >= MIN_CONTINUATION && byte <= MAX_CONTINUATION {
+    } else if (MIN_CONTINUATION..=MAX_CONTINUATION).contains(&byte) {
         ByteResult::Continuation
     } else if byte & UTF8_START_2_BYTE_SEQ_MASK == UTF8_2_BYTE_SEQ {
         ByteResult::First(2)
