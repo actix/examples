@@ -1,3 +1,5 @@
+//! Module contains code 
+
 #[cfg(test)]
 mod tests;
 
@@ -16,14 +18,10 @@ pub struct ValidUtf8 {
 const UTF8_START_2_BYTE_SEQ_MASK: u8 = 0b1110_0000u8;
 const UFT8_START_3_BYTE_SEQ_MASK: u8 = 0b1111_0000u8;
 const UTF8_START_4_BYTE_SEQ_MASK: u8 = 0b1111_1000u8;
-const UTF8_START_5_BYTE_SEQ_MASK: u8 = 0b1111_1100u8;
-const UTF8_START_6_BYTE_SEQ_MASK: u8 = 0b1111_1110u8;
 
 const UTF8_2_BYTE_SEQ: u8 = 0b11000000u8;
 const UTF8_3_BYTE_SEQ: u8 = 0b11100000u8;
 const UTF8_4_BYTE_SEQ: u8 = 0b11110000u8;
-const UTF8_5_BYTE_SEQ: u8 = 0b11111000u8;
-const UTF8_6_BYTE_SEQ: u8 = 0b11111100u8;
 
 const MAX_ASCII_VALUE: u8 = 0x7Fu8;
 const MIN_CONTINUATION: u8 = 0x80u8;
@@ -120,10 +118,6 @@ fn check_byte(byte: u8) -> ByteResult {
         ByteResult::First(3)
     } else if byte & UTF8_START_4_BYTE_SEQ_MASK == UTF8_4_BYTE_SEQ {
         ByteResult::First(4)
-    } else if byte & UTF8_START_5_BYTE_SEQ_MASK == UTF8_5_BYTE_SEQ {
-        ByteResult::First(5)
-    } else if byte & UTF8_START_6_BYTE_SEQ_MASK == UTF8_6_BYTE_SEQ {
-        ByteResult::First(6)
     } else {
         ByteResult::Invalid
     }
