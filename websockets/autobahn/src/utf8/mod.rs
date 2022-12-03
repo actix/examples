@@ -1,4 +1,15 @@
-//! Module contains code 
+//! Module contains code related to handling utf8 codepoints split across multiple continuation frames
+//! 
+//! Websocket standard allows sending continuation text frames which are not valid utf8 by themselves. 
+//! 
+//! Example:
+//! > `♩` is `e2 99 a9`
+//! >
+//! > The first frame can end up with (e2) `0b11100010u8` which is a first byte of three byte utf8 sequence and the second
+//! > continuation frame can start with (99) `0b10011001u8`  followed by (a9) `0b10101001u8` which only after combining together
+//! > will give the proper utf8 sequence
+//! 
+//! What's more strict 
 
 #[cfg(test)]
 mod tests;
@@ -9,7 +20,7 @@ use bytes::BufMut;
 use bytes::Bytes;
 use bytes::BytesMut;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct ValidUtf8 {
     pub valid: Bytes,
     pub overflow: Option<Bytes>,
@@ -26,6 +37,8 @@ const UTF8_4_BYTE_SEQ: u8 = 0b11110000u8;
 const MAX_ASCII_VALUE: u8 = 0x7Fu8;
 const MIN_CONTINUATION: u8 = 0x80u8;
 const MAX_CONTINUATION: u8 = 0xBFu8;
+
+const ERROR_INVALID_UTF8_SEQUENCE_MESSAGE: &'static str = "invalid utf-8 sequence";
 
 #[derive(Debug, PartialEq)]
 pub enum ByteResult {
@@ -141,7 +154,7 @@ pub fn validate_utf8_bytes(data: Bytes) -> Result<ValidUtf8, ProtocolError> {
             index -= 1;
             let current = match data.get(index) {
                 Some(b) => b,
-                None => return protocol_other_error("invalid utf-8 sequence".to_owned()),
+                None => return protocol_other_error(ERROR_INVALID_UTF8_SEQUENCE_MESSAGE.to_owned()),
             };
 
             checked = check_byte(*current);
@@ -162,7 +175,7 @@ pub fn validate_utf8_bytes(data: Bytes) -> Result<ValidUtf8, ProtocolError> {
                         // we've just checked that whole code point is inside this data frame, so no overflow is required
                     }
                     if overflow_size > seq_size {
-                        return protocol_data_error("invalid utf-8 sequence".to_owned());
+                        return protocol_data_error(ERROR_INVALID_UTF8_SEQUENCE_MESSAGE.to_owned());
                     }
 
                     expected_overflow_size = seq_size;
@@ -173,7 +186,7 @@ pub fn validate_utf8_bytes(data: Bytes) -> Result<ValidUtf8, ProtocolError> {
                     break;
                 }
                 ByteResult::Invalid => {
-                    return protocol_data_error("invalid utf-8 sequence".to_owned())
+                    return protocol_data_error(ERROR_INVALID_UTF8_SEQUENCE_MESSAGE.to_owned())
                 }
             }
         }
@@ -183,7 +196,7 @@ pub fn validate_utf8_bytes(data: Bytes) -> Result<ValidUtf8, ProtocolError> {
             let (data, overflow) = data.split_at(index);
 
             if !check_overflow(overflow, expected_overflow_size) {
-                return protocol_data_error("Data is not a valid utf8 string".to_owned());
+                return protocol_data_error(ERROR_INVALID_UTF8_SEQUENCE_MESSAGE.to_owned());
             }
 
             let mut bytes_data = BytesMut::with_capacity(data.len());
