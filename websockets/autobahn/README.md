@@ -11,11 +11,13 @@ cd websockets/autobahn
 cargo run
 ```
 
-### Running Autobahn Test Suite
+### Running autobahn test suite
 
 Running the autobahn test suite is easiest using the docker image as explained on the [autobahn test suite repo](https://github.com/crossbario/autobahn-testsuite#using-the-testsuite-docker-image).
 
-After starting the server, in the same directory, run the test suite in "fuzzing client" mode:
+After starting the server, in the same directory, run the test suite in "fuzzing client" mode.
+
+#### Docker
 
 ```sh
 docker run -it --rm \
@@ -29,4 +31,30 @@ docker run -it --rm \
     --mode fuzzingclient
 ```
 
-Results are written to the `reports/servers` directory for viewing.
+#### Podman
+
+```sh
+podman run -it --rm \
+    -v "${PWD}/config":/config \
+    -v "${PWD}/reports":/reports \
+    --network host \
+    --name autobahn \
+    crossbario/autobahn-testsuite \
+    wstest \
+    --spec /config/fuzzingclient-podman.json \
+    --mode fuzzingclient
+```
+
+If you run it with `selinux` enabled, then
+
+```sh
+podman run -it --rm \
+    -v "${PWD}/config":/config:z \
+    -v "${PWD}/reports":/reports:z \
+    --network host \
+    --name autobahn \
+    crossbario/autobahn-testsuite \
+    wstest \
+    --spec /config/fuzzingclient-podman.json \
+    --mode fuzzingclient
+```
