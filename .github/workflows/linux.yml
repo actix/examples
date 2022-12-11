@@ -4,8 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   push:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   build_and_test:
@@ -13,28 +12,25 @@ jobs:
       fail-fast: false
       matrix:
         version: [stable, nightly]
-    
+
     name: ${{ matrix.version }}
     runs-on: ubuntu-latest
 
     env:
-      CI: '1'
-      CARGO_UNSTABLE_SPARSE_REGISTRY: 'true'
+      CI: 1
+      CARGO_UNSTABLE_SPARSE_REGISTRY: true
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.version }}
-          override: true
+      - name: Install Rust
+        run: |
+          rustup install ${{ matrix.version }} --no-self-update --profile minimal --force
+          rustup override set ${{ matrix.version }}
 
-      - name: Generate Cargo.lock
-        uses: actions-rs/cargo@v1
-        with: { command: generate-lockfile }
+      - run: cargo generate-lockfile
       - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v1.2.0
+        uses: Swatinem/rust-cache@v2.2.0
 
       - name: Create test DBs
         run: |
@@ -54,8 +50,7 @@ jobs:
 
       - name: start redis
         uses: supercharge/redis-github-action@1.1.0
-        with:
-          redis-version: 6
+        with: { redis-version: 6 }
 
       # - name: run diesel migrations
       #   run: |
@@ -65,8 +60,5 @@ jobs:
       #     chmod a+rwx test.db
 
       - name: cargo test
-        uses: actions-rs/cargo@v1
+        run: cargo test --workspace --all-features --no-fail-fast -- --nocapture
         timeout-minutes: 30
-        with:
-          command: test
-          args: --workspace --all-features --no-fail-fast -- --nocapture

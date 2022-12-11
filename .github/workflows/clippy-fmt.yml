@@ -10,46 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: rustfmt
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: rustfmt }
 
       - name: rustfmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        run: cargo fmt --all -- --check
 
   clippy:
     name: clippy check
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: cache cargo artifacts
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ./target/debug
-          key: cargo-clippy-${{ matrix.version }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            cargo-clippy-${{ matrix.version }}-
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: clippy }
 
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: clippy
-          override: true
-      
+      - run: cargo generate-lockfile
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2.2.0
+
       # - name: Create test DBs
       #   run: |
       #     sudo apt-get update && sudo apt-get install sqlite3
