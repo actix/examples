@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 
-env_logger = "0.9"
+env_logger = "0.10"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 log = "0.4"
 r2d2 = "0.8"

@@ -12,7 +12,7 @@ aws-config = "0.49"
 aws-sdk-s3 = "0.19"
 
 dotenv = "0.15"
-env_logger = "0.9"
+env_logger = "0.10"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"
 sanitize-filename = "0.4"

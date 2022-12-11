@@ -7,6 +7,6 @@ edition = "2021"
 actix-web = "4"
 
 derive_more = "0.99.5"
-env_logger = "0.9"
+env_logger = "0.10"
 log = "0.4"
 rand = "0.8"
