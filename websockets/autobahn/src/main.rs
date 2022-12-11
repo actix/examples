@@ -1,36 +1,7 @@
-use actix::prelude::*;
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
-use actix_web_actors::ws;
+mod websocket;
+mod utf8;
 
-async fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    ws::start(AutobahnWebSocket::default(), &r, stream)
-}
-
-#[derive(Debug, Clone, Default)]
-struct AutobahnWebSocket;
-
-impl Actor for AutobahnWebSocket {
-    type Context = ws::WebsocketContext<Self>;
-}
-
-impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for AutobahnWebSocket {
-    fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
-        if let Ok(msg) = msg {
-            match msg {
-                ws::Message::Text(text) => ctx.text(text),
-                ws::Message::Binary(bin) => ctx.binary(bin),
-                ws::Message::Ping(bytes) => ctx.pong(&bytes),
-                ws::Message::Close(reason) => {
-                    ctx.close(reason);
-                    ctx.stop();
-                }
-                _ => {}
-            }
-        } else {
-            ctx.stop();
-        }
-    }
-}
+use actix_web::{middleware, web, App, HttpServer};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -41,7 +12,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Logger::default())
-            .service(web::resource("/").route(web::get().to(ws_index)))
+            .service(web::resource("/").route(web::get().to(websocket::index)))
     })
     .workers(2)
     .bind(("127.0.0.1", 9001))?

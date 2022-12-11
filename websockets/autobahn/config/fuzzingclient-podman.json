@@ -1,0 +1,15 @@
+{
+  "outdir": "./reports/servers",
+  "servers": [
+    {
+      "agent": "actix-web-actors",
+      "url": "ws://127.0.0.1:9001"
+    }
+  ],
+  "cases": ["*"],
+  "exclude-cases": [
+    "12.*",
+    "13.*"
+  ],
+  "exclude-agent-cases": {}
+}
