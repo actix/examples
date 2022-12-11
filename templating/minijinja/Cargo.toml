@@ -10,5 +10,5 @@ actix-utils = "3"
 
 env_logger = "0.10"
 log = "0.4"
-minijinja = { version = "0.24", features = ["source"] }
-minijinja-autoreload = "0.24"
+minijinja = { version = "0.27", features = ["source"] }
+minijinja-autoreload = "0.27"

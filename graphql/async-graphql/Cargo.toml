@@ -9,8 +9,8 @@ actix-web = "4"
 actix-web-lab = "0.18"
 actix-cors = "0.6"
 
-async-graphql = "4"
-async-graphql-actix-web = "4"
+async-graphql = "5"
+async-graphql-actix-web = "5"
 
 env_logger = "0.10"
 log = "0.4"
