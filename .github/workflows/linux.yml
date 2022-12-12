@@ -32,33 +32,39 @@ jobs:
       - name: Cache Dependencies
         uses: Swatinem/rust-cache@v2.2.0
 
-      - name: Create test DBs
+      - name: Install DB CLI tools
+        run: |
+          cargo install sqlx-cli --no-default-features --features=rustls,sqlite
+          cargo install diesel_cli --no-default-features --features sqlite
+
+      - name: Create Test DBs
+        env:
+          DATABASE_URL: sqlite://./todo.db
         run: |
           sudo apt-get update && sudo apt-get install sqlite3
-          cargo install sqlx-cli --no-default-features --features=rustls,sqlite
           cd basics/todo
-          DATABASE_URL="sqlite://./todo.db" sqlx database create
+          sqlx database create
           chmod a+rwx todo.db
-          DATABASE_URL="sqlite://./todo.db" sqlx migrate run
+          sqlx migrate run
 
       - name: cargo check
-        uses: actions-rs/cargo@v1
+        run: cargo check --workspace --bins --examples --tests
         timeout-minutes: 30
-        with:
-          command: check
-          args: --workspace --bins --examples --tests
 
-      - name: start redis
+      - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
         with: { redis-version: 6 }
 
-      # - name: run diesel migrations
-      #   run: |
-      #     cargo install diesel_cli --no-default-features --features sqlite
-      #     cd databases/diesel
-      #     diesel migration run
-      #     chmod a+rwx test.db
-
       - name: cargo test
-        run: cargo test --workspace --all-features --no-fail-fast -- --nocapture
+        run: cargo test --workspace --all-features --no-fail-fast --exclude=diesel-example -- --nocapture
         timeout-minutes: 30
+
+      - name: cargo test (diesel)
+        env:
+          DATABASE_URL: test.db
+        run: |
+          cd databases/diesel
+          diesel migration run
+          chmod a+rwx test.db
+          cargo test -p=diesel-example --all-features --no-fail-fast -- --nocapture
+        timeout-minutes: 10

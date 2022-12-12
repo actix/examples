@@ -100,8 +100,8 @@ mod tests {
         env_logger::init();
         dotenv::dotenv().ok();
 
-        let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
-        let manager = ConnectionManager::<SqliteConnection>::new(connspec);
+        let conn_spec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
+        let manager = ConnectionManager::<SqliteConnection>::new(conn_spec);
         let pool = r2d2::Pool::builder()
             .build(manager)
             .expect("Failed to create pool.");
