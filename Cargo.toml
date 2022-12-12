@@ -63,7 +63,3 @@ members = [
    "websockets/echo",
 ]
 resolver = "2"
-
-[patch.crates-io.r2d2_mysql]
-git = "https://github.com/outersky/r2d2-mysql.git"
-rev = "v23.0.0"

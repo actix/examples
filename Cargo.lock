@@ -5118,7 +5118,8 @@ dependencies = [
 [[package]]
 name = "r2d2_mysql"
 version = "23.0.0"
-source = "git+https://github.com/outersky/r2d2-mysql.git?rev=v23.0.0#5827ac32742f505d60590707e1f79ba735668dca"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9733d738ce65959a744f387bae69aa690a867e18d48e5486b171c47bc7b0c575"
 dependencies = [
  "mysql",
  "r2d2",
