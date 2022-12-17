@@ -1,10 +1,25 @@
-use actix_web::{dev::Service, web, App, HttpServer};
-use futures_util::FutureExt as _;
+use std::time::Duration;
+
+use actix_http::body::MessageBody;
+use actix_web::{dev, rt::time, web, App, Error, HttpServer};
+use actix_web_lab::middleware::{from_fn, Next};
 
 mod read_request_body;
 mod read_response_body;
 mod redirect;
 mod simple;
+
+// See more examples of from_fn middleware here:
+// https://github.com/robjtede/actix-web-lab/blob/main/actix-web-lab/examples/from_fn.rs
+async fn timeout_10secs(
+    req: dev::ServiceRequest,
+    next: Next<impl MessageBody + 'static>,
+) -> Result<dev::ServiceResponse<impl MessageBody>, Error> {
+    match time::timeout(Duration::from_secs(10), next.call(req)).await {
+        Ok(res) => res,
+        Err(_err) => Err(actix_web::error::ErrorRequestTimeout("")),
+    }
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -18,14 +33,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(read_request_body::Logging)
             .wrap(read_response_body::Logging)
             .wrap(simple::SayHi)
-            .wrap_fn(|req, srv| {
-                println!("Hi from start. You requested: {}", req.path());
-
-                srv.call(req).map(|res| {
-                    println!("Hi from response");
-                    res
-                })
-            })
+            .wrap(from_fn(timeout_10secs))
             .service(web::resource("/login").to(|body: String| async move {
                 println!("request body (handler): {body}");
                 "You are on /login. Go to src/redirect.rs to change this behavior."
