@@ -3,12 +3,12 @@ use std::{
     rc::Rc,
 };
 
+use actix_http::h1;
 use actix_web::{
     dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
-    web::BytesMut,
-    Error, HttpMessage,
+    web, Error,
 };
-use futures_util::{future::LocalBoxFuture, stream::StreamExt};
+use futures_util::future::LocalBoxFuture;
 
 pub struct Logging;
 
@@ -52,17 +52,23 @@ where
         let svc = self.service.clone();
 
         Box::pin(async move {
-            let mut body = BytesMut::new();
-            let mut stream = req.take_payload();
-            while let Some(chunk) = stream.next().await {
-                body.extend_from_slice(&chunk?);
-            }
+            // extract bytes from request body
+            let body = req.extract::<web::Bytes>().await.unwrap();
+            println!("request body (middleware): {body:?}");
 
-            println!("request body: {body:?}");
+            // re-insert body back into request to be used by handlers
+            req.set_payload(bytes_to_payload(body));
+
             let res = svc.call(req).await?;
 
             println!("response: {:?}", res.headers());
             Ok(res)
         })
     }
+}
+
+fn bytes_to_payload(buf: web::Bytes) -> dev::Payload {
+    let (_, mut pl) = h1::Payload::create(true);
+    pl.unread_data(buf);
+    dev::Payload::from(pl)
 }

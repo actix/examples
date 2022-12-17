@@ -26,7 +26,8 @@ async fn main() -> std::io::Result<()> {
                     res
                 })
             })
-            .service(web::resource("/login").to(|| async {
+            .service(web::resource("/login").to(|body: String| async move {
+                println!("request body (handler): {body}");
                 "You are on /login. Go to src/redirect.rs to change this behavior."
             }))
             .service(
@@ -36,6 +37,7 @@ async fn main() -> std::io::Result<()> {
             )
     })
     .bind(("127.0.0.1", 8080))?
+    .workers(1)
     .run()
     .await
 }

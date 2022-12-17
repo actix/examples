@@ -4103,6 +4103,7 @@ dependencies = [
 name = "middleware-example"
 version = "1.0.0"
 dependencies = [
+ "actix-http",
  "actix-web",
  "env_logger",
  "futures-util",
