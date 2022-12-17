@@ -2,4 +2,4 @@ This directory includes weather information obtained from NOAA for NYC Central P
 
 # Setup Instructions
 
-Set up a sqlite3 database by executing the setup_db.sh file: `bash sqlite_db.sh`
+Set up a sqlite3 database by executing the setup_db.sh file: `bash setup_db.sh`
