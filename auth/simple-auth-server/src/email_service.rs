@@ -50,7 +50,7 @@ pub fn send_invitation(invitation: &Invitation) -> Result<(), ServiceError> {
     match result {
         Ok(res) => match res {
             TransmissionResponse::ApiResponse(api_res) => {
-                println!("API Response: \n {:#?}", api_res);
+                println!("API Response: \n {api_res:#?}");
                 Ok(())
             }
             TransmissionResponse::ApiError(errors) => {
@@ -59,7 +59,7 @@ pub fn send_invitation(invitation: &Invitation) -> Result<(), ServiceError> {
             }
         },
         Err(error) => {
-            println!("Send Email Error: \n {:#?}", error);
+            println!("Send Email Error: \n {error:#?}");
             Err(ServiceError::InternalServerError)
         }
     }
