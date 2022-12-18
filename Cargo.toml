@@ -38,6 +38,7 @@ members = [
    "json/json-validation",
    "json/json",
    "json/jsonrpc",
+   "middleware/middleware-encrypted-payloads",
    "middleware/middleware-ext-mut",
    "middleware/middleware-http-to-https",
    "middleware/middleware",

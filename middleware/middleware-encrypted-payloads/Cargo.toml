@@ -1,0 +1,18 @@
+[package]
+name = "middleware-encrypted-payloads"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-http = "3"
+actix-web = "4"
+actix-web-lab = "0.18"
+
+aes-gcm-siv = "0.11"
+base64 = "0.20"
+env_logger = "0.10"
+futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+log = "0.4"
+pin-project = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
