@@ -8,7 +8,7 @@ name = "websocket-chat-server"
 path = "src/main.rs"
 
 [dependencies]
-actix = "0.13"
+actix = { workspace = true }
 actix-files = { workspace = true }
 actix-web = { workspace = true }
 actix-web-actors = { workspace = true }

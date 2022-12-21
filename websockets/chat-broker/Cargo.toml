@@ -8,7 +8,7 @@ name = "server"
 path = "src/main.rs"
 
 [dependencies]
-actix = "0.13"
+actix = { workspace = true }
 actix-broker = { workspace = true }
 actix-files = { workspace = true }
 actix-web = { workspace = true }
