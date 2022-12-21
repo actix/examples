@@ -15,7 +15,6 @@ path = "src/client.rs"
 actix = "0.13"
 actix-codec = "0.5"
 actix-files = { workspace = true }
-actix-rt = "2"
 actix-web = { workspace = true }
 actix-web-actors = { workspace = true }
 awc = "3"
