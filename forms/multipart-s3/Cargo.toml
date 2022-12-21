@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-multipart = "0.4"
-actix-web = "4"
+actix-web = { workspace = true }
 actix-web-lab = "0.18"
 
 aws-config = "0.51"

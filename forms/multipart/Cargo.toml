@@ -10,7 +10,7 @@ readme = "README.md"
 
 [dependencies]
 actix-multipart = "0.4"
-actix-web = "4"
+actix-web = { workspace = true }
 
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 sanitize-filename = "0.4"

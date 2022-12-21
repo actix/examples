@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix = "0.13"
-actix-web = "4"
+actix-web = { workspace = true }
 actix-web-lab = "0.18"
 actix-cors = "0.6"
 

@@ -5,7 +5,7 @@ edition = "2021"
 description = "Send a request to the server to shut it down"
 
 [dependencies]
-actix-web = "4"
+actix-web = { workspace = true }
 actix-web-lab = "0.18"
 
 env_logger = "0.10"

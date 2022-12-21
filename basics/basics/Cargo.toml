@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-files = "0.6"
 actix-session = { version = "0.7", features = ["cookie-session"] }
-actix-web = "4"
+actix-web = { workspace = true }
 
 async-stream = "0.3"
 env_logger = "0.10"

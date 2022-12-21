@@ -64,3 +64,6 @@ members = [
    "websockets/echo",
 ]
 resolver = "2"
+
+[workspace.dependencies]
+actix-web = "4"

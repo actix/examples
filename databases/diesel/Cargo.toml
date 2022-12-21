@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4"
+actix-web = { workspace = true }
 diesel = { version = "2", features = ["sqlite", "r2d2"] }
 dotenv = "0.15"
 env_logger = "0.10"
