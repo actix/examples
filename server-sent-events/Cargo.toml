@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = { workspace = true }
-actix-web-lab = "0.18"
+actix-web-lab = { workspace = true }
 env_logger = "0.10"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"

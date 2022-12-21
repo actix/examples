@@ -7,7 +7,7 @@ edition = "2021"
 actix-files = { workspace = true }
 actix-session = { workspace = true, features = ["cookie-session"] }
 actix-web = { workspace = true }
-actix-web-lab = "0.18"
+actix-web-lab = { workspace = true }
 
 dotenv = "0.15"
 env_logger = "0.10"

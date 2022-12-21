@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix = "0.13"
 actix-web = { workspace = true }
-actix-web-lab = "0.18"
+actix-web-lab = { workspace = true }
 actix-cors = { workspace = true }
 
 async-graphql = "5"

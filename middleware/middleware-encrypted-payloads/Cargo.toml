@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-http = "3"
 actix-web = { workspace = true }
-actix-web-lab = "0.18"
+actix-web-lab = { workspace = true }
 
 aes-gcm-siv = "0.11"
 base64 = "0.20"
