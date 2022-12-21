@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-files = { workspace = true }
 actix-web = { workspace = true }
-actix-ws = "0.2.5"
+actix-ws = { workspace = true }
 awc = "3"
 
 derive_more = "0.99.5"

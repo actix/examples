@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-multipart = "0.4"
+actix-multipart = { workspace = true }
 actix-web = { workspace = true }
 actix-web-lab = { workspace = true }
 
