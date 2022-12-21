@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web = { workspace = true }
 actix-identity = "0.5"
-actix-session = { version = "0.7", features = ["cookie-session"] }
+actix-session = { workspace = true, features = ["cookie-session"] }
 
 chrono = { version = "0.4", features = ["serde"] }
 derive_more = "0.99.5"

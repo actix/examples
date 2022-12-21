@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-files = { workspace = true }
-actix-session = { version = "0.7", features = ["cookie-session"] }
+actix-session = { workspace = true, features = ["cookie-session"] }
 actix-web = { workspace = true }
 
 async-stream = "0.3"

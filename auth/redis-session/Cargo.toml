@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = { workspace = true }
-actix-session = { version = "0.7", features = ["redis-actor-session"] }
+actix-session = { workspace = true, features = ["redis-actor-session"] }
 
 env_logger = "0.10"
 log = "0.4"
