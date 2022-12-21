@@ -17,7 +17,7 @@ actix-codec = "0.5"
 actix-files = { workspace = true }
 actix-rt = "2"
 actix-web = { workspace = true }
-actix-web-actors = "4.1"
+actix-web-actors = { workspace = true }
 awc = "3"
 
 env_logger = "0.10"
