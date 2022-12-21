@@ -4,9 +4,9 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-files = "0.6"
-actix-web = "4"
-actix-ws = "0.2.5"
+actix-files = { workspace = true }
+actix-web = { workspace = true }
+actix-ws = { workspace = true }
 awc = "3"
 
 env_logger = "0.10"

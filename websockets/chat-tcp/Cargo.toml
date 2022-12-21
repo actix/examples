@@ -12,11 +12,11 @@ name = "websocket-tcp-client"
 path = "src/client.rs"
 
 [dependencies]
-actix = "0.13"
-actix-codec = "0.5"
-actix-files = "0.6"
-actix-web = "4"
-actix-web-actors = "4.1"
+actix = { workspace = true }
+actix-codec = { workspace = true }
+actix-files = { workspace = true }
+actix-web = { workspace = true }
+actix-web-actors = { workspace = true }
 
 byteorder = "1.2"
 bytes = "1"

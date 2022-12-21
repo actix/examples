@@ -5,7 +5,7 @@ publish = false
 edition = "2021"
 
 [dependencies]
-actix-web = "4"
+actix-web = { workspace = true }
 env_logger = "0.10"
 yarte = { version = "0.15", features = ["bytes-buf", "html-min"] }
 derive_more = "0.99"

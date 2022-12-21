@@ -7647,7 +7647,6 @@ dependencies = [
  "actix",
  "actix-codec",
  "actix-files",
- "actix-rt",
  "actix-web",
  "actix-web-actors",
  "awc",

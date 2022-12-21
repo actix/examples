@@ -4,9 +4,9 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4"
-actix-web-lab = "0.18"
-actix-utils = "3"
+actix-web = { workspace = true }
+actix-web-lab = { workspace = true }
+actix-utils = { workspace = true }
 
 env_logger = "0.10"
 log = "0.4"

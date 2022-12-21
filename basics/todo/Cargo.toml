@@ -4,10 +4,10 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-files = "0.6"
-actix-session = { version = "0.7", features = ["cookie-session"] }
-actix-web = "4"
-actix-web-lab = "0.18"
+actix-files = { workspace = true }
+actix-session = { workspace = true, features = ["cookie-session"] }
+actix-web = { workspace = true }
+actix-web-lab = { workspace = true }
 
 dotenv = "0.15"
 env_logger = "0.10"
