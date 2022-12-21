@@ -66,5 +66,6 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
+actix-cors = "0.6"
 actix-files = "0.6"
 actix-web = "4"
