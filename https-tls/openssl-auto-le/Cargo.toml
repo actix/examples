@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = { workspace = true, features = ["openssl"] }
-actix-files = "0.6"
+actix-files = { workspace = true }
 
 acme-micro = "0.12"
 anyhow = "1"
