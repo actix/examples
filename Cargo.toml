@@ -5,6 +5,7 @@ members = [
    "auth/cookie-session",
    "auth/redis-session",
    "auth/simple-auth-server",
+   "background-jobs",
    "basics/basics",
    "basics/error-handling",
    "basics/hello-world",
@@ -83,3 +84,5 @@ actix-web = "4"
 actix-web-actors = "4.1"
 actix-web-lab = "0.18"
 actix-ws = "0.2.5"
+
+env_logger = "0.10"
