@@ -4644,6 +4644,7 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
+ "log",
  "serde",
  "serde_json",
 ]

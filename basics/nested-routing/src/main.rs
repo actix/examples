@@ -3,8 +3,9 @@ use nested_routing::app_config::config_app;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()

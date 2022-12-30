@@ -5,10 +5,8 @@ use std::time::Duration;
 use apalis::{prelude::*, redis::RedisStorage};
 use rand::Rng as _;
 use serde::{Deserialize, Serialize};
-use tokio::task::JoinHandle;
 
 #[derive(Debug, Deserialize, Serialize)]
-
 pub(crate) struct Email {
     to: String,
 }
@@ -51,11 +49,12 @@ pub(crate) async fn start_processing_email_queue() -> anyhow::Result<RedisStorag
     });
 
     // spawn job monitor into background
-    let _ = tokio::spawn(async move {
+    // the monitor manages itself otherwise so we don't need to return a join handle
+    #[allow(clippy::let_underscore_future)]
+    let _ = tokio::spawn(
         // run_without_signals: don't listen for ctrl-c because Actix Web does
-        // the monitor manages itself otherwise so we don't need to return a join handle
-        monitor.run_without_signals().await;
-    });
+        monitor.run_without_signals(),
+    );
 
     Ok(storage)
 }

@@ -31,7 +31,7 @@ pub(crate) async fn cache_item(
     // insert into item cache
     cache.lock().unwrap().insert(form.data, expires);
 
-    Ok(HttpResponse::Ok().body(format!("data cached until {:?}", expires)))
+    Ok(HttpResponse::Ok().body(format!("data cached until {expires}")))
 }
 
 #[post("/email")]
