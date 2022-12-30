@@ -7,5 +7,5 @@ edition = "2021"
 actix-web = { workspace = true }
 actix-web-lab = { workspace = true }
 
-env_logger = "0.10"
+env_logger.workspace = true
 tera = "1.8.0"

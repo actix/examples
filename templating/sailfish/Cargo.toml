@@ -7,6 +7,6 @@ edition = "2021"
 actix-web = { workspace = true }
 actix-web-lab = { workspace = true }
 
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true
 sailfish = "0.5"

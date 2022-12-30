@@ -11,7 +11,7 @@ apalis = { version = "0.3", features = ["redis"] }
 chrono = { version = "0.4.20", default-features = false, features = ["clock", "serde"] }
 dotenv = "0.15"
 env_logger.workspace = true
-log = "0.4"
+log.workspace = true
 rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1.13.1", features = ["sync", "rt-multi-thread", "macros"] }

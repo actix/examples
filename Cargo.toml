@@ -86,3 +86,4 @@ actix-web-lab = "0.18"
 actix-ws = "0.2.5"
 
 env_logger = "0.10"
+log = "0.4"

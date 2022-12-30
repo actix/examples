@@ -12,6 +12,6 @@ actix-cors = { workspace = true }
 async-graphql = "5"
 async-graphql-actix-web = "5"
 
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true
 slab = "0.4"

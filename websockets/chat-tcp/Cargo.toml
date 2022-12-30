@@ -20,9 +20,9 @@ actix-web-actors = { workspace = true }
 
 byteorder = "1.2"
 bytes = "1"
-env_logger = "0.10"
+env_logger.workspace = true
 futures-util = { version = "0.3.17", default-features = false, features = ["std", "sink"] }
-log = "0.4"
+log.workspace = true
 rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

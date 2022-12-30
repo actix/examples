@@ -6,9 +6,9 @@ edition = "2021"
 [dependencies]
 actix-web = { workspace = true }
 
-env_logger = "0.10"
+env_logger.workspace = true
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
-log = "0.4"
+log.workspace = true
 r2d2 = "0.8"
 r2d2_sqlite = "0.20" # 0.21.0 blocked on sqlx sqlite update
 rusqlite = "0.27" # 0.28.0 blocked on sqlx sqlite update

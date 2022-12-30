@@ -12,7 +12,7 @@ actix-web = { workspace = true, features = ["rustls"] }
 actix-web-lab = { workspace = true }
 actix-files = { workspace = true }
 
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true
 rustls = "0.20.2"
 rustls-pemfile = "1"

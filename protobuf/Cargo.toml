@@ -7,7 +7,7 @@ edition = "2021"
 actix-protobuf = { workspace = true }
 actix-web = { workspace = true }
 
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true
 prost = "0.11"
 prost-derive = "0.11"

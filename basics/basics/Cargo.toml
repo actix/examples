@@ -9,5 +9,5 @@ actix-session = { workspace = true, features = ["cookie-session"] }
 actix-web = { workspace = true }
 
 async-stream = "0.3"
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true

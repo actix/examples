@@ -12,7 +12,7 @@ chrono = { version = "0.4", features = ["serde"] }
 derive_more = "0.99.5"
 diesel = { version = "2", features = ["postgres", "r2d2", "uuid", "chrono"] }
 dotenv = "0.15"
-env_logger = "0.10"
+env_logger.workspace = true
 once_cell = "1"
 r2d2 = "0.8"
 rust-argon2 = "1"

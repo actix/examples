@@ -9,7 +9,7 @@ actix-web = { workspace = true }
 actix-ws = { workspace = true }
 awc = "3"
 
-env_logger = "0.10"
+env_logger.workspace = true
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
-log = "0.4"
+log.workspace = true
 tokio = { version = "1.13.1", features = ["rt", "macros", "sync", "time"] }

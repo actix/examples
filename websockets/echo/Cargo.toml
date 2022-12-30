@@ -19,8 +19,8 @@ actix-web = { workspace = true }
 actix-web-actors = { workspace = true }
 awc = "3"
 
-env_logger = "0.10"
+env_logger.workspace = true
 futures-util = { version = "0.3.17", default-features = false, features = ["std", "sink"] }
-log = "0.4"
+log.workspace = true
 tokio = { version = "1.13.1", features = ["full"] }
 tokio-stream = "0.1.8"

@@ -8,7 +8,7 @@ actix-web = { workspace = true }
 actix-web-lab = { workspace = true }
 actix-utils = { workspace = true }
 
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true
 minijinja = { version = "0.27", features = ["source"] }
 minijinja-autoreload = "0.27"

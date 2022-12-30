@@ -8,6 +8,6 @@ actix-web = { workspace = true, features = ["openssl"] }
 awc = "3"
 
 clap = { version = "4", features = ["derive"] }
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true
 url = "2.2"
