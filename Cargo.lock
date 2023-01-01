@@ -3419,7 +3419,11 @@ dependencies = [
  "awc",
  "clap",
  "env_logger",
+ "futures-util",
  "log",
+ "reqwest 0.11.13",
+ "tokio 1.23.0",
+ "tokio-stream",
  "url",
 ]
 
@@ -5648,6 +5652,7 @@ dependencies = [
  "serde_urlencoded",
  "tokio 1.23.0",
  "tokio-native-tls",
+ "tokio-util 0.7.4",
  "tower-service",
  "url",
  "wasm-bindgen",
@@ -7290,6 +7295,7 @@ dependencies = [
  "futures-core",
  "pin-project-lite 0.2.9",
  "tokio 1.23.0",
+ "tokio-util 0.7.4",
 ]
 
 [[package]]
