@@ -22,7 +22,7 @@
 - [chrono](https://crates.io/crates/chrono) // Date and time library for Rust.
 - [diesel](https://crates.io/crates/diesel) // A safe, extensible ORM and Query Builder for PostgreSQL, SQLite, and MySQL.
 - [dotenv](https://crates.io/crates/dotenv) // A dotenv implementation for Rust.
-- [derive_more](https://crates.io/crates/derive_more) // Convenience macros to derive tarits easily
+- [derive_more](https://crates.io/crates/derive_more) // Convenience macros to derive traits easily
 - [env_logger](https://crates.io/crates/env_logger) // A logging implementation for log which is configured via an environment variable.
 - [futures](https://crates.io/crates/futures) // An implementation of futures and streams featuring zero allocations, composability, and iterator-like interfaces.
 - [lazy_static](https://docs.rs/lazy_static) // A macro for declaring lazily evaluated statics.
