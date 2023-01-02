@@ -9,4 +9,4 @@ actix-identity.workspace = true
 actix-session = { workspace = true, features = ["cookie-session"] }
 
 env_logger.workspace = true
-rand = "0.8"
+rand.workspace = true
