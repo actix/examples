@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = { workspace = true, features = ["rustls"] }
-actix-cors = { workspace = true }
+actix-cors.workspace = true
 
 env_logger.workspace = true
 serde = { version = "1.0", features = ["derive"] }

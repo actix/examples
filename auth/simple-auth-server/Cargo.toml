@@ -4,8 +4,8 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { workspace = true }
-actix-identity = { workspace = true }
+actix-web.workspace = true
+actix-identity.workspace = true
 actix-session = { workspace = true, features = ["cookie-session"] }
 
 chrono = { version = "0.4", features = ["serde"] }

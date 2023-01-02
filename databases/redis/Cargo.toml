@@ -4,10 +4,10 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { workspace = true }
+actix-web.workspace = true
 
 env_logger.workspace = true
-futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+futures-util.workspace = true
 log.workspace = true
 redis = { version = "0.22", default-features = false, features = ["tokio-comp", "connection-manager"] }
 serde = { version = "1", features = ["derive"] }

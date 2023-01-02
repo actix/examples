@@ -4,6 +4,6 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { workspace = true }
+actix-web.workspace = true
 mongodb = "2"
 serde = { version = "1", features = ["derive"] }

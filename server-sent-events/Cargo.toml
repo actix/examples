@@ -4,11 +4,11 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { workspace = true }
-actix-web-lab = { workspace = true }
+actix-web.workspace = true
+actix-web-lab.workspace = true
 env_logger.workspace = true
-futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+futures-util.workspace = true
 log.workspace = true
 parking_lot = "0.12"
-tokio = { version = "1.13.1", features = ["sync"] }
+tokio.workspace = true
 tokio-stream = { version = "0.1.8", features = ["time"] }

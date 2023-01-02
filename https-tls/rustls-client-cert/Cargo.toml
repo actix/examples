@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-tls = { workspace = true }
+actix-tls.workspace = true
 actix-web = { workspace = true, features = ["rustls"] }
 env_logger.workspace = true
 log.workspace = true

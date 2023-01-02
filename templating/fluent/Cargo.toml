@@ -4,8 +4,8 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { workspace = true }
-actix-web-lab = { workspace = true }
+actix-web.workspace = true
+actix-web-lab.workspace = true
 fluent-templates = { version = "0.8", features = ["handlebars"] }
 handlebars = { version = "4.3", features = ["dir_source"] }
 serde = { version = "1", features = ["derive"] }

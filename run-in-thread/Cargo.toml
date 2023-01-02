@@ -5,7 +5,7 @@ edition = "2021"
 description = "Run Actix Web in separate thread"
 
 [dependencies]
-actix-web = { workspace = true }
+actix-web.workspace = true
 
 env_logger.workspace = true
 log.workspace = true

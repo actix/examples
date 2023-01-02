@@ -7,6 +7,7 @@ use actix_web::{
 use awc::Client;
 use clap::Parser;
 use futures_util::StreamExt as _;
+use tokio::sync::mpsc;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use url::Url;
 
@@ -71,7 +72,7 @@ async fn forward_reqwest(
     new_url.set_path(path);
     new_url.set_query(req.uri().query());
 
-    let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
+    let (tx, rx) = mpsc::unbounded_channel();
 
     actix_web::rt::spawn(async move {
         while let Some(chunk) = payload.next().await {

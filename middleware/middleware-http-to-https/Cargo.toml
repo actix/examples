@@ -5,10 +5,10 @@ edition = "2021"
 
 [dependencies]
 actix-web = { workspace = true, features = ["rustls"] }
-actix-web-lab = { workspace = true }
+actix-web-lab.workspace = true
 
 env_logger.workspace = true
-futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+futures-util.workspace = true
 log.workspace = true
 rustls = "0.20"
 rustls-pemfile = "1"

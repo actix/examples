@@ -12,20 +12,20 @@ name = "websocket-tcp-client"
 path = "src/client.rs"
 
 [dependencies]
-actix = { workspace = true }
-actix-codec = { workspace = true }
-actix-files = { workspace = true }
-actix-web = { workspace = true }
-actix-web-actors = { workspace = true }
+actix.workspace = true
+actix-codec.workspace = true
+actix-files.workspace = true
+actix-web.workspace = true
+actix-web-actors.workspace = true
 
 byteorder = "1.2"
 bytes = "1"
 env_logger.workspace = true
-futures-util = { version = "0.3.17", default-features = false, features = ["std", "sink"] }
+futures-util = { workspace = true, features = ["sink"] }
 log.workspace = true
 rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tokio = { version = "1.13.1", features = ["full"] }
+tokio = { workspace = true, features = ["full"] }
 tokio-util = { version = "0.7", features = ["codec"] }
 tokio-stream = "0.1.8"

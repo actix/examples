@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 env_logger.workspace = true
-actix-web = { workspace = true }
+actix-web.workspace = true

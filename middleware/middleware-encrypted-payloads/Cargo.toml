@@ -4,14 +4,14 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-http = { workspace = true }
-actix-web = { workspace = true }
-actix-web-lab = { workspace = true }
+actix-http.workspace = true
+actix-web.workspace = true
+actix-web-lab.workspace = true
 
 aes-gcm-siv = "0.11"
 base64 = "0.20"
 env_logger.workspace = true
-futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+futures-util.workspace = true
 log.workspace = true
 pin-project = "1"
 serde = { version = "1", features = ["derive"] }

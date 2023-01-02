@@ -9,8 +9,8 @@ path = "src/main.rs"
 
 [dependencies]
 actix-web = { workspace = true, features = ["rustls"] }
-actix-web-lab = { workspace = true }
-actix-files = { workspace = true }
+actix-web-lab.workspace = true
+actix-files.workspace = true
 
 env_logger.workspace = true
 log.workspace = true

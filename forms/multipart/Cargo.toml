@@ -9,9 +9,9 @@ repository = "https://github.com/actix/examples"
 readme = "README.md"
 
 [dependencies]
-actix-multipart = { workspace = true }
-actix-web = { workspace = true }
+actix-multipart.workspace = true
+actix-web.workspace = true
 
-futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+futures-util.workspace = true
 sanitize-filename = "0.4"
 uuid = { version = "1", features = ["v4"] }
