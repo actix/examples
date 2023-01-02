@@ -8,5 +8,5 @@ actix-web.workspace = true
 actix-web-lab.workspace = true
 fluent-templates = { version = "0.8", features = ["handlebars"] }
 handlebars = { version = "4.3", features = ["dir_source"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde.workspace = true
+serde_json.workspace = true

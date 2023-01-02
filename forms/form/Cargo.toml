@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-serde = { version = "1", features = ["derive"] }
+serde.workspace = true

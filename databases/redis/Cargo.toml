@@ -10,4 +10,4 @@ env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 redis = { version = "0.22", default-features = false, features = ["tokio-comp", "connection-manager"] }
-serde = { version = "1", features = ["derive"] }
+serde.workspace = true

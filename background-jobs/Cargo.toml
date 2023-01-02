@@ -13,6 +13,6 @@ dotenv = "0.15"
 env_logger.workspace = true
 log.workspace = true
 rand = "0.8"
-serde = { version = "1", features = ["derive"] }
+serde.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 tokio-util = "0.7.4"

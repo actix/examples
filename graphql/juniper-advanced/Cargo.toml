@@ -17,6 +17,6 @@ r2d2_mysql = "23"
 dotenv = "0.15"
 env_logger.workspace = true
 log.workspace = true
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde.workspace = true
+serde_json.workspace = true
 uuid = { version = "1", features = ["v4", "serde"] }
