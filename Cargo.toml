@@ -86,6 +86,7 @@ actix-web-lab = "0.18"
 actix-ws = "0.2.5"
 awc = "3"
 
+derive_more = "0.99.7"
 env_logger = "0.10"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"

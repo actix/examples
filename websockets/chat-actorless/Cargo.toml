@@ -9,7 +9,7 @@ actix-web.workspace = true
 actix-ws.workspace = true
 awc.workspace = true
 
-derive_more = "0.99.5"
+derive_more.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true

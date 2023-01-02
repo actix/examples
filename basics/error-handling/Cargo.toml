@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web.workspace = true
 
-derive_more = "0.99.5"
+derive_more.workspace = true
 env_logger.workspace = true
 log.workspace = true
 rand.workspace = true

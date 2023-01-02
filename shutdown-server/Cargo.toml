@@ -11,4 +11,4 @@ actix-web-lab.workspace = true
 env_logger.workspace = true
 log.workspace = true
 parking_lot = "0.12"
-tokio = { version = "1.13.1", features = ["signal"] }
+tokio = { workspace = true, features = ["signal"] }

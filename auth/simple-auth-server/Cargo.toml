@@ -8,8 +8,8 @@ actix-web.workspace = true
 actix-identity.workspace = true
 actix-session = { workspace = true, features = ["cookie-session"] }
 
-chrono = { version = "0.4", features = ["serde"] }
-derive_more = "0.99.5"
+chrono = { version = "0.4.20", features = ["serde"] }
+derive_more.workspace = true
 diesel = { version = "2", features = ["postgres", "r2d2", "uuid", "chrono"] }
 dotenv = "0.15"
 env_logger.workspace = true
