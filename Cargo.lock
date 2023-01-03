@@ -2050,7 +2050,9 @@ dependencies = [
  "actix-identity",
  "actix-session",
  "actix-web",
+ "actix-web-lab",
  "env_logger",
+ "log",
  "rand 0.8.5",
 ]
 

@@ -1,55 +1,74 @@
 use actix_identity::{Identity, IdentityMiddleware};
-use actix_session::{storage::CookieSessionStore, SessionMiddleware};
+use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
 use actix_web::{
-    cookie::Key, middleware, web, App, HttpMessage as _, HttpRequest, HttpResponse, HttpServer,
+    cookie::{time::Duration, Key},
+    error,
+    http::StatusCode,
+    middleware, web, App, HttpMessage as _, HttpRequest, HttpServer, Responder,
 };
-async fn index(id: Identity) -> String {
-    format!(
-        "Hello {}",
-        id.id().unwrap_or_else(|_| "Anonymous".to_owned())
-    )
+use actix_web_lab::web::Redirect;
+
+const ONE_MINUTE: Duration = Duration::minutes(1);
+
+async fn index(identity: Option<Identity>) -> actix_web::Result<impl Responder> {
+    let id = match identity.map(|id| id.id()) {
+        None => "anonymous".to_owned(),
+        Some(Ok(id)) => id,
+        Some(Err(err)) => return Err(error::ErrorInternalServerError(err)),
+    };
+
+    Ok(format!("Hello {id}"))
 }
 
-async fn login(req: HttpRequest) -> HttpResponse {
+async fn login(req: HttpRequest) -> impl Responder {
     Identity::login(&req.extensions(), "user1".to_owned()).unwrap();
 
-    HttpResponse::Found()
-        .insert_header(("location", "/"))
-        .finish()
+    Redirect::to("/").using_status_code(StatusCode::FOUND)
 }
 
-async fn logout(id: Identity) -> HttpResponse {
+async fn logout(id: Identity) -> impl Responder {
     id.logout();
 
-    HttpResponse::Found()
-        .insert_header(("location", "/"))
-        .finish()
+    Redirect::to("/").using_status_code(StatusCode::FOUND)
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // Generate a random secret key. Note that it is important to use a unique
     // secret key for every project. Anyone with access to the key can generate
     // authentication cookies for any user!
+    //
+    // If the secret key is read from a file or the environment, make sure it is generated securely.
+    // For example, a secure random key (in base64 format) can be generated with the OpenSSL CLI:
+    // ```
+    // openssl rand -base64 64
+    // ```
+    //
+    // Then decoded and used converted to a Key:
+    // ```
+    // let secret_key = Key::from(base64::decode(&private_key_base64).unwrap());
+    // ```
     let secret_key = Key::generate();
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
+            .service(web::resource("/login").route(web::post().to(login)))
+            .service(web::resource("/logout").route(web::post().to(logout)))
+            .service(web::resource("/").route(web::get().to(index)))
             .wrap(IdentityMiddleware::default())
             .wrap(
                 SessionMiddleware::builder(CookieSessionStore::default(), secret_key.clone())
                     .cookie_name("auth-example".to_owned())
                     .cookie_secure(false)
+                    .session_lifecycle(PersistentSession::default().session_ttl(ONE_MINUTE))
                     .build(),
             )
-            // enable logger - always register Actix Web Logger middleware last
+            .wrap(middleware::NormalizePath::trim())
             .wrap(middleware::Logger::default())
-            .service(web::resource("/login").route(web::post().to(login)))
-            .service(web::resource("/logout").to(logout))
-            .service(web::resource("/").route(web::get().to(index)))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
