@@ -1,5 +1,5 @@
 [package]
-name = "async_db"
+name = "db-sqlite"
 version = "1.0.0"
 edition = "2021"
 
