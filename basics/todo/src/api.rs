@@ -1,9 +1,9 @@
 use actix_files::NamedFile;
 use actix_session::Session;
+use actix_web::http::StatusCode;
 use actix_web::{
     dev, error, middleware::ErrorHandlerResponse, web, Error, HttpResponse, Responder, Result,
 };
-use actix_web::http::StatusCode;
 use actix_web_lab::web::Redirect;
 use serde::Deserialize;
 use sqlx::SqlitePool;
@@ -51,7 +51,7 @@ pub async fn create(
 ) -> Result<impl Responder, Error> {
     if params.description.is_empty() {
         session::set_flash(&session, FlashMessage::error("Description cannot be empty"))?;
-        Ok(Redirect::to("/", ).using_status_code(StatusCode::FOUND))
+        Ok(Redirect::to("/").using_status_code(StatusCode::FOUND))
     } else {
         db::create_task(params.into_inner().description, &pool)
             .await
@@ -86,7 +86,8 @@ pub async fn update(
             let msg = format!("Unsupported HTTP method: {unsupported_method}");
             return Err(error::ErrorBadRequest(msg));
         }
-    }).using_status_code(StatusCode::FOUND))
+    })
+    .using_status_code(StatusCode::FOUND))
 }
 
 async fn toggle(
