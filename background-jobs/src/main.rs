@@ -43,7 +43,7 @@ async fn main() -> anyhow::Result<()> {
     // signal cache sweep task to stop running
     cache_sweep_cancel.cancel();
 
-    // wait for the cache sweep job to exit it's loop gracefully
+    // wait for the cache sweep job to exit its loop gracefully
     cache_sweep_handle.await.unwrap();
 
     log::info!("application successfully shut down gracefully");
