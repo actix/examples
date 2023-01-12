@@ -11,6 +11,7 @@
 - [Contile](https://github.com/mozilla-services/contile): The back-end server for the Mozilla Tile Service (MTS).
 - [lemmy](https://github.com/dessalines/lemmy): A federated alternative to reddit in Rust.
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
+- [hyperswitch](https://github.com/juspay/hyperswitch): An Open Source Financial Switch to make payment open, fast, secure and reliable.
 - [tokei.rs](https://github.com/XAMPPRocky/tokei_rs): The tokei.rs server code.
 - [Monrinth](https://github.com/modrinth/labrinth): Rust-based backend to serve the `modrinth` API.
 - [Barricade](https://github.com/purton-tech/barricade): Quickly add user registration and logon to any application.
