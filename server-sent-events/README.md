@@ -10,7 +10,7 @@ cargo run
 Open http://127.0.0.1:8080/ with a browser, then send events with another HTTP client:
 
 ```sh
-curl 127.0.0.1:8080/broadcast/my_message
+curl -X post 127.0.0.1:8080/broadcast/my_message
 ```
 
 _my_message_ should appear in the browser with a timestamp.
