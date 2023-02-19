@@ -4,7 +4,7 @@ use once_cell::sync::Lazy;
 use crate::errors::ServiceError;
 
 pub static SECRET_KEY: Lazy<String> =
-    Lazy::new(|| std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(8)));
+    Lazy::new(|| std::env::var("SECRET_KEY").unwrap_or_else(|_| "0123".repeat(16)));
 
 const SALT: &[u8] = b"supersecuresalt";
 
@@ -27,4 +27,20 @@ pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {
             ServiceError::Unauthorized
         },
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use std::env;
+
+    use actix_web::cookie::Key;
+
+    use super::SECRET_KEY;
+
+    #[test]
+    fn secret_key_default() {
+        env::remove_var("SECRET_KEY");
+
+        assert!(Key::try_from(SECRET_KEY.as_bytes()).is_ok());
+    }
 }
