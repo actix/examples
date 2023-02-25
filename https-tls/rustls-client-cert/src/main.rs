@@ -103,7 +103,7 @@ async fn main() -> std::io::Result<()> {
         .collect();
     let config = config.with_single_cert(cert_chain, keys.remove(0)).unwrap();
 
-    log::info!("starting HTTP server at http://localhost:8080 and http://localhost:8443");
+    log::info!("starting HTTP server at http://localhost:8080 and https://localhost:8443");
 
     HttpServer::new(|| App::new().default_service(web::to(route_whoami)))
         .on_connect(get_client_cert)

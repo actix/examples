@@ -173,7 +173,7 @@ async fn main() -> anyhow::Result<()> {
     // Storing pkey_der, cert_der and intermediate_cert somewhere
     // (in order to avoid unnecessarily regeneration of TLS/SSL) is recommended
 
-    log::info!("starting HTTP server at http://localhost:443");
+    log::info!("starting HTTP server at https://localhost:443");
 
     // Start HTTP server!
     let srv = HttpServer::new(|| App::new().route("/", web::get().to(index)))

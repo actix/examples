@@ -16,7 +16,7 @@ async fn main() -> io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=debug");
     env_logger::init();
 
-    println!("Started http server: 127.0.0.1:8443");
+    println!("Started http server: https://127.0.0.1:8443");
 
     // load TLS keys
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
