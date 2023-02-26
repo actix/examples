@@ -33,6 +33,7 @@
 - [pict-rs](https://git.asonix.dog/asonix/pict-rs): An image host API service
 - [rustypaste](https://github.com/orhun/rustypaste): A minimal file upload/pastebin service
 - [rustus](https://github.com/s3rius/rustus): A TUS protocol implementation that helps you handle file uploads
+- [gcs-proxy](https://github.com/guaychou/gcs-proxy): A Google Cloud Storage download proxy
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 
