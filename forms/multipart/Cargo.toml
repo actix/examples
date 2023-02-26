@@ -12,6 +12,8 @@ readme = "README.md"
 actix-multipart.workspace = true
 actix-web.workspace = true
 
+env_logger.workspace = true
 futures-util.workspace = true
+log.workspace = true
 sanitize-filename = "0.4"
 uuid = { version = "1", features = ["v4"] }

@@ -71,14 +71,16 @@ impl Client {
 
     async fn upload_and_remove(&self, file: TempFile, key_prefix: &str) -> UploadedFile {
         let uploaded_file = self.upload(&file, key_prefix).await;
-        file.delete_from_disk().await;
+        tokio::fs::remove_file(file.file.path()).await.unwrap();
         uploaded_file
     }
 
     async fn upload(&self, file: &TempFile, key_prefix: &str) -> UploadedFile {
-        let filename = file.name();
-        let key = format!("{key_prefix}{}", file.name());
-        let s3_url = self.put_object_from_file(file.path(), &key).await;
+        let filename = file.file_name.as_deref().expect("TODO");
+        let key = format!("{key_prefix}{filename}");
+        let s3_url = self
+            .put_object_from_file(file.file.path().to_str().unwrap(), &key)
+            .await;
         UploadedFile::new(filename, key, s3_url)
     }
 

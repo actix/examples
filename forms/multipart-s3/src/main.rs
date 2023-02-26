@@ -1,6 +1,6 @@
 use std::fs;
 
-use actix_multipart::Multipart;
+use actix_multipart::form::{tempfile::TempFile, text::Text, MultipartForm};
 use actix_web::{
     body::SizedStream, delete, error, get, middleware::Logger, post, web, App, Error, HttpResponse,
     HttpServer, Responder,
@@ -8,51 +8,41 @@ use actix_web::{
 use actix_web_lab::{extract::Path, respond::Html};
 use aws_config::meta::region::RegionProviderChain;
 use dotenv::dotenv;
-use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 mod client;
-mod temp_file;
 mod upload_file;
-mod utils;
 
-use self::{client::Client, temp_file::TempFile, upload_file::UploadedFile, utils::split_payload};
+use self::{client::Client, upload_file::UploadedFile};
 
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct UploadMeta {
-    namespace: String,
-}
+#[derive(Debug, MultipartForm)]
+struct UploadForm {
+    namespace: Text<String>,
 
-impl Default for UploadMeta {
-    fn default() -> Self {
-        Self {
-            namespace: "default".to_owned(),
-        }
-    }
+    #[multipart(rename = "file")]
+    files: Vec<TempFile>,
 }
 
 #[post("/")]
 async fn upload_to_s3(
     s3_client: web::Data<Client>,
-    mut payload: Multipart,
+    MultipartForm(form): MultipartForm<UploadForm>,
 ) -> Result<impl Responder, Error> {
-    let (data, files) = split_payload(&mut payload).await;
-    log::info!("bytes = {data:?}");
+    let namespace = form.namespace.into_inner();
+    let files = form.files;
 
-    let upload_meta = serde_json::from_slice::<UploadMeta>(&data).unwrap_or_default();
-    log::info!("converter_struct = {upload_meta:?}");
+    log::info!("namespace = {namespace:?}");
     log::info!("tmp_files = {files:?}");
 
     // make key prefix (make sure it ends with a forward slash)
-    let s3_key_prefix = format!("uploads/{}/", upload_meta.namespace);
+    let s3_key_prefix = format!("uploads/{namespace}/");
 
-    // create tmp file and upload s3 and remove tmp file
+    // upload temp files to s3 and then remove them
     let uploaded_files = s3_client.upload_files(files, &s3_key_prefix).await?;
 
     Ok(HttpResponse::Ok().json(json!({
         "uploadedFiles": uploaded_files,
-        "meta": upload_meta,
+        "meta": json!({ "namespace": namespace }),
     })))
 }
 

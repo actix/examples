@@ -19,10 +19,7 @@
 
             const formData = new FormData();
 
-            const meta = { namespace: $form.namespace.value };
-            console.log(meta);
-
-            formData.append("meta", JSON.stringify(meta));
+            formData.append("namespace", $form.namespace.value);
 
             for (const file in $files.files) {
                 formData.append("file", file);
