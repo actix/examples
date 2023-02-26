@@ -47,7 +47,7 @@ async fn main() -> std::io::Result<()> {
                 // handle the request and if it's "http" then a response with redirect status code
                 // will be sent whose "location" header will be same as before, with just "http"
                 // changed to "https"
-                //
+
                 if sreq.connection_info().scheme() == "https" {
                     Either::Left(srv.call(sreq).map(|res| res))
                 } else {
