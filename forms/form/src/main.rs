@@ -119,7 +119,7 @@ mod tests {
                 name: "John".to_string(),
             })
             .to_request();
-        let resp: ServiceResponse = app.call(req).await.unwrap();
+        let resp: ServiceResponse = test::call_service(&app, req).await;
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
@@ -164,7 +164,7 @@ mod tests {
                 name: "John".to_string(),
             })
             .to_request();
-        let resp: ServiceResponse = app.call(req).await.unwrap();
+        let resp: ServiceResponse = test::call_service(&app, req).await;
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
@@ -208,7 +208,7 @@ mod tests {
                 name: "John".to_string(),
             })
             .to_request();
-        let resp: ServiceResponse = app.call(req).await.unwrap();
+        let resp: ServiceResponse = test::call_service(&app, req).await;
 
         assert_eq!(resp.status(), StatusCode::OK);
         assert_eq!(
