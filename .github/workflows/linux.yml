@@ -19,18 +19,14 @@ jobs:
     env:
       CI: 1
       CARGO_INCREMENTAL: false
-      CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install Rust
-        run: |
-          rustup install ${{ matrix.version }} --no-self-update --profile minimal --force
-          rustup override set ${{ matrix.version }}
-
-      - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2.2.1
+        uses: actions-rust-lang/setup-rust-toolchain@v1.4.3
+        with:
+          toolchain: ${{ matrix.version }}
 
       - name: Install DB CLI tools
         run: |

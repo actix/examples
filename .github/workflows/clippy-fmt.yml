@@ -12,11 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: dtolnay/rust-toolchain@stable
-        with: { components: rustfmt }
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.4.3
+        with:
+          toolchain: stable
+          components: rustfmt
 
       - name: rustfmt
-        run: cargo fmt --all -- --check
+        uses: actions-rust-lang/rustfmt@v1
 
   clippy:
     name: clippy check
@@ -25,16 +28,15 @@ jobs:
     env:
       CI: 1
       CARGO_INCREMENTAL: false
-      CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
 
     steps:
       - uses: actions/checkout@v3
 
-      - uses: dtolnay/rust-toolchain@stable
-        with: { components: clippy }
-
-      - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2.2.1
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.4.3
+        with:
+          toolchain: stable
+          components: clippy
 
       # - name: Create test DBs
       #   run: |
