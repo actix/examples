@@ -3,7 +3,6 @@ use std::io::Write;
 use actix_multipart::{
     form::{
         tempfile::{TempFile, TempFileConfig},
-        text::Text,
         MultipartForm,
     },
     Multipart,

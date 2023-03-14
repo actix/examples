@@ -1,6 +1,6 @@
 # diesel
 
-Basic integration of [Diesel](https://diesel.rs/) using SQLite for Actix Web.
+Basic integration of [Diesel](https://diesel.rs) using SQLite for Actix Web.
 
 ## Usage
 
@@ -66,7 +66,7 @@ On success, a response like the following is returned:
 <details>
   <summary>Client Examples</summary>
 
-Using [HTTPie](https://httpie.org/):
+Using [HTTPie]:
 
 ```sh
 http POST localhost:8080/user name=bill
@@ -87,7 +87,7 @@ Gets a user from the DB using its UID (returned from the insert request or taken
 <details>
   <summary>Client Examples</summary>
 
-Using [HTTPie](https://httpie.org/):
+Using [HTTPie]:
 
 ```sh
 http localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
@@ -115,3 +115,5 @@ sqlite> SELECT * FROM users;
 ## Using Other Databases
 
 You can find a complete example of Diesel + PostgreSQL at: [https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Rust/actix](https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Rust/actix)
+
+[httpie]: https://httpie.io/cli

@@ -66,5 +66,5 @@ jobs:
           cd databases/diesel
           diesel migration run
           chmod a+rwx test.db
-          cargo test -p=diesel-example --all-features --no-fail-fast -- --nocapture
+          cargo test -p=diesel-example --no-fail-fast -- --nocapture
         timeout-minutes: 10

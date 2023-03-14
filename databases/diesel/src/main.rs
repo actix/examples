@@ -1,63 +1,77 @@
 //! Actix Web Diesel integration example
 //!
-//! Diesel does not support tokio, so we have to run it in separate threads using the web::block
-//! function which offloads blocking code (like Diesel's) in order to not block the server's thread.
+//! Diesel v2 is not an async library, so we have to execute queries in `web::block` closures which
+//! offload blocking code (like Diesel's) to a thread-pool in order to not block the server.
 
 #[macro_use]
 extern crate diesel;
 
-use actix_web::{get, middleware, post, web, App, Error, HttpResponse, HttpServer};
-use diesel::{
-    prelude::*,
-    r2d2::{self, ConnectionManager},
-};
+use actix_web::{error, get, middleware, post, web, App, HttpResponse, HttpServer, Responder};
+use diesel::{prelude::*, r2d2};
 use uuid::Uuid;
 
 mod actions;
 mod models;
 mod schema;
 
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+/// Short-hand for the database pool type to use throughout the app.
+type DbPool = r2d2::Pool<r2d2::ConnectionManager<SqliteConnection>>;
 
 /// Finds user by UID.
+///
+/// Extracts:
+/// - the database pool handle from application data
+/// - a user UID from the request path
 #[get("/user/{user_id}")]
 async fn get_user(
     pool: web::Data<DbPool>,
     user_uid: web::Path<Uuid>,
-) -> Result<HttpResponse, Error> {
+) -> actix_web::Result<impl Responder> {
     let user_uid = user_uid.into_inner();
 
-    // use web::block to offload blocking Diesel code without blocking server thread
+    // use web::block to offload blocking Diesel queries without blocking server thread
     let user = web::block(move || {
+        // note that obtaining a connection from the pool is also potentially blocking
         let mut conn = pool.get()?;
+
         actions::find_user_by_uid(&mut conn, user_uid)
     })
     .await?
-    .map_err(actix_web::error::ErrorInternalServerError)?;
+    // map diesel query errors to a 500 error response
+    .map_err(error::ErrorInternalServerError)?;
 
-    if let Some(user) = user {
-        Ok(HttpResponse::Ok().json(user))
-    } else {
-        let res = HttpResponse::NotFound().body(format!("No user found with uid: {user_uid}"));
-        Ok(res)
-    }
+    Ok(match user {
+        // user was found; return 200 response with JSON formatted user object
+        Some(user) => HttpResponse::Ok().json(user),
+
+        // user was not found; return 404 response with error message
+        None => HttpResponse::NotFound().body(format!("No user found with UID: {user_uid}")),
+    })
 }
 
-/// Inserts new user with name defined in form.
+/// Creates new user.
+///
+/// Extracts:
+/// - the database pool handle from application data
+/// - a JSON form containing new user info from the request body
 #[post("/user")]
 async fn add_user(
     pool: web::Data<DbPool>,
     form: web::Json<models::NewUser>,
-) -> Result<HttpResponse, Error> {
-    // use web::block to offload blocking Diesel code without blocking server thread
+) -> actix_web::Result<impl Responder> {
+    // use web::block to offload blocking Diesel queries without blocking server thread
     let user = web::block(move || {
+        // note that obtaining a connection from the pool is also potentially blocking
         let mut conn = pool.get()?;
+
         actions::insert_new_user(&mut conn, &form.name)
     })
     .await?
-    .map_err(actix_web::error::ErrorInternalServerError)?;
+    // map diesel query errors to a 500 error response
+    .map_err(error::ErrorInternalServerError)?;
 
-    Ok(HttpResponse::Ok().json(user))
+    // user was added successfully; return 201 response with new user info
+    Ok(HttpResponse::Created().json(user))
 }
 
 #[actix_web::main]
@@ -65,21 +79,18 @@ async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    // set up database connection pool
-    let conn_spec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
-    let manager = ConnectionManager::<SqliteConnection>::new(conn_spec);
-    let pool = r2d2::Pool::builder()
-        .build(manager)
-        .expect("Failed to create pool.");
+    // initialize DB pool outside of `HttpServer::new` so that it is shared across all workers
+    let pool = initialize_db_pool();
 
     log::info!("starting HTTP server at http://localhost:8080");
 
-    // Start HTTP server
     HttpServer::new(move || {
         App::new()
-            // set up DB pool to be used with web::Data<Pool> extractor
+            // add DB pool handle to app data; enables use of `web::Data<DbPool>` extractor
             .app_data(web::Data::new(pool.clone()))
+            // add request logger middleware
             .wrap(middleware::Logger::default())
+            // add route handlers
             .service(get_user)
             .service(add_user)
     })
@@ -88,23 +99,29 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 
+/// Initialize database connection pool based on `DATABASE_URL` environment variable.
+///
+/// See more: <https://docs.rs/diesel/latest/diesel/r2d2/index.html>.
+fn initialize_db_pool() -> DbPool {
+    let conn_spec = std::env::var("DATABASE_URL").expect("DATABASE_URL should be set");
+    let manager = r2d2::ConnectionManager::<SqliteConnection>::new(conn_spec);
+    r2d2::Pool::builder()
+        .build(manager)
+        .expect("database URL should be valid path to SQLite DB file")
+}
+
 #[cfg(test)]
 mod tests {
-    use actix_web::test;
+    use actix_web::{http::StatusCode, test};
 
     use super::*;
 
     #[actix_web::test]
     async fn user_routes() {
-        std::env::set_var("RUST_LOG", "actix_web=debug");
-        env_logger::init();
         dotenv::dotenv().ok();
+        env_logger::try_init_from_env(env_logger::Env::new().default_filter_or("info")).ok();
 
-        let conn_spec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
-        let manager = ConnectionManager::<SqliteConnection>::new(conn_spec);
-        let pool = r2d2::Pool::builder()
-            .build(manager)
-            .expect("Failed to create pool.");
+        let pool = initialize_db_pool();
 
         let app = test::init_service(
             App::new()
@@ -115,30 +132,46 @@ mod tests {
         )
         .await;
 
-        // Insert a user
+        // send something that isn't a UUID to `get_user`
+        let req = test::TestRequest::get().uri("/user/123").to_request();
+        let res = test::call_service(&app, req).await;
+        assert_eq!(res.status(), StatusCode::NOT_FOUND);
+        let body = test::read_body(res).await;
+        assert!(
+            body.starts_with(b"UUID parsing failed"),
+            "unexpected body: {body:?}",
+        );
+
+        // try to find a non-existent user
+        let req = test::TestRequest::get()
+            .uri(&format!("/user/{}", Uuid::nil()))
+            .to_request();
+        let res = test::call_service(&app, req).await;
+        assert_eq!(res.status(), StatusCode::NOT_FOUND);
+        let body = test::read_body(res).await;
+        assert!(
+            body.starts_with(b"No user found"),
+            "unexpected body: {body:?}",
+        );
+
+        // create new user
         let req = test::TestRequest::post()
             .uri("/user")
-            .set_json(&models::NewUser {
-                name: "Test user".to_owned(),
-            })
+            .set_json(models::NewUser::new("Test user"))
             .to_request();
+        let res: models::User = test::call_and_read_body_json(&app, req).await;
+        assert_eq!(res.name, "Test user");
 
-        let resp: models::User = test::call_and_read_body_json(&app, req).await;
-
-        assert_eq!(resp.name, "Test user");
-
-        // Get a user
+        // get a user
         let req = test::TestRequest::get()
-            .uri(&format!("/user/{}", resp.id))
+            .uri(&format!("/user/{}", res.id))
             .to_request();
+        let res: models::User = test::call_and_read_body_json(&app, req).await;
+        assert_eq!(res.name, "Test user");
 
-        let resp: models::User = test::call_and_read_body_json(&app, req).await;
-
-        assert_eq!(resp.name, "Test user");
-
-        // Delete new user from table
+        // delete new user from table
         use crate::schema::users::dsl::*;
-        diesel::delete(users.filter(id.eq(resp.id)))
+        diesel::delete(users.filter(id.eq(res.id)))
             .execute(&mut pool.get().expect("couldn't get db connection from pool"))
             .expect("couldn't delete test user from table");
     }
