@@ -22,15 +22,19 @@ jobs:
     name: clippy check
     runs-on: ubuntu-latest
 
+    env:
+      CI: 1
+      CARGO_INCREMENTAL: false
+      CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+
     steps:
       - uses: actions/checkout@v3
 
       - uses: dtolnay/rust-toolchain@stable
         with: { components: clippy }
 
-      - run: cargo generate-lockfile
       - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v2.2.0
+        uses: Swatinem/rust-cache@v2.2.1
 
       # - name: Create test DBs
       #   run: |
