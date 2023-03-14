@@ -139,10 +139,11 @@ impl AppState {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let network = Arc::new(RwLock::new(ObjNetwork::new()));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         let app_state = AppState::new(network.clone());

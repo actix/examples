@@ -13,10 +13,7 @@ async fn index(req: HttpRequest) -> Result<HttpResponse, Error> {
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=debug");
-    env_logger::init();
-
-    println!("Started http server: https://127.0.0.1:8443");
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // load TLS keys
     let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
@@ -24,6 +21,8 @@ async fn main() -> io::Result<()> {
         .set_private_key_file("key.pem", SslFiletype::PEM)
         .unwrap();
     builder.set_certificate_chain_file("cert.pem").unwrap();
+
+    log::info!("starting HTTPS server at http://localhost:8443");
 
     HttpServer::new(|| {
         App::new()

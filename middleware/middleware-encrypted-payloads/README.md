@@ -14,10 +14,11 @@ All this to say, it provides a (fairly brittle) way to have handlers not need to
 
 ## Usage
 
+Using [HTTPie] throughout for simplicity.
+
 ```console
 $ http POST :8080/encrypt id:=1234 data=abcde > tmp.json
-POST /reverse HTTP/1.1
-Content-Length: 76
+HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
@@ -28,7 +29,6 @@ Content-Type: application/json
 
 $ cat tmp.json | http -v POST :8080/reverse
 HTTP/1.1 200 OK
-Content-Length: 66
 Content-Type: application/json
 
 {
@@ -49,3 +49,5 @@ The server logs would look something like
 [INFO  middleware_encrypted_payloads] encrypting response 1234
 [INFO  actix_web::middleware::logger] 127.0.0.1 "POST /reverse HTTP/1.1" 200 66 "-" "-" 0.000425
 ```
+
+[httpie]: https://httpie.io/cli

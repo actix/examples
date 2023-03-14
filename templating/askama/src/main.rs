@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
-use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result};
+use actix_web::{middleware, web, App, HttpServer, Responder, Result};
+use actix_web_lab::respond::Html;
 use askama::Template;
 
 #[derive(Template)]
@@ -14,26 +15,27 @@ struct UserTemplate<'a> {
 #[template(path = "index.html")]
 struct Index;
 
-async fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpResponse> {
-    let s = if let Some(name) = query.get("name") {
+async fn index(query: web::Query<HashMap<String, String>>) -> Result<impl Responder> {
+    let html = if let Some(name) = query.get("name") {
         UserTemplate {
             name,
             text: "Welcome!",
         }
         .render()
-        .unwrap()
+        .expect("template should be valid")
     } else {
-        Index.render().unwrap()
+        Index.render().expect("template should be valid")
     };
-    Ok(HttpResponse::Ok().content_type("text/html").body(s))
+
+    Ok(Html(html))
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    // start http server
+    log::info!("starting HTTP server at http://localhost:8080");
+
     HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())

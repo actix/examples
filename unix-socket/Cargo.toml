@@ -4,5 +4,6 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-env_logger.workspace = true
 actix-web.workspace = true
+env_logger.workspace = true
+log.workspace = true

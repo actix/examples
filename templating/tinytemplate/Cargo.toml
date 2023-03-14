@@ -4,7 +4,8 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-env_logger.workspace = true
-tinytemplate = "1.1"
 actix-web.workspace = true
+env_logger.workspace = true
+log.workspace = true
 serde_json.workspace = true
+tinytemplate = "1.1"

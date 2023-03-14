@@ -1,9 +1,10 @@
 [package]
-name = "openssl-example"
+name = "tls-openssl"
 version = "1.0.0"
 edition = "2021"
 
 [dependencies]
 actix-web = { workspace = true, features = ["openssl"] }
 env_logger.workspace = true
+log.workspace = true
 openssl = "0.10"

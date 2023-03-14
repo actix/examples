@@ -7,6 +7,7 @@ use actix_web::{
 };
 use actix_web_lab::middleware::{from_fn, Next};
 use aes_gcm_siv::{aead::Aead as _, Aes256GcmSiv, KeyInit as _, Nonce};
+use base64::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -34,10 +35,10 @@ async fn make_encrypted(
 
     // this nonce should actually be unique per message in a production environment
     let nonce = Nonce::from_slice(b"unique nonce");
-    let nonce_b64 = Some(base64::encode(nonce));
+    let nonce_b64 = Some(BASE64_STANDARD.encode(nonce));
 
     let data_enc = cipher.encrypt(nonce, data.as_bytes()).unwrap();
-    let data_enc = base64::encode(data_enc);
+    let data_enc = BASE64_STANDARD.encode(data_enc);
 
     web::Json(Req {
         id,
@@ -98,11 +99,11 @@ async fn encrypt_payloads(
     log::info!("decrypting request {id:?}");
 
     // decode nonce from payload
-    let nonce = base64::decode(nonce.unwrap()).unwrap();
+    let nonce = BASE64_STANDARD.decode(nonce.unwrap()).unwrap();
     let nonce = Nonce::from_slice(&nonce);
 
     // decode and decrypt data field
-    let data_enc = base64::decode(&data).unwrap();
+    let data_enc = BASE64_STANDARD.decode(&data).unwrap();
     let data = cipher.decrypt(nonce, data_enc.as_slice()).unwrap();
 
     // construct request body format with plaintext data
@@ -136,11 +137,11 @@ async fn encrypt_payloads(
 
     // generate and encode nonce for later
     let nonce = Nonce::from_slice(b"unique nonce");
-    let nonce_b64 = Some(base64::encode(nonce));
+    let nonce_b64 = Some(BASE64_STANDARD.encode(nonce));
 
     // encrypt and encode data field
     let data_enc = cipher.encrypt(nonce, data.as_bytes()).unwrap();
-    let data_enc = base64::encode(data_enc);
+    let data_enc = BASE64_STANDARD.encode(data_enc);
 
     // re-pack response into JSON format
     let res_body = Res {

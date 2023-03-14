@@ -58,13 +58,14 @@ async fn index(
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // Create some global state prior to building the server
     #[allow(clippy::mutex_atomic)] // it's intentional.
     let counter_mutex = Data::new(Mutex::new(0usize));
     let counter_atomic = Data::new(AtomicUsize::new(0usize));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     // move is necessary to give closure below ownership of counter1
     HttpServer::new(move || {

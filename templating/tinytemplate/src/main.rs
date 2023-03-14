@@ -34,8 +34,9 @@ async fn index(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         let mut tt = TinyTemplate::new();
@@ -45,7 +46,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .app_data(web::Data::new(tt))
-            .wrap(middleware::Logger::default()) // enable logger
+            .wrap(middleware::Logger::default())
             .service(web::resource("/").route(web::get().to(index)))
             .service(web::scope("").wrap(error_handlers()))
     })

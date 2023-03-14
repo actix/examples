@@ -9,7 +9,7 @@ actix-web.workspace = true
 actix-web-lab.workspace = true
 
 aes-gcm-siv = "0.11"
-base64 = "0.20"
+base64 = "0.21"
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true

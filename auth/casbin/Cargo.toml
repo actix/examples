@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
+
 casbin = "2"
-loge = { version = "0.4", default-features = false, features = ["colored", "chrono"] }
-tokio = { workspace = true, features = ["sync"] }
+env_logger.workspace = true
+tokio.workspace = true

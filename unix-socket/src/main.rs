@@ -7,8 +7,9 @@ async fn index(_req: HttpRequest) -> &'static str {
 #[actix_web::main]
 #[cfg(unix)]
 async fn main() -> std::io::Result<()> {
-    ::std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()
@@ -24,6 +25,6 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(not(unix))]
 fn main() -> std::io::Result<()> {
-    println!("not supported");
+    log::info!("Example only runs on UNIX");
     Ok(())
 }

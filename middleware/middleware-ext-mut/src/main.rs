@@ -1,4 +1,4 @@
-use std::{env, io};
+use std::io;
 
 use actix_web::{
     middleware,
@@ -7,7 +7,7 @@ use actix_web::{
 };
 
 mod add_msg;
-use crate::add_msg::{AddMsg, Msg};
+use self::add_msg::{AddMsg, Msg};
 
 // wrap route in our middleware factory
 async fn index(msg: Option<ReqData<Msg>>) -> HttpResponse {
@@ -21,8 +21,9 @@ async fn index(msg: Option<ReqData<Msg>>) -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    env::set_var("RUST_LOG", "info");
-    env_logger::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()

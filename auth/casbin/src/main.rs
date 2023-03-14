@@ -23,10 +23,7 @@ async fn fail(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpRe
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    std::env::set_var("RUST_LOG", "info");
-    std::env::set_var("LOGE_FORMAT", "target");
-
-    loge::init();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let model = DefaultModel::from_file("rbac/rbac_model.conf")
         .await

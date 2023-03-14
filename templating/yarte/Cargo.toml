@@ -6,9 +6,10 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-env_logger.workspace = true
-yarte = { version = "0.15", features = ["bytes-buf", "html-min"] }
 derive_more.workspace = true
+env_logger.workspace = true
+log.workspace = true
+yarte = { version = "0.15", features = ["bytes-buf", "html-min"] }
 
 [build-dependencies.yarte_helpers]
 version = "0.15.6"
