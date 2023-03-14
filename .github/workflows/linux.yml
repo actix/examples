@@ -28,7 +28,6 @@ jobs:
           rustup install ${{ matrix.version }} --no-self-update --profile minimal --force
           rustup override set ${{ matrix.version }}
 
-      - run: cargo generate-lockfile
       - name: Cache Dependencies
         uses: Swatinem/rust-cache@v2.2.0
 
