@@ -83,7 +83,7 @@ actix-tls = "3"
 actix-utils = "3"
 actix-web = "4.3"
 actix-web-actors = "4.1"
-actix-web-lab = "0.18"
+actix-web-lab = "0.19"
 actix-ws = "0.2.5"
 awc = "3"
 

@@ -1,7 +1,6 @@
-use actix_utils::future::{ready, Ready};
-use minijinja_autoreload::AutoReloader;
 use std::{collections::HashMap, env, path::PathBuf};
 
+use actix_utils::future::{ready, Ready};
 use actix_web::{
     dev::{self, ServiceResponse},
     error,
@@ -10,6 +9,7 @@ use actix_web::{
     web, App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder, Result,
 };
 use actix_web_lab::respond::Html;
+use minijinja_autoreload::AutoReloader;
 
 struct MiniJinjaRenderer {
     tmpl_env: web::Data<minijinja_autoreload::AutoReloader>,

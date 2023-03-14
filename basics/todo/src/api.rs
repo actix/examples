@@ -1,10 +1,9 @@
 use actix_files::NamedFile;
 use actix_session::Session;
-use actix_web::http::StatusCode;
 use actix_web::{
-    dev, error, middleware::ErrorHandlerResponse, web, Error, HttpResponse, Responder, Result,
+    dev, error, http::StatusCode, middleware::ErrorHandlerResponse, web, Error, HttpResponse,
+    Responder, Result,
 };
-use actix_web_lab::web::Redirect;
 use serde::Deserialize;
 use sqlx::SqlitePool;
 use tera::{Context, Tera};
@@ -51,7 +50,7 @@ pub async fn create(
 ) -> Result<impl Responder, Error> {
     if params.description.is_empty() {
         session::set_flash(&session, FlashMessage::error("Description cannot be empty"))?;
-        Ok(Redirect::to("/").using_status_code(StatusCode::FOUND))
+        Ok(web::Redirect::to("/").using_status_code(StatusCode::FOUND))
     } else {
         db::create_task(params.into_inner().description, &pool)
             .await
@@ -59,7 +58,7 @@ pub async fn create(
 
         session::set_flash(&session, FlashMessage::success("Task successfully added"))?;
 
-        Ok(Redirect::to("/").using_status_code(StatusCode::FOUND))
+        Ok(web::Redirect::to("/").using_status_code(StatusCode::FOUND))
     }
 }
 
@@ -79,7 +78,7 @@ pub async fn update(
     form: web::Form<UpdateForm>,
     session: Session,
 ) -> Result<impl Responder, Error> {
-    Ok(Redirect::to(match form._method.as_ref() {
+    Ok(web::Redirect::to(match form._method.as_ref() {
         "put" => toggle(db, params).await?,
         "delete" => delete(db, params, session).await?,
         unsupported_method => {

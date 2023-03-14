@@ -4,7 +4,6 @@ use actix_files::Files;
 use actix_web::{
     http::header::ContentType, middleware, web, App, HttpRequest, HttpResponse, HttpServer,
 };
-use actix_web_lab::web::redirect;
 use log::debug;
 use rustls::{Certificate, PrivateKey, ServerConfig};
 use rustls_pemfile::{certs, pkcs8_private_keys};
@@ -34,7 +33,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             // register simple handler, handle all methods
             .service(web::resource("/index.html").to(index))
-            .service(redirect("/", "/index.html"))
+            .service(web::redirect("/", "/index.html"))
             .service(Files::new("/static", "static"))
     })
     .bind_rustls("127.0.0.1:8443", config)?
