@@ -72,7 +72,7 @@ async fn handle_post_3(req: HttpRequest, params: web::Form<MyParams>) -> impl Re
 mod tests {
     use actix_web::{
         body::to_bytes,
-        dev::{Service, ServiceResponse},
+        dev::ServiceResponse,
         http::{
             header::{HeaderValue, CONTENT_TYPE},
             StatusCode,
@@ -115,7 +115,7 @@ mod tests {
         let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post1")
-            .set_form(&MyParams {
+            .set_form(MyParams {
                 name: "John".to_string(),
             })
             .to_request();
@@ -160,7 +160,7 @@ mod tests {
         let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post2")
-            .set_form(&MyParams {
+            .set_form(MyParams {
                 name: "John".to_string(),
             })
             .to_request();
@@ -204,7 +204,7 @@ mod tests {
         let app = test::init_service(App::new().configure(app_config)).await;
         let req = test::TestRequest::post()
             .uri("/post3")
-            .set_form(&MyParams {
+            .set_form(MyParams {
                 name: "John".to_string(),
             })
             .to_request();

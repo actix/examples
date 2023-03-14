@@ -96,7 +96,7 @@ mod tests {
 
         let req = test::TestRequest::post()
             .uri("/")
-            .set_json(&MyObj {
+            .set_json(MyObj {
                 name: "my-name".to_owned(),
                 number: 43,
             })
