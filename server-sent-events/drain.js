@@ -25,11 +25,10 @@ setInterval(() => {
       .on('error', () => {})
       .end()
   }
-}, 1)
+}, 0)
 
 setInterval(() => {
-  http
-    .post('http://127.0.0.1:8080/', () => print_status(true))
+  http.request({ ...query, path: '/' }, () => print_status(true))
     .setTimeout(100, () => print_status(false))
     .on('error', () => {})
 }, 20)
