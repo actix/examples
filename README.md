@@ -37,6 +37,7 @@
 
 ## Community Articles, Example Apps, Starters & Boilerplate Projects
 
+- [RUSTfulapi](https://github.com/robatipoor/rustfulapi): Reusable template for building REST web services in Rust. Uses Actix Web HTTP web framework and SQLx toolkit.
 - [create-rust-app](https://github.com/Wulf/create-rust-app): Set up a modern Rust + React web app by running one command.
 - [Jelly Starter](https://github.com/secretkeysio/jelly-actix-web-starter): A starter template for Actix Web projects that feels very Django-esque. Avoid the boring stuff and move faster.
 - [Actix and SQLx User CRUD for MySQL](https://github.com/jamesjmeyer210/actix_sqlx_mysql_user_crud): A User CRUD showcasing MySQL database interaction with full integration test coverage, designed to fit comfortably in a system of micro-services.
