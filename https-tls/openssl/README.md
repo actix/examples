@@ -13,7 +13,7 @@ mkcert -install
 If you want to generate your own private key/certificate pair, then run:
 
 ```sh
-mkcert 127.0.0.1 localhost
+mkcert -key-file key.pem -cert-file cert.pem 127.0.0.1 localhost
 ```
 
 A new `key.pem` and `cert.pem` will be saved to the current directory. You will then need to modify `main.rs` where indicated.

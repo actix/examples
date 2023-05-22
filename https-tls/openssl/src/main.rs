@@ -31,7 +31,9 @@ async fn main() -> io::Result<()> {
 
     // set the unencrypted private key
     // (uncomment if you generate your own key+cert with `mkcert`, and also remove the statement above)
-    // builder.set_private_key_file("key.pem").unwrap();
+    // builder
+    //     .set_private_key_file("key.pem", openssl::ssl::SslFiletype::PEM)
+    //     .unwrap();
 
     // set the certificate chain file location
     builder.set_certificate_chain_file("cert.pem").unwrap();
