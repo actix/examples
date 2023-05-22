@@ -2,31 +2,40 @@
 
 ## Usage
 
-### Certificate
+### Generating Trusted Certificate
 
-We put the self-signed certificate in this directory as an example but your browser would complain that it isn't secure. So we recommend to use [`mkcert`] to trust it. To use local CA, you should run:
+We put self-signed certificate in this directory as an example but your browser will complain that connections to the server aren't secure. We recommend to use [`mkcert`] to trust it. To use a local CA, you should run:
 
 ```sh
 mkcert -install
 ```
 
-If you want to generate your own cert/private key file, then run:
+If you want to generate your own private key/certificate pair, then run:
 
 ```sh
-mkcert 127.0.0.1
+mkcert 127.0.0.1 localhost
+```
+
+A new `key.pem` and `cert.pem` will be saved to the current directory. You will then need to modify `main.rs` where indicated.
+
+### Running Server
+
+```console
+$ cd security/openssl
+$ cargo run # (or `cargo watch -x run`)
+starting HTTPS server at 127.0.0.1:8443
+```
+
+### Using Client
+
+- curl: `curl -vk https://127.0.0.1:8443`
+- curl (forced HTTP/1.1): `curl -vk --http1.1 https://127.0.0.1:8443`
+- browser: <https://127.0.0.1:8443>
+
+## Self-Signed Encrypted Private Key Command
+
+```sh
+openssl req -x509 -newkey rsa:4096 -keyout key-pass.pem -out cert-pass.pem -sha256 -days 365
 ```
 
 [`mkcert`]: https://github.com/FiloSottile/mkcert
-
-### server
-
-```sh
-cd security/openssl
-cargo run (or ``cargo watch -x run``)
-# Started http server: 127.0.0.1:8443
-```
-
-### web client
-
-- curl: `curl -v https://127.0.0.1:8443/index.html --compressed -k`
-- browser: [https://127.0.0.1:8443/index.html](https://127.0.0.1:8443/index.html)
