@@ -1,4 +1,4 @@
-# tls example
+# HTTPS Server using OpenSSL
 
 ## Usage
 

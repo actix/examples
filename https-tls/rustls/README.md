@@ -1,4 +1,4 @@
-# TLS / HTTPS (via Rustls)
+# HTTPS Server (using Rustls)
 
 ## Usage
 

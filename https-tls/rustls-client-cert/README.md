@@ -1,4 +1,4 @@
-# Access Client Certificate (via Rustls)
+# TLS Client Certificate (using Rustls)
 
 ## Usage
 
