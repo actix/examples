@@ -201,9 +201,6 @@ async fn main() {
         Err(e) => 0,
     };
 
-    // if your password contains dollar sign "$" the remember to escape it
-    // db_password = "123$abc" will need to be changed to db_password = "123\$abc"
-
     http_server_status.push_str(&server_addr);
 
     let builder: OptsBuilder = get_conn_builder(db_user, db_password, db_host, db_port, db_name);

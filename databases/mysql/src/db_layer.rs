@@ -356,25 +356,7 @@ fn insert_customer_data(
     )
 	.and_then(|_| Ok(conn.last_insert_id()))
 }
-/*
-fn select_bank_details(
-    conn: &mut PooledConn,
-) -> std::result::Result<Vec<BankDetails>, mysql::error::Error> {
-    let mut bank_data = Vec::new();
 
-    conn.exec_map(
-        "select bank_name, country from bank_details where length(trim(coalesce(bank_name,''))) > :my_value and length(trim(coalesce(country,''))) > :my_value order by id asc;",
-        params! {
-                "my_value" => 0,
-            },
-            |(my_bank_name, my_country)| {
-                let bank_details = BankDetails { bank_name: my_bank_name, country: my_country, };
-                bank_data.push(bank_details);
-            },
-    )
-    .and_then(|_| Ok(bank_data))
-}
-*/
 fn select_bank_details(
     conn: &mut PooledConn,
 ) -> std::result::Result<Vec<BankDetails>, mysql::error::Error> {

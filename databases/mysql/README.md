@@ -44,7 +44,7 @@ You may need to ensure that you are running the commands with the correct MySQL 
 
    Copy the contents of each of the ".sql" and execute them separately on MySQL Server. This will create four tables in the database.
 
-4. Update `.env` file:
+4. Create `.env` file:
 
    ```ini
    SERVER_ADDR=127.0.0.1:8080
@@ -55,7 +55,8 @@ You may need to ensure that you are running the commands with the correct MySQL 
    MYSQL_DBNAME=my_bank
    ```
    
-   Update "MYSQL_USER" and "MYSQL_PASSWORD" with the correct MySQL user/password.
+   Update "MYSQL_USER" and "MYSQL_PASSWORD" values with the correct MySQL user/password.
+   If your password contains dollar sign "$", then remember to escape it eg "123$abc" will need to be changed to "123\$abc"
 
 5. Run the server:
 
