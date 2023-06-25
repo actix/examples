@@ -1,0 +1,18 @@
+1.
+Linux
+
+curl -d '{"customer_name":"Peter Paul", "branch_name":"Central Business District"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/addcustomer
+
+2.
+Windows
+
+curl -H "Content-type:application/json" --data-binary "{\"customer_name\":\"Peter Paul\", \"branch_name\":\"Central Business District\"}" http://127.0.0.1:8080/addcustomer
+
+
+3.
+Json response
+
+{
+  "status_code": 0,
+  "status_description": "Successful"
+}

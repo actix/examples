@@ -1,0 +1,23 @@
+1.
+Linux
+
+curl 'http://localhost:8080/getcustomer'
+
+2.
+Windows
+
+curl http://localhost:8080/getcustomer
+
+3.
+Json response
+
+{
+  "status_code": 0,
+  "status_description": "Successful",
+  "customer_data": [
+    {
+      "customer_name": "peter paul",
+      "branch_name": "central business district"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+1.
+Linux
+
+curl -d '{"branch_name":"HQ branch", "location":"Central Business District"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/addbranch
+
+2.
+Windows
+
+curl -H "Content-type:application/json" --data-binary "{\"branch_name\":\"HQ branch\", \"location\":\"Central Business District\"}" http://127.0.0.1:8080/addbranch
+
+
+3.
+Json response
+
+{
+  "status_code": 0,
+  "status_description": "Successful"
+}
