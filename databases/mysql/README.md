@@ -56,7 +56,7 @@ You may need to ensure that you are running the commands with the correct MySQL 
    ```
    
    Update "MYSQL_USER" and "MYSQL_PASSWORD" values with the correct MySQL user/password.
-   If your password contains dollar sign "$", then remember to escape it eg "123$abc" will need to be changed to "123\$abc"
+   If your password contains dollar sign "$", then remember to escape it eg "123$abc" will need to be changed to "123\\$abc"
 
 5. Run the server:
 
