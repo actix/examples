@@ -13,7 +13,7 @@ mkcert -install
 If you want to generate your own cert/private key file, then run:
 
 ```sh
-mkcert 127.0.0.1 localhost
+mkcert -key-file key.pem -cert-file cert.pem 127.0.0.1 localhost
 ```
 
 For `rsa` keys use `rsa_private_keys` function instead `pkcs8_private_keys`

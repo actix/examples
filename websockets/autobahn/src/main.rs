@@ -3,7 +3,7 @@ use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServ
 use actix_web_actors::ws;
 
 async fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    ws::start(AutobahnWebSocket::default(), &r, stream)
+    ws::start(AutobahnWebSocket, &r, stream)
 }
 
 #[derive(Debug, Clone, Default)]

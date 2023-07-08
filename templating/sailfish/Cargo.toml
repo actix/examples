@@ -9,4 +9,4 @@ actix-web-lab.workspace = true
 
 env_logger.workspace = true
 log.workspace = true
-sailfish = "0.6"
+sailfish = "0.7"
