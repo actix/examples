@@ -10,7 +10,7 @@ actix-cors.workspace = true
 
 juniper = "0.15"
 
-mysql = "23"
+mysql = "23" # waiting on r2d2_mysql update
 r2d2 = "0.8"
 r2d2_mysql = "23"
 

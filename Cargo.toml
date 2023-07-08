@@ -87,6 +87,7 @@ actix-web-lab = "0.19"
 actix-ws = "0.2.5"
 awc = "3"
 
+chrono = { version = "0.4.20", default-features = false, features = ["clock", "serde"] }
 derive_more = "0.99.7"
 env_logger = "0.10"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
@@ -95,3 +96,4 @@ rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1.24.2", features = ["sync"] }
+tokio-util = "0.7.4"

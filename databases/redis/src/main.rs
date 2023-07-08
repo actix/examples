@@ -19,7 +19,7 @@ async fn cache_stuff(
         .await
         .map_err(error::ErrorInternalServerError)?;
 
-    let res = redis::Cmd::set_multiple(&[
+    let res = redis::Cmd::mset(&[
         ("my_domain:one", info.one),
         ("my_domain:two", info.two),
         ("my_domain:three", info.three),

@@ -9,6 +9,7 @@ use actix_web::{
     web, App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder, Result,
 };
 use actix_web_lab::respond::Html;
+use minijinja::path_loader;
 use minijinja_autoreload::AutoReloader;
 
 struct MiniJinjaRenderer {
@@ -91,7 +92,7 @@ async fn main() -> std::io::Result<()> {
             notifier.watch_path(&tmpl_path, true);
         }
 
-        env.set_source(minijinja::Source::from_path(tmpl_path));
+        env.set_loader(path_loader(tmpl_path));
 
         Ok(env)
     });

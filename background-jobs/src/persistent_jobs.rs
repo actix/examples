@@ -29,13 +29,13 @@ impl Job for Email {
     const NAME: &'static str = "send_email";
 }
 
-async fn process_email_job(job: Email, _ctx: JobContext) -> Result<JobResult, JobError> {
+async fn process_email_job(job: Email, _ctx: JobContext) -> Result<(), JobError> {
     log::info!("sending email to {}", &job.to);
 
     // simulate time taken to send email
     tokio::time::sleep(rand_delay_with_jitter()).await;
 
-    Ok(JobResult::Success)
+    Ok(())
 }
 
 pub(crate) async fn start_processing_email_queue() -> anyhow::Result<RedisStorage<Email>> {
@@ -45,16 +45,17 @@ pub(crate) async fn start_processing_email_queue() -> anyhow::Result<RedisStorag
     // create job monitor(s) and attach email job handler
     let monitor = Monitor::new().register_with_count(2, {
         let storage = storage.clone();
-        move |_n| WorkerBuilder::new(storage.clone()).build_fn(process_email_job)
+        move |n| {
+            WorkerBuilder::new(format!("job-handler-{n}"))
+                .with_storage(storage.clone())
+                .build_fn(process_email_job)
+        }
     });
 
     // spawn job monitor into background
     // the monitor manages itself otherwise so we don't need to return a join handle
     #[allow(clippy::let_underscore_future)]
-    let _ = tokio::spawn(
-        // run_without_signals: don't listen for ctrl-c because Actix Web does
-        monitor.run_without_signals(),
-    );
+    let _ = tokio::spawn(monitor.run());
 
     Ok(storage)
 }
