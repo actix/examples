@@ -16,7 +16,6 @@ use std::io;
 
 use actix_web::{
     error::ErrorBadRequest,
-    http::header::ContentType,
     web::{self, BytesMut},
     App, Error, HttpResponse, HttpServer,
 };
@@ -56,7 +55,7 @@ async fn step_x(data: SomeData, client: &Client) -> actix_web::Result<SomeData> 
         body.extend_from_slice(&chunk?);
     }
 
-    let body: HttpBinResponse = serde_json::from_slice(&body).unwrap();
+    let body = serde_json::from_slice::<HttpBinResponse>(&body).unwrap();
 
     println!("{body:?}");
 
@@ -71,9 +70,7 @@ async fn create_something(
     let some_data_3 = step_x(some_data_2, &client).await?;
     let d = step_x(some_data_3, &client).await?;
 
-    Ok(HttpResponse::Ok()
-        .content_type(ContentType::json())
-        .body(serde_json::to_string(&d).unwrap()))
+    Ok(HttpResponse::Ok().json(d))
 }
 
 #[actix_web::main]

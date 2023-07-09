@@ -124,7 +124,7 @@ mod test {
                         RedisActorSessionStore::new("127.0.0.1:6379"),
                         private_key.clone(),
                     )
-                    .cookie_name("test-session".to_string())
+                    .cookie_name("test-session".to_owned())
                     .build(),
                 )
                 .wrap(middleware::Logger::default())

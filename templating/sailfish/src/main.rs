@@ -38,7 +38,7 @@ async fn page(params: web::Path<(i32,)>) -> actix_web::Result<impl Responder> {
 
 #[get("/")]
 async fn hello() -> impl Responder {
-    Html("<p>Hello world!</p>".to_string())
+    Html("<p>Hello world!</p>".to_owned())
 }
 
 #[actix_web::main]

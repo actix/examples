@@ -30,7 +30,7 @@ async fn main() -> io::Result<()> {
 
 #[get("/")]
 async fn index() -> impl Responder {
-    Html(include_str!("index.html").to_string())
+    Html(include_str!("index.html").to_owned())
 }
 
 #[get("/events")]

@@ -31,7 +31,7 @@ impl ResponseError for Error {
 
 async fn index() -> Result<HttpResponse, Error> {
     Err(Error {
-        msg: "an example error message".to_string(),
+        msg: "an example error message".to_owned(),
         status: 400,
     })
 }

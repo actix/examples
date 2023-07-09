@@ -64,7 +64,7 @@ impl WsChatSession {
     pub fn send_msg(&self, msg: &str) {
         let content = format!(
             "{}: {msg}",
-            self.name.clone().unwrap_or_else(|| "anon".to_string()),
+            self.name.clone().unwrap_or_else(|| "anon".to_owned()),
         );
 
         let msg = SendMessage(self.room.clone(), self.id, content);
@@ -84,7 +84,7 @@ impl Actor for WsChatSession {
     fn stopped(&mut self, _ctx: &mut Self::Context) {
         log::info!(
             "WsChatSession closed for {}({}) in room {}",
-            self.name.clone().unwrap_or_else(|| "anon".to_string()),
+            self.name.clone().unwrap_or_else(|| "anon".to_owned()),
             self.id,
             self.room
         );

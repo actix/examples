@@ -28,7 +28,7 @@ async fn main() -> std::io::Result<()> {
     let pool: models::Pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
-    let domain: String = std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_string());
+    let domain: String = std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_owned());
 
     log::info!("starting HTTP server at http://localhost:8080");
 

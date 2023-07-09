@@ -45,7 +45,7 @@ impl From<DBError> for ServiceError {
         match error {
             DBError::DatabaseError(kind, info) => {
                 if let DatabaseErrorKind::UniqueViolation = kind {
-                    let message = info.details().unwrap_or_else(|| info.message()).to_string();
+                    let message = info.details().unwrap_or_else(|| info.message()).to_owned();
                     return ServiceError::BadRequest(message);
                 }
                 ServiceError::InternalServerError

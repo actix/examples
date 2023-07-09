@@ -21,7 +21,7 @@ fn app_config(config: &mut web::ServiceConfig) {
     config.service(
         web::scope("")
             .app_data(web::Data::new(AppState {
-                foo: "bar".to_string(),
+                foo: "bar".to_owned(),
             }))
             .service(web::resource("/").route(web::get().to(index)))
             .service(web::resource("/post1").route(web::post().to(handle_post_1)))
@@ -96,7 +96,7 @@ mod tests {
     #[actix_web::test]
     async fn handle_post_1_unit_test() {
         let params = Form(MyParams {
-            name: "John".to_string(),
+            name: "John".to_owned(),
         });
         let resp = handle_post_1(params).await.unwrap();
 
@@ -116,7 +116,7 @@ mod tests {
         let req = test::TestRequest::post()
             .uri("/post1")
             .set_form(MyParams {
-                name: "John".to_string(),
+                name: "John".to_owned(),
             })
             .to_request();
         let resp: ServiceResponse = test::call_service(&app, req).await;
@@ -134,12 +134,12 @@ mod tests {
     async fn handle_post_2_unit_test() {
         let state = TestRequest::default()
             .data(AppState {
-                foo: "bar".to_string(),
+                foo: "bar".to_owned(),
             })
             .to_http_request();
         let data = state.app_data::<actix_web::web::Data<AppState>>().unwrap();
         let params = Form(MyParams {
-            name: "John".to_string(),
+            name: "John".to_owned(),
         });
         let resp = handle_post_2(data.clone(), params).await.unwrap();
 
@@ -161,7 +161,7 @@ mod tests {
         let req = test::TestRequest::post()
             .uri("/post2")
             .set_form(MyParams {
-                name: "John".to_string(),
+                name: "John".to_owned(),
             })
             .to_request();
         let resp: ServiceResponse = test::call_service(&app, req).await;
@@ -183,7 +183,7 @@ mod tests {
     async fn handle_post_3_unit_test() {
         let req = TestRequest::default().to_http_request();
         let params = Form(MyParams {
-            name: "John".to_string(),
+            name: "John".to_owned(),
         });
         let result = handle_post_3(req.clone(), params).await;
         let resp = result.respond_to(&req);
@@ -205,7 +205,7 @@ mod tests {
         let req = test::TestRequest::post()
             .uri("/post3")
             .set_form(MyParams {
-                name: "John".to_string(),
+                name: "John".to_owned(),
             })
             .to_request();
         let resp: ServiceResponse = test::call_service(&app, req).await;

@@ -14,7 +14,7 @@ pub async fn gen_tls_cert(user_email: &str, user_domain: &str) -> anyhow::Result
     // Create acme-challenge dir.
     fs::create_dir("./acme-challenge").unwrap();
 
-    let domain = user_domain.to_string();
+    let domain = user_domain.to_owned();
 
     // Create temporary Actix Web server for ACME challenge.
     let srv = HttpServer::new(|| {

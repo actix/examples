@@ -71,10 +71,10 @@ fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> HttpResponse 
 
     // Provide a fallback to a simple plain text response in case an error occurs during the
     // rendering of the error page.
-    let fallback = |e: &str| {
+    let fallback = |err: &str| {
         HttpResponse::build(res.status())
             .content_type(ContentType::plaintext())
-            .body(e.to_string())
+            .body(err.to_string())
     };
 
     let tera = request.app_data::<web::Data<Tera>>().map(|t| t.get_ref());
