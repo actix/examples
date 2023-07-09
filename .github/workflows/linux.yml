@@ -36,7 +36,7 @@ jobs:
           sudo apt-get update && sudo apt-get install sqlite3
           sqlx database create
           chmod a+rwx ./todo.db
-          sqlx migrate run
+          sqlx migrate run --source=./basics/todo/migrations
 
       - name: cargo check
         run: cargo check --workspace --bins --examples --tests
