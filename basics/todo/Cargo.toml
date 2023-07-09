@@ -14,5 +14,5 @@ env_logger.workspace = true
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "sqlite", "offline"] }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite"] }
 tera = "1.5"

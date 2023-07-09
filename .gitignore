@@ -26,3 +26,7 @@ upload.png
 
 # file uploads
 /tmp
+
+# todo example database
+todo.db
+todo.db-*

@@ -6,12 +6,13 @@ A simple Todo project using a SQLite database.
 
 - SQLite 3
 
-## Change Into This Project Sub Directory
+## Change Into The Examples Workspace Root Directory
 
-All instructions assume you have changed into this folder:
+All instructions assume you have changed into the examples workspace root:
 
-```sh
-cd basics/todo
+```pwd
+$ pwd
+.../examples
 ```
 
 ## Set Up The Database
@@ -34,7 +35,7 @@ sqlx migrate run
 Start the application with:
 
 ```sh
-cargo run
+cargo run --bin=todo
 ```
 
 The app will be viewable in the browser at <http://localhost:8080>.
@@ -44,5 +45,5 @@ The app will be viewable in the browser at <http://localhost:8080>.
 For simplicity, this example uses SQLx's offline mode. If you make any changes to the database schema, this must be turned off or the `sqlx-data.json` file regenerated using the following command:
 
 ```sh
-DATABASE_URL="sqlite://$(pwd)/todo.db" cargo sqlx prepare
+cargo sqlx prepare --database-url=sqlite://./todo.db
 ```
