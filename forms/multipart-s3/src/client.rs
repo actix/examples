@@ -2,7 +2,7 @@ use std::env;
 
 use actix_web::{error, web::Bytes, Error};
 use aws_config::SdkConfig as AwsConfig;
-use aws_sdk_s3::{types::ByteStream, Client as S3Client};
+use aws_sdk_s3::{primitives::ByteStream, Client as S3Client};
 use futures_util::{stream, Stream, StreamExt as _, TryStreamExt as _};
 use tokio::{fs, io::AsyncReadExt as _};
 

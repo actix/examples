@@ -8,8 +8,8 @@ actix-multipart.workspace = true
 actix-web.workspace = true
 actix-web-lab.workspace = true
 
-aws-config = "0.54"
-aws-sdk-s3 = "0.24"
+aws-config = "0.55"
+aws-sdk-s3 = "0.28"
 
 dotenv = "0.15"
 env_logger.workspace = true
