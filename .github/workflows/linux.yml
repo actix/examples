@@ -16,10 +16,6 @@ jobs:
     name: ${{ matrix.version }}
     runs-on: ubuntu-latest
 
-    env:
-      CI: 1
-      CARGO_INCREMENTAL: false
-
     steps:
       - uses: actions/checkout@v3
 
@@ -38,9 +34,8 @@ jobs:
           DATABASE_URL: sqlite://./todo.db
         run: |
           sudo apt-get update && sudo apt-get install sqlite3
-          cd basics/todo
           sqlx database create
-          chmod a+rwx todo.db
+          chmod a+rwx ./todo.db
           sqlx migrate run
 
       - name: cargo check

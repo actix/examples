@@ -10,7 +10,7 @@ A simple Todo project using a SQLite database.
 
 All instructions assume you have changed into the examples workspace root:
 
-```pwd
+```console
 $ pwd
 .../examples
 ```
@@ -26,8 +26,8 @@ cargo install sqlx-cli --no-default-features --features=rustls,sqlite
 Then to create and set-up the database run:
 
 ```sh
-sqlx database create
-sqlx migrate run
+sqlx database create --database-url=sqlite://./todo.db
+sqlx migrate run --database-url=sqlite://./todo.db
 ```
 
 ## Run The Application
