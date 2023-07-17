@@ -52,6 +52,7 @@
 - [Fullstack-Rust](https://github.com/vascokk/fullstack-rust): A Full Stack Rust application (Connect5 game) with Actix Web, Yew, Bulma CSS and Diesel.
 - [Mozilla Services Skeleton App](https://github.com/mozilla-services/skeleton)
 - [rayspace.dev](https://github.com/ryspc/rayspace.dev): Minimalist dev portfolio and blog featuring GitHub OAuth, session management, HTTP Server for SPA, API endpoints, and SQLx integration.
+- [rayspace.dev](https://github.com/ryspc/rayspace.dev): Minimalist dev portfolio and blog implemented as a Rust-powered SPA, featuring GitHub OAuth, session management, static file serving, API endpoints, and SQLx integration.
 
 ## Paid Resources
 
