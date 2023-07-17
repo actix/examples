@@ -9,7 +9,7 @@ Windows
 curl http://localhost:8080/getbranch
 
 3.
-Json response
+JSON response
 
 {
   "status_code": 0,

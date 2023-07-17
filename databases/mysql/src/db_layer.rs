@@ -1,33 +1,32 @@
-use crate::BankDetails;
-use crate::BankResponseData;
-use crate::BranchDetails;
-use crate::BranchResponseData;
-use crate::CustomerDetails;
-use crate::CustomerResponseData;
-use crate::ResponseStatus;
-use crate::TellerDetails;
-use crate::TellerResponseData;
 use actix_web::web;
-use mysql::prelude::*;
-use mysql::*;
+use mysql::{params, prelude::*};
 
-const ERROR_MESSAGE: &str = "Error occured during processing, please try again.";
+use crate::{
+    BankDetails, BankResponseData, BranchDetails, BranchResponseData, CustomerDetails,
+    CustomerResponseData, ResponseStatus, TellerDetails, TellerResponseData,
+};
 
-pub fn create_bank(data: &web::Data<Pool>, bank_name: String, _country: String) -> ResponseStatus {
+const ERROR_MESSAGE: &str = "Error occurred during processing, please try again.";
+
+pub fn create_bank(
+    data: &web::Data<mysql::Pool>,
+    bank_name: String,
+    _country: String,
+) -> ResponseStatus {
     let my_status_code: u8 = 1;
-    let my_status_description: String = ERROR_MESSAGE.to_string();
+    let my_status_description = ERROR_MESSAGE.to_owned();
 
     let mut response_status = ResponseStatus {
         status_code: my_status_code,
         status_description: my_status_description,
     };
 
-    if bank_name.replace(" ", "").trim().len() == 0 {
+    if bank_name.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Bank name is empty!");
         return response_status;
     }
 
-    if _country.replace(" ", "").trim().len() == 0 {
+    if _country.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Country is empty!");
         return response_status;
     }
@@ -41,31 +40,31 @@ pub fn create_bank(data: &web::Data<Pool>, bank_name: String, _country: String) 
                 response_status.status_description = String::from("Successful");
             }
         }
-        Err(e) => println!("Failed to open DB connection. create_bank {:?}", e),
+        Err(err) => println!("Failed to open DB connection. create_bank {err:?}"),
     }
 
     response_status
 }
 
 pub fn create_branch(
-    data: &web::Data<Pool>,
+    data: &web::Data<mysql::Pool>,
     branch_name: String,
     _location: String,
 ) -> ResponseStatus {
     let my_status_code: u8 = 1;
-    let my_status_description: String = ERROR_MESSAGE.to_string();
+    let my_status_description = ERROR_MESSAGE.to_owned();
 
     let mut response_status = ResponseStatus {
         status_code: my_status_code,
         status_description: my_status_description,
     };
 
-    if branch_name.replace(" ", "").trim().len() == 0 {
+    if branch_name.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Branch name is empty!");
         return response_status;
     }
 
-    if _location.replace(" ", "").trim().len() == 0 {
+    if _location.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Location is empty!");
         return response_status;
     }
@@ -83,31 +82,31 @@ pub fn create_branch(
                 response_status.status_description = String::from("Successful");
             }
         }
-        Err(e) => println!("Failed to open DB connection. create_branch {:?}", e),
+        Err(err) => println!("Failed to open DB connection. create_branch {err:?}"),
     }
 
     response_status
 }
 
 pub fn create_teller(
-    data: &web::Data<Pool>,
+    data: &web::Data<mysql::Pool>,
     teller_name: String,
     branch_name: String,
 ) -> ResponseStatus {
     let my_status_code: u8 = 1;
-    let my_status_description: String = ERROR_MESSAGE.to_string();
+    let my_status_description = ERROR_MESSAGE.to_owned();
 
     let mut response_status = ResponseStatus {
         status_code: my_status_code,
         status_description: my_status_description,
     };
 
-    if teller_name.replace(" ", "").trim().len() == 0 {
+    if teller_name.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Teller name is empty!");
         return response_status;
     }
 
-    if branch_name.replace(" ", "").trim().len() == 0 {
+    if branch_name.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Branch name is empty!");
         return response_status;
     }
@@ -125,31 +124,31 @@ pub fn create_teller(
                 response_status.status_description = String::from("Successful");
             }
         }
-        Err(e) => println!("Failed to open DB connection. create_teller {:?}", e),
+        Err(err) => println!("Failed to open DB connection. create_teller {err:?}"),
     }
 
     response_status
 }
 
 pub fn create_customer(
-    data: &web::Data<Pool>,
+    data: &web::Data<mysql::Pool>,
     customer_name: String,
     branch_name: String,
 ) -> ResponseStatus {
     let my_status_code: u8 = 1;
-    let my_status_description: String = ERROR_MESSAGE.to_string();
+    let my_status_description = ERROR_MESSAGE.to_owned();
 
     let mut response_status = ResponseStatus {
         status_code: my_status_code,
         status_description: my_status_description,
     };
 
-    if customer_name.replace(" ", "").trim().len() == 0 {
+    if customer_name.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Customer name is empty!");
         return response_status;
     }
 
-    if branch_name.replace(" ", "").trim().len() == 0 {
+    if branch_name.replace(' ', "").trim().is_empty() {
         response_status.status_description = String::from("Branch name is empty!");
         return response_status;
     }
@@ -167,13 +166,13 @@ pub fn create_customer(
                 response_status.status_description = String::from("Successful");
             }
         }
-        Err(e) => println!("Failed to open DB connection. create_customer {:?}", e),
+        Err(err) => println!("Failed to open DB connection. create_customer {err:?}"),
     }
 
     response_status
 }
 
-pub fn get_bank_data(data: &web::Data<Pool>) -> BankResponseData {
+pub fn get_bank_data(data: &web::Data<mysql::Pool>) -> BankResponseData {
     let mut vec_bank_data = Vec::new();
     let mut my_status_code: u8 = 1;
     let mut my_status_description: String = String::from("Record not found");
@@ -185,25 +184,24 @@ pub fn get_bank_data(data: &web::Data<Pool>) -> BankResponseData {
         Ok(s) => {
             vec_bank_data = s;
         }
-        Err(e) => println!("Failed to open DB connection. {:?}", e),
+        Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
-    if vec_bank_data.len() > 0 {
+    if !vec_bank_data.is_empty() {
         my_status_code = 0;
         my_status_description = String::from("Successful");
     }
 
     //Assign values to struct variable
-    let output_data = BankResponseData {
+
+    BankResponseData {
         status_code: my_status_code,
         status_description: my_status_description,
         bank_data: vec_bank_data,
-    };
-
-    output_data
+    }
 }
 
-pub fn get_branch_data(data: &web::Data<Pool>) -> BranchResponseData {
+pub fn get_branch_data(data: &web::Data<mysql::Pool>) -> BranchResponseData {
     let mut vec_branch_data = Vec::new();
     let mut my_status_code: u8 = 1;
     let mut my_status_description: String = String::from("Record not found");
@@ -215,25 +213,24 @@ pub fn get_branch_data(data: &web::Data<Pool>) -> BranchResponseData {
         Ok(s) => {
             vec_branch_data = s;
         }
-        Err(e) => println!("Failed to open DB connection. {:?}", e),
+        Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
-    if vec_branch_data.len() > 0 {
+    if !vec_branch_data.is_empty() {
         my_status_code = 0;
         my_status_description = String::from("Successful");
     }
 
     //Assign values to struct variable
-    let output_data = BranchResponseData {
+
+    BranchResponseData {
         status_code: my_status_code,
         status_description: my_status_description,
         branch_data: vec_branch_data,
-    };
-
-    output_data
+    }
 }
 
-pub fn get_teller_data(data: &web::Data<Pool>) -> TellerResponseData {
+pub fn get_teller_data(data: &web::Data<mysql::Pool>) -> TellerResponseData {
     let mut vec_teller_data = Vec::new();
     let mut my_status_code: u8 = 1;
     let mut my_status_description: String = String::from("Record not found");
@@ -245,25 +242,23 @@ pub fn get_teller_data(data: &web::Data<Pool>) -> TellerResponseData {
         Ok(s) => {
             vec_teller_data = s;
         }
-        Err(e) => println!("Failed to open DB connection. {:?}", e),
+        Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
-    if vec_teller_data.len() > 0 {
+    if !vec_teller_data.is_empty() {
         my_status_code = 0;
         my_status_description = String::from("Successful");
     }
 
-    //Assign values to struct variable
-    let output_data = TellerResponseData {
+    // assign values to struct variable
+    TellerResponseData {
         status_code: my_status_code,
         status_description: my_status_description,
         teller_data: vec_teller_data,
-    };
-
-    output_data
+    }
 }
 
-pub fn get_customer_data(data: &web::Data<Pool>) -> CustomerResponseData {
+pub fn get_customer_data(data: &web::Data<mysql::Pool>) -> CustomerResponseData {
     let mut vec_customer_data = Vec::new();
     let mut my_status_code: u8 = 1;
     let mut my_status_description: String = String::from("Record not found");
@@ -275,26 +270,24 @@ pub fn get_customer_data(data: &web::Data<Pool>) -> CustomerResponseData {
         Ok(s) => {
             vec_customer_data = s;
         }
-        Err(e) => println!("Failed to open DB connection. {:?}", e),
+        Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
-    if vec_customer_data.len() > 0 {
+    if !vec_customer_data.is_empty() {
         my_status_code = 0;
         my_status_description = String::from("Successful");
     }
 
-    //Assign values to struct variable
-    let output_data = CustomerResponseData {
+    // assign values to struct variable
+    CustomerResponseData {
         status_code: my_status_code,
         status_description: my_status_description,
         customer_data: vec_customer_data,
-    };
-
-    output_data
+    }
 }
 
 fn insert_bank_data(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
     my_bank_name: String,
     my_country: String,
 ) -> std::result::Result<u64, mysql::error::Error> {
@@ -306,11 +299,11 @@ fn insert_bank_data(
             "country" => my_country,
         },
     )
-    .and_then(|_| Ok(conn.last_insert_id()))
+    .map(|_| conn.last_insert_id())
 }
 
 fn insert_branch_data(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
     my_branch_name: String,
     my_location: String,
 ) -> std::result::Result<u64, mysql::error::Error> {
@@ -322,11 +315,11 @@ fn insert_branch_data(
             "location" => my_location,
         },
     )
-    .and_then(|_| Ok(conn.last_insert_id()))
+    .map(|_| conn.last_insert_id())
 }
 
 fn insert_teller_data(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
     my_teller_name: String,
     my_branch_name: String,
 ) -> std::result::Result<u64, mysql::error::Error> {
@@ -337,12 +330,11 @@ fn insert_teller_data(
             "teller_name" => my_teller_name,
             "branch_name" => my_branch_name,
         },
-    )
-	.and_then(|_| Ok(conn.last_insert_id()))
+    ).map(|_| conn.last_insert_id())
 }
 
 fn insert_customer_data(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
     my_customer_name: String,
     my_branch_name: String,
 ) -> std::result::Result<u64, mysql::error::Error> {
@@ -353,12 +345,11 @@ fn insert_customer_data(
             "customer_name" => my_customer_name,
             "branch_name" => my_branch_name,
         },
-    )
-	.and_then(|_| Ok(conn.last_insert_id()))
+    ).map(|_| conn.last_insert_id())
 }
 
 fn select_bank_details(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
 ) -> std::result::Result<Vec<BankDetails>, mysql::error::Error> {
     let mut bank_data = Vec::new();
 
@@ -368,12 +359,11 @@ fn select_bank_details(
                 let bank_details = BankDetails { bank_name: my_bank_name, country: my_country, };
                 bank_data.push(bank_details);
             },
-    )
-	.and_then(|_| Ok(bank_data))
+    ).map(|_| bank_data)
 }
 
 fn select_branch_details(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
 ) -> std::result::Result<Vec<BranchDetails>, mysql::error::Error> {
     let mut branch_data = Vec::new();
 
@@ -383,12 +373,11 @@ fn select_branch_details(
                 let branch_details = BranchDetails { branch_name: my_branch_name, location: my_location, };
                 branch_data.push(branch_details);
             },
-    )
-	.and_then(|_| Ok(branch_data))
+    ).map(|_| branch_data)
 }
 
 fn select_teller_details(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
 ) -> std::result::Result<Vec<TellerDetails>, mysql::error::Error> {
     let mut teller_data = Vec::new();
 
@@ -398,12 +387,11 @@ fn select_teller_details(
                 let teller_details = TellerDetails { teller_name: my_teller_name, branch_name: my_branch_name, };
                 teller_data.push(teller_details);
             },
-    )
-	.and_then(|_| Ok(teller_data))
+    ).map(|_| teller_data)
 }
 
 fn select_customer_details(
-    conn: &mut PooledConn,
+    conn: &mut mysql::PooledConn,
 ) -> std::result::Result<Vec<CustomerDetails>, mysql::error::Error> {
     let mut customer_data = Vec::new();
 
@@ -413,6 +401,5 @@ fn select_customer_details(
                 let teller_details = CustomerDetails { customer_name: my_customer_name, branch_name: my_branch_name, };
                 customer_data.push(teller_details);
             },
-    )
-	.and_then(|_| Ok(customer_data))
+    ).map(|_| customer_data)
 }

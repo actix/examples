@@ -10,7 +10,7 @@ curl -H "Content-type:application/json" --data-binary "{\"customer_name\":\"Pete
 
 
 3.
-Json response
+JSON response
 
 {
   "status_code": 0,

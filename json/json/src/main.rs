@@ -106,6 +106,6 @@ mod tests {
         assert_eq!(resp.status(), http::StatusCode::OK);
 
         let body_bytes = to_bytes(resp.into_body()).await.unwrap();
-        assert_eq!(body_bytes, r##"{"name":"my-name","number":43}"##);
+        assert_eq!(body_bytes, r#"{"name":"my-name","number":43}"#);
     }
 }

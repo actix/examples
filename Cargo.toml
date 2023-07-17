@@ -17,6 +17,7 @@ members = [
    "data-factory",
    "databases/diesel",
    "databases/mongodb",
+   "databases/mysql",
    "databases/postgres",
    "databases/redis",
    "databases/sqlite",

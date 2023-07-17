@@ -1,11 +1,10 @@
 mod db_layer;
 
+use std::{env, str};
+
 use actix_web::{get, post, web, App, HttpServer, Responder};
 use dotenv::dotenv;
-use mysql::*;
 use serde::{Deserialize, Serialize};
-use std::env;
-use std::str;
 
 #[derive(Deserialize)]
 struct BankData {
@@ -92,11 +91,11 @@ pub struct CustomerResponseData {
 
 #[get("/")]
 async fn index() -> impl Responder {
-    format!("")
+    String::new()
 }
 
 #[post("/addbank")]
-async fn add_bank(bank_data: web::Json<BankData>, data: web::Data<Pool>) -> impl Responder {
+async fn add_bank(bank_data: web::Json<BankData>, data: web::Data<mysql::Pool>) -> impl Responder {
     let bank_name = &bank_data.bank_name;
     let _country = &bank_data.country;
 
@@ -106,7 +105,10 @@ async fn add_bank(bank_data: web::Json<BankData>, data: web::Data<Pool>) -> impl
 }
 
 #[post("/addbranch")]
-async fn add_branch(branch_data: web::Json<BranchData>, data: web::Data<Pool>) -> impl Responder {
+async fn add_branch(
+    branch_data: web::Json<BranchData>,
+    data: web::Data<mysql::Pool>,
+) -> impl Responder {
     let branch_name = &branch_data.branch_name;
     let _location = &branch_data.location;
 
@@ -117,7 +119,10 @@ async fn add_branch(branch_data: web::Json<BranchData>, data: web::Data<Pool>) -
 }
 
 #[post("/addteller")]
-async fn add_teller(teller_data: web::Json<TellerData>, data: web::Data<Pool>) -> impl Responder {
+async fn add_teller(
+    teller_data: web::Json<TellerData>,
+    data: web::Data<mysql::Pool>,
+) -> impl Responder {
     let teller_name = &teller_data.teller_name;
     let branch_name = &teller_data.branch_name;
 
@@ -130,7 +135,7 @@ async fn add_teller(teller_data: web::Json<TellerData>, data: web::Data<Pool>) -
 #[post("/addcustomer")]
 async fn add_customer(
     customer_data: web::Json<CustomerData>,
-    data: web::Data<Pool>,
+    data: web::Data<mysql::Pool>,
 ) -> impl Responder {
     let customer_name = &customer_data.customer_name;
     let branch_name = &customer_data.branch_name;
@@ -142,28 +147,28 @@ async fn add_customer(
 }
 
 #[get("/getbank")]
-async fn get_bank(data: web::Data<Pool>) -> impl Responder {
+async fn get_bank(data: web::Data<mysql::Pool>) -> impl Responder {
     let bank_response_data = db_layer::get_bank_data(&data);
 
     web::Json(bank_response_data)
 }
 
 #[get("/getbranch")]
-async fn get_branch(data: web::Data<Pool>) -> impl Responder {
+async fn get_branch(data: web::Data<mysql::Pool>) -> impl Responder {
     let branch_response_data = db_layer::get_branch_data(&data);
 
     web::Json(branch_response_data)
 }
 
 #[get("/getteller")]
-async fn get_teller(data: web::Data<Pool>) -> impl Responder {
+async fn get_teller(data: web::Data<mysql::Pool>) -> impl Responder {
     let teller_response_data = db_layer::get_teller_data(&data);
 
     web::Json(teller_response_data)
 }
 
 #[get("/getcustomer")]
-async fn get_customer(data: web::Data<Pool>) -> impl Responder {
+async fn get_customer(data: web::Data<mysql::Pool>) -> impl Responder {
     let customer_response_data = db_layer::get_customer_data(&data);
 
     web::Json(customer_response_data)
@@ -175,14 +180,13 @@ fn get_conn_builder(
     db_host: String,
     db_port: u16,
     db_name: String,
-) -> OptsBuilder {
-    let builder = OptsBuilder::new()
+) -> mysql::OptsBuilder {
+    mysql::OptsBuilder::new()
         .ip_or_hostname(Some(db_host))
         .tcp_port(db_port)
         .db_name(Some(db_name))
         .user(Some(db_user))
-        .pass(Some(db_password));
-    builder
+        .pass(Some(db_password))
 }
 
 #[actix_web::main]
@@ -198,13 +202,14 @@ async fn main() {
     let mut http_server_status = String::from("[info] ActixWebHttpServer - Listening for HTTP on ");
     let db_port: u16 = match my_db_port.parse::<u16>() {
         Ok(a) => a,
-        Err(e) => 0,
+        Err(_err) => 0,
     };
 
     http_server_status.push_str(&server_addr);
 
-    let builder: OptsBuilder = get_conn_builder(db_user, db_password, db_host, db_port, db_name);
-    let pool = match Pool::new(builder) {
+    let builder: mysql::OptsBuilder =
+        get_conn_builder(db_user, db_password, db_host, db_port, db_name);
+    let pool = match mysql::Pool::new(builder) {
         Ok(pool) => pool,
         Err(e) => {
             println!("Failed to open DB connection. {:?}", e);

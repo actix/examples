@@ -10,7 +10,7 @@ curl -H "Content-type:application/json" --data-binary "{\"branch_name\":\"HQ bra
 
 
 3.
-Json response
+JSON response
 
 {
   "status_code": 0,
