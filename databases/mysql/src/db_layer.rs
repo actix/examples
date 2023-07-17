@@ -1,4 +1,3 @@
-use actix_web::web;
 use mysql::{params, prelude::*};
 
 use crate::{
@@ -8,11 +7,7 @@ use crate::{
 
 const ERROR_MESSAGE: &str = "Error occurred during processing, please try again.";
 
-pub fn create_bank(
-    data: &web::Data<mysql::Pool>,
-    bank_name: String,
-    _country: String,
-) -> ResponseStatus {
+pub fn create_bank(pool: &mysql::Pool, bank_name: String, _country: String) -> ResponseStatus {
     let my_status_code: u8 = 1;
     let my_status_description = ERROR_MESSAGE.to_owned();
 
@@ -31,13 +26,13 @@ pub fn create_bank(
         return response_status;
     }
 
-    match data.get_conn().and_then(|mut conn| {
+    match pool.get_conn().and_then(|mut conn| {
         insert_bank_data(&mut conn, bank_name.to_lowercase(), _country.to_lowercase())
     }) {
         Ok(x) => {
             if x > 0 {
                 response_status.status_code = 0;
-                response_status.status_description = String::from("Successful");
+                response_status.status_description = "Successful".to_owned();
             }
         }
         Err(err) => println!("Failed to open DB connection. create_bank {err:?}"),
@@ -46,11 +41,7 @@ pub fn create_bank(
     response_status
 }
 
-pub fn create_branch(
-    data: &web::Data<mysql::Pool>,
-    branch_name: String,
-    _location: String,
-) -> ResponseStatus {
+pub fn create_branch(pool: &mysql::Pool, branch_name: String, _location: String) -> ResponseStatus {
     let my_status_code: u8 = 1;
     let my_status_description = ERROR_MESSAGE.to_owned();
 
@@ -69,7 +60,7 @@ pub fn create_branch(
         return response_status;
     }
 
-    match data.get_conn().and_then(|mut conn| {
+    match pool.get_conn().and_then(|mut conn| {
         insert_branch_data(
             &mut conn,
             branch_name.to_lowercase(),
@@ -79,7 +70,7 @@ pub fn create_branch(
         Ok(x) => {
             if x > 0 {
                 response_status.status_code = 0;
-                response_status.status_description = String::from("Successful");
+                response_status.status_description = "Successful".to_owned();
             }
         }
         Err(err) => println!("Failed to open DB connection. create_branch {err:?}"),
@@ -89,7 +80,7 @@ pub fn create_branch(
 }
 
 pub fn create_teller(
-    data: &web::Data<mysql::Pool>,
+    pool: &mysql::Pool,
     teller_name: String,
     branch_name: String,
 ) -> ResponseStatus {
@@ -111,7 +102,7 @@ pub fn create_teller(
         return response_status;
     }
 
-    match data.get_conn().and_then(|mut conn| {
+    match pool.get_conn().and_then(|mut conn| {
         insert_teller_data(
             &mut conn,
             teller_name.to_lowercase(),
@@ -121,7 +112,7 @@ pub fn create_teller(
         Ok(x) => {
             if x > 0 {
                 response_status.status_code = 0;
-                response_status.status_description = String::from("Successful");
+                response_status.status_description = "Successful".to_owned();
             }
         }
         Err(err) => println!("Failed to open DB connection. create_teller {err:?}"),
@@ -131,7 +122,7 @@ pub fn create_teller(
 }
 
 pub fn create_customer(
-    data: &web::Data<mysql::Pool>,
+    pool: &mysql::Pool,
     customer_name: String,
     branch_name: String,
 ) -> ResponseStatus {
@@ -153,7 +144,7 @@ pub fn create_customer(
         return response_status;
     }
 
-    match data.get_conn().and_then(|mut conn| {
+    match pool.get_conn().and_then(|mut conn| {
         insert_customer_data(
             &mut conn,
             customer_name.to_lowercase(),
@@ -163,7 +154,7 @@ pub fn create_customer(
         Ok(x) => {
             if x > 0 {
                 response_status.status_code = 0;
-                response_status.status_description = String::from("Successful");
+                response_status.status_description = "Successful".to_owned();
             }
         }
         Err(err) => println!("Failed to open DB connection. create_customer {err:?}"),
@@ -172,27 +163,23 @@ pub fn create_customer(
     response_status
 }
 
-pub fn get_bank_data(data: &web::Data<mysql::Pool>) -> BankResponseData {
+pub fn get_bank_data(pool: &mysql::Pool) -> BankResponseData {
     let mut vec_bank_data = Vec::new();
-    let mut my_status_code: u8 = 1;
+    let mut my_status_code = 1_u8;
     let mut my_status_description: String = String::from("Record not found");
 
-    match data
+    match pool
         .get_conn()
         .and_then(|mut conn| select_bank_details(&mut conn))
     {
-        Ok(s) => {
-            vec_bank_data = s;
-        }
+        Ok(data) => vec_bank_data = data,
         Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
     if !vec_bank_data.is_empty() {
         my_status_code = 0;
-        my_status_description = String::from("Successful");
+        my_status_description = "Successful".to_owned();
     }
-
-    //Assign values to struct variable
 
     BankResponseData {
         status_code: my_status_code,
@@ -201,24 +188,22 @@ pub fn get_bank_data(data: &web::Data<mysql::Pool>) -> BankResponseData {
     }
 }
 
-pub fn get_branch_data(data: &web::Data<mysql::Pool>) -> BranchResponseData {
+pub fn get_branch_data(pool: &mysql::Pool) -> BranchResponseData {
     let mut vec_branch_data = Vec::new();
-    let mut my_status_code: u8 = 1;
+    let mut my_status_code = 1_u8;
     let mut my_status_description: String = String::from("Record not found");
 
-    match data
+    match pool
         .get_conn()
         .and_then(|mut conn| select_branch_details(&mut conn))
     {
-        Ok(s) => {
-            vec_branch_data = s;
-        }
+        Ok(data) => vec_branch_data = data,
         Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
     if !vec_branch_data.is_empty() {
         my_status_code = 0;
-        my_status_description = String::from("Successful");
+        my_status_description = "Successful".to_owned();
     }
 
     //Assign values to struct variable
@@ -230,27 +215,24 @@ pub fn get_branch_data(data: &web::Data<mysql::Pool>) -> BranchResponseData {
     }
 }
 
-pub fn get_teller_data(data: &web::Data<mysql::Pool>) -> TellerResponseData {
+pub fn get_teller_data(pool: &mysql::Pool) -> TellerResponseData {
     let mut vec_teller_data = Vec::new();
-    let mut my_status_code: u8 = 1;
+    let mut my_status_code = 1_u8;
     let mut my_status_description: String = String::from("Record not found");
 
-    match data
+    match pool
         .get_conn()
         .and_then(|mut conn| select_teller_details(&mut conn))
     {
-        Ok(s) => {
-            vec_teller_data = s;
-        }
+        Ok(data) => vec_teller_data = data,
         Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
     if !vec_teller_data.is_empty() {
         my_status_code = 0;
-        my_status_description = String::from("Successful");
+        my_status_description = "Successful".to_owned();
     }
 
-    // assign values to struct variable
     TellerResponseData {
         status_code: my_status_code,
         status_description: my_status_description,
@@ -258,27 +240,24 @@ pub fn get_teller_data(data: &web::Data<mysql::Pool>) -> TellerResponseData {
     }
 }
 
-pub fn get_customer_data(data: &web::Data<mysql::Pool>) -> CustomerResponseData {
+pub fn get_customer_data(pool: &mysql::Pool) -> CustomerResponseData {
     let mut vec_customer_data = Vec::new();
-    let mut my_status_code: u8 = 1;
+    let mut my_status_code = 1_u8;
     let mut my_status_description: String = String::from("Record not found");
 
-    match data
+    match pool
         .get_conn()
         .and_then(|mut conn| select_customer_details(&mut conn))
     {
-        Ok(s) => {
-            vec_customer_data = s;
-        }
+        Ok(data) => vec_customer_data = data,
         Err(err) => println!("Failed to open DB connection. {err:?}"),
     }
 
     if !vec_customer_data.is_empty() {
         my_status_code = 0;
-        my_status_description = String::from("Successful");
+        my_status_description = "Successful".to_owned();
     }
 
-    // assign values to struct variable
     CustomerResponseData {
         status_code: my_status_code,
         status_description: my_status_description,
