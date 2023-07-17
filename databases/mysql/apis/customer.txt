@@ -16,3 +16,27 @@ JSON response
   "status_code": 0,
   "status_description": "Successful"
 }
+
+4.
+Linux
+
+curl 'http://localhost:8080/customer'
+
+5.
+Windows
+
+curl http://localhost:8080/customer
+
+6.
+JSON response
+
+{
+  "status_code": 0,
+  "status_description": "Successful",
+  "customer_data": [
+    {
+      "customer_name": "peter paul",
+      "branch_name": "central business district"
+    }
+  ]
+}

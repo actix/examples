@@ -206,8 +206,6 @@ pub fn get_branch_data(pool: &mysql::Pool) -> BranchResponseData {
         my_status_description = "Successful".to_owned();
     }
 
-    //Assign values to struct variable
-
     BranchResponseData {
         status_code: my_status_code,
         status_description: my_status_description,

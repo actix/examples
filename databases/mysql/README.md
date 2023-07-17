@@ -71,13 +71,9 @@ You may need to ensure that you are running the commands with the correct MySQL 
 
    Directory "mysql/apis" contains below listed API's files:
 
-   - `addbank.txt`
-   - `addbranch.txt`
-   - `addteller.txt`
-   - `addcustomer.txt`
-   - `getbank.txt`
-   - `getbranch.txt`
-   - `getteller.txt`
-   - `getcustomer.txt`
+   - `bank.txt`
+   - `branch.txt`
+   - `teller.txt`
+   - `customer.txt`
 
    Copy the curl request on each of the ".txt" and execute them on separate terminals. Each ".txt" contains curl request and expected JSON response data.

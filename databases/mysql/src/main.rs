@@ -94,7 +94,7 @@ async fn index() -> impl Responder {
     String::new()
 }
 
-#[post("/addbank")]
+#[post("/bank")]
 async fn add_bank(bank_data: web::Json<BankData>, data: web::Data<mysql::Pool>) -> impl Responder {
     let bank_name = &bank_data.bank_name;
     let _country = &bank_data.country;
@@ -104,7 +104,7 @@ async fn add_bank(bank_data: web::Json<BankData>, data: web::Data<mysql::Pool>) 
     web::Json(response_data)
 }
 
-#[post("/addbranch")]
+#[post("/branch")]
 async fn add_branch(
     branch_data: web::Json<BranchData>,
     data: web::Data<mysql::Pool>,
@@ -118,7 +118,7 @@ async fn add_branch(
     web::Json(response_data)
 }
 
-#[post("/addteller")]
+#[post("/teller")]
 async fn add_teller(
     teller_data: web::Json<TellerData>,
     data: web::Data<mysql::Pool>,
@@ -132,7 +132,7 @@ async fn add_teller(
     web::Json(response_data)
 }
 
-#[post("/addcustomer")]
+#[post("/customer")]
 async fn add_customer(
     customer_data: web::Json<CustomerData>,
     data: web::Data<mysql::Pool>,
@@ -146,28 +146,28 @@ async fn add_customer(
     web::Json(response_data)
 }
 
-#[get("/getbank")]
+#[get("/bank")]
 async fn get_bank(data: web::Data<mysql::Pool>) -> impl Responder {
     let bank_response_data = db_layer::get_bank_data(&data);
 
     web::Json(bank_response_data)
 }
 
-#[get("/getbranch")]
+#[get("/branch")]
 async fn get_branch(data: web::Data<mysql::Pool>) -> impl Responder {
     let branch_response_data = db_layer::get_branch_data(&data);
 
     web::Json(branch_response_data)
 }
 
-#[get("/getteller")]
+#[get("/teller")]
 async fn get_teller(data: web::Data<mysql::Pool>) -> impl Responder {
     let teller_response_data = db_layer::get_teller_data(&data);
 
     web::Json(teller_response_data)
 }
 
-#[get("/getcustomer")]
+#[get("/customer")]
 async fn get_customer(data: web::Data<mysql::Pool>) -> impl Responder {
     let customer_response_data = db_layer::get_customer_data(&data);
 

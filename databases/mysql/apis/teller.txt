@@ -1,0 +1,42 @@
+1.
+Linux
+
+curl -d '{"teller_name":"John Doe", "branch_name":"Central Business District"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/teller
+
+2.
+Windows
+
+curl -H "Content-type:application/json" --data-binary "{\"teller_name\":\"John Doe\", \"branch_name\":\"Central Business District\"}" http://127.0.0.1:8080/teller
+
+
+3.
+JSON response
+
+{
+  "status_code": 0,
+  "status_description": "Successful"
+}
+
+4.
+Linux
+
+curl 'http://localhost:8080/teller'
+
+5.
+Windows
+
+curl http://localhost:8080/teller
+
+6.
+JSON response
+
+{
+  "status_code": 0,
+  "status_description": "Successful",
+  "teller_data": [
+    {
+      "teller_name": "john doe",
+      "branch_name": "central business district"
+    }
+  ]
+}
