@@ -51,7 +51,6 @@
 - [Production-Grade Logging in Rust Applications](https://medium.com/better-programming/production-grade-logging-in-rust-applications-2c7fffd108a6): An article showcasing the use of [tracing](https://github.com/tokio-rs/tracing) in an Actix application
 - [Fullstack-Rust](https://github.com/vascokk/fullstack-rust): A Full Stack Rust application (Connect5 game) with Actix Web, Yew, Bulma CSS and Diesel.
 - [Mozilla Services Skeleton App](https://github.com/mozilla-services/skeleton)
-- [rayspace.dev](https://github.com/ryspc/rayspace.dev): Minimalist dev portfolio and blog featuring GitHub OAuth, session management, HTTP Server for SPA, API endpoints, and SQLx integration.
 - [rayspace.dev](https://github.com/ryspc/rayspace.dev): Minimalist dev portfolio and blog implemented as a Rust-powered SPA, featuring GitHub OAuth, session management, static file serving, API endpoints, and SQLx integration.
 
 ## Paid Resources
