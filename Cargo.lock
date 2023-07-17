@@ -4877,7 +4877,10 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "chrono",
+ "derive_more",
  "dotenv",
+ "env_logger",
+ "log",
  "mysql 24.0.0",
  "serde",
 ]

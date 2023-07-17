@@ -38,7 +38,7 @@ You may need to ensure that you are running the commands with the correct MySQL 
 
 1. Create tables in the database:
 
-   Directory "mysql\sql" contains below listed ".sql" files:
+   The `sql` directory contains below listed ".sql" files:
 
    - `bankdetails.sql`
    - `branch_details.sql`
@@ -69,7 +69,7 @@ You may need to ensure that you are running the commands with the correct MySQL 
 
 1. Using a different terminal send an HTTP GET/POST requests to the running server:
 
-   Directory "mysql/apis" contains below listed API's files:
+   The `apis` directory contains below listed API's files:
 
    - `bank.txt`
    - `branch.txt`
