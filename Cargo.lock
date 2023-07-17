@@ -492,17 +492,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "actix-web-cors"
-version = "1.0.0"
-dependencies = [
- "actix-cors",
- "actix-web",
- "env_logger",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "actix-web-lab"
 version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2295,6 +2284,18 @@ name = "core-foundation-sys"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e496a50fda8aacccc86d7529e2c1e0892dbd0f898a6b5645b5561b89c3210efa"
+
+[[package]]
+name = "cors"
+version = "1.0.0"
+dependencies = [
+ "actix-cors",
+ "actix-web",
+ "env_logger",
+ "log",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "cpufeatures"

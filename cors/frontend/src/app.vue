@@ -1,22 +1,49 @@
 <template>
- <div id="app">
-   <div id="content">
-        <div id="title">    
-            <a to="#">SignUp</a> 
-        </div> 
-          <input type="text" name="username" placeholder="Username" v-model="Username"  required />
-          <input type="text" name="email" placeholder="E-mail" v-model="Email"  required />
-          <input type="password" name="password" placeholder="Password" v-model="Password"  required/>
-          <input type="password" name="confirm_password" placeholder="Confirm password" v-model="ConfirmPassword"  required/><br/>
-          
-          <button id="submit" @click="signup">Sign up</button>
+  <div id="app">
+    <div id="content">
+      <div id="title">
+        <a to="#">SignUp</a>
+      </div>
+      <input
+        type="text"
+        name="username"
+        placeholder="Username"
+        v-model="Username"
+        required
+      />
+      <input
+        type="text"
+        name="email"
+        placeholder="E-mail"
+        v-model="Email"
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        v-model="Password"
+        required
+      />
+      <input
+        type="password"
+        name="confirm_password"
+        placeholder="Confirm password"
+        v-model="ConfirmPassword"
+        required
+      /><br />
 
-          <div id="user-info">
-              <p>Click Above 'Sign up' Button <br> Then Get Your Signup Info!</p>
-              <p>email : {{ email }}</p>
-              <p>username : {{ username }}</p>
-              <p>password : {{ password }}</p>
-          </div>
+      <button id="submit" @click="signup">Sign up</button>
+
+      <div id="user-info">
+        <p>
+          Click Above 'Sign up' Button <br />
+          Then Get Your Signup Info!
+        </p>
+        <p>email : {{ email }}</p>
+        <p>username : {{ username }}</p>
+        <p>password : {{ password }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -24,48 +51,49 @@
 <script>
 export default {
   name: 'app',
-  data () {
-                return {
-                    Username: '',
-                    Email: '',
-                    Password: '',
-                    ConfirmPassword: '',
+  data() {
+    return {
+      Username: '',
+      Email: '',
+      Password: '',
+      ConfirmPassword: '',
 
-                    email: '',
-                    username: '',
-                    password: ''
-                }
-            },
-            methods: {
-                signup () {
-                    let username = this.Username
-                    let email = this.Email
-                    let password = this.Password
-                    let confirm_password = this.ConfirmPassword
-                    let data = { 
-                        username: username,
-                        email: email,
-                        password: password,
-                        confirm_password: confirm_password
-                    }
-                    fetch('http://localhost:8000/user/info', {
-                        body: JSON.stringify(data), 
-                        headers: {
-                            'content-type': 'application/json'
-                        },
-                        method: 'POST',
-                    }).then(response => response.json())
-                    .then(json => {
-                        console.log(json)
-                            this.email =  json.email
-                            this.username =  json.username
-                            this.password =  json.password
-                    })
-                    .catch((e) => {
-                        console.log(e)
-                    })
-                }
-            }
+      email: '',
+      username: '',
+      password: '',
+    }
+  },
+  methods: {
+    signup() {
+      let username = this.Username
+      let email = this.Email
+      let password = this.Password
+      let confirm_password = this.ConfirmPassword
+      let data = {
+        username: username,
+        email: email,
+        password: password,
+        confirm_password: confirm_password,
+      }
+      fetch('http://localhost:8080/user/info', {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'POST',
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json)
+          this.email = json.email
+          this.username = json.username
+          this.password = json.password
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    },
+  },
 }
 </script>
 
@@ -76,26 +104,26 @@ export default {
   padding-top: 33px;
 }
 #title {
-    padding: 0.5rem 0;
-    font-size: 22px;
-    font-weight: bold;
-    background-color:bisque;
-    text-align: center;
+  padding: 0.5rem 0;
+  font-size: 22px;
+  font-weight: bold;
+  background-color: bisque;
+  text-align: center;
 }
-input[type="text"],
-input[type="password"] {
+input[type='text'],
+input[type='password'] {
   margin: 6px auto auto;
   width: 250px;
   height: 36px;
   border: none;
-  border-bottom: 1px solid #AAA;
+  border-bottom: 1px solid #aaa;
   font-size: 16px;
 }
-#submit  {
+#submit {
   margin: 10px 0 20px 0;
   width: 250px;
   height: 33px;
-  background-color:bisque;
+  background-color: bisque;
   border: none;
   border-radius: 2px;
   font-family: 'Roboto', sans-serif;
@@ -103,37 +131,38 @@ input[type="password"] {
   transition: 0.1s ease;
   cursor: pointer;
 }
-input[type="checkbox"] {
+input[type='checkbox'] {
   margin-top: 11px;
 }
 dialog {
-top: 50%;
-width: 80%;  
-border: 5px solid rgba(0, 0, 0, 0.3);
+  top: 50%;
+  width: 80%;
+  border: 5px solid rgba(0, 0, 0, 0.3);
 }
-dialog::backdrop{
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background-color: rgba(0, 0, 0, 0.7);
+dialog::backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 #closeDialog {
-display: inline-block;
-border-radius: 3px;
-border: none;
-font-size: 1rem;
-padding: 0.4rem 0.8em;
-background: #eb9816;
-border-bottom: 1px solid #f1b75c;
-color: white;
-font-weight: bold;
-text-align: center;
+  display: inline-block;
+  border-radius: 3px;
+  border: none;
+  font-size: 1rem;
+  padding: 0.4rem 0.8em;
+  background: #eb9816;
+  border-bottom: 1px solid #f1b75c;
+  color: white;
+  font-weight: bold;
+  text-align: center;
 }
-#closeDialog:hover, #closeDialog:focus {
-opacity: 0.92;
-cursor: pointer;
+#closeDialog:hover,
+#closeDialog:focus {
+  opacity: 0.92;
+  cursor: pointer;
 }
 #user-info {
   width: 250px;
@@ -141,9 +170,9 @@ cursor: pointer;
   padding-top: 44px;
 }
 @media only screen and (min-width: 600px) {
-    #content  {
-      margin: 0 auto;
-      padding-top: 100px;
+  #content {
+    margin: 0 auto;
+    padding-top: 100px;
   }
 }
 </style>

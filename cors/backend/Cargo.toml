@@ -1,5 +1,5 @@
 [package]
-name = "actix-web-cors"
+name = "cors"
 version = "1.0.0"
 edition = "2021"
 
@@ -8,5 +8,6 @@ actix-web = { workspace = true, features = ["rustls"] }
 actix-cors.workspace = true
 
 env_logger.workspace = true
-serde = { version = "1.0", features = ["derive"] }
+log.workspace = true
+serde.workspace = true
 serde_json.workspace = true

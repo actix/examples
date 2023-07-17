@@ -4,11 +4,11 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4"
-chrono = { version = "0.4.26", default-features = false, features = ["std", "clock"] }
-derive_more = "0.99.7"
+actix-web.workspace = true
+chrono.workspace = true
+derive_more.workspace = true
 dotenv = "0.15"
-env_logger = "0.10"
-log = "0.4"
+env_logger.workspace = true
+log.workspace = true
 mysql = "24"
-serde = { version = "1", features = ["derive"] }
+serde.workspace = true
