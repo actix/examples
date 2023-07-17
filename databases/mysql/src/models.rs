@@ -25,12 +25,6 @@ pub struct CustomerData {
 }
 
 #[derive(Debug, Serialize)]
-pub struct ResponseStatus {
-    pub status_code: u8,
-    pub status_description: String,
-}
-
-#[derive(Debug, Serialize)]
 pub struct BankDetails {
     pub bank_name: String,
     pub country: String,
@@ -38,8 +32,6 @@ pub struct BankDetails {
 
 #[derive(Debug, Serialize)]
 pub struct BankResponseData {
-    pub status_code: u8,
-    pub status_description: String,
     pub bank_data: Vec<BankDetails>,
 }
 
@@ -51,8 +43,6 @@ pub struct BranchDetails {
 
 #[derive(Debug, Serialize)]
 pub struct BranchResponseData {
-    pub status_code: u8,
-    pub status_description: String,
     pub branch_data: Vec<BranchDetails>,
 }
 
@@ -64,8 +54,6 @@ pub struct TellerDetails {
 
 #[derive(Debug, Serialize)]
 pub struct TellerResponseData {
-    pub status_code: u8,
-    pub status_description: String,
     pub teller_data: Vec<TellerDetails>,
 }
 
@@ -77,7 +65,5 @@ pub struct CustomerDetails {
 
 #[derive(Debug, Serialize)]
 pub struct CustomerResponseData {
-    pub status_code: u8,
-    pub status_description: String,
     pub customer_data: Vec<CustomerDetails>,
 }
