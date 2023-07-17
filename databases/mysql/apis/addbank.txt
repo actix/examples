@@ -1,0 +1,17 @@
+1.
+Linux
+
+curl -d '{"bank_name":"Bank ABC","country":"Kenya"}' -H 'Content-Type: application/json' http://127.0.0.1:8080/addbank
+
+2.
+Windows
+
+curl -H "Content-type:application/json" --data-binary "{\"bank_name\":\"Bank ABC\",\"country\":\"Kenya\"}" http://127.0.0.1:8080/addbank
+
+3.
+Json response
+
+{
+  "status_code": 0,
+  "status_description": "Successful"
+}

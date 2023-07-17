@@ -1,0 +1,23 @@
+1.
+Linux
+
+curl 'http://localhost:8080/getbranch'
+
+2.
+Windows
+
+curl http://localhost:8080/getbranch
+
+3.
+Json response
+
+{
+  "status_code": 0,
+  "status_description": "Successful",
+  "branch_data": [
+    {
+      "branch_name": "hq branch",
+      "location": "central business district"
+    }
+  ]
+}

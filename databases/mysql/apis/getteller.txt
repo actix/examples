@@ -1,0 +1,23 @@
+1.
+Linux
+
+curl 'http://localhost:8080/getteller'
+
+2.
+Windows
+
+curl http://localhost:8080/getteller
+
+3.
+Json response
+
+{
+  "status_code": 0,
+  "status_description": "Successful",
+  "teller_data": [
+    {
+      "teller_name": "john doe",
+      "branch_name": "central business district"
+    }
+  ]
+}
