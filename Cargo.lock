@@ -990,7 +990,6 @@ dependencies = [
 name = "async-graphql-demo"
 version = "1.0.0"
 dependencies = [
- "actix",
  "actix-cors",
  "actix-web",
  "actix-web-lab",
@@ -2229,10 +2228,8 @@ dependencies = [
  "actix-identity",
  "actix-session",
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "log",
- "rand 0.8.5",
 ]
 
 [[package]]
@@ -2286,7 +2283,6 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -2621,7 +2617,6 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
- "futures-util",
  "log",
  "redis",
  "serde",
@@ -2639,7 +2634,6 @@ dependencies = [
  "r2d2_sqlite",
  "rusqlite",
  "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -2779,7 +2773,6 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
- "serde_json",
  "uuid 1.4.1",
 ]
 
@@ -4122,7 +4115,6 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
- "futures-util",
  "log",
  "serde",
  "serde_json",
@@ -4223,8 +4215,6 @@ dependencies = [
  "mysql 24.0.0",
  "r2d2",
  "r2d2_mysql",
- "serde",
- "serde_json",
  "uuid 1.4.1",
 ]
 
@@ -4238,8 +4228,6 @@ dependencies = [
  "env_logger",
  "juniper",
  "log",
- "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -4594,9 +4582,7 @@ dependencies = [
  "aes-gcm-siv",
  "base64 0.21.2",
  "env_logger",
- "futures-util",
  "log",
- "pin-project",
  "serde",
  "serde_json",
 ]
@@ -4628,7 +4614,6 @@ name = "middleware-http-to-https"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "futures-util",
  "log",
@@ -4842,7 +4827,6 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "sanitize-filename",
  "serde",
  "serde_json",
  "tokio 1.29.1",
@@ -4853,7 +4837,6 @@ name = "mysql"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "chrono",
  "derive_more",
  "dotenv",
  "env_logger",
@@ -4979,7 +4962,6 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -5685,7 +5667,6 @@ dependencies = [
  "env_logger",
  "log",
  "prost",
- "prost-derive",
 ]
 
 [[package]]
@@ -6352,7 +6333,6 @@ version = "1.0.0"
 dependencies = [
  "actix-files",
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "log",
  "rustls 0.20.8",
@@ -6687,8 +6667,6 @@ dependencies = [
  "futures-util",
  "log",
  "parking_lot 0.12.1",
- "tokio 1.29.1",
- "tokio-stream",
 ]
 
 [[package]]
@@ -6754,7 +6732,6 @@ dependencies = [
  "env_logger",
  "log",
  "parking_lot 0.12.1",
- "tokio 1.29.1",
 ]
 
 [[package]]
@@ -7750,12 +7727,10 @@ dependencies = [
  "actix-files",
  "actix-session",
  "actix-web",
- "actix-web-lab",
  "dotenv",
  "env_logger",
  "log",
  "serde",
- "serde_json",
  "sqlx 0.7.1",
  "tera",
 ]
@@ -8863,7 +8838,6 @@ name = "websocket"
 version = "1.0.0"
 dependencies = [
  "actix",
- "actix-codec",
  "actix-files",
  "actix-web",
  "actix-web-actors",
@@ -8893,8 +8867,6 @@ dependencies = [
  "actix-files",
  "actix-web",
  "actix-ws",
- "awc",
- "derive_more",
  "env_logger",
  "futures-util",
  "log",
@@ -8923,7 +8895,6 @@ dependencies = [
  "actix-files",
  "actix-web",
  "actix-ws",
- "awc",
  "env_logger",
  "futures-util",
  "log",
@@ -8941,8 +8912,6 @@ dependencies = [
  "env_logger",
  "log",
  "rand 0.8.5",
- "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -8955,7 +8924,6 @@ dependencies = [
  "actix-web",
  "actix-web-actors",
  "byteorder",
- "bytes 1.4.0",
  "env_logger",
  "futures-util",
  "log",

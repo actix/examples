@@ -10,5 +10,3 @@ env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 parking_lot = "0.12"
-tokio.workspace = true
-tokio-stream = { version = "0.1.8", features = ["time"] }

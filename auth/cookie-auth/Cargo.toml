@@ -5,10 +5,8 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-actix-web-lab.workspace = true
 actix-identity.workspace = true
 actix-session = { workspace = true, features = ["cookie-session"] }
 
 env_logger.workspace = true
 log.workspace = true
-rand.workspace = true

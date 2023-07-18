@@ -15,7 +15,6 @@ dotenv = "0.15"
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
-sanitize-filename = "0.4"
 serde.workspace = true
 serde_json.workspace = true
 tokio = { workspace = true, features = ["io-util", "fs"] }

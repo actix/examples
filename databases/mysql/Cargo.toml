@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-chrono.workspace = true
 derive_more.workspace = true
 dotenv = "0.15"
 env_logger.workspace = true

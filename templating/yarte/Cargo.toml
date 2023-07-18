@@ -4,6 +4,11 @@ version = "1.0.0"
 publish = false
 edition = "2021"
 
+[package.metadata.cargo-machete]
+ignored = [
+    "yarte_helpers", # only build dep
+]
+
 [dependencies]
 actix-web.workspace = true
 derive_more.workspace = true

@@ -1,6 +1,6 @@
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result};
-use prost_derive::Message;
+use prost::Message;
 
 #[derive(Clone, PartialEq, Eq, Message)]
 pub struct MyObj {

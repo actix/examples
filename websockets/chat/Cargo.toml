@@ -16,5 +16,3 @@ actix-web-actors.workspace = true
 env_logger.workspace = true
 log.workspace = true
 rand.workspace = true
-serde = "1"
-serde_json.workspace = true

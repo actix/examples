@@ -4,7 +4,6 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix.workspace = true
 actix-web.workspace = true
 actix-web-lab.workspace = true
 actix-cors.workspace = true

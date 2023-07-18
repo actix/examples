@@ -7,9 +7,7 @@ edition = "2021"
 actix-files.workspace = true
 actix-web.workspace = true
 actix-ws.workspace = true
-awc.workspace = true
 
-derive_more.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true

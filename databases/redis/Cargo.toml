@@ -7,7 +7,6 @@ edition = "2021"
 actix-web.workspace = true
 
 env_logger.workspace = true
-futures-util.workspace = true
 log.workspace = true
 redis = { version = "0.23", default-features = false, features = ["tokio-comp", "connection-manager"] }
 serde.workspace = true

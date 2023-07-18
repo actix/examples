@@ -9,5 +9,4 @@ actix-web.workspace = true
 
 env_logger.workspace = true
 log.workspace = true
-prost = "0.11"
-prost-derive = "0.11"
+prost = { version = "0.11", features = ["prost-derive"] }

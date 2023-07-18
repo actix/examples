@@ -13,7 +13,6 @@ path = "src/client.rs"
 
 [dependencies]
 actix.workspace = true
-actix-codec.workspace = true
 actix-files.workspace = true
 actix-web.workspace = true
 actix-web-actors.workspace = true
