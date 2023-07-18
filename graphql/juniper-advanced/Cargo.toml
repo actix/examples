@@ -10,9 +10,9 @@ actix-cors.workspace = true
 
 juniper = "0.15"
 
-mysql = "23" # waiting on r2d2_mysql update
+mysql = "24"
 r2d2 = "0.8"
-r2d2_mysql = "23"
+r2d2_mysql = "24"
 
 dotenv = "0.15"
 env_logger.workspace = true

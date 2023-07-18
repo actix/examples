@@ -4235,7 +4235,7 @@ dependencies = [
  "env_logger",
  "juniper",
  "log",
- "mysql 23.0.1",
+ "mysql 24.0.0",
  "r2d2",
  "r2d2_mysql",
  "serde",
@@ -4497,15 +4497,6 @@ name = "log"
 version = "0.4.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b06a4cde4c0f271a446782e3eff8de789548ce57dbc8eca9292c27f4a42004b4"
-
-[[package]]
-name = "lru"
-version = "0.8.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6e8aaa3f231bb4bd57b84b2d5dc3ae7f350265df8aa96492e0bc394a1571909"
-dependencies = [
- "hashbrown 0.12.3",
-]
 
 [[package]]
 name = "lru"
@@ -4888,32 +4879,6 @@ dependencies = [
 
 [[package]]
 name = "mysql"
-version = "23.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05f11339ca5c251941805d51362a07823605a80586ced92914ab7de84fba813f"
-dependencies = [
- "bufstream",
- "bytes 1.4.0",
- "crossbeam",
- "flate2",
- "io-enum",
- "libc",
- "lru 0.8.1",
- "mysql_common 0.29.2",
- "named_pipe",
- "native-tls",
- "once_cell",
- "pem 1.1.1",
- "percent-encoding",
- "serde",
- "serde_json",
- "socket2 0.4.9",
- "twox-hash",
- "url",
-]
-
-[[package]]
-name = "mysql"
 version = "24.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cfe2babc5f5b354eab9c0a0e40da3e69c4d77421c8b9b6ee03f97acc75bd7955"
@@ -4924,12 +4889,12 @@ dependencies = [
  "flate2",
  "io-enum",
  "libc",
- "lru 0.10.1",
- "mysql_common 0.30.6",
+ "lru",
+ "mysql_common",
  "named_pipe",
  "native-tls",
  "once_cell",
- "pem 2.0.1",
+ "pem",
  "percent-encoding",
  "serde",
  "serde_json",
@@ -4954,43 +4919,6 @@ dependencies = [
  "syn 2.0.23",
  "termcolor",
  "thiserror",
-]
-
-[[package]]
-name = "mysql_common"
-version = "0.29.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9006c95034ccf7b903d955f210469119f6c3477fc9c9e7a7845ce38a3e665c2a"
-dependencies = [
- "base64 0.13.1",
- "bigdecimal",
- "bindgen",
- "bitflags 1.3.2",
- "bitvec",
- "byteorder",
- "bytes 1.4.0",
- "cc",
- "cmake",
- "crc32fast",
- "flate2",
- "frunk",
- "lazy_static",
- "lexical",
- "num-bigint",
- "num-traits",
- "rand 0.8.5",
- "regex",
- "rust_decimal",
- "saturating",
- "serde",
- "serde_json",
- "sha1 0.10.5",
- "sha2",
- "smallvec 1.11.0",
- "subprocess",
- "thiserror",
- "time 0.3.22",
- "uuid 1.4.0",
 ]
 
 [[package]]
@@ -5398,15 +5326,6 @@ name = "peeking_take_while"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
-
-[[package]]
-name = "pem"
-version = "1.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8835c273a76a90455d7344889b0964598e3316e2a79ede8e36f16bdcf2228b8"
-dependencies = [
- "base64 0.13.1",
-]
 
 [[package]]
 name = "pem"
@@ -5851,11 +5770,11 @@ dependencies = [
 
 [[package]]
 name = "r2d2_mysql"
-version = "23.0.0"
+version = "24.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9733d738ce65959a744f387bae69aa690a867e18d48e5486b171c47bc7b0c575"
+checksum = "3fe5127e6c21971cdb9580f2f54cbe6d9c2226eb861036c3ca6d390c25f52574"
 dependencies = [
- "mysql 23.0.1",
+ "mysql 24.0.0",
  "r2d2",
 ]
 
