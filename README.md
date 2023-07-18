@@ -59,6 +59,6 @@
 
 ## Contribute
 
-Pull requests welcome for small, focussed example projects demonstrating patterns or techniques.
+Pull requests welcome for small, focused example projects demonstrating patterns or techniques.
 
 Submissions also accepted to have your app or repo considered for the showcase lists.
