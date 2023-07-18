@@ -8,7 +8,7 @@ actix-web.workspace = true
 actix-web-lab.workspace = true
 actix-cors.workspace = true
 
-juniper = "0.15"
+juniper = "0.15.10"
 
 env_logger.workspace = true
 log.workspace = true

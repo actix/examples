@@ -7,4 +7,4 @@ edition = "2021"
 actix-web = { workspace = true, features = ["openssl"] }
 env_logger.workspace = true
 log.workspace = true
-openssl = "0.10"
+openssl.workspace = true

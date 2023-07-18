@@ -11,5 +11,5 @@ acme-micro = "0.12"
 anyhow = "1"
 env_logger.workspace = true
 log.workspace = true
-openssl = { version = "0.10", features = ["v110"] }
+openssl.workspace = true
 reqwest = "0.11"
