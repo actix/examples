@@ -82,14 +82,14 @@ export default {
         },
         method: 'POST',
       })
-        .then((response) => response.json())
-        .then((json) => {
+        .then(response => response.json())
+        .then(json => {
           console.log(json)
           this.email = json.email
           this.username = json.username
           this.password = json.password
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e)
         })
     },
@@ -103,6 +103,7 @@ export default {
   margin: 0 auto;
   padding-top: 33px;
 }
+
 #title {
   padding: 0.5rem 0;
   font-size: 22px;
@@ -110,6 +111,7 @@ export default {
   background-color: bisque;
   text-align: center;
 }
+
 input[type='text'],
 input[type='password'] {
   margin: 6px auto auto;
@@ -119,6 +121,7 @@ input[type='password'] {
   border-bottom: 1px solid #aaa;
   font-size: 16px;
 }
+
 #submit {
   margin: 10px 0 20px 0;
   width: 250px;
@@ -131,14 +134,17 @@ input[type='password'] {
   transition: 0.1s ease;
   cursor: pointer;
 }
+
 input[type='checkbox'] {
   margin-top: 11px;
 }
+
 dialog {
   top: 50%;
   width: 80%;
   border: 5px solid rgba(0, 0, 0, 0.3);
 }
+
 dialog::backdrop {
   position: fixed;
   top: 0;
@@ -147,6 +153,7 @@ dialog::backdrop {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
 }
+
 #closeDialog {
   display: inline-block;
   border-radius: 3px;
@@ -159,16 +166,19 @@ dialog::backdrop {
   font-weight: bold;
   text-align: center;
 }
+
 #closeDialog:hover,
 #closeDialog:focus {
   opacity: 0.92;
   cursor: pointer;
 }
+
 #user-info {
   width: 250px;
   margin: 0 auto;
   padding-top: 44px;
 }
+
 @media only screen and (min-width: 600px) {
   #content {
     margin: 0 auto;

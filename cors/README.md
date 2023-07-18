@@ -14,7 +14,7 @@ In a separate terminal, also run:
 ```sh
 cd cors/frontend
 npm install
-npm run serve
+npm run dev
 ```
 
 then open browser at: http://localhost:8080
