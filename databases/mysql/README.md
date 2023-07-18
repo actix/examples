@@ -18,11 +18,11 @@ $ pwd
    The `sql` directory contains the SQL files used for database setup:
 
    ```sh
-   mysql -u root -p < sql/create_database.sql
-   mysql -u root -p my_bank < sql/bank_details.sql
-   mysql -u root -p my_bank < sql/branch_details.sql
-   mysql -u root -p my_bank < sql/teller_details.sql
-   mysql -u root -p my_bank < sql/customer_details.sql
+   mysql -u root -p < sql/0_create_database.sql
+   mysql -u root -p my_bank < sql/1_bank_details.sql
+   mysql -u root -p my_bank < sql/2_branch_details.sql
+   mysql -u root -p my_bank < sql/3_teller_details.sql
+   mysql -u root -p my_bank < sql/4_customer_details.sql
    ```
 
    For each step you will be prompted for the root user's password. If there's no password set on the root use, just hit enter again.

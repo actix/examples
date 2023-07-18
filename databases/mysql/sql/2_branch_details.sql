@@ -1,0 +1,6 @@
+CREATE TABLE `branch_details` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `branch_name` VARCHAR(30) NOT NULL,
+  `location` VARCHAR(30) NOT NULL,
+  `date_added` DATETIME DEFAULT CURRENT_TIMESTAMP
+) CHARSET=utf8mb4;

@@ -1,0 +1,6 @@
+CREATE TABLE `customer_details` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `customer_name` VARCHAR(100) NOT NULL,
+  `branch_name` VARCHAR(30) NOT NULL,
+  `date_added` DATETIME DEFAULT CURRENT_TIMESTAMP
+) CHARSET=utf8mb4;

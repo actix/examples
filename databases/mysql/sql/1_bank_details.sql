@@ -1,0 +1,6 @@
+CREATE TABLE `bank_details` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `bank_name` VARCHAR(30) NOT NULL,
+  `country` VARCHAR(30) NOT NULL,
+  `date_added` DATETIME DEFAULT CURRENT_TIMESTAMP
+) CHARSET=utf8mb4;
