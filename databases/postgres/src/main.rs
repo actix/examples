@@ -145,13 +145,11 @@ async fn main() -> std::io::Result<()> {
     let pool = config.pg.create_pool(None, NoTls).unwrap();
 
     let server = HttpServer::new(move || {
-        App::new()
-            .app_data(web::Data::new(pool.clone()))
-            .service(
-                web::resource("/users")
-                    .route(web::post().to(add_user))
-                    .route(web::get().to(get_users))
-            )
+        App::new().app_data(web::Data::new(pool.clone())).service(
+            web::resource("/users")
+                .route(web::post().to(add_user))
+                .route(web::get().to(get_users)),
+        )
     })
     .bind(config.server_addr.clone())?
     .run();
