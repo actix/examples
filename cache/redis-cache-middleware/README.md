@@ -22,7 +22,7 @@ To test the demo, send a GET request to `/fibonacci/{number}`, where {number} is
 ## Verify Redis Contents
 
 When making the first GET request to `/fibonacci/47`, it may take around 8 seconds to respond.
-If Redis is running and the connection is established, subsequent requests should return the cached result immediately, but with content type `application/json`.
+If Redis is running and the connection is established, subsequent requests should return the cached result immediately, a `hit` cache status will be returned, but with content type `application/json`.
 
 ## Known issues
 
