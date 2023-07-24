@@ -1,0 +1,12 @@
+[package]
+authors = ["Jatutep Bunupuradah <bangbaew@gmail.com>"]
+name = "main"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "*"
+actix-rt = "*"
+env_logger = "*"
+actix-web-lab = "*"
+redis = { version = "*", features = ["tls-native-tls"] }
