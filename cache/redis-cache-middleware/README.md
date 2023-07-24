@@ -16,8 +16,8 @@ To test the demo, send a GET request to `/fibonacci/{number}`, where {number} is
 
 ## Request Directives
 
-Setting `Cache-Control: no-cache` will return the most up-to-date response while still caching it. This will always yield a `miss` cache status.
-Using `Cache-Control: no-store` will prevent caching, ensuring you always receive the latest response.
+- `Cache-Control: no-cache` will return the most up-to-date response while still caching it. This will always yield a `miss` cache status.
+- `Cache-Control: no-store` will prevent caching, ensuring you always receive the latest response.
 
 ## Verify Redis Contents
 
