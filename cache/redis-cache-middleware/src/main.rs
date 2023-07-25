@@ -11,15 +11,36 @@ use actix_web_lab::middleware::{from_fn, Next};
 use redis::{Client as RedisClient, Commands, RedisError};
 use std::env;
 
-fn fib(n: u64) -> u64 {
+fn fib_recursive(n: u64) -> u64 {
     if n <= 1 {
         return n;
     }
-    fib(n - 1) + fib(n - 2)
+    let a = n - 1;
+    let b = n - 2;
+    println!("{a} + {b}");
+    fib_recursive(a) + fib_recursive(b)
 }
 
+/* fn fib_iterative(n: u64) -> u64 {
+    let mut a = 0;
+    let mut b = 1;
+    let mut c;
+
+    if n == 0 {
+        return a;
+    }
+
+    for i in 2..=n {
+        print!("{i} ");
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    b
+} */
+
 async fn an_expensive_function(n: web::Path<u64>) -> impl Responder {
-    let result = fib(n.to_owned());
+    let result = fib_recursive(n.to_owned());
     HttpResponse::Ok().body(result.to_string())
 }
 
@@ -64,47 +85,47 @@ async fn cache_middleware(
         None => "",
     };
 
-    // Initialize Redis Client from App Data
-    let redis_client = req.app_data::<RedisClient>();
-    // This should always be Some, so let's unwrap
-    let mut redis_conn = redis_client.unwrap().get_connection();
-    let redis_ok = redis_conn.is_ok();
-
-    // If Redis connection succeeded and request method is GET
-    // Also, if cache directive is not "no-cache" and not "no-store"
-    if redis_ok
-        && req.method() == Method::GET
-        && cache_directive != CacheDirective::NoCache.to_string()
+    // If cache directive is not "no-cache" and not "no-store"
+    if cache_directive != CacheDirective::NoCache.to_string()
         && cache_directive != CacheDirective::NoStore.to_string()
     {
-        // Unwrap the connection
-        let redis_conn = redis_conn.as_mut().unwrap();
+        // Initialize Redis Client from App Data
+        let redis_client = req.app_data::<RedisClient>();
+        // This should always be Some, so let's unwrap
+        let mut redis_conn = redis_client.unwrap().get_connection();
+        let redis_ok = redis_conn.is_ok();
 
-        // Try to get the cached response by defined key
-        let cached_response: Result<Vec<u8>, RedisError> = redis_conn.get(key.to_owned());
-        if let Err(e) = cached_response {
-            // If cache cannot be deserialized
-            println!("cache get error: {}", e);
-        } else if cached_response.as_ref().unwrap().is_empty() {
-            // If cache body is empty
-            println!("cache not found");
-        } else {
-            // If cache is found
-            println!("cache found");
+        // If Redis connection succeeded and request method is GET
+        if redis_ok && req.method() == Method::GET {
+            // Unwrap the connection
+            let redis_conn = redis_conn.as_mut().unwrap();
 
-            // Prepare response body
-            let res = HttpResponse::new(StatusCode::OK).set_body(cached_response.unwrap());
-            let mut res = ServiceResponse::new(req.request().to_owned(), res);
+            // Try to get the cached response by defined key
+            let cached_response: Result<Vec<u8>, RedisError> = redis_conn.get(key.to_owned());
+            if let Err(e) = cached_response {
+                // If cache cannot be deserialized
+                println!("cache get error: {}", e);
+            } else if cached_response.as_ref().unwrap().is_empty() {
+                // If cache body is empty
+                println!("cache not found");
+            } else {
+                // If cache is found
+                println!("cache found");
 
-            // Define content-type and headers here
-            res.headers_mut()
-                .append(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-            res.headers_mut()
-                .append(CACHE_CONTROL, HeaderValue::from_static("max-age=86400"));
-            res.headers_mut()
-                .append(CACHE_STATUS, HeaderValue::from_static("hit"));
+                // Prepare response body
+                let res = HttpResponse::new(StatusCode::OK).set_body(cached_response.unwrap());
+                let mut res = ServiceResponse::new(req.request().to_owned(), res);
 
-            return Ok(res);
+                // Define content-type and headers here
+                res.headers_mut()
+                    .append(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+                res.headers_mut()
+                    .append(CACHE_CONTROL, HeaderValue::from_static("max-age=86400"));
+                res.headers_mut()
+                    .append(CACHE_STATUS, HeaderValue::from_static("hit"));
+
+                return Ok(res);
+            }
         }
     }
 
@@ -135,6 +156,12 @@ async fn cache_middleware(
             .append(CACHE_CONTROL, HeaderValue::from_static("max-age=86400"));
         res.headers_mut()
             .append(CACHE_STATUS, HeaderValue::from_static("miss"));
+
+        // Initialize Redis Client from App Data
+        let redis_client = req.app_data::<RedisClient>();
+        // This should always be Some, so let's unwrap
+        let redis_conn = redis_client.unwrap().get_connection();
+        let redis_ok = redis_conn.is_ok();
 
         // If Redis connection succeeded
         if redis_ok {
