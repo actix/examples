@@ -13,13 +13,12 @@
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
 - [hyperswitch](https://github.com/juspay/hyperswitch): An Open Source Financial Switch to make payment open, fast, secure and reliable.
 - [tokei.rs](https://github.com/XAMPPRocky/tokei_rs): The tokei.rs server code.
-- [Monrinth](https://github.com/modrinth/labrinth): Rust-based backend to serve the `modrinth` API.
+- [Labrinth](https://github.com/modrinth/labrinth): Rust-based backend to serve the `modrinth` API.
 - [Barricade](https://github.com/purton-tech/barricade): Quickly add user registration and logon to any application.
 - [Bloom](https://github.com/skerkour/bloom): The simplest way to de-Google your life and business: Inbox, Calendar, Files, Contacts & much more.
 - [GitArena](https://github.com/mellowagain/gitarena): Software development platform with built-in VCS, issue tracking and code review.
 - [Four in a Row - Server](https://github.com/ffactory-ofcl/fourinarow-server): An online version of the popular game four in a row, written in Rust on the server side and Flutter + Dart on the client.
 - [Nitro Repo](https://github.com/wherkamp/nitro_repo): An open source artifact manager. Rust back-end and Vue front-end.
-- [Imitari](https://github.com/imitari/imitari): A lightweight ShareX-compatible image uploader server
 - [mCaptcha](https://github.com/mCaptcha/mCaptcha/): Proof of work based, privacy focused, libre CAPTCHA system. Crates used: `actix-web`, `sqlx`, `redis`, and `lettre`.
 - [Zero2prod](https://github.com/LukeMathWalker/zero-to-production/): Source code of zero to production series [zero2prod.com](https://www.zero2prod.com). Paid book but some of the chapters is available online for free. The book compares and explains the chosen technologies, like Actix Web and SQLx.
 - [Triox](https://github.com/Trioxidation/Triox): A free file hosting server that focuses on speed, reliability and security.
