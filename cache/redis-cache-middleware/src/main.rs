@@ -15,29 +15,8 @@ fn fib_recursive(n: u64) -> u64 {
     if n <= 1 {
         return n;
     }
-    let a = n - 1;
-    let b = n - 2;
-    println!("{a} + {b}");
-    fib_recursive(a) + fib_recursive(b)
+    fib_recursive(n - 1) + fib_recursive(n - 2)
 }
-
-/* fn fib_iterative(n: u64) -> u64 {
-    let mut a = 0;
-    let mut b = 1;
-    let mut c;
-
-    if n == 0 {
-        return a;
-    }
-
-    for i in 2..=n {
-        print!("{i} ");
-        c = a + b;
-        a = b;
-        b = c;
-    }
-    b
-} */
 
 async fn an_expensive_function(n: web::Path<u64>) -> impl Responder {
     let result = fib_recursive(n.to_owned());
@@ -70,12 +49,19 @@ async fn main() -> std::result::Result<(), std::io::Error> {
     Ok(())
 }
 
-async fn cache_middleware(
+pub async fn cache_middleware(
     req: ServiceRequest,
     next: Next<impl MessageBody>,
 ) -> Result<ServiceResponse<impl MessageBody>, Error> {
+    // Adjust cache expiry here
+    const MAX_AGE: usize = 86400;
+    let cache_max_age = format!("max-age={MAX_AGE}").parse::<HeaderValue>().unwrap();
     // Defining cache key based on requst path and query string
-    let key = format!("{}?{}", req.path(), req.query_string());
+    let key = if req.query_string().is_empty() {
+        req.path().to_owned()
+    } else {
+        format!("{}?{}", req.path(), req.query_string())
+    };
     println!("cache key: {key:?}");
 
     // Get "Cache-Control" request header and get cache directive
@@ -88,6 +74,7 @@ async fn cache_middleware(
     // If cache directive is not "no-cache" and not "no-store"
     if cache_directive != CacheDirective::NoCache.to_string()
         && cache_directive != CacheDirective::NoStore.to_string()
+        && key != "/metrics"
     {
         // Initialize Redis Client from App Data
         let redis_client = req.app_data::<RedisClient>();
@@ -119,8 +106,7 @@ async fn cache_middleware(
                 // Define content-type and headers here
                 res.headers_mut()
                     .append(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-                res.headers_mut()
-                    .append(CACHE_CONTROL, HeaderValue::from_static("max-age=86400"));
+                res.headers_mut().append(CACHE_CONTROL, cache_max_age);
                 res.headers_mut()
                     .append(CACHE_STATUS, HeaderValue::from_static("hit"));
 
@@ -150,10 +136,10 @@ async fn cache_middleware(
     if req.method() == Method::GET
         && StatusCode::is_success(&res.status())
         && cache_directive != CacheDirective::NoStore.to_string()
+        && key != "/metrics"
     {
         // Define response headers here
-        res.headers_mut()
-            .append(CACHE_CONTROL, HeaderValue::from_static("max-age=86400"));
+        res.headers_mut().append(CACHE_CONTROL, cache_max_age);
         res.headers_mut()
             .append(CACHE_STATUS, HeaderValue::from_static("miss"));
 
@@ -167,7 +153,9 @@ async fn cache_middleware(
         if redis_ok {
             // Try to insert the response body into Redis
             let mut redis_conn = redis_conn.unwrap();
-            let insert = redis::Cmd::set(key, res_body_enc);
+            let insert = redis::Cmd::set_ex(key, res_body_enc, MAX_AGE);
+            // Or keep the cache forever:
+            // let insert = redis::Cmd::set(key, res_body_enc);
             let insert = insert.query::<String>(&mut redis_conn);
 
             if let Err(e) = insert {
