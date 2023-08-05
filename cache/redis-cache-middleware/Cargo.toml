@@ -1,12 +1,12 @@
 [package]
 authors = ["Jatutep Bunupuradah <bangbaew@gmail.com>"]
-name = "main"
+name = "actix-cache-middleware"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "*"
-actix-rt = "*"
-env_logger = "*"
-actix-web-lab = "*"
-redis = { version = "*", features = ["tls-native-tls"] }
+actix-web = "4.3.1"
+actix-rt = "2.8.0"
+env_logger = "0.10.0"
+actix-web-lab = "0.19.1"
+redis = { version = "0.23.1", features = ["tls-native-tls"] }
