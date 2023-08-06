@@ -1,3 +1,5 @@
+use std::env;
+
 use actix_web::{
     body::{self, MessageBody},
     dev::{ServiceRequest, ServiceResponse},
@@ -9,7 +11,6 @@ use actix_web::{
 };
 use actix_web_lab::middleware::{from_fn, Next};
 use redis::{Client as RedisClient, Commands, RedisError};
-use std::env;
 
 fn fib_recursive(n: u64) -> u64 {
     if n <= 1 {
@@ -23,7 +24,7 @@ async fn an_expensive_function(n: web::Path<u64>) -> impl Responder {
     HttpResponse::Ok().body(result.to_string())
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::result::Result<(), std::io::Error> {
     env_logger::init();
 
@@ -56,7 +57,7 @@ pub async fn cache_middleware(
     // Adjust cache expiry here
     const MAX_AGE: usize = 86400;
     let cache_max_age = format!("max-age={MAX_AGE}").parse::<HeaderValue>().unwrap();
-    // Defining cache key based on requst path and query string
+    // Defining cache key based on request path and query string
     let key = if req.query_string().is_empty() {
         req.path().to_owned()
     } else {

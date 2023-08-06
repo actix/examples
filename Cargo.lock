@@ -1909,6 +1909,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "cache-redis"
+version = "1.0.0"
+dependencies = [
+ "actix-web",
+ "actix-web-lab",
+ "env_logger",
+ "redis",
+]
+
+[[package]]
 name = "casbin"
 version = "2.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5834,9 +5844,9 @@ dependencies = [
 
 [[package]]
 name = "redis"
-version = "0.23.0"
+version = "0.23.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ea8c51b5dc1d8e5fd3350ec8167f464ec0995e79f2e90a075b63371500d557f"
+checksum = "ff5d95dd18a4d76650f0c2607ed8ebdbf63baf9cb934e1c233cd220c694db1d7"
 dependencies = [
  "arc-swap",
  "async-trait",
@@ -5845,11 +5855,14 @@ dependencies = [
  "futures 0.3.28",
  "futures-util",
  "itoa 1.0.9",
+ "native-tls",
  "percent-encoding",
  "pin-project-lite 0.2.10",
  "ryu",
  "sha1_smol",
+ "socket2 0.4.9",
  "tokio 1.29.1",
+ "tokio-retry",
  "tokio-util 0.7.8",
  "url",
 ]
@@ -7944,6 +7957,17 @@ dependencies = [
  "tokio-executor",
  "tokio-io",
  "tokio-sync",
+]
+
+[[package]]
+name = "tokio-retry"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f57eb36ecbe0fc510036adff84824dd3c24bb781e21bfa67b69d556aa85214f"
+dependencies = [
+ "pin-project",
+ "rand 0.8.5",
+ "tokio 1.29.1",
 ]
 
 [[package]]
