@@ -5,10 +5,10 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-awc = { version = "3", features = ["rustls"] }
+awc = { workspace = true, features = ["rustls-0_21"] }
 
 env_logger.workspace = true
 log.workspace = true
 mime = "0.3"
-rustls = "0.20"
-webpki-roots = "0.24"
+rustls.workspace = true
+webpki-roots = "0.25"

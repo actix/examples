@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 actix-tls.workspace = true
-actix-web = { workspace = true, features = ["rustls"] }
+actix-web = { workspace = true, features = ["rustls-0_21"] }
 env_logger.workspace = true
 log.workspace = true
-rustls = "0.20"
+rustls.workspace = true
 rustls-pemfile = "1"

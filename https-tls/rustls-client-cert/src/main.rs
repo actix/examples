@@ -108,7 +108,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| App::new().default_service(web::to(route_whoami)))
         .on_connect(get_client_cert)
         .bind(("localhost", 8080))?
-        .bind_rustls(("localhost", 8443), config)?
+        .bind_rustls_021(("localhost", 8443), config)?
         .workers(1)
         .run()
         .await

@@ -62,7 +62,7 @@ async fn main() -> std::io::Result<()> {
             .service(index)
     })
     .bind(("127.0.0.1", 80))? // HTTP port
-    .bind_rustls(("127.0.0.1", 443), config)? // HTTPS port
+    .bind_rustls_021(("127.0.0.1", 443), config)? // HTTPS port
     .run()
     .await
 }
