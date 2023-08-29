@@ -1,6 +1,6 @@
 use std::{fs, time::Duration};
 
-use acme_lib::{create_p384_key, Certificate, Directory, DirectoryUrl};
+use acme_micro::{create_p384_key, Certificate, Directory, DirectoryUrl};
 use actix_files::Files;
 use actix_web::{rt, web, App, HttpRequest, HttpServer, Responder};
 use anyhow::anyhow;

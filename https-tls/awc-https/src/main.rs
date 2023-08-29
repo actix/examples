@@ -49,7 +49,7 @@ async fn main() -> std::io::Result<()> {
             // Wikipedia requires a User-Agent header to make requests
             .add_default_header((header::USER_AGENT, "awc-example/1.0"))
             // a "connector" wraps the stream into an encrypted connection
-            .connector(Connector::new().rustls(Arc::clone(&client_tls_config)))
+            .connector(Connector::new().rustls_021(Arc::clone(&client_tls_config)))
             .finish();
 
         App::new()
@@ -66,7 +66,7 @@ async fn main() -> std::io::Result<()> {
 /// Create simple rustls client config from root certificates.
 fn rustls_config() -> ClientConfig {
     let mut root_store = RootCertStore::empty();
-    root_store.add_server_trust_anchors(webpki_roots::TLS_SERVER_ROOTS.0.iter().map(|ta| {
+    root_store.add_trust_anchors(webpki_roots::TLS_SERVER_ROOTS.iter().map(|ta| {
         OwnedTrustAnchor::from_subject_spki_name_constraints(
             ta.subject,
             ta.spki,

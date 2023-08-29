@@ -1,9 +1,9 @@
 //! This example shows how to use `actix_web::HttpServer::on_connect` to access client certificates
 //! pass them to a handler through connection-local data.
 
-use std::{any::Any, fs::File, io::BufReader, net::SocketAddr};
+use std::{any::Any, sync::Arc, fs::File, io::BufReader, net::SocketAddr};
 
-use actix_tls::accept::rustls::{reexports::ServerConfig, TlsStream};
+use actix_tls::accept::rustls_0_21::{reexports::ServerConfig, TlsStream};
 use actix_web::{
     dev::Extensions, rt::net::TcpStream, web, App, HttpRequest, HttpResponse, HttpServer, Responder,
 };
@@ -85,7 +85,7 @@ async fn main() -> std::io::Result<()> {
     let client_auth = AllowAnyAnonymousOrAuthenticatedClient::new(cert_store);
     let config = ServerConfig::builder()
         .with_safe_defaults()
-        .with_client_cert_verifier(client_auth);
+        .with_client_cert_verifier(Arc::new(client_auth));
 
     // import server cert and key
     let cert_file = &mut BufReader::new(File::open(SERVER_CERT)?);

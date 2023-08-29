@@ -130,7 +130,7 @@ impl ChatServer {
         // auto join session to main room
         self.rooms
             .entry("main".to_owned())
-            .or_insert_with(HashSet::new)
+            .or_default()
             .insert(id);
 
         let count = self.visitor_count.fetch_add(1, Ordering::SeqCst);
@@ -187,7 +187,7 @@ impl ChatServer {
 
         self.rooms
             .entry(room.clone())
-            .or_insert_with(HashSet::new)
+            .or_default()
             .insert(conn_id);
 
         self.send_system_message(&room, conn_id, "Someone connected")

@@ -13,11 +13,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "acme-lib"
-version = "0.8.2"
+name = "acme-micro"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "292ac9d513052341a7f5bdae61f31c4dc93c1dce2598508f52709df08cecc8b0"
+checksum = "a18fb402a32ddc56ef7015df8d575c326ea911887ba9b7661ce18786282e89a3"
 dependencies = [
+ "anyhow",
  "base64 0.13.1",
  "lazy_static",
  "log",
@@ -5091,7 +5092,7 @@ dependencies = [
 name = "openssl-auto-le"
 version = "1.0.0"
 dependencies = [
- "acme-lib",
+ "acme-micro",
  "actix-files",
  "actix-web",
  "anyhow",
