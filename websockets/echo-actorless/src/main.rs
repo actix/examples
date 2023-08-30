@@ -6,6 +6,7 @@ use actix_files::NamedFile;
 use actix_web::{
     middleware, rt, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder,
 };
+use tokio::sync::broadcast;
 
 mod handler;
 
@@ -37,6 +38,31 @@ async fn echo_ws(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse,
     Ok(res)
 }
 
+/// Handshake and start broadcast WebSocket handler with heartbeats.
+async fn send(
+    body: web::Bytes,
+    tx: web::Data<broadcast::Sender<web::Bytes>>,
+) -> Result<impl Responder, Error> {
+    tx.send(body)
+        .map_err(actix_web::error::ErrorInternalServerError)?;
+
+    Ok(HttpResponse::NoContent())
+}
+
+/// Handshake and start broadcast WebSocket handler with heartbeats.
+async fn broadcast_ws(
+    req: HttpRequest,
+    stream: web::Payload,
+    tx: web::Data<broadcast::Sender<web::Bytes>>,
+) -> Result<HttpResponse, Error> {
+    let (res, session, msg_stream) = actix_ws::handle(&req, stream)?;
+
+    // spawn websocket handler (and don't await it) so that the response is returned immediately
+    rt::spawn(handler::broadcast_ws(session, msg_stream, tx.subscribe()));
+
+    Ok(res)
+}
+
 // note that the `actix` based WebSocket handling would NOT work under `tokio::main`
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> std::io::Result<()> {
@@ -44,13 +70,18 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("starting HTTP server at http://localhost:8080");
 
-    HttpServer::new(|| {
+    let (tx, _) = broadcast::channel::<web::Bytes>(128);
+
+    HttpServer::new(move || {
         App::new()
             // WebSocket UI HTML file
             .service(web::resource("/").to(index))
             // websocket routes
             .service(web::resource("/ws").route(web::get().to(echo_heartbeat_ws)))
             .service(web::resource("/ws-basic").route(web::get().to(echo_ws)))
+            .app_data(web::Data::new(tx.clone()))
+            .service(web::resource("/ws-broadcast").route(web::get().to(broadcast_ws)))
+            .service(web::resource("/send").route(web::post().to(send)))
             // enable logger
             .wrap(middleware::Logger::default())
     })
