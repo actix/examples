@@ -38,8 +38,8 @@ async fn echo_ws(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse,
     Ok(res)
 }
 
-/// Handshake and start broadcast WebSocket handler with heartbeats.
-async fn send(
+/// Send message to clients connected to broadcast WebSocket.
+async fn send_to_broadcast_ws(
     body: web::Bytes,
     tx: web::Data<broadcast::Sender<web::Bytes>>,
 ) -> Result<impl Responder, Error> {
@@ -81,7 +81,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/ws-basic").route(web::get().to(echo_ws)))
             .app_data(web::Data::new(tx.clone()))
             .service(web::resource("/ws-broadcast").route(web::get().to(broadcast_ws)))
-            .service(web::resource("/send").route(web::post().to(send)))
+            .service(web::resource("/send").route(web::post().to(send_to_broadcast_ws)))
             // enable logger
             .wrap(middleware::Logger::default())
     })
