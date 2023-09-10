@@ -67,6 +67,9 @@ members = [
 ]
 resolver = "2"
 
+[workspace.package]
+edition = "2021"
+
 [workspace.dependencies]
 actix = "0.13"
 actix-broker = "0.4"

@@ -1,7 +1,8 @@
 [package]
 name = "tls-acme"
 version = "1.0.0"
-edition = "2021"
+publish = false
+edition.workspace = true
 
 [dependencies]
 acme-rfc8555 = "0.1"
@@ -11,7 +12,6 @@ color-eyre = "0.6"
 env_logger.workspace = true
 eyre = "0.6"
 log.workspace = true
-reqwest = "0.11"
 rustls = "0.21"
 rustls-pemfile = "1"
 tokio = { workspace = true, feature = ["fs"] }

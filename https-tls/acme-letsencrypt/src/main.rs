@@ -137,6 +137,7 @@ async fn index(_req: HttpRequest) -> impl Responder {
 #[actix_web::main]
 async fn main() -> eyre::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    color_eyre::install()?;
 
     //   Load keys
     // ==============================================
