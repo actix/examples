@@ -1,7 +1,7 @@
 //! This example shows how to use `actix_web::HttpServer::on_connect` to access client certificates
 //! pass them to a handler through connection-local data.
 
-use std::{any::Any, sync::Arc, fs::File, io::BufReader, net::SocketAddr};
+use std::{any::Any, fs::File, io::BufReader, net::SocketAddr, sync::Arc};
 
 use actix_tls::accept::rustls_0_21::{reexports::ServerConfig, TlsStream};
 use actix_web::{
