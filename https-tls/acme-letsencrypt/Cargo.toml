@@ -1,0 +1,17 @@
+[package]
+name = "tls-acme"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+acme-rfc8555 = "0.1"
+actix-files.workspace = true
+actix-web = { workspace = true, features = ["rustls"] }
+color-eyre = "0.6"
+env_logger.workspace = true
+eyre = "0.6"
+log.workspace = true
+reqwest = "0.11"
+rustls = "0.21"
+rustls-pemfile = "1"
+tokio = { workspace = true, feature = ["fs"] }
