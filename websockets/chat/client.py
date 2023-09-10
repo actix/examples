@@ -41,7 +41,10 @@ async def start_client(url: str) -> None:
 
             # Exit with Ctrl+D
             while line := await asyncio.to_thread(sys.stdin.readline):
-                await ws.send_str(name + ": " + line)
+                if line.startswith("/"):
+                    await ws.send_str(line)
+                else:
+                    await ws.send_str(name + ": " + line)
 
             dispatch_task.cancel()
             with suppress(asyncio.CancelledError):
