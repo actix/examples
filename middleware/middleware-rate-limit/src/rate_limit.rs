@@ -110,12 +110,12 @@ impl TokenBucket {
 
         self.tokens = min(self.tokens + tokens_to_add, self.capacity);
 
-        return if self.tokens > 0 {
+        if self.tokens > 0 {
             self.last_query_time = current_time;
-            self.tokens = self.tokens - 1;
+            self.tokens -= 1;
             true
         } else {
             false
-        };
+        }
     }
 }
