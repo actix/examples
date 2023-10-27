@@ -7,6 +7,8 @@ use actix_web::{
     App, HttpResponse, HttpServer,
 };
 
+mod rate_limit;
+
 async fn index() -> HttpResponse {
     HttpResponse::Ok().body("succeed")
 }
@@ -26,8 +28,16 @@ async fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())
-            .wrap(Governor::new(&limit_cfg))
-            .service(web::resource("/test").route(web::get().to(index)))
+            .service(
+                web::resource("/test/governor")
+                    .wrap(Governor::new(&limit_cfg))
+                    .route(web::get().to(index)),
+            )
+            .service(
+                web::resource("/test/simple")
+                    .wrap(rate_limit::RateLimit::new(2))
+                    .route(web::get().to(index)),
+            )
     })
     .bind(("127.0.0.1", 8080))?
     .run()
