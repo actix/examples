@@ -14,4 +14,4 @@ eyre = "0.6"
 log.workspace = true
 rustls = "0.21"
 rustls-pemfile = "1"
-tokio = { workspace = true, feature = ["fs"] }
+tokio = { workspace = true, features = ["fs"] }
