@@ -960,9 +960,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql"
-version = "5.0.10"
+version = "6.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b35ef8f9be23ee30fe1eb1cf175c689bc33517c6c6d0fd0669dade611e5ced7f"
+checksum = "117113a7ff4a98f2a864fa7a5274033b0907fce65dc8464993c75033f8074f90"
 dependencies = [
  "async-graphql-derive",
  "async-graphql-parser",
@@ -976,7 +976,7 @@ dependencies = [
  "futures-util",
  "handlebars",
  "http",
- "indexmap 1.9.3",
+ "indexmap 2.0.2",
  "mime",
  "multer",
  "num-traits",
@@ -993,9 +993,9 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-actix-web"
-version = "5.0.10"
+version = "6.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75e3d335639e722213bdd120f77a66f531bde8bbcff1b19ab8e542f82aed7f48"
+checksum = "515cb488dbd5da3b757388050dcc2fde88f37f00ffdb7955367cb793fd8cbe7b"
 dependencies = [
  "actix",
  "actix-http",
@@ -1003,6 +1003,7 @@ dependencies = [
  "actix-web-actors",
  "async-channel",
  "async-graphql",
+ "async-stream",
  "futures-channel",
  "futures-util",
  "serde_json",
@@ -1025,25 +1026,26 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-derive"
-version = "5.0.10"
+version = "6.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a0f6ceed3640b4825424da70a5107e79d48d9b2bc6318dfc666b2fc4777f8c4"
+checksum = "6e4bb7b7b2344d24af860776b7fe4e4ee4a67cd965f076048d023f555703b854"
 dependencies = [
  "Inflector",
  "async-graphql-parser",
- "darling 0.14.4",
+ "darling 0.20.3",
  "proc-macro-crate 1.3.1",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "strum",
+ "syn 2.0.38",
  "thiserror",
 ]
 
 [[package]]
 name = "async-graphql-parser"
-version = "5.0.10"
+version = "6.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ecc308cd3bc611ee86c9cf19182d2b5ee583da40761970e41207f088be3db18f"
+checksum = "c47e1c1ff6cb7cae62c9cd768d76475cc68f156d8234b024fd2499ad0e91da21"
 dependencies = [
  "async-graphql-value",
  "pest",
@@ -1053,12 +1055,12 @@ dependencies = [
 
 [[package]]
 name = "async-graphql-value"
-version = "5.0.10"
+version = "6.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d461325bfb04058070712296601dfe5e5bd6cdff84780a0a8c569ffb15c87eb3"
+checksum = "2270df3a642efce860ed06fbcf61fc6db10f83c2ecb5613127fb453c82e012a4"
 dependencies = [
  "bytes 1.5.0",
- "indexmap 1.9.3",
+ "indexmap 2.0.2",
  "serde",
  "serde_json",
 ]
@@ -2516,16 +2518,6 @@ dependencies = [
 
 [[package]]
 name = "darling"
-version = "0.14.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b750cb3417fd1b327431a470f388520309479ab0bf5e323505daf0290cd3850"
-dependencies = [
- "darling_core 0.14.4",
- "darling_macro 0.14.4",
-]
-
-[[package]]
-name = "darling"
 version = "0.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0209d94da627ab5605dcccf08bb18afa5009cfbef48d8a8b7d7bdbc79be25c5e"
@@ -2539,20 +2531,6 @@ name = "darling_core"
 version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "859d65a907b6852c9361e3185c862aae7fafd2887876799fa55f5f99dc40d610"
-dependencies = [
- "fnv",
- "ident_case",
- "proc-macro2",
- "quote",
- "strsim",
- "syn 1.0.109",
-]
-
-[[package]]
-name = "darling_core"
-version = "0.14.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "109c1ca6e6b7f82cc233a97004ea8ed7ca123a9af07a8230878fcfda9b158bf0"
 dependencies = [
  "fnv",
  "ident_case",
@@ -2583,17 +2561,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c972679f83bdf9c42bd905396b6c3588a843a17f0f16dfcfa3e2c5d57441835"
 dependencies = [
  "darling_core 0.13.4",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
-name = "darling_macro"
-version = "0.14.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4aab4dbc9f7611d8b55048a3a16d2d010c2c8334e46304b40ac1cc14bf3b48e"
-dependencies = [
- "darling_core 0.14.4",
  "quote",
  "syn 1.0.109",
 ]
@@ -4046,6 +4013,7 @@ checksum = "8adf3ddd720272c6ea8bf59463c04e0f93d0bbf7c5439b691bca2987e0270897"
 dependencies = [
  "equivalent",
  "hashbrown 0.14.2",
+ "serde",
 ]
 
 [[package]]
