@@ -206,15 +206,15 @@ dependencies = [
 
 [[package]]
 name = "actix-identity"
-version = "0.5.2"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1224c9f9593dc27c9077b233ce04adedc1d7febcfc35ee9f53ea3c24df180bec"
+checksum = "36e1cc6f95e245b2f3c6995df4e1c0c697704c48c28ec325d135a3ca039d4952"
 dependencies = [
  "actix-service",
  "actix-session",
  "actix-utils",
  "actix-web",
- "anyhow",
+ "derive_more",
  "futures-core",
  "serde",
  "tracing",
@@ -355,9 +355,9 @@ dependencies = [
 
 [[package]]
 name = "actix-session"
-version = "0.7.2"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43da8b818ae1f11049a4d218975345fe8e56ce5a5f92c11f972abcff5ff80e87"
+checksum = "2e6a28f813a6671e1847d005cad0be36ae4d016287690f765c303379837c13d6"
 dependencies = [
  "actix",
  "actix-redis",
@@ -506,9 +506,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web-lab"
-version = "0.19.2"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9b7c50a90657ef1868db9dd85f74e82c4d9858ce583d4639ae3583f0bb97775"
+checksum = "e15f180c2bf7abacfda7d8d9ee4169e7f792ec8983313dc38809e902f61c79d0"
 dependencies = [
  "actix-http",
  "actix-router",
@@ -538,18 +538,19 @@ dependencies = [
  "serde_html_form",
  "serde_json",
  "tokio 1.33.0",
+ "tokio-stream",
  "tracing",
 ]
 
 [[package]]
 name = "actix-web-lab-derive"
-version = "0.19.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "16294584c7794939b1e5711f28e7cae84ef30e62a520db3f9af425f85269bcd2"
+checksum = "9aa0b287c8de4a76b691f29dbb5451e8dd5b79d777eaf87350c9b0cbfdb5e968"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.38",
 ]
 
 [[package]]
@@ -6759,6 +6760,8 @@ dependencies = [
  "futures-util",
  "log",
  "parking_lot 0.12.1",
+ "tokio 1.33.0",
+ "tokio-stream",
 ]
 
 [[package]]

@@ -1,9 +1,14 @@
 use std::{sync::Arc, time::Duration};
 
 use actix_web::rt::time::interval;
-use actix_web_lab::sse::{self, ChannelStream, Sse};
+use actix_web_lab::{
+    sse::{self, Sse},
+    util::InfallibleStream,
+};
 use futures_util::future;
 use parking_lot::Mutex;
+use tokio::sync::mpsc;
+use tokio_stream::wrappers::ReceiverStream;
 
 pub struct Broadcaster {
     inner: Mutex<BroadcasterInner>,
@@ -11,7 +16,7 @@ pub struct Broadcaster {
 
 #[derive(Debug, Clone, Default)]
 struct BroadcasterInner {
-    clients: Vec<sse::Sender>,
+    clients: Vec<mpsc::Sender<sse::Event>>,
 }
 
 impl Broadcaster {
@@ -59,14 +64,14 @@ impl Broadcaster {
     }
 
     /// Registers client with broadcaster, returning an SSE response body.
-    pub async fn new_client(&self) -> Sse<ChannelStream> {
-        let (tx, rx) = sse::channel(10);
+    pub async fn new_client(&self) -> Sse<InfallibleStream<ReceiverStream<sse::Event>>> {
+        let (tx, rx) = mpsc::channel(10);
 
-        tx.send(sse::Data::new("connected")).await.unwrap();
+        tx.send(sse::Data::new("connected").into()).await.unwrap();
 
         self.inner.lock().clients.push(tx);
 
-        rx
+        Sse::from_infallible_receiver(rx)
     }
 
     /// Broadcasts `msg` to all clients.
@@ -75,7 +80,7 @@ impl Broadcaster {
 
         let send_futures = clients
             .iter()
-            .map(|client| client.send(sse::Data::new(msg)));
+            .map(|client| client.send(sse::Data::new(msg).into()));
 
         // try to send to all clients, ignoring failures
         // disconnected clients will get swept up by `remove_stale_clients`
