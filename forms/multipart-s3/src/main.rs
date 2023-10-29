@@ -7,7 +7,7 @@ use actix_web::{
 };
 use actix_web_lab::{extract::Path, respond::Html};
 use aws_config::meta::region::RegionProviderChain;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use serde_json::json;
 
 mod client;

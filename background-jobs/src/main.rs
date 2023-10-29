@@ -15,7 +15,7 @@ pub(crate) type ItemCache = Mutex<HashMap<String, DateTime<Utc>>>;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // background jobs relating to local, disposable tasks
