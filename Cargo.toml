@@ -45,6 +45,7 @@ members = [
    "middleware/middleware-ext-mut",
    "middleware/middleware-http-to-https",
    "middleware/middleware",
+   "middleware/middleware-rate-limit",
    "protobuf",
    "run-in-thread",
    "server-sent-events",
