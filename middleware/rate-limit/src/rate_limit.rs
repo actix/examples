@@ -1,15 +1,18 @@
-use std::cell::RefCell;
-use std::cmp::min;
-use std::future::{ready, Ready};
+//! Simple leaky-bucket rate-limiter.
 
-use actix_web::body::EitherBody;
+use std::{
+    cell::RefCell,
+    cmp::min,
+    future::{ready, Ready},
+};
+
 use actix_web::{
-    dev,
-    dev::{Service, ServiceRequest, ServiceResponse, Transform},
+    body::EitherBody,
+    dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
     Error, HttpResponse,
 };
 use chrono::{Local, NaiveDateTime};
-use futures_util::future::LocalBoxFuture;
+use futures_util::{future::LocalBoxFuture, FutureExt, TryFutureExt};
 
 #[doc(hidden)]
 pub struct RateLimitService<S> {
@@ -27,35 +30,38 @@ where
     type Error = Error;
     type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
 
-    dev::forward_ready!(service);
+    forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
         log::info!("request is passing through the AddMsg middleware");
 
-        req.uri().path();
-        // if be limited
         if !self.token_bucket.borrow_mut().allow_query() {
+            // request has been rate limited
+
             return Box::pin(async {
                 Ok(req.into_response(
                     HttpResponse::TooManyRequests()
-                        .body("")
+                        .finish()
                         .map_into_right_body(),
                 ))
             });
         }
 
-        let fut = self.service.call(req);
-        Box::pin(async move { fut.await.map(ServiceResponse::map_into_left_body) })
+        self.service
+            .call(req)
+            .map_ok(ServiceResponse::map_into_left_body)
+            .boxed_local()
     }
 }
 
 #[derive(Clone, Debug)]
 pub struct RateLimit {
-    // limit in 10s
+    /// Request limit for 10 second period.
     limit: u64,
 }
 
 impl RateLimit {
+    /// Constructs new rate limiter.
     pub fn new(limit: u64) -> Self {
         Self { limit }
     }
@@ -82,36 +88,44 @@ where
 }
 
 struct TokenBucket {
-    // limit in ten sec
+    /// Request limit for 10 second period.
     limit: u64,
-    last_query_time: NaiveDateTime,
-    // max query number in ten sec,in this case equal limit
+
+    /// Max number of requests for 10 second period, in this case equal to limit.
     capacity: u64,
-    // numbers of token,default equal capacity
+
+    /// Time that last request was accepted.
+    last_req_time: NaiveDateTime,
+
+    /// Numbers of tokens remaining.
+    ///
+    /// Initialized equal to capacity.
     tokens: u64,
 }
 
 impl TokenBucket {
+    /// Constructs new leaky bucket.
     fn new(limit: u64) -> Self {
         TokenBucket {
             limit,
-            last_query_time: Default::default(),
+            last_req_time: NaiveDateTime::UNIX_EPOCH,
             capacity: limit,
             tokens: 0,
         }
     }
 
+    /// Mutates leaky bucket for accepted request.
     fn allow_query(&mut self) -> bool {
         let current_time = Local::now().naive_local();
 
-        let time_elapsed = (current_time.timestamp() - self.last_query_time.timestamp()) as u64;
+        let time_elapsed = (current_time.timestamp() - self.last_req_time.timestamp()) as u64;
 
         let tokens_to_add = time_elapsed * self.limit / 10;
 
         self.tokens = min(self.tokens + tokens_to_add, self.capacity);
 
         if self.tokens > 0 {
-            self.last_query_time = current_time;
+            self.last_req_time = current_time;
             self.tokens -= 1;
             true
         } else {
