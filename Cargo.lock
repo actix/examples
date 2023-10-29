@@ -6291,14 +6291,13 @@ dependencies = [
 
 [[package]]
 name = "rust-argon2"
-version = "1.0.1"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5885493fdf0be6cdff808d1533ce878d21cfa49c7086fa00c66355cd9141bfc"
+checksum = "1e71971821b3ae0e769e4a4328dbcb517607b434db7697e9aba17203ec14e46a"
 dependencies = [
  "base64 0.21.5",
  "blake2b_simd",
  "constant_time_eq",
- "crossbeam-utils 0.8.16",
 ]
 
 [[package]]

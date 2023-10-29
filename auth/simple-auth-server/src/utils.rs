@@ -1,4 +1,3 @@
-use argon2::{self, Config};
 use once_cell::sync::Lazy;
 
 use crate::errors::ServiceError;
@@ -10,9 +9,9 @@ const SALT: &[u8] = b"supersecuresalt";
 
 // PLEASE NOTE THIS IS ONLY FOR DEMO PLEASE DO MORE RESEARCH FOR PRODUCTION USE
 pub fn hash_password(password: &str) -> Result<String, ServiceError> {
-    let config = Config {
+    let config = argon2::Config {
         secret: SECRET_KEY.as_bytes(),
-        ..Default::default()
+        ..argon2::Config::rfc9106_low_mem()
     };
     argon2::hash_encoded(password.as_bytes(), SALT, &config).map_err(|err| {
         dbg!(err);
