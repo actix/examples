@@ -109,6 +109,7 @@ pub struct Response {
     // This member is REQUIRED on error.
     // This member MUST NOT exist if there was no error triggered during invocation.
     // The value for this member MUST be an Object as defined in section 5.1.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<ErrorData>,
 
     /// This member is REQUIRED.
