@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web.workspace = true
 diesel = { version = "2", features = ["sqlite", "r2d2"] }
-dotenv = "0.15"
+dotenvy.workspace = true
 env_logger.workspace = true
 log.workspace = true
 serde = { version = "1.0", features = ["derive"] }

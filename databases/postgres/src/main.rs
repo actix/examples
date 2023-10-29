@@ -125,7 +125,7 @@ mod handlers {
 
 use ::config::Config;
 use actix_web::{web, App, HttpServer};
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use handlers::{add_user, get_users};
 use tokio_postgres::NoTls;
 

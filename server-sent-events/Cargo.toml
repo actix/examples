@@ -10,3 +10,5 @@ env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 parking_lot = "0.12"
+tokio = { workspace = true, features = ["sync"] }
+tokio-stream.workspace = true

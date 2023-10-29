@@ -7,7 +7,7 @@ use actix_web::{
     middleware::{ErrorHandlers, Logger},
     web, App, HttpServer,
 };
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use tera::Tera;
 
 mod api;

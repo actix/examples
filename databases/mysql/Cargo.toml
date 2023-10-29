@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web.workspace = true
 derive_more.workspace = true
-dotenv = "0.15"
+dotenvy.workspace = true
 env_logger.workspace = true
 log.workspace = true
 mysql = "24"
