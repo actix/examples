@@ -104,7 +104,6 @@ pub struct Response {
     /// This member is REQUIRED on success.
     /// This member MUST NOT exist if there was an error invoking the method.
     /// The value of this member is determined by the method invoked on the Server.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Value,
 
     // This member is REQUIRED on error.
