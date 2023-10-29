@@ -2609,29 +2609,28 @@ dependencies = [
 
 [[package]]
 name = "deadpool"
-version = "0.9.5"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "421fe0f90f2ab22016f32a9881be5134fdd71c65298917084b0c7477cbc3856e"
+checksum = "fb84100978c1c7b37f09ed3ce3e5f843af02c2a2c431bae5b19230dad2c1b490"
 dependencies = [
  "async-trait",
  "deadpool-runtime",
  "num_cpus",
- "retain_mut",
  "serde",
  "tokio 1.33.0",
 ]
 
 [[package]]
 name = "deadpool-postgres"
-version = "0.10.5"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "836a24a9d49deefe610b8b60c767a7412e9a931d79a89415cd2d2d71630ca8d7"
+checksum = "40b75ba49590d27f677d3bebaf76cd15889ca8b308bc7ba99bfa25f1d7269c13"
 dependencies = [
  "deadpool",
- "log",
  "serde",
  "tokio 1.33.0",
  "tokio-postgres",
+ "tracing",
 ]
 
 [[package]]
@@ -5663,7 +5662,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f4c021e1093a56626774e81216a4ce732a735e5bad4868a03f3ed65ca0c3919"
 dependencies = [
  "once_cell",
- "toml_edit",
+ "toml_edit 0.19.15",
 ]
 
 [[package]]
@@ -6093,12 +6092,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "retain_mut"
-version = "0.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4389f1d5789befaf6029ebd9f7dac4af7f7e3d61b69d4f30e2ac02b57e7712b0"
-
-[[package]]
 name = "rfc6979"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6440,9 +6433,9 @@ checksum = "1ad4cc8da4ef723ed60bced201181d83791ad433213d8c24efffda1eec85d741"
 
 [[package]]
 name = "sailfish"
-version = "0.7.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "82a03fcade08eb837d7ba0d8f775f1fe6cddb00d413de0c655ab2b93e821a0eb"
+checksum = "acd5f4680149b62b3478f6af08a8f1c37794bc1bc577e28874a4d0c70084d600"
 dependencies = [
  "itoap",
  "ryu",
@@ -6452,9 +6445,9 @@ dependencies = [
 
 [[package]]
 name = "sailfish-compiler"
-version = "0.7.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0cf1deecb07747a1f7ab55745edcc406875db007602b037af5fcf59f40dd2005"
+checksum = "67087aca4a3886686a88cee6835089c53e6143a0b8c5be01e63e4fe2f6dfe7cb"
 dependencies = [
  "filetime",
  "home",
@@ -6463,14 +6456,14 @@ dependencies = [
  "quote",
  "serde",
  "syn 2.0.38",
- "toml 0.7.8",
+ "toml 0.8.6",
 ]
 
 [[package]]
 name = "sailfish-macros"
-version = "0.7.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3e5946289d6daa26cde6ffb06678d7a8ba276ec6a7a55d36f64b35e7f644d22"
+checksum = "e47e31910c5f9230e99992568d05a5968fe4f42a635c3f912c993e9f66a619a5"
 dependencies = [
  "proc-macro2",
  "sailfish-compiler",
@@ -8038,14 +8031,14 @@ dependencies = [
 
 [[package]]
 name = "toml"
-version = "0.7.8"
+version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd79e69d3b627db300ff956027cc6c3798cef26d22526befdfcd12feeb6d2257"
+checksum = "8ff9e3abce27ee2c9a37f9ad37238c1bdd4e789c84ba37df76aa4d528f5072cc"
 dependencies = [
  "serde",
  "serde_spanned",
  "toml_datetime",
- "toml_edit",
+ "toml_edit 0.20.7",
 ]
 
 [[package]]
@@ -8062,6 +8055,17 @@ name = "toml_edit"
 version = "0.19.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b5bb770da30e5cbfde35a2d7b9b8a2c4b8ef89548a7a6aeab5c9a576e3e7421"
+dependencies = [
+ "indexmap 2.0.2",
+ "toml_datetime",
+ "winnow",
+]
+
+[[package]]
+name = "toml_edit"
+version = "0.20.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70f427fce4d84c72b5b732388bf4a9f4531b53f74e2887e3ecb2481f68f66d81"
 dependencies = [
  "indexmap 2.0.2",
  "serde",
