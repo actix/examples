@@ -1,7 +1,8 @@
 [package]
-name = "middleware-ext-mut"
+name = "middleware-request-extensions"
 version = "1.0.0"
-edition = "2021"
+publish.workspace = true
+edition.workspace = true
 
 [dependencies]
 actix-web.workspace = true

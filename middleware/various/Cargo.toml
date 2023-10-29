@@ -1,7 +1,8 @@
 [package]
-name = "middleware-example"
+name = "middleware-various"
 version = "1.0.0"
-edition = "2021"
+publish.workspace = true
+edition.workspace = true
 
 [dependencies]
 actix-http.workspace = true

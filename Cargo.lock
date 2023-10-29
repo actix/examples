@@ -4712,28 +4712,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "middleware-example"
-version = "1.0.0"
-dependencies = [
- "actix-http",
- "actix-web",
- "actix-web-lab",
- "env_logger",
- "futures-util",
- "log",
- "pin-project",
-]
-
-[[package]]
-name = "middleware-ext-mut"
-version = "1.0.0"
-dependencies = [
- "actix-web",
- "env_logger",
- "log",
-]
-
-[[package]]
 name = "middleware-http-to-https"
 version = "1.0.0"
 dependencies = [
@@ -4755,6 +4733,28 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
+]
+
+[[package]]
+name = "middleware-request-extensions"
+version = "1.0.0"
+dependencies = [
+ "actix-web",
+ "env_logger",
+ "log",
+]
+
+[[package]]
+name = "middleware-various"
+version = "1.0.0"
+dependencies = [
+ "actix-http",
+ "actix-web",
+ "actix-web-lab",
+ "env_logger",
+ "futures-util",
+ "log",
+ "pin-project",
 ]
 
 [[package]]

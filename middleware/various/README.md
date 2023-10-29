@@ -1,13 +1,14 @@
 # Middleware: Various
 
-This example showcases a bunch of different uses of middleware. See also the [Middleware guide](https://actix.rs/docs/middleware/).
+This example showcases a bunch of different uses of middleware.
+
+See also the [Middleware guide](https://actix.rs/docs/middleware).
 
 ## Usage
 
 ```sh
-cd basics/middleware
+cd middleware/various
 cargo run
-# Started http server: 127.0.0.1:8080
 ```
 
 Look in `src/main.rs` and comment the different middleware in/out to see how they function.
