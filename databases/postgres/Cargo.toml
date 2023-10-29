@@ -8,7 +8,7 @@ actix-web.workspace = true
 config = "0.13.1"
 deadpool-postgres = { version = "0.11", features = ["serde"] }
 derive_more.workspace = true
-dotenv = "0.15.0"
+dotenvy.workspace = true
 serde = { version = "1.0.137", features = ["derive"] }
 tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
