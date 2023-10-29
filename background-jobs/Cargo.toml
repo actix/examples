@@ -9,7 +9,7 @@ actix-web.workspace = true
 anyhow = "1"
 apalis = { version = "0.4", features = ["redis"] }
 chrono.workspace = true
-dotenv = "0.15"
+dotenvy.workspace = true
 env_logger.workspace = true
 log.workspace = true
 rand.workspace = true
