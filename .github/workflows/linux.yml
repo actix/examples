@@ -43,7 +43,7 @@ jobs:
         timeout-minutes: 30
 
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.5.0
+        uses: supercharge/redis-github-action@1.7.0
         with:
           redis-version: 6
 
