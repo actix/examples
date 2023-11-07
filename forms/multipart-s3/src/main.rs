@@ -56,7 +56,10 @@ async fn fetch_from_s3(
         .await
         .ok_or_else(|| error::ErrorNotFound("file with specified key not found"))?;
 
-    Ok(HttpResponse::Ok().body(SizedStream::new(file_size, file_stream)))
+    Ok(HttpResponse::Ok().body(SizedStream::new(
+        file_size,
+        tokio_util::io::ReaderStream::new(file_stream.into_async_read()),
+    )))
 }
 
 #[delete("/file/{s3_key}*")]

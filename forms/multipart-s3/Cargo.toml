@@ -8,8 +8,8 @@ actix-multipart.workspace = true
 actix-web.workspace = true
 actix-web-lab.workspace = true
 
-aws-config = "0.56"
-aws-sdk-s3 = "0.34"
+aws-config = "0.57"
+aws-sdk-s3 = "0.35"
 
 dotenvy.workspace = true
 env_logger.workspace = true
@@ -18,3 +18,4 @@ log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tokio = { workspace = true, features = ["io-util", "fs"] }
+tokio-util = "0.7"

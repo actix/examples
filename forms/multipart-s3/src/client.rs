@@ -1,9 +1,8 @@
 use std::env;
 
-use actix_web::{error, web::Bytes, Error};
 use aws_config::SdkConfig as AwsConfig;
 use aws_sdk_s3::{primitives::ByteStream, Client as S3Client};
-use futures_util::{stream, Stream, StreamExt as _, TryStreamExt as _};
+use futures_util::{stream, StreamExt as _};
 use tokio::{fs, io::AsyncReadExt as _};
 
 use crate::{TempFile, UploadedFile};
@@ -32,10 +31,7 @@ impl Client {
         )
     }
 
-    pub async fn fetch_file(
-        &self,
-        key: &str,
-    ) -> Option<(u64, impl Stream<Item = Result<Bytes, actix_web::Error>>)> {
+    pub async fn fetch_file(&self, key: &str) -> Option<(u64, ByteStream)> {
         let object = self
             .s3
             .get_object()
@@ -50,7 +46,7 @@ impl Client {
                 .content_length()
                 .try_into()
                 .expect("file has invalid size"),
-            object.body.map_err(error::ErrorInternalServerError),
+            object.body,
         ))
     }
 
@@ -58,7 +54,7 @@ impl Client {
         &self,
         temp_files: Vec<TempFile>,
         key_prefix: &str,
-    ) -> Result<Vec<UploadedFile>, Error> {
+    ) -> actix_web::Result<Vec<UploadedFile>> {
         let uploaded_files = stream::iter(temp_files)
             .map(|file| self.upload_and_remove(file, key_prefix))
             // upload files concurrently, up to 2 at a time
