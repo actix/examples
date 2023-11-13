@@ -5,5 +5,5 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-handlebars = { version = "4.2.1", features = ["dir_source"] }
+handlebars = { version = "4.5.0", features = ["dir_source"] }
 serde_json.workspace = true
