@@ -6,7 +6,7 @@ use actix_web::{
     HttpServer, Responder,
 };
 use actix_web_lab::{extract::Path, respond::Html};
-use aws_config::meta::region::RegionProviderChain;
+use aws_config::{meta::region::RegionProviderChain, BehaviorVersion};
 use dotenvy::dotenv;
 use serde_json::json;
 
@@ -90,7 +90,10 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("configuring S3 client");
     let aws_region = RegionProviderChain::default_provider().or_else("us-east-1");
-    let aws_config = aws_config::from_env().region(aws_region).load().await;
+    let aws_config = aws_config::defaults(BehaviorVersion::latest())
+        .region(aws_region)
+        .load()
+        .await;
 
     // create singleton S3 client
     let s3_client = Client::new(&aws_config);
