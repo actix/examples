@@ -44,7 +44,7 @@ impl Client {
         Some((
             object
                 .content_length()
-                .try_into()
+                .and_then(|len| len.try_into().ok())
                 .expect("file has invalid size"),
             object.body,
         ))
