@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-config = "0.13.1"
+config = "0.13.4"
 deadpool-postgres = { version = "0.11", features = ["serde"] }
 derive_more.workspace = true
 dotenvy.workspace = true
