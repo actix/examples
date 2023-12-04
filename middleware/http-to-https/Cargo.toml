@@ -10,4 +10,4 @@ env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 rustls.workspace = true
-rustls-pemfile = "1"
+rustls-pemfile = "2"

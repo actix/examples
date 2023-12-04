@@ -9,4 +9,4 @@ actix-web = { workspace = true, features = ["rustls-0_21"] }
 env_logger.workspace = true
 log.workspace = true
 rustls.workspace = true
-rustls-pemfile = "1"
+rustls-pemfile = "2"
