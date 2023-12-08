@@ -51,7 +51,7 @@ impl QueryRoot {
         Ok(User { id, name, email })
     }
 
-    #[graphql(description = "List of all users")]
+    #[graphql(description = "List of all products")]
     fn products(context: &Context) -> FieldResult<Vec<Product>> {
         let mut conn = context.db_pool.get().unwrap();
 
@@ -65,7 +65,7 @@ impl QueryRoot {
         Ok(products)
     }
 
-    #[graphql(description = "Get Single user reference by user ID")]
+    #[graphql(description = "Get Single product reference by product ID")]
     fn product(context: &Context, id: String) -> FieldResult<Product> {
         let mut conn = context.db_pool.get().unwrap();
         let product: Result<Option<Row>, DBError> =
