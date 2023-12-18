@@ -851,7 +851,7 @@ dependencies = [
  "chrono",
  "futures",
  "log",
- "redis",
+ "redis 0.23.3",
  "serde",
  "serde_json",
  "tokio 1.34.0",
@@ -2602,7 +2602,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "redis",
+ "redis 0.24.0",
  "serde",
 ]
 
@@ -6009,6 +6009,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "redis"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c580d9cbbe1d1b479e8d67cf9daf6a62c957e6846048408b80b43ac3f6af84cd"
+dependencies = [
+ "arc-swap",
+ "async-trait",
+ "bytes 1.5.0",
+ "combine 4.6.6",
+ "futures",
+ "futures-util",
+ "itoa 1.0.9",
+ "percent-encoding",
+ "pin-project-lite 0.2.13",
+ "ryu",
+ "tokio 1.34.0",
+ "tokio-retry",
+ "tokio-util 0.7.10",
+ "url",
+]
+
+[[package]]
 name = "redis-async"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8187,8 +8209,8 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
- "cfg-if 0.1.10",
- "rand 0.7.3",
+ "cfg-if 1.0.0",
+ "rand 0.8.5",
  "static_assertions",
 ]
 
