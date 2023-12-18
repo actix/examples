@@ -12,6 +12,6 @@ color-eyre = "0.6"
 env_logger.workspace = true
 eyre = "0.6"
 log.workspace = true
-rustls = "0.21"
+rustls = "0.22"
 rustls-pemfile = "1"
 tokio = { workspace = true, features = ["fs"] }
