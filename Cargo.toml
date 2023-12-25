@@ -100,7 +100,7 @@ dotenvy = "0.15"
 env_logger = "0.10"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"
-openssl = { version = "0.10.62", features = ["v110"] }
+openssl = { version = "0.10.60", features = ["v110"] }
 rand = "0.8"
 rustls = "0.21"
 serde = { version = "1", features = ["derive"] }
