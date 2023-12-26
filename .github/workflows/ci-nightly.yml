@@ -1,19 +1,14 @@
-name: CI
+name: CI (nightly)
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  merge_group:
-    types: [checks_requested]
-  push:
-    branches: [master]
+  schedule: [cron: "40 1 * * *"]
 
 jobs:
   build_and_test:
     strategy:
       fail-fast: false
       matrix:
-        version: [stable]
+        version: [nightly]
 
     name: ${{ matrix.version }}
     runs-on: ubuntu-latest
