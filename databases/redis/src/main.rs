@@ -15,7 +15,7 @@ async fn cache_stuff(
     redis: web::Data<redis::Client>,
 ) -> actix_web::Result<impl Responder> {
     let mut conn = redis
-        .get_tokio_connection_manager()
+        .get_connection_manager()
         .await
         .map_err(error::ErrorInternalServerError)?;
 
@@ -38,7 +38,7 @@ async fn cache_stuff(
 
 async fn del_stuff(redis: web::Data<redis::Client>) -> actix_web::Result<impl Responder> {
     let mut conn = redis
-        .get_tokio_connection_manager()
+        .get_connection_manager()
         .await
         .map_err(error::ErrorInternalServerError)?;
 
