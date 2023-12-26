@@ -1,8 +1,10 @@
-name: CI (Linux)
+name: CI
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  merge_group:
+    types: [checks_requested]
   push:
     branches: [master]
 
@@ -11,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [stable, nightly]
+        version: [stable]
 
     name: ${{ matrix.version }}
     runs-on: ubuntu-latest
@@ -43,7 +45,7 @@ jobs:
         timeout-minutes: 30
 
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.7.0
+        uses: supercharge/redis-github-action@1.8.0
         with:
           redis-version: 6
 
@@ -61,5 +63,10 @@ jobs:
           cargo test -p=diesel-example --no-fail-fast -- --nocapture
         timeout-minutes: 10
 
-      - name: Clear the cargo caches
-        run: cargo install cargo-cache --version=0.8.3 --no-default-features --features=ci-autoclean && cargo-cache
+      - name: Install cargo-ci-cache-clean
+        uses: taiki-e/install-action@v2.23.2
+        with:
+          tool: cargo-ci-cache-clean
+
+      - name: CI cache clean
+        run: cargo-ci-cache-clean

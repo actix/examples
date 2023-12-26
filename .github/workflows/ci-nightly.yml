@@ -1,0 +1,67 @@
+name: CI (nightly)
+
+on:
+  schedule: [cron: "40 1 * * *"]
+
+jobs:
+  build_and_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [nightly]
+
+    name: ${{ matrix.version }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (${{ matrix.version }})
+        uses: actions-rust-lang/setup-rust-toolchain@v1.6.0
+        with:
+          toolchain: ${{ matrix.version }}
+
+      - name: Install DB CLI tools
+        run: |
+          cargo install sqlx-cli --no-default-features --features=rustls,sqlite
+          cargo install diesel_cli --no-default-features --features sqlite
+
+      - name: Create Test DBs
+        env:
+          DATABASE_URL: sqlite://./todo.db
+        run: |
+          sudo apt-get update && sudo apt-get install sqlite3
+          sqlx database create
+          chmod a+rwx ./todo.db
+          sqlx migrate run --source=./basics/todo/migrations
+
+      - name: cargo check
+        run: cargo check --workspace --bins --examples --tests
+        timeout-minutes: 30
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.8.0
+        with:
+          redis-version: 6
+
+      - name: cargo test
+        run: cargo test --workspace --all-features --no-fail-fast --exclude=diesel-example -- --nocapture
+        timeout-minutes: 30
+
+      - name: cargo test (diesel)
+        env:
+          DATABASE_URL: test.db
+        run: |
+          cd databases/diesel
+          diesel migration run
+          chmod a+rwx test.db
+          cargo test -p=diesel-example --no-fail-fast -- --nocapture
+        timeout-minutes: 10
+
+      - name: Install cargo-ci-cache-clean
+        uses: taiki-e/install-action@v2.23.2
+        with:
+          tool: cargo-ci-cache-clean
+
+      - name: CI cache clean
+        run: cargo-ci-cache-clean
