@@ -1142,9 +1142,9 @@ checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "awc"
-version = "3.2.0"
+version = "3.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7fa3c705a9c7917ac0f41c0757a0a747b43bbc29b0b364b081bd7c5fc67fb223"
+checksum = "b625cad34428b3b82d0bd548b26a1cd0a3d70b6109e9b4e3355d8f1802a8b1c6"
 dependencies = [
  "actix-codec",
  "actix-http",
