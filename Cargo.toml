@@ -92,7 +92,7 @@ actix-web = "4.4"
 actix-web-actors = "4.1"
 actix-web-lab = "0.20"
 actix-ws = "0.2.5"
-awc = "3.2"
+awc = "3.3"
 
 chrono = { version = "0.4.20", default-features = false, features = ["clock", "serde"] }
 derive_more = "0.99.7"
