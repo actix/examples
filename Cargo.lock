@@ -118,16 +118,15 @@ dependencies = [
 
 [[package]]
 name = "actix-files"
-version = "0.6.2"
+version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d832782fac6ca7369a70c9ee9a20554623c5e51c76e190ad151780ebea1cf689"
+checksum = "cc517050e349356239da19a5e100cd61c21658b3ae183b02c1c6799c581bddf3"
 dependencies = [
  "actix-http",
  "actix-service",
  "actix-utils",
  "actix-web",
- "askama_escape",
- "bitflags 1.3.2",
+ "bitflags 2.4.1",
  "bytes 1.5.0",
  "derive_more",
  "futures-core",
@@ -137,6 +136,7 @@ dependencies = [
  "mime_guess",
  "percent-encoding",
  "pin-project-lite 0.2.13",
+ "v_htmlescape",
 ]
 
 [[package]]
