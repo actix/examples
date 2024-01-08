@@ -423,7 +423,7 @@ dependencies = [
  "impl-more",
  "openssl",
  "pin-project-lite 0.2.13",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-webpki",
  "tokio 1.35.1",
  "tokio-openssl",
@@ -1168,7 +1168,7 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite 0.2.13",
  "rand 0.8.5",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "serde",
  "serde_json",
  "serde_urlencoded",
@@ -1184,7 +1184,7 @@ dependencies = [
  "env_logger",
  "log",
  "mime",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "webpki-roots 0.25.2",
 ]
 
@@ -1500,7 +1500,7 @@ dependencies = [
  "once_cell",
  "pin-project-lite 0.2.13",
  "pin-utils",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "tokio 1.35.1",
  "tracing",
 ]
@@ -3932,7 +3932,7 @@ dependencies = [
  "http 0.2.9",
  "hyper 0.14.27",
  "log",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-native-certs",
  "tokio 1.35.1",
  "tokio-rustls 0.24.1",
@@ -4696,7 +4696,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-pemfile",
 ]
 
@@ -4863,7 +4863,7 @@ dependencies = [
  "percent-encoding",
  "rand 0.8.5",
  "rustc_version_runtime",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-pemfile",
  "serde",
  "serde_bytes",
@@ -6173,7 +6173,7 @@ dependencies = [
  "once_cell",
  "percent-encoding",
  "pin-project-lite 0.2.13",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-pemfile",
  "serde",
  "serde_json",
@@ -6477,9 +6477,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.21.9"
+version = "0.21.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "629648aced5775d558af50b2b4c7b02983a04b312126d45eeead26e7caa498b9"
+checksum = "f9d5a6813c0759e4609cd494e8e725babae6a2ca7b62a5536a13daaec6fcb7ba"
 dependencies = [
  "log",
  "ring 0.17.5",
@@ -6495,7 +6495,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-pemfile",
 ]
 
@@ -6507,7 +6507,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-pemfile",
 ]
 
@@ -7187,7 +7187,7 @@ dependencies = [
  "once_cell",
  "paste",
  "percent-encoding",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-pemfile",
  "serde",
  "serde_json",
@@ -7766,7 +7766,7 @@ dependencies = [
  "env_logger",
  "eyre",
  "log",
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "rustls-pemfile",
  "tokio 1.35.1",
 ]
@@ -7940,7 +7940,7 @@ version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c28327cf380ac148141087fbfb9de9d7bd4e84ab5d2c28fbc911d753de8a7081"
 dependencies = [
- "rustls 0.21.9",
+ "rustls 0.21.10",
  "tokio 1.35.1",
 ]
 
@@ -8197,8 +8197,8 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
- "cfg-if 0.1.10",
- "rand 0.7.3",
+ "cfg-if 1.0.0",
+ "rand 0.8.5",
  "static_assertions",
 ]
 
