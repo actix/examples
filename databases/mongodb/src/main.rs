@@ -7,6 +7,7 @@ mod test;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
 use model::User;
 use mongodb::{bson::doc, options::IndexOptions, Client, Collection, IndexModel};
+use dotenv::dotenv;
 
 const DB_NAME: &str = "myApp";
 const COLL_NAME: &str = "users";
@@ -56,6 +57,8 @@ async fn create_username_index(client: &Client) {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().ok(); //loading .env file
+    
     let uri = std::env::var("MONGODB_URI").unwrap_or_else(|_| "mongodb://localhost:27017".into());
 
     let client = Client::with_uri_str(uri).await.expect("failed to connect");

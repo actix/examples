@@ -7,3 +7,4 @@ edition = "2021"
 actix-web.workspace = true
 mongodb = "2"
 serde.workspace = true
+dotenv = "0.15"
