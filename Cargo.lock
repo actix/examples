@@ -4303,9 +4303,9 @@ dependencies = [
 
 [[package]]
 name = "juniper"
-version = "0.15.11"
+version = "0.15.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52adf17d43d0b526eed31fac15d9312941c5c2558ffbfb105811690b96d6e2f1"
+checksum = "875dca5a0c08b1521e1bb0ed940e9955a9f38971008aaa2a9f64a2ac6b59e1b5"
 dependencies = [
  "async-trait",
  "bson 1.2.4",
