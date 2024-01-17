@@ -66,6 +66,7 @@ members = [
    "websockets/chat",
    "websockets/echo-actorless",
    "websockets/echo",
+   "test/status-codes",
 ]
 
 [workspace.package]
