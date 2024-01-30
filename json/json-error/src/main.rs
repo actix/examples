@@ -1,13 +1,9 @@
 //! This example is meant to show how to automatically generate a json error response when something goes wrong.
 
-use std::{
-    fmt::{Display, Formatter, Result as FmtResult},
-    io,
-};
+use std::{fmt, io};
 
 use actix_web::{http::StatusCode, web, App, HttpResponse, HttpServer, ResponseError};
 use serde::Serialize;
-use serde_json::{json, to_string_pretty};
 
 #[derive(Debug, Serialize)]
 struct Error {
@@ -15,16 +11,16 @@ struct Error {
     status: u16,
 }
 
-impl Display for Error {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "{}", to_string_pretty(self).unwrap())
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", serde_json::to_string_pretty(self).unwrap())
     }
 }
 
 impl ResponseError for Error {
     // builds the actual response to send back when an error occurs
     fn error_response(&self) -> HttpResponse {
-        let err_json = json!({ "error": self.msg });
+        let err_json = serde_json::json!({ "error": self.msg });
         HttpResponse::build(StatusCode::from_u16(self.status).unwrap()).json(err_json)
     }
 }
@@ -43,6 +39,7 @@ async fn main() -> io::Result<()> {
     log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| App::new().service(web::resource("/").route(web::get().to(index))))
+        .workers(2)
         .bind(("127.0.0.1", 8080))?
         .run()
         .await

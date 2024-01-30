@@ -1,7 +1,7 @@
 use actix_web::{error, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 struct Info {
     name: String,
 }
@@ -38,6 +38,7 @@ async fn main() -> std::io::Result<()> {
                 .error_handler(json_error_handler),
         )
     })
+    .workers(2)
     .bind(("127.0.0.1", 8080))?
     .run()
     .await

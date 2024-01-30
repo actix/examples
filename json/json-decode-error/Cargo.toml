@@ -8,4 +8,4 @@ actix-web.workspace = true
 
 env_logger.workspace = true
 log.workspace = true
-serde = "1"
+serde.workspace = true
