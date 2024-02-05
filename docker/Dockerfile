@@ -3,7 +3,7 @@
 #################
 ## build stage ##
 #################
-FROM rust:1-slim-bullseye AS builder
+FROM rust:1-slim-bookworm AS builder
 WORKDIR /code
 
 # Download crates-io index and fetch dependency code.
@@ -22,7 +22,7 @@ RUN cargo build --release
 ###############
 ## run stage ##
 ###############
-FROM debian:bullseye-slim
+FROM bitnami/minideb:bookworm
 WORKDIR /app
 
 # copy server binary from build stage
