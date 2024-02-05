@@ -430,7 +430,7 @@ dependencies = [
  "tokio-util 0.7.10",
  "tracing",
  "webpki-roots 0.22.6",
- "webpki-roots 0.25.2",
+ "webpki-roots 0.25.4",
 ]
 
 [[package]]
@@ -1183,7 +1183,7 @@ dependencies = [
  "log",
  "mime",
  "rustls 0.21.10",
- "webpki-roots 0.25.2",
+ "webpki-roots 0.25.4",
 ]
 
 [[package]]
@@ -4879,7 +4879,7 @@ dependencies = [
  "trust-dns-resolver",
  "typed-builder",
  "uuid 1.6.1",
- "webpki-roots 0.25.2",
+ "webpki-roots 0.25.4",
 ]
 
 [[package]]
@@ -6186,7 +6186,7 @@ dependencies = [
  "wasm-bindgen-futures",
  "wasm-streams",
  "web-sys",
- "webpki-roots 0.25.2",
+ "webpki-roots 0.25.4",
  "winreg 0.50.0",
 ]
 
@@ -8716,9 +8716,9 @@ dependencies = [
 
 [[package]]
 name = "webpki-roots"
-version = "0.25.2"
+version = "0.25.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14247bb57be4f377dfb94c72830b8ce8fc6beac03cf4bf7b9732eadd414123fc"
+checksum = "5f20c57d8d7db6d3b86154206ae5d8fba62dd39573114de97c2cb0578251f8e1"
 
 [[package]]
 name = "websocket"
