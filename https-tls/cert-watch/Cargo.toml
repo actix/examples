@@ -1,0 +1,18 @@
+[package]
+name = "cert-watch"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web = { workspace = true, features = ["rustls-0_21"] }
+actix-files.workspace = true
+color-eyre.workspace = true
+env_logger.workspace = true
+eyre.workspace = true
+futures-util.workspace = true
+log.workspace = true
+notify = "6"
+rustls.workspace = true
+rustls-pemfile = "1"
+tokio = { workspace = true, features = ["time", "rt-multi-thread", "macros"] }
+parking_lot = "0.12"

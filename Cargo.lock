@@ -1976,6 +1976,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "cert-watch"
+version = "1.0.0"
+dependencies = [
+ "actix-files",
+ "actix-web",
+ "color-eyre",
+ "env_logger",
+ "eyre",
+ "futures-util",
+ "log",
+ "notify 6.1.1",
+ "parking_lot 0.12.1",
+ "rustls 0.21.10",
+ "rustls-pemfile",
+ "tokio 1.35.1",
+]
+
+[[package]]
 name = "cexpr"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4765,7 +4783,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d073fe2671399bed11572e89b1349d2ea54205a65282e7dc0b1e954c82ad597"
 dependencies = [
  "minijinja",
- "notify",
+ "notify 5.2.0",
 ]
 
 [[package]]
@@ -5118,6 +5136,25 @@ dependencies = [
  "mio 0.8.9",
  "walkdir",
  "windows-sys 0.45.0",
+]
+
+[[package]]
+name = "notify"
+version = "6.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6205bd8bb1e454ad2e27422015fb5e4f2bcc7e08fa8f27058670d208324a4d2d"
+dependencies = [
+ "bitflags 2.4.1",
+ "crossbeam-channel",
+ "filetime",
+ "fsevent-sys",
+ "inotify",
+ "kqueue",
+ "libc",
+ "log",
+ "mio 0.8.9",
+ "walkdir",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]

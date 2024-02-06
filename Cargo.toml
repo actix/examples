@@ -33,6 +33,7 @@ members = [
    "http-proxy",
    "https-tls/acme-letsencrypt",
    "https-tls/awc-https",
+   "https-tls/cert-watch",
    "https-tls/openssl",
    "https-tls/rustls-client-cert",
    "https-tls/rustls",
@@ -98,6 +99,8 @@ chrono = { version = "0.4.20", default-features = false, features = ["clock", "s
 derive_more = "0.99.7"
 dotenvy = "0.15"
 env_logger = "0.11"
+eyre = { version = "0.6", default-features = false, features = ["auto-install", "track-caller"] }
+color-eyre = "0.6"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"
 openssl = { version = "0.10.60", features = ["v110"] }
