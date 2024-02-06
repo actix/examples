@@ -53,11 +53,12 @@ async fn main() -> eyre::Result<()> {
     //
     // loop reloads on TLS changes and exits on normal ctrl-c (etc.) signals
     loop {
-        // load TLS cert/key files and
+        // load TLS cert/key files
         let config = load_rustls_config()?;
 
         log::info!("starting HTTPS server at https://localhost:8443");
 
+        // start running server but don't await it
         let mut server = HttpServer::new(|| {
             App::new()
                 .service(web::resource("/").to(index))
@@ -67,6 +68,7 @@ async fn main() -> eyre::Result<()> {
         .bind_rustls_021("127.0.0.1:8443", config)?
         .run();
 
+        // server handle to send signals
         let server_hnd = server.handle();
 
         tokio::select! {
