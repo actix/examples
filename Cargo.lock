@@ -1990,7 +1990,7 @@ dependencies = [
  "parking_lot 0.12.1",
  "rustls 0.21.10",
  "rustls-pemfile",
- "tokio 1.35.1",
+ "tokio 1.36.0",
 ]
 
 [[package]]

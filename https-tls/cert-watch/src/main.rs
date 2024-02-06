@@ -54,7 +54,7 @@ async fn main() -> eyre::Result<()> {
     // loop reloads on TLS changes and exits on normal ctrl-c (etc.) signals
     loop {
         // load TLS cert/key files and
-        let config = load_rustls_config();
+        let config = load_rustls_config()?;
 
         log::info!("starting HTTPS server at https://localhost:8443");
 
@@ -97,24 +97,19 @@ async fn main() -> eyre::Result<()> {
     Ok(())
 }
 
-fn load_rustls_config() -> rustls::ServerConfig {
+fn load_rustls_config() -> eyre::Result<rustls::ServerConfig> {
     // init server config builder with safe defaults
     let config = ServerConfig::builder()
         .with_safe_defaults()
         .with_no_client_auth();
 
     // load TLS key/cert files
-    let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
-    let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
+    let cert_file = &mut BufReader::new(File::open("cert.pem")?);
+    let key_file = &mut BufReader::new(File::open("key.pem")?);
 
     // convert files to key/cert objects
-    let cert_chain = certs(cert_file)
-        .unwrap()
-        .into_iter()
-        .map(Certificate)
-        .collect();
-    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)
-        .unwrap()
+    let cert_chain = certs(cert_file)?.into_iter().map(Certificate).collect();
+    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)?
         .into_iter()
         .map(PrivateKey)
         .collect();
@@ -125,5 +120,5 @@ fn load_rustls_config() -> rustls::ServerConfig {
         std::process::exit(1);
     }
 
-    config.with_single_cert(cert_chain, keys.remove(0)).unwrap()
+    Ok(config.with_single_cert(cert_chain, keys.remove(0))?)
 }

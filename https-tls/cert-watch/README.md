@@ -32,7 +32,9 @@ $ touch cert.pem
 
 ### Client
 
+- [HTTPie]: `http --verify=no :8443`
 - cURL: `curl -v --insecure https://127.0.0.1:8443`
-- Browser: go to <https://127.0.0.1:8443>
+- Browser: navigate to <https://127.0.0.1:8443>
 
 [`mkcert`]: https://github.com/FiloSottile/mkcert
+[httpie]: https://httpie.io/cli
