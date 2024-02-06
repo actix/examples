@@ -14,5 +14,5 @@ log.workspace = true
 notify = "6"
 rustls.workspace = true
 rustls-pemfile = "1"
-tokio = { workspace = true, features = ["time", "rt-multi-thread", "macros"] }
+tokio = { workspace = true, features = ["time", "rt", "macros"] }
 parking_lot = "0.12"

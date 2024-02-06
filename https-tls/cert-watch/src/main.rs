@@ -22,7 +22,7 @@ async fn index(req: HttpRequest) -> HttpResponse {
     )
 }
 
-#[tokio::main(worker_threads = 2)]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> eyre::Result<()> {
     color_eyre::install()?;
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
