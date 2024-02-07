@@ -162,7 +162,7 @@ dependencies = [
  "actix-service",
  "actix-tls",
  "actix-utils",
- "ahash 0.8.6",
+ "ahash 0.8.7",
  "base64 0.21.7",
  "bitflags 2.4.1",
  "brotli",
@@ -459,7 +459,7 @@ dependencies = [
  "actix-tls",
  "actix-utils",
  "actix-web-codegen",
- "ahash 0.8.6",
+ "ahash 0.8.7",
  "bytes 1.5.0",
  "bytestring",
  "cfg-if 1.0.0",
@@ -526,7 +526,7 @@ dependencies = [
  "actix-utils",
  "actix-web",
  "actix-web-lab-derive",
- "ahash 0.8.6",
+ "ahash 0.8.7",
  "arc-swap",
  "async-trait",
  "bytes 1.5.0",
@@ -665,9 +665,9 @@ dependencies = [
 
 [[package]]
 name = "ahash"
-version = "0.8.6"
+version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91429305e9f0a25f6205c5b8e0d2db09e0708a7a6df0f42212bb56c32c8ac97a"
+checksum = "77c3a9648d43b9cd48db467b3f87fdd6e146bcc88ab0180006cef2179fe11d01"
 dependencies = [
  "cfg-if 1.0.0",
  "const-random",
@@ -1843,7 +1843,7 @@ version = "2.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "88c18b51216e1f74b9d769cead6ace2f82b965b807e3d73330aabe9faec31c84"
 dependencies = [
- "ahash 0.8.6",
+ "ahash 0.8.7",
  "base64 0.13.1",
  "bitvec",
  "hex",
@@ -3712,7 +3712,7 @@ version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "43a3c133739dddd0d2990f9a4bdf8eb4b21ef50e4851ca85ab661199821d510e"
 dependencies = [
- "ahash 0.8.6",
+ "ahash 0.8.7",
 ]
 
 [[package]]
@@ -3721,7 +3721,7 @@ version = "0.14.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f93e7192158dbcda357bdec5fb5788eebf8bbac027f3f33e719d29135ae84156"
 dependencies = [
- "ahash 0.8.6",
+ "ahash 0.8.7",
  "allocator-api2",
 ]
 
@@ -6270,7 +6270,7 @@ version = "1.16.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3625f343d89990133d013e39c46e350915178cf94f1bec9f49b0cbef98a3e3c"
 dependencies = [
- "ahash 0.8.6",
+ "ahash 0.8.7",
  "bitflags 2.4.1",
  "instant",
  "num-traits",
@@ -7204,7 +7204,7 @@ version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8d6753e460c998bbd4cd8c6f0ed9a64346fcca0723d6e75e52fdc351c5d2169d"
 dependencies = [
- "ahash 0.8.6",
+ "ahash 0.8.7",
  "atoi",
  "byteorder",
  "bytes 1.5.0",
