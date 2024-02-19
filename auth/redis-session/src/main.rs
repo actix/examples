@@ -105,11 +105,6 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod test {
-    use actix_web::{
-        middleware,
-        web::{get, post, resource},
-        App,
-    };
     use serde_json::json;
 
     use super::*;
