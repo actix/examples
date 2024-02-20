@@ -1,5 +1,3 @@
-use std::convert::From;
-
 use actix_web::{error::ResponseError, HttpResponse};
 use derive_more::Display;
 use diesel::result::{DatabaseErrorKind, Error as DBError};

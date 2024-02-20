@@ -1,4 +1,4 @@
-use actix::{fut, prelude::*};
+use actix::prelude::*;
 use actix_broker::BrokerIssue;
 use actix_web_actors::ws;
 

@@ -5,7 +5,7 @@
 use std::collections::{HashMap, HashSet};
 
 use actix::prelude::*;
-use rand::{self, rngs::ThreadRng, Rng};
+use rand::{rngs::ThreadRng, Rng};
 
 use crate::session;
 
