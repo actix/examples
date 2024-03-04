@@ -10,7 +10,7 @@ use actix_web::{
 };
 use actix_web_lab::{extract::Path, respond::Html};
 use fluent_templates::{static_loader, FluentLoader, Loader as _};
-use handlebars::Handlebars;
+use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;
 
 mod lang_choice;
@@ -57,7 +57,14 @@ async fn main() -> io::Result<()> {
 
     // register template dir with Handlebars registry
     handlebars
-        .register_templates_directory(".html", "./templates")
+        .register_templates_directory(
+            "./static/templates",
+            DirectorySourceOptions {
+                tpl_extension: ".html".to_owned(),
+                hidden: false,
+                temporary: false,
+            },
+        )
         .unwrap();
 
     // register Fluent helper with Handlebars registry
@@ -85,7 +92,7 @@ fn error_handlers() -> ErrorHandlers<BoxBody> {
 // Error handler for a 404 Page not found error.
 fn not_found<B>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<BoxBody>> {
     let lang = LangChoice::from_req(res.request()).lang_id();
-    let error = LOCALES.lookup(&lang, "error-not-found").unwrap();
+    let error = LOCALES.lookup(&lang, "error-not-found");
 
     let response = get_error_response(&res, &error);
 

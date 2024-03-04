@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web.workspace = true
 actix-web-lab.workspace = true
-fluent-templates = { version = "0.8", features = ["handlebars"] }
-handlebars = { version = "4.5", features = ["dir_source"] }
+fluent-templates = { version = "0.9", features = ["handlebars"] }
+handlebars = { version = "5.1", features = ["dir_source"] }
 serde.workspace = true
 serde_json.workspace = true

@@ -8,7 +8,7 @@ use actix_web::{
     middleware::{ErrorHandlerResponse, ErrorHandlers},
     web, App, HttpResponse, HttpServer, Result,
 };
-use handlebars::Handlebars;
+use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;
 
 // Macro documentation can be found in the actix_web_codegen crate
@@ -41,7 +41,14 @@ async fn main() -> io::Result<()> {
     // Application Builder as an atomic reference-counted pointer.
     let mut handlebars = Handlebars::new();
     handlebars
-        .register_templates_directory(".html", "./static/templates")
+        .register_templates_directory(
+            "./static/templates",
+            DirectorySourceOptions {
+                tpl_extension: ".html".to_owned(),
+                hidden: false,
+                temporary: false,
+            },
+        )
         .unwrap();
     let handlebars_ref = web::Data::new(handlebars);
 
