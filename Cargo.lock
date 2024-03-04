@@ -4858,15 +4858,15 @@ name = "mongodb"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "mongodb 2.8.0",
+ "mongodb 2.8.1",
  "serde",
 ]
 
 [[package]]
 name = "mongodb"
-version = "2.8.0"
+version = "2.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46c30763a5c6c52079602be44fa360ca3bfacee55fca73f4734aecd23706a7f2"
+checksum = "de59562e5c71656c098d8e966641b31da87b89dc3dcb6e761d3b37dcdfa0cb72"
 dependencies = [
  "async-trait",
  "base64 0.13.1",
@@ -8261,7 +8261,7 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
- "cfg-if 0.1.10",
+ "cfg-if 1.0.0",
  "rand 0.8.5",
  "static_assertions",
 ]
