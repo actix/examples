@@ -984,7 +984,7 @@ dependencies = [
  "fast_chemail",
  "fnv",
  "futures-util",
- "handlebars",
+ "handlebars 4.5.0",
  "http 0.2.9",
  "indexmap 2.1.0",
  "mime",
@@ -3168,24 +3168,24 @@ dependencies = [
 
 [[package]]
 name = "fluent-template-macros"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dec7592cd1f45c1afe9084ce59c62a3a7c266c125c4c2ec97e95b0563c4aa914"
+checksum = "0c58fd7421bad2b89506827409317a3088b74d0d637202003f2e87efdc43ae8e"
 dependencies = [
  "flume 0.10.14",
  "ignore",
  "once_cell",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.48",
  "unic-langid",
 ]
 
 [[package]]
 name = "fluent-templates"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c3ef2c2152757885365abce32ddf682746062f1b6b3c0824a29fbed6ee4d080"
+checksum = "fc023356542b155925aa5e433806ddd33acb46f0218541f869b342676332cd79"
 dependencies = [
  "arc-swap",
  "fluent",
@@ -3194,7 +3194,7 @@ dependencies = [
  "fluent-syntax",
  "fluent-template-macros",
  "flume 0.10.14",
- "handlebars",
+ "handlebars 5.1.0",
  "heck",
  "ignore",
  "intl-memoizer",
@@ -3678,6 +3678,20 @@ name = "handlebars"
 version = "4.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "faa67bab9ff362228eb3d00bd024a4965d8231bbb7921167f0cfa66c6626b225"
+dependencies = [
+ "log",
+ "pest",
+ "pest_derive",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "handlebars"
+version = "5.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ab283476b99e66691dee3f1640fea91487a8d81f50fb5ecc75538f8f8879a1e4"
 dependencies = [
  "log",
  "pest",
@@ -7600,8 +7614,9 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "actix-web-lab",
+ "env_logger",
  "fluent-templates",
- "handlebars",
+ "handlebars 5.1.0",
  "serde",
  "serde_json",
 ]
@@ -7611,7 +7626,9 @@ name = "templating-handlebars"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "handlebars",
+ "actix-web-lab",
+ "env_logger",
+ "handlebars 5.1.0",
  "serde_json",
 ]
 
