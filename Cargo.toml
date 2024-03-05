@@ -21,7 +21,7 @@ members = [
    "databases/mysql",
    "databases/postgres",
    "databases/redis",
-   "databases/sqlite",
+   # "databases/sqlite",
    "docker",
    "forms/form",
    "forms/multipart-s3",
@@ -95,7 +95,7 @@ actix-web-lab = "0.20"
 actix-ws = "0.2.5"
 awc = "3.2"
 
-chrono = { version = "0.4.20", default-features = false, features = ["clock", "serde"] }
+chrono = { version = "0.4.30", features = ["serde"] }
 derive_more = "0.99.7"
 dotenvy = "0.15"
 env_logger = "0.11"
