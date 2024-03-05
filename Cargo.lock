@@ -218,9 +218,9 @@ dependencies = [
 
 [[package]]
 name = "actix-identity"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1478456bca71c7b04411da1afb0c506e16dec6863815207693b791247511027f"
+checksum = "f2c99b7a5614b72a78f04aa2021e5370fc1aef2475fffeffc0c1266b99007062"
 dependencies = [
  "actix-service",
  "actix-session",
@@ -8261,8 +8261,8 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
- "cfg-if 1.0.0",
- "rand 0.8.5",
+ "cfg-if 0.1.10",
+ "rand 0.7.3",
  "static_assertions",
 ]
 
