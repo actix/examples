@@ -6,24 +6,24 @@ use actix_web::{
     get,
     http::{header::ContentType, StatusCode},
     middleware::{ErrorHandlerResponse, ErrorHandlers},
-    web, App, HttpResponse, HttpServer, Result,
+    web, App, HttpResponse, HttpServer, Responder, Result,
 };
+use actix_web_lab::respond::Html;
 use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;
 
-// Macro documentation can be found in the actix_web_codegen crate
 #[get("/")]
-async fn index(hb: web::Data<Handlebars<'_>>) -> HttpResponse {
+async fn index(hb: web::Data<Handlebars<'_>>) -> impl Responder {
     let data = json!({
         "name": "Handlebars"
     });
     let body = hb.render("index", &data).unwrap();
 
-    HttpResponse::Ok().body(body)
+    Html(body)
 }
 
 #[get("/{user}/{data}")]
-async fn user(hb: web::Data<Handlebars<'_>>, path: web::Path<(String, String)>) -> HttpResponse {
+async fn user(hb: web::Data<Handlebars<'_>>, path: web::Path<(String, String)>) -> impl Responder {
     let info = path.into_inner();
     let data = json!({
         "user": info.0,
@@ -31,18 +31,20 @@ async fn user(hb: web::Data<Handlebars<'_>>, path: web::Path<(String, String)>) 
     });
     let body = hb.render("user", &data).unwrap();
 
-    HttpResponse::Ok().body(body)
+    Html(body)
 }
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     // Handlebars uses a repository for the compiled templates. This object must be
     // shared between the application threads, and is therefore passed to the
     // Application Builder as an atomic reference-counted pointer.
     let mut handlebars = Handlebars::new();
     handlebars
         .register_templates_directory(
-            "./static/templates",
+            "./templates",
             DirectorySourceOptions {
                 tpl_extension: ".html".to_owned(),
                 hidden: false,
@@ -59,6 +61,7 @@ async fn main() -> io::Result<()> {
             .service(index)
             .service(user)
     })
+    .workers(2)
     .bind(("127.0.0.1", 8080))?
     .run()
     .await

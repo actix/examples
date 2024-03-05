@@ -7614,6 +7614,7 @@ version = "1.0.0"
 dependencies = [
  "actix-web",
  "actix-web-lab",
+ "env_logger",
  "fluent-templates",
  "handlebars 5.1.0",
  "serde",
@@ -7625,6 +7626,8 @@ name = "templating-handlebars"
 version = "1.0.0"
 dependencies = [
  "actix-web",
+ "actix-web-lab",
+ "env_logger",
  "handlebars 5.1.0",
  "serde_json",
 ]

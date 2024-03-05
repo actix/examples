@@ -51,6 +51,8 @@ async fn user(
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     // Handlebars uses a repository for the compiled templates. This object must be shared between
     // the application threads, and is therefore passed to the App in an Arc.
     let mut handlebars = Handlebars::new();
@@ -58,7 +60,7 @@ async fn main() -> io::Result<()> {
     // register template dir with Handlebars registry
     handlebars
         .register_templates_directory(
-            "./static/templates",
+            "./templates",
             DirectorySourceOptions {
                 tpl_extension: ".html".to_owned(),
                 hidden: false,
@@ -79,6 +81,7 @@ async fn main() -> io::Result<()> {
             .service(index)
             .service(user)
     })
+    .workers(2)
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
