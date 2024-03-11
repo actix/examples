@@ -11,8 +11,8 @@ use actix_web::{
     dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
     Error, HttpResponse,
 };
-use chrono::{Local, NaiveDateTime};
-use futures_util::{future::LocalBoxFuture, FutureExt, TryFutureExt};
+use chrono::{DateTime, Utc};
+use futures_util::{future::LocalBoxFuture, FutureExt as _, TryFutureExt as _};
 
 #[doc(hidden)]
 pub struct RateLimitService<S> {
@@ -95,7 +95,7 @@ struct TokenBucket {
     capacity: u64,
 
     /// Time that last request was accepted.
-    last_req_time: NaiveDateTime,
+    last_req_time: DateTime<Utc>,
 
     /// Numbers of tokens remaining.
     ///
@@ -108,7 +108,7 @@ impl TokenBucket {
     fn new(limit: u64) -> Self {
         TokenBucket {
             limit,
-            last_req_time: NaiveDateTime::UNIX_EPOCH,
+            last_req_time: DateTime::<Utc>::UNIX_EPOCH,
             capacity: limit,
             tokens: 0,
         }
@@ -116,7 +116,7 @@ impl TokenBucket {
 
     /// Mutates leaky bucket for accepted request.
     fn allow_query(&mut self) -> bool {
-        let current_time = Local::now().naive_local();
+        let current_time = Utc::now();
 
         let time_elapsed = (current_time.timestamp() - self.last_req_time.timestamp()) as u64;
 
