@@ -1,7 +1,9 @@
 #![allow(clippy::extra_unused_lifetimes)]
 
+use chrono::{NaiveDateTime, TimeDelta, Utc};
 use diesel::{r2d2::ConnectionManager, PgConnection};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 use super::schema::*;
 
@@ -13,7 +15,7 @@ pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 pub struct User {
     pub email: String,
     pub hash: String,
-    pub created_at: chrono::NaiveDateTime,
+    pub created_at: NaiveDateTime,
 }
 
 impl User {
@@ -29,9 +31,9 @@ impl User {
 #[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
 #[diesel(table_name = invitations)]
 pub struct Invitation {
-    pub id: uuid::Uuid,
+    pub id: Uuid,
     pub email: String,
-    pub expires_at: chrono::NaiveDateTime,
+    pub expires_at: NaiveDateTime,
 }
 
 // any type that implements Into<String> can be used to create Invitation
@@ -41,9 +43,9 @@ where
 {
     fn from(email: T) -> Self {
         Invitation {
-            id: uuid::Uuid::new_v4(),
+            id: Uuid::new_v4(),
             email: email.into(),
-            expires_at: chrono::Local::now().naive_local() + chrono::Duration::hours(24),
+            expires_at: (Utc::now() + TimeDelta::try_hours(24).unwrap()).naive_utc(),
         }
     }
 }
