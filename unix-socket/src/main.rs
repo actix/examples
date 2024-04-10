@@ -9,7 +9,7 @@ async fn index(_req: HttpRequest) -> &'static str {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("starting HTTP server at unix:/tmp/actix-uds.socket");
 
     HttpServer::new(|| {
         App::new()
