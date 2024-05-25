@@ -81,7 +81,9 @@ async fn main() -> std::io::Result<()> {
     // authentication cookies for any user!
     let private_key = actix_web::cookie::Key::generate();
 
-    let store = RedisSessionStore::new("127.0.0.1:6379").await.unwrap();
+    let store = RedisSessionStore::new("redis://127.0.0.1:6379")
+        .await
+        .unwrap();
 
     HttpServer::new(move || {
         App::new()
@@ -108,7 +110,10 @@ mod test {
     #[actix_web::test]
     async fn test_workflow() {
         let private_key = actix_web::cookie::Key::generate();
-        let store = RedisSessionStore::new("127.0.0.1:6379").await.unwrap();
+        let store = RedisSessionStore::new("redis://127.0.0.1:6379")
+            .await
+            .unwrap();
+
         let srv = actix_test::start(move || {
             App::new()
                 .wrap(
