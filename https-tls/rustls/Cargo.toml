@@ -3,15 +3,11 @@ name = "rustls-example"
 version = "1.0.0"
 edition = "2021"
 
-[[bin]]
-name = "rustls-server"
-path = "src/main.rs"
-
 [dependencies]
-actix-web = { workspace = true, features = ["rustls-0_21"] }
+actix-web = { workspace = true, features = ["rustls-0_23"] }
 actix-files.workspace = true
 
 env_logger.workspace = true
 log.workspace = true
 rustls.workspace = true
-rustls-pemfile = "1"
+rustls-pemfile.workspace = true

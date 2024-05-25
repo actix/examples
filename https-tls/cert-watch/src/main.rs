@@ -5,7 +5,7 @@ use actix_web::{
 };
 use log::debug;
 use notify::{Event, RecursiveMode, Watcher as _};
-use rustls::{Certificate, PrivateKey, ServerConfig};
+use rustls::{pki_types::PrivateKeyDer, ServerConfig};
 use rustls_pemfile::{certs, pkcs8_private_keys};
 use tokio::sync::mpsc;
 
@@ -65,7 +65,7 @@ async fn main() -> eyre::Result<()> {
                 .wrap(middleware::Logger::default())
         })
         .workers(2)
-        .bind_rustls_021("127.0.0.1:8443", config)?
+        .bind_rustls_0_23("127.0.0.1:8443", config)?
         .run();
 
         // server handle to send signals
@@ -100,21 +100,23 @@ async fn main() -> eyre::Result<()> {
 }
 
 fn load_rustls_config() -> eyre::Result<rustls::ServerConfig> {
+    rustls::crypto::aws_lc_rs::default_provider()
+        .install_default()
+        .unwrap();
+
     // init server config builder with safe defaults
-    let config = ServerConfig::builder()
-        .with_safe_defaults()
-        .with_no_client_auth();
+    let config = ServerConfig::builder().with_no_client_auth();
 
     // load TLS key/cert files
     let cert_file = &mut BufReader::new(File::open("cert.pem")?);
     let key_file = &mut BufReader::new(File::open("key.pem")?);
 
     // convert files to key/cert objects
-    let cert_chain = certs(cert_file)?.into_iter().map(Certificate).collect();
-    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)?
-        .into_iter()
-        .map(PrivateKey)
-        .collect();
+    let cert_chain = certs(cert_file).collect::<Result<Vec<_>, _>>().unwrap();
+    let mut keys = pkcs8_private_keys(key_file)
+        .map(|key| key.map(PrivateKeyDer::Pkcs8))
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
 
     // exit if no keys could be parsed
     if keys.is_empty() {

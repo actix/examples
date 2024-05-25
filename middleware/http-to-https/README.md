@@ -2,7 +2,7 @@
 
 ## Alternatives
 
-A pre-built solution is soon to be built-in. For now, see [`RedirectHttps`](https://docs.rs/actix-web-lab/0.18/actix_web_lab/middleware/struct.RedirectHttps.html) from [`actix-web-lab`](https://crates.io/crates/actix-web-lab).
+A pre-built solution is soon to be built-in. For now, see [`RedirectHttps`](https://docs.rs/actix-web-lab/0.20/actix_web_lab/middleware/struct.RedirectHttps.html) from [`actix-web-lab`](https://crates.io/crates/actix-web-lab).
 
 ## This Example
 

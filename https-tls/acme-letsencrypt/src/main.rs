@@ -4,6 +4,7 @@ use acme::{create_p256_key, Certificate, Directory, DirectoryUrl};
 use actix_files::Files;
 use actix_web::{rt, web, App, HttpRequest, HttpServer, Responder};
 use eyre::eyre;
+use rustls::pki_types::{PrivateKeyDer, PrivatePkcs8KeyDer};
 use tokio::fs;
 
 const CHALLENGE_DIR: &str = "./acme-challenges";
@@ -112,7 +113,7 @@ pub async fn gen_tls_cert(user_domain: &str, contact_email: &str) -> eyre::Resul
     // certificate is either issued or rejected. Again we poll
     // for the status change.
     let ord_cert = ord_csr
-        .finalize(signing_key, Duration::from_millis(5000))
+        .finalize(signing_key, Duration::from_secs(5))
         .await?;
 
     // Now download the certificate. Also stores the cert in
@@ -139,6 +140,10 @@ async fn main() -> eyre::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     color_eyre::install()?;
 
+    rustls::crypto::aws_lc_rs::default_provider()
+        .install_default()
+        .unwrap();
+
     //   Load keys
     // ==============================================
     // = IMPORTANT:                                 =
@@ -157,7 +162,7 @@ async fn main() -> eyre::Result<()> {
 
     // Start HTTP server!
     let srv = HttpServer::new(|| App::new().route("/", web::get().to(index)))
-        .bind_rustls_021(("0.0.0.0", 443), rustls_config)?
+        .bind_rustls_0_23(("0.0.0.0", 443), rustls_config)?
         .run();
 
     let srv_handle = srv.handle();
@@ -177,19 +182,16 @@ async fn main() -> eyre::Result<()> {
 
 fn load_rustls_config(cert: Certificate) -> eyre::Result<rustls::ServerConfig> {
     // init server config builder with safe defaults
-    let config = rustls::ServerConfig::builder()
-        .with_safe_defaults()
-        .with_no_client_auth();
+    let config = rustls::ServerConfig::builder().with_no_client_auth();
 
     // convert ACME-obtained private key
-    let private_key = rustls::PrivateKey(cert.private_key_der()?.to_owned());
+    let private_key = PrivateKeyDer::Pkcs8(PrivatePkcs8KeyDer::from(cert.private_key_der()?));
 
     // convert ACME-obtained certificate chain
     let cert_chain =
-        rustls_pemfile::certs(&mut std::io::BufReader::new(cert.certificate().as_bytes()))?
-            .into_iter()
-            .map(rustls::Certificate)
-            .collect();
+        rustls_pemfile::certs(&mut std::io::BufReader::new(cert.certificate().as_bytes()))
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap();
 
     Ok(config.with_single_cert(cert_chain, private_key)?)
 }

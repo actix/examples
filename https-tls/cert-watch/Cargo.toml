@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { workspace = true, features = ["rustls-0_21"] }
+actix-web = { workspace = true, features = ["rustls-0_23"] }
 actix-files.workspace = true
 color-eyre.workspace = true
 env_logger.workspace = true
@@ -13,6 +13,6 @@ futures-util.workspace = true
 log.workspace = true
 notify = "6"
 rustls.workspace = true
-rustls-pemfile = "1"
+rustls-pemfile.workspace = true
 tokio = { workspace = true, features = ["time", "rt", "macros"] }
 parking_lot = "0.12"

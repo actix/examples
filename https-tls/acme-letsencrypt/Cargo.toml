@@ -7,11 +7,11 @@ edition.workspace = true
 [dependencies]
 acme-rfc8555 = "0.1"
 actix-files.workspace = true
-actix-web = { workspace = true, features = ["rustls"] }
+actix-web = { workspace = true, features = ["rustls-0_23"] }
 color-eyre = "0.6"
 env_logger.workspace = true
 eyre = "0.6"
 log.workspace = true
-rustls = "0.21"
-rustls-pemfile = "1"
+rustls.workspace = true
+rustls-pemfile.workspace = true
 tokio = { workspace = true, features = ["fs"] }

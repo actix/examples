@@ -5,9 +5,9 @@ publish.workspace = true
 edition.workspace = true
 
 [dependencies]
-actix-web = { workspace = true, features = ["rustls-0_21"] }
+actix-web = { workspace = true, features = ["rustls-0_23"] }
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 rustls.workspace = true
-rustls-pemfile = "1"
+rustls-pemfile.workspace = true

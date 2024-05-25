@@ -2,7 +2,7 @@ use std::{fs::File, io::BufReader};
 
 use actix_web::{dev::Service, get, http, App, HttpResponse, HttpServer};
 use futures_util::future::{self, Either, FutureExt};
-use rustls::{Certificate, PrivateKey, ServerConfig};
+use rustls::{pki_types::PrivateKeyDer, ServerConfig};
 use rustls_pemfile::{certs, pkcs8_private_keys};
 
 #[get("/")]
@@ -14,27 +14,27 @@ async fn index() -> String {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
+    rustls::crypto::aws_lc_rs::default_provider()
+        .install_default()
+        .unwrap();
+
     let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
     let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
 
-    let cert_chain: Vec<Certificate> = certs(cert_file)
-        .unwrap()
-        .into_iter()
-        .map(Certificate)
-        .collect();
-    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)
-        .unwrap()
-        .into_iter()
-        .map(PrivateKey)
-        .collect();
+    let cert_chain = certs(cert_file).collect::<Result<Vec<_>, _>>().unwrap();
+    let mut keys = pkcs8_private_keys(key_file)
+        .map(|key| key.map(PrivateKeyDer::Pkcs8))
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
 
     let config = ServerConfig::builder()
-        .with_safe_defaults()
         .with_no_client_auth()
         .with_single_cert(cert_chain, keys.remove(0))
         .unwrap();
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!(
+        "starting HTTP server at http://localhost:80 and HTTPS server on http://localhost:443"
+    );
 
     HttpServer::new(|| {
         App::new()
@@ -62,7 +62,7 @@ async fn main() -> std::io::Result<()> {
             .service(index)
     })
     .bind(("127.0.0.1", 80))? // HTTP port
-    .bind_rustls_021(("127.0.0.1", 443), config)? // HTTPS port
+    .bind_rustls_0_23(("127.0.0.1", 443), config)? // HTTPS port
     .run()
     .await
 }
