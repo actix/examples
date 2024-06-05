@@ -6,7 +6,7 @@ edition = "2021"
 
 [package.metadata.cargo-machete]
 ignored = [
-    "yarte_helpers", # only build dep
+  "yarte_helpers", # only build dep
 ]
 
 [dependencies]

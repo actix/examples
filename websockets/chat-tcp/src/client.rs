@@ -24,7 +24,7 @@ async fn main() {
             return;
         }
 
-        if cmd == "/exit" {
+        if cmd.trim() == "/exit" {
             println!("exiting input loop");
             return;
         }
