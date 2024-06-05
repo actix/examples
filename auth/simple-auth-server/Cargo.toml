@@ -21,4 +21,4 @@ serde_json.workspace = true
 serde.workspace = true
 sparkpost = "0.5"
 time = "0.3"
-uuid = { version = "1", features = ["v4", "serde"] }
+uuid.workspace = true

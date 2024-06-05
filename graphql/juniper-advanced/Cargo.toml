@@ -17,4 +17,4 @@ r2d2_mysql = "24"
 dotenvy.workspace = true
 env_logger.workspace = true
 log.workspace = true
-uuid = { version = "1", features = ["v4", "serde"] }
+uuid.workspace = true

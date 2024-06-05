@@ -12,4 +12,4 @@ env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 sanitize-filename = "0.5"
-uuid = { version = "1", features = ["v4"] }
+uuid.workspace = true

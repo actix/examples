@@ -1,6 +1,7 @@
 use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::Deserialize;
+use uuid::Uuid;
 
 use crate::{
     errors::ServiceError,
@@ -40,7 +41,7 @@ fn query(
 
     let mut conn = pool.get().unwrap();
 
-    let invitation_id = uuid::Uuid::parse_str(&invitation_id)?;
+    let invitation_id = invitation_id.parse::<Uuid>()?;
 
     invitations
         .filter(id.eq(invitation_id))
