@@ -154,7 +154,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                         }
                         "/join" => {
                             if v.len() == 2 {
-                                self.room = v[1].to_owned();
+                                v[1].clone_into(&mut self.room);
                                 self.addr.do_send(server::Join {
                                     id: self.id,
                                     name: self.room.clone(),

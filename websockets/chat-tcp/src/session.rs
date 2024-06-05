@@ -103,7 +103,7 @@ impl StreamHandler<Result<ChatRequest, io::Error>> for ChatSession {
             }
             Ok(ChatRequest::Join(name)) => {
                 println!("Join to room: {name}");
-                self.room = name.clone();
+                name.clone_into(&mut self.room);
                 self.addr.do_send(server::Join {
                     id: self.id,
                     name: name.clone(),

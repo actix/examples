@@ -168,6 +168,7 @@ impl QueryRoot {
     }
 }
 
+#[allow(clippy::duplicated_attributes)] // false positive
 #[derive(Interface)]
 #[graphql(
     field(name = "id", ty = "&str"),
