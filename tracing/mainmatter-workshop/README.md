@@ -13,7 +13,8 @@ As stated in the exercise brief, this example will:
   - Create a top-level INFO span for each incoming request;
   - Track the number of concurrent requests using a gauge;
   - Track request duration using a histogram;
-  - Track the number of handled requests All metrics should include success/failure as a label.
+  - Track the number of handled requests
+- All metrics should include success/failure as a label.
 
 ## Usage
 

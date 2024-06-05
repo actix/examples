@@ -31,8 +31,14 @@ pub(crate) async fn request_telemetry(
         );
     };
 
+    let outcome = if res.status().is_success() || res.status().is_redirection() {
+        "success"
+    } else {
+        "failure"
+    };
+
     let diff = now.elapsed();
-    metrics::histogram!(HISTOGRAM_HTTP_REQUEST_DURATION).record(diff);
+    metrics::histogram!(HISTOGRAM_HTTP_REQUEST_DURATION, "outcome" => outcome).record(diff);
 
     metrics::gauge!(GAUGE_HTTP_CONCURRENT_REQUESTS).decrement(1);
 
