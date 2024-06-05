@@ -28,5 +28,13 @@ async fn main() -> io::Result<()> {
     .workers(2)
     .bind(("127.0.0.1", 8080))?
     .run()
+    .await?;
+
+    actix_web::web::block(move || {
+        opentelemetry::global::shutdown_tracer_provider();
+    })
     .await
+    .unwrap();
+
+    Ok(())
 }
