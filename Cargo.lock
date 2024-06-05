@@ -3249,7 +3249,7 @@ dependencies = [
  "fluent-syntax",
  "fluent-template-macros",
  "flume 0.10.14",
- "handlebars 5.1.0",
+ "handlebars 5.1.2",
  "heck 0.4.1",
  "ignore",
  "intl-memoizer",
@@ -3760,9 +3760,9 @@ dependencies = [
 
 [[package]]
 name = "handlebars"
-version = "5.1.0"
+version = "5.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ab283476b99e66691dee3f1640fea91487a8d81f50fb5ecc75538f8f8879a1e4"
+checksum = "d08485b96a0e6393e9e4d1b8d48cf74ad6c063cd905eb33f42c1ce3f0377539b"
 dependencies = [
  "log",
  "pest",
@@ -8021,7 +8021,7 @@ dependencies = [
  "actix-web-lab",
  "env_logger",
  "fluent-templates",
- "handlebars 5.1.0",
+ "handlebars 5.1.2",
  "serde",
  "serde_json",
 ]
@@ -8033,7 +8033,7 @@ dependencies = [
  "actix-web",
  "actix-web-lab",
  "env_logger",
- "handlebars 5.1.0",
+ "handlebars 5.1.2",
  "serde_json",
 ]
 
