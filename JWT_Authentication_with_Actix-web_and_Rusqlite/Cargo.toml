@@ -1,0 +1,16 @@
+[package]
+name = "jwt_example"
+version = "0.1.0"
+edition = "2021"
+author = "Paxton Smith"
+# https://www.linkedin.com/in/paxton21/
+# https://github.com/Paxton21/actix-web-jwt-example
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "4.5.1"
+jsonwebtoken = "9.3.0"
+rusqlite = { version = "0.31.0", features = ["bundled"] }
+serde = { version = "1.0.198", features = ["derive"]}
+chrono = "0.4.38"
