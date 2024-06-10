@@ -1156,7 +1156,7 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite 0.2.13",
  "rand 0.8.5",
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "serde",
  "serde_json",
  "serde_urlencoded",
@@ -1172,7 +1172,7 @@ dependencies = [
  "env_logger",
  "log",
  "mime",
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "webpki-roots 0.26.1",
 ]
 
@@ -1753,7 +1753,7 @@ dependencies = [
  "bitflags 2.4.1",
  "cexpr",
  "clang-sys",
- "itertools 0.12.1",
+ "itertools 0.11.0",
  "lazy_static",
  "lazycell",
  "log",
@@ -2048,7 +2048,7 @@ dependencies = [
  "log",
  "notify 6.1.1",
  "parking_lot 0.12.3",
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "rustls-pemfile 2.1.2",
  "tokio 1.37.0",
 ]
@@ -4985,7 +4985,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "rustls-pemfile 2.1.2",
 ]
 
@@ -6216,7 +6216,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81bddcdb20abf9501610992b6759a4c888aef7d1a7247ef75e2404275ac24af1"
 dependencies = [
  "anyhow",
- "itertools 0.12.1",
+ "itertools 0.11.0",
  "proc-macro2",
  "quote",
  "syn 2.0.48",
@@ -6892,9 +6892,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.23.8"
+version = "0.23.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79adb16721f56eb2d843e67676896a61ce7a0fa622dc18d3e372477a029d2740"
+checksum = "a218f0f6d05669de4eabfb24f31ce802035c952429d037507b4a4a39f0e60c5b"
 dependencies = [
  "aws-lc-rs",
  "log",
@@ -6913,7 +6913,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "rustls-pemfile 2.1.2",
 ]
 
@@ -6925,7 +6925,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "rustls-pemfile 2.1.2",
 ]
 
@@ -8247,7 +8247,7 @@ dependencies = [
  "env_logger",
  "eyre",
  "log",
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "rustls-pemfile 2.1.2",
  "tokio 1.37.0",
 ]
@@ -8462,7 +8462,7 @@ version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c7bc40d0e5a97695bb96e27995cd3a08538541b0a846f65bba7a359f36700d4"
 dependencies = [
- "rustls 0.23.8",
+ "rustls 0.23.9",
  "rustls-pki-types",
  "tokio 1.37.0",
 ]
