@@ -4941,7 +4941,7 @@ dependencies = [
  "actix-web",
  "actix-web-lab",
  "aes-gcm-siv",
- "base64 0.21.7",
+ "base64 0.22.1",
  "env_logger",
  "log",
  "serde",
