@@ -244,9 +244,9 @@ dependencies = [
 
 [[package]]
 name = "actix-multipart"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b960e2aea75f49c8f069108063d12a48d329fc8b60b786dfc7552a9d5918d2d"
+checksum = "d974dd6c4f78d102d057c672dcf6faa618fafa9df91d44f9c466688fc1275a3a"
 dependencies = [
  "actix-multipart-derive",
  "actix-utils",
@@ -260,6 +260,7 @@ dependencies = [
  "log",
  "memchr",
  "mime",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "serde_plain",
@@ -1747,7 +1748,7 @@ dependencies = [
  "bitflags 2.4.1",
  "cexpr",
  "clang-sys",
- "itertools 0.12.1",
+ "itertools 0.11.0",
  "lazy_static",
  "lazycell",
  "log",
@@ -4925,7 +4926,7 @@ dependencies = [
  "actix-web",
  "actix-web-lab",
  "aes-gcm-siv",
- "base64 0.22.1",
+ "base64 0.21.7",
  "env_logger",
  "log",
  "serde",
@@ -6163,7 +6164,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81bddcdb20abf9501610992b6759a4c888aef7d1a7247ef75e2404275ac24af1"
 dependencies = [
  "anyhow",
- "itertools 0.12.1",
+ "itertools 0.11.0",
  "proc-macro2",
  "quote",
  "syn 2.0.48",
@@ -8828,7 +8829,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
  "cfg-if 0.1.10",
- "rand 0.8.5",
+ "rand 0.7.3",
  "static_assertions",
 ]
 
