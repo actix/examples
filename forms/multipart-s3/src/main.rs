@@ -1,14 +1,21 @@
-use std::fs;
+use std::{fs, io};
 
 use actix_multipart::form::{tempfile::TempFile, text::Text, MultipartForm};
 use actix_web::{
-    body::SizedStream, delete, error, get, middleware::Logger, post, web, App, Error, HttpResponse,
-    HttpServer, Responder,
+    body::SizedStream,
+    delete, error, get,
+    http::Method,
+    middleware::Logger,
+    post, route,
+    web::{self},
+    App, Error, HttpResponse, HttpServer, Responder,
 };
 use actix_web_lab::{extract::Path, respond::Html};
 use aws_config::{meta::region::RegionProviderChain, BehaviorVersion};
 use dotenvy::dotenv;
+use futures_util::{stream, StreamExt as _};
 use serde_json::json;
+use tokio_util::io::ReaderStream;
 
 mod client;
 mod upload_file;
@@ -46,9 +53,10 @@ async fn upload_to_s3(
     })))
 }
 
-#[get("/file/{s3_key}*")]
+#[route("/file/{s3_key}*", method = "GET", method = "HEAD")]
 async fn fetch_from_s3(
     s3_client: web::Data<Client>,
+    method: Method,
     Path((s3_key,)): Path<(String,)>,
 ) -> Result<impl Responder, Error> {
     let (file_size, file_stream) = s3_client
@@ -56,10 +64,19 @@ async fn fetch_from_s3(
         .await
         .ok_or_else(|| error::ErrorNotFound("file with specified key not found"))?;
 
-    Ok(HttpResponse::Ok().body(SizedStream::new(
-        file_size,
-        tokio_util::io::ReaderStream::new(file_stream.into_async_read()),
-    )))
+    let stream = match method {
+        // data stream for GET requests
+        Method::GET => ReaderStream::new(file_stream.into_async_read()).boxed_local(),
+
+        // empty stream for HEAD requests
+        Method::HEAD => stream::empty::<Result<_, io::Error>>().boxed_local(),
+
+        _ => unreachable!(),
+    };
+
+    Ok(HttpResponse::Ok()
+        .no_chunking(file_size)
+        .body(SizedStream::new(file_size, stream)))
 }
 
 #[delete("/file/{s3_key}*")]
@@ -104,12 +121,12 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .app_data(web::Data::new(s3_client.clone()))
             .service(index)
             .service(upload_to_s3)
             .service(fetch_from_s3)
             .service(delete_from_s3)
             .wrap(Logger::default())
-            .app_data(web::Data::new(s3_client.clone()))
     })
     .workers(2)
     .bind(("127.0.0.1", 8080))?
