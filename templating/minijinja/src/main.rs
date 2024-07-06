@@ -61,7 +61,7 @@ async fn index(
             },
         )
     } else {
-        tmpl_env.render("index.html", ())
+        tmpl_env.render("index.html", minijinja::Value::UNDEFINED)
     }
 }
 

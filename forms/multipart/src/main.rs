@@ -74,7 +74,9 @@ async fn save_file_manual(mut payload: Multipart) -> Result<HttpResponse, Error>
     // iterate over multipart stream
     while let Some(mut field) = payload.try_next().await? {
         // A multipart/form-data stream has to contain `content_disposition`
-        let content_disposition = field.content_disposition();
+        let Some(content_disposition) = field.content_disposition() else {
+            continue;
+        };
 
         let filename = content_disposition
             .get_filename()

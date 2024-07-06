@@ -15,7 +15,7 @@ async fn index(
     tmpl: web::Data<tera::Tera>,
     query: web::Query<HashMap<String, String>>,
 ) -> Result<impl Responder, Error> {
-    let s = if let Some(name) = query.get("name") {
+    let html = if let Some(name) = query.get("name") {
         // submitted form
         let mut ctx = tera::Context::new();
         ctx.insert("name", name);
@@ -27,7 +27,7 @@ async fn index(
             .map_err(|_| error::ErrorInternalServerError("Template error"))?
     };
 
-    Ok(web::Html::new(s))
+    Ok(web::Html::new(html))
 }
 
 #[actix_web::main]
