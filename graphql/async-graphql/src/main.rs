@@ -1,6 +1,5 @@
 use actix_cors::Cors;
 use actix_web::{get, middleware::Logger, route, web, App, HttpServer, Responder};
-use actix_web_lab::respond::Html;
 use async_graphql::{
     http::{playground_source, GraphQLPlaygroundConfig},
     EmptyMutation, EmptySubscription, Schema,
@@ -19,7 +18,7 @@ async fn graphql(schema: web::Data<StarWarsSchema>, req: GraphQLRequest) -> Grap
 /// GraphiQL playground UI
 #[get("/graphiql")]
 async fn graphql_playground() -> impl Responder {
-    Html(playground_source(
+    web::Html::new(playground_source(
         GraphQLPlaygroundConfig::new("/graphql").subscription_endpoint("/graphql"),
     ))
 }

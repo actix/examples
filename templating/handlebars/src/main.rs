@@ -8,7 +8,6 @@ use actix_web::{
     middleware::{ErrorHandlerResponse, ErrorHandlers},
     web, App, HttpResponse, HttpServer, Responder, Result,
 };
-use actix_web_lab::respond::Html;
 use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;
 
@@ -19,7 +18,7 @@ async fn index(hb: web::Data<Handlebars<'_>>) -> impl Responder {
     });
     let body = hb.render("index", &data).unwrap();
 
-    Html(body)
+    web::Html::new(body)
 }
 
 #[get("/{user}/{data}")]
@@ -31,7 +30,7 @@ async fn user(hb: web::Data<Handlebars<'_>>, path: web::Path<(String, String)>) 
     });
     let body = hb.render("user", &data).unwrap();
 
-    Html(body)
+    web::Html::new(body)
 }
 
 #[actix_web::main]

@@ -8,7 +8,7 @@ use actix_web::{
     middleware::{ErrorHandlerResponse, ErrorHandlers},
     web, App, HttpResponse, HttpServer, Responder, Result,
 };
-use actix_web_lab::{extract::Path, respond::Html};
+use actix_web_lab::extract::Path;
 use fluent_templates::{static_loader, FluentLoader, Loader as _};
 use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;
@@ -31,7 +31,7 @@ static_loader! {
 async fn index(hb: web::Data<Handlebars<'_>>, lang: LangChoice) -> impl Responder {
     let data = json!({ "lang": lang });
     let body = hb.render("index", &data).unwrap();
-    Html(body)
+    web::Html::new(body)
 }
 
 #[get("/{user}/{data}")]
@@ -46,7 +46,7 @@ async fn user(
         "data": info.1
     });
     let body = hb.render("user", &data).unwrap();
-    Html(body)
+    web::Html::new(body)
 }
 
 #[actix_web::main]

@@ -8,7 +8,6 @@ use actix_web::{
     middleware::{ErrorHandlerResponse, ErrorHandlers, Logger},
     web, App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder, Result,
 };
-use actix_web_lab::respond::Html;
 use minijinja::path_loader;
 use minijinja_autoreload::AutoReloader;
 
@@ -21,14 +20,14 @@ impl MiniJinjaRenderer {
         &self,
         tmpl: &str,
         ctx: impl Into<minijinja::value::Value>,
-    ) -> actix_web::Result<Html> {
+    ) -> actix_web::Result<impl Responder> {
         self.tmpl_env
             .acquire_env()
             .map_err(|_| error::ErrorInternalServerError("could not acquire template env"))?
             .get_template(tmpl)
             .map_err(|_| error::ErrorInternalServerError("could not find template"))?
             .render(ctx.into())
-            .map(Html)
+            .map(web::Html::new)
             .map_err(|err| {
                 log::error!("{err}");
                 error::ErrorInternalServerError("template error")

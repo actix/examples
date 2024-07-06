@@ -1,5 +1,4 @@
 use actix_web::{get, route, web, Error, HttpResponse, Responder};
-use actix_web_lab::respond::Html;
 use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 
 use crate::{
@@ -26,7 +25,7 @@ pub async fn graphql(
 /// GraphiQL UI
 #[get("/graphiql")]
 async fn graphql_playground() -> impl Responder {
-    Html(graphiql_source("/graphql", None))
+    web::Html::new(graphiql_source("/graphql", None))
 }
 
 pub fn register(config: &mut web::ServiceConfig) {

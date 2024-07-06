@@ -3,7 +3,6 @@ use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpServer, Responder,
 };
-use actix_web_lab::respond::Html;
 use sailfish::TemplateOnce;
 
 #[derive(TemplateOnce)]
@@ -24,7 +23,7 @@ async fn greet(params: web::Path<(String,)>) -> actix_web::Result<impl Responder
         .render_once()
         .map_err(error::ErrorInternalServerError)?;
 
-    Ok(Html(body))
+    Ok(web::Html::new(body))
 }
 
 #[get("/page-{id:\\d+}")]
@@ -33,12 +32,12 @@ async fn page(params: web::Path<(i32,)>) -> actix_web::Result<impl Responder> {
         .render_once()
         .map_err(error::ErrorInternalServerError)?;
 
-    Ok(Html(body))
+    Ok(web::Html::new(body))
 }
 
 #[get("/")]
 async fn hello() -> impl Responder {
-    Html("<p>Hello world!</p>".to_owned())
+    web::Html::new("<p>Hello world!</p>".to_owned())
 }
 
 #[actix_web::main]

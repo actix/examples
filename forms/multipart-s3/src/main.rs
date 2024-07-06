@@ -2,15 +2,10 @@ use std::{fs, io};
 
 use actix_multipart::form::{tempfile::TempFile, text::Text, MultipartForm};
 use actix_web::{
-    body::SizedStream,
-    delete, error, get,
-    http::Method,
-    middleware::Logger,
-    post, route,
-    web::{self},
-    App, Error, HttpResponse, HttpServer, Responder,
+    body::SizedStream, delete, error, get, http::Method, middleware::Logger, post, route, web, App,
+    Error, HttpResponse, HttpServer, Responder,
 };
-use actix_web_lab::{extract::Path, respond::Html};
+use actix_web_lab::extract::Path;
 use aws_config::{meta::region::RegionProviderChain, BehaviorVersion};
 use dotenvy::dotenv;
 use futures_util::{stream, StreamExt as _};
@@ -93,7 +88,7 @@ async fn delete_from_s3(
 
 #[get("/")]
 async fn index() -> impl Responder {
-    Html(include_str!("./index.html").to_owned())
+    web::Html::new(include_str!("./index.html").to_owned())
 }
 
 #[actix_web::main]

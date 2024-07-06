@@ -10,7 +10,6 @@ use actix_web::{
     web::{self, Data},
     App, HttpResponse, HttpServer, Responder,
 };
-use actix_web_lab::respond::Html;
 use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 
 mod schema;
@@ -20,7 +19,7 @@ use crate::schema::{create_schema, Schema};
 /// GraphiQL playground UI
 #[get("/graphiql")]
 async fn graphql_playground() -> impl Responder {
-    Html(graphiql_source("/graphql", None))
+    web::Html::new(graphiql_source("/graphql", None))
 }
 
 /// GraphQL endpoint
