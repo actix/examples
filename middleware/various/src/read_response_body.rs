@@ -11,6 +11,7 @@ use actix_web::{
     web::{Bytes, BytesMut},
     Error,
 };
+use pin_project_lite::pin_project;
 
 pub struct Logging;
 
@@ -53,15 +54,16 @@ where
     }
 }
 
-#[pin_project::pin_project]
-pub struct WrapperStream<S, B>
-where
-    B: MessageBody,
-    S: Service<ServiceRequest>,
-{
-    #[pin]
-    fut: S::Future,
-    _t: PhantomData<(B,)>,
+pin_project! {
+    pub struct WrapperStream<S, B>
+    where
+        B: MessageBody,
+        S: Service<ServiceRequest>,
+    {
+        #[pin]
+        fut: S::Future,
+        _t: PhantomData<(B,)>,
+    }
 }
 
 impl<S, B> Future for WrapperStream<S, B>
@@ -83,17 +85,17 @@ where
     }
 }
 
-#[pin_project::pin_project(PinnedDrop)]
-pub struct BodyLogger<B> {
-    #[pin]
-    body: B,
-    body_accum: BytesMut,
-}
+pin_project! {
+    pub struct BodyLogger<B> {
+        #[pin]
+        body: B,
+        body_accum: BytesMut,
+    }
 
-#[pin_project::pinned_drop]
-impl<B> PinnedDrop for BodyLogger<B> {
-    fn drop(self: Pin<&mut Self>) {
-        println!("response body: {:?}", self.body_accum);
+    impl<B> PinnedDrop for BodyLogger<B> {
+        fn drop(this: Pin<&mut Self>) {
+            println!("response body: {:?}", this.body_accum);
+        }
     }
 }
 

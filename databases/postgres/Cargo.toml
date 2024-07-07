@@ -9,7 +9,7 @@ config = "0.13"
 deadpool-postgres = { version = "0.12", features = ["serde"] }
 derive_more.workspace = true
 dotenvy.workspace = true
-serde = { version = "1.0.137", features = ["derive"] }
+serde.workspace = true
 tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
 tokio-postgres = "0.7.6"

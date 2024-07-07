@@ -9,6 +9,6 @@ actix-web-lab.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
-parking_lot = "0.12"
+parking_lot.workspace = true
 tokio = { workspace = true, features = ["sync"] }
 tokio-stream.workspace = true

@@ -9,5 +9,5 @@ diesel = { version = "2", features = ["sqlite", "r2d2", "uuid"] }
 dotenvy.workspace = true
 env_logger.workspace = true
 log.workspace = true
-serde = { version = "1.0", features = ["derive"] }
+serde.workspace = true
 uuid.workspace = true

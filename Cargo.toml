@@ -104,6 +104,8 @@ color-eyre = "0.6"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"
 openssl = { version = "0.10.60", features = ["v110"] }
+parking_lot = "0.12"
+pin-project-lite = "0.2"
 rand = "0.8"
 rustls = "0.23"
 rustls-pemfile = "2"

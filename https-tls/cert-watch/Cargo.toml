@@ -15,4 +15,4 @@ notify = "6"
 rustls.workspace = true
 rustls-pemfile.workspace = true
 tokio = { workspace = true, features = ["time", "rt", "macros"] }
-parking_lot = "0.12"
+parking_lot.workspace = true

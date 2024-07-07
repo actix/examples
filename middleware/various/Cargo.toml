@@ -12,4 +12,4 @@ actix-web-lab.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
-pin-project = "1"
+pin-project-lite.workspace = true
