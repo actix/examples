@@ -20,6 +20,8 @@
         "protobuf",
         "rustls",
         "rustup",
+        "sparklepost",
+        "sparkpost",
         "sqlx",
         "tera",
         "tmpl",

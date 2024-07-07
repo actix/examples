@@ -19,6 +19,6 @@ r2d2 = "0.8"
 rust-argon2 = "2"
 serde_json.workspace = true
 serde.workspace = true
-sparkpost = "0.5"
+sparklepost = "0.5"
 time.workspace = true
 uuid.workspace = true

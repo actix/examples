@@ -30,7 +30,7 @@
 - [serde](https://crates.io/crates/serde) // A generic serialization/deserialization framework.
 - [serde_json](https://crates.io/crates/serde_json) // A JSON serialization file format.
 - [serde_derive](https://crates.io/crates/serde_derive) // Macros 1.1 implementation of #[derive(Serialize, Deserialize)].
-- [sparkpost](https://crates.io/crates/sparkpost) // Rust bindings for sparkpost email api v1.
+- [sparklepost](https://crates.io/crates/sparklepost) // Rust bindings for Sparkpost email API.
 - [uuid](https://crates.io/crates/uuid) // A library to generate and parse UUIDs.
 
 Read the full tutorial series on [gill.net.in](https://gill.net.in)
