@@ -4,11 +4,6 @@ version = "1.0.0"
 publish = false
 edition = "2021"
 
-[package.metadata.cargo-machete]
-ignored = [
-  "yarte_helpers", # only build dep
-]
-
 [dependencies]
 actix-web.workspace = true
 derive_more.workspace = true
@@ -16,7 +11,5 @@ env_logger.workspace = true
 log.workspace = true
 yarte = { version = "0.15", features = ["bytes-buf", "html-min"] }
 
-[build-dependencies.yarte_helpers]
-version = "0.15.6"
-default-features = false
-features = ["config"]
+[build-dependencies]
+yarte_helpers = { version = "0.15", default-features = false, features = ["config"] }

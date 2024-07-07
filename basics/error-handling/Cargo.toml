@@ -1,5 +1,5 @@
 [package]
-name = "error_handling"
+name = "error-handling"
 version = "1.0.0"
 edition = "2021"
 

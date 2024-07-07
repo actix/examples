@@ -3,7 +3,7 @@
 use std::time::Duration;
 
 use apalis::{prelude::*, redis::RedisStorage};
-use rand::Rng as _;
+use rand::distributions::{Alphanumeric, DistString as _};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -13,14 +13,8 @@ pub(crate) struct Email {
 
 impl Email {
     pub(crate) fn random() -> Self {
-        let user = (&mut rand::thread_rng())
-            .sample_iter(rand::distributions::Alphanumeric)
-            .take(10)
-            .map(char::from)
-            .collect::<String>();
-
+        let user = Alphanumeric.sample_string(&mut rand::thread_rng(), 10);
         let to = format!("{user}@fake-mail.com");
-
         Self { to }
     }
 }
@@ -38,7 +32,7 @@ async fn process_email_job(job: Email, _ctx: JobContext) -> Result<(), JobError>
     Ok(())
 }
 
-pub(crate) async fn start_processing_email_queue() -> anyhow::Result<RedisStorage<Email>> {
+pub(crate) async fn start_processing_email_queue() -> eyre::Result<RedisStorage<Email>> {
     let redis_url = std::env::var("REDIS_URL").expect("Missing env variable REDIS_URL");
     let storage = RedisStorage::connect(redis_url).await?;
 

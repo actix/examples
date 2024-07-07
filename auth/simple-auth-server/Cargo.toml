@@ -20,5 +20,5 @@ rust-argon2 = "2"
 serde_json.workspace = true
 serde.workspace = true
 sparkpost = "0.5"
-time = "0.3"
+time.workspace = true
 uuid.workspace = true

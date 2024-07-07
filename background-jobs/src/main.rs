@@ -14,7 +14,8 @@ mod routes;
 pub(crate) type ItemCache = Mutex<HashMap<String, DateTime<Utc>>>;
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() -> eyre::Result<()> {
+    color_eyre::install()?;
     dotenvy::dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

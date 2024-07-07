@@ -8,9 +8,9 @@ edition.workspace = true
 acme-rfc8555 = "0.1"
 actix-files.workspace = true
 actix-web = { workspace = true, features = ["rustls-0_23"] }
-color-eyre = "0.6"
+color-eyre.workspace = true
 env_logger.workspace = true
-eyre = "0.6"
+eyre.workspace = true
 log.workspace = true
 rustls.workspace = true
 rustls-pemfile.workspace = true

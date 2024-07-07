@@ -7,6 +7,7 @@ edition = "2021"
 actix-files.workspace = true
 actix-session = { workspace = true, features = ["cookie-session"] }
 actix-web.workspace = true
+actix-web-lab.workspace = true
 
 async-stream = "0.3"
 env_logger.workspace = true
