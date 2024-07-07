@@ -10,5 +10,5 @@ actix-utils.workspace = true
 
 env_logger.workspace = true
 log.workspace = true
-minijinja = { version = "1", features = ["loader"] }
-minijinja-autoreload = "1"
+minijinja = { version = "2", features = ["loader"] }
+minijinja-autoreload = "2"
