@@ -7,13 +7,10 @@ edition = "2021"
 actix-web.workspace = true
 actix-web-lab.workspace = true
 actix-cors.workspace = true
-
-juniper = "0.15.10"
-
+juniper = "0.16"
 mysql = "24"
 r2d2 = "0.8"
 r2d2_mysql = "24"
-
 dotenvy.workspace = true
 env_logger.workspace = true
 log.workspace = true

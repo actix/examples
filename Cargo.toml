@@ -21,7 +21,6 @@ members = [
   "databases/mysql",
   "databases/postgres",
   "databases/redis",
-  # "databases/sqlite",
   "docker",
   "forms/form",
   "forms/multipart-s3",
@@ -68,6 +67,9 @@ members = [
   "websockets/chat",
   "websockets/echo-actorless",
   "websockets/echo",
+]
+exclude = [
+  "databases/sqlite",
 ]
 
 [workspace.package]

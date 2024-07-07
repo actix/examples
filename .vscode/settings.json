@@ -6,6 +6,7 @@
         "autoclean",
         "autoreload",
         "chrono",
+        "deadpool",
         "dotenv",
         "dotenvy",
         "graphiql",

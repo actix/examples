@@ -7,8 +7,6 @@ edition = "2021"
 actix-web.workspace = true
 actix-web-lab.workspace = true
 actix-cors.workspace = true
-
-juniper = "0.15.10"
-
+juniper = "0.16"
 env_logger.workspace = true
 log.workspace = true

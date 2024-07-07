@@ -8,8 +8,5 @@ actix-web.workspace = true
 
 env_logger.workspace = true
 log.workspace = true
-redis = { version = "0.24", default-features = false, features = [
-  "tokio-comp",
-  "connection-manager",
-] }
+redis = { version = "0.25", features = ["tokio-comp", "connection-manager"] }
 serde.workspace = true
