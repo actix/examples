@@ -6,7 +6,8 @@ edition = "2021"
 [dependencies]
 actix-web.workspace = true
 
-apalis = { version = "0.4", features = ["redis"] }
+apalis = { version = "0.6.0-rc.2" }
+apalis-redis = { version = "0.6.0-rc.2" }
 chrono.workspace = true
 color-eyre.workspace = true
 dotenvy.workspace = true
