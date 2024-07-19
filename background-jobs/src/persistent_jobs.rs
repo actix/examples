@@ -25,8 +25,6 @@ async fn process_email_job(job: Email) {
 
     // simulate time taken to send email
     tokio::time::sleep(rand_delay_with_jitter()).await;
-
-    // Ok(())
 }
 
 pub(crate) async fn start_processing_email_queue() -> eyre::Result<RedisStorage<Email>> {
