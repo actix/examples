@@ -50,7 +50,7 @@ jobs:
           redis-version: 6
 
       - name: cargo test
-        run: cargo test --workspace --all-features --no-fail-fast --exclude=diesel-example -- --nocapture
+        run: cargo test --workspace --all-features --no-fail-fast --exclude=db-diesel -- --nocapture
         timeout-minutes: 30
 
       - name: cargo test (diesel)
@@ -60,7 +60,7 @@ jobs:
           cd databases/diesel
           diesel migration run
           chmod a+rwx test.db
-          cargo test -p=diesel-example --no-fail-fast -- --nocapture
+          cargo test -p=db-diesel --no-fail-fast -- --nocapture
         timeout-minutes: 10
 
       - name: Install cargo-ci-cache-clean
