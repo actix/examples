@@ -19,7 +19,7 @@ cargo run --bin websocket-server
 ### rust client
 
 ```sh
-cd websockets/websocket
+cd websockets/echo
 cargo run --bin websocket-client
 ```
 
