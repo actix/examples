@@ -22,7 +22,12 @@ Fancy shiny features:
 
 2. [http://localhost:8080/count/](http://localhost:8080/count/) is a non-websocket endpoint and will affect and display state.
 
-To start server use command: `cargo run --bin websocket-chat-server`
+To start server use the following
+
+```sh
+cd websockets/chat
+cargo run --bin websocket-chat-server
+```
 
 ## WebSocket Browser Client
 
@@ -36,6 +41,3 @@ Create a venv environment `python3 -m venv venv`
 Launch venv environment `source ./venv/bin/activate`
 Fetch the needed python libraries `pip3 install -r requirements.txt`
 Then start client as `./client.py`
-
-
-
