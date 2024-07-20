@@ -3,7 +3,8 @@ use actix_web::{
     web::{self, Data},
     HttpResponse, Responder,
 };
-use apalis::{prelude::*, redis::RedisStorage};
+use apalis::prelude::*;
+use apalis_redis::RedisStorage;
 use chrono::{TimeDelta, Utc};
 use serde::Deserialize;
 
