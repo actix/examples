@@ -66,7 +66,7 @@
     <div id="log"></div>
 
     <form id="chatform">
-      <input type="text" id="text" />
+      <input type="text" id="text" autocomplete="off" />
       <input type="submit" id="send" />
     </form>
 
@@ -133,7 +133,7 @@
           updateConnectionStatus()
         }
 
-        socket.onmessage = (ev) => {
+        socket.onmessage = ev => {
           log('Received: ' + ev.data, 'message')
         }
 
@@ -179,7 +179,7 @@
         updateConnectionStatus()
       })
 
-      $form.addEventListener('submit', (ev) => {
+      $form.addEventListener('submit', ev => {
         ev.preventDefault()
 
         const text = $input.value
@@ -192,7 +192,6 @@
       })
 
       updateConnectionStatus()
-
     </script>
   </body>
 </html>

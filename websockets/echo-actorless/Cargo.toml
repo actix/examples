@@ -1,5 +1,5 @@
 [package]
-name = "websocket-echo-actorless-example"
+name = "websockets-echo-actorless-example"
 version = "1.0.0"
 edition = "2021"
 
@@ -7,7 +7,6 @@ edition = "2021"
 actix-files.workspace = true
 actix-web.workspace = true
 actix-ws.workspace = true
-
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
