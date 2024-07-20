@@ -1114,7 +1114,7 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "rand",
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "serde",
  "serde_json",
  "serde_urlencoded",
@@ -1130,7 +1130,7 @@ dependencies = [
  "env_logger",
  "log",
  "mime",
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "webpki-roots 0.26.3",
 ]
 
@@ -1963,7 +1963,7 @@ dependencies = [
  "log",
  "notify 6.1.1",
  "parking_lot",
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "rustls-pemfile 2.1.2",
  "tokio",
 ]
@@ -4432,7 +4432,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e310b3a6b5907f99202fcdb4960ff45b93735d7c7d96b760fcff8db2dc0e103d"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.0",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -4657,7 +4657,7 @@ dependencies = [
  "actix-web",
  "actix-web-lab",
  "aes-gcm-siv",
- "base64 0.22.1",
+ "base64 0.21.7",
  "env_logger",
  "log",
  "serde",
@@ -4672,7 +4672,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "rustls-pemfile 2.1.2",
 ]
 
@@ -6413,9 +6413,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.23.9"
+version = "0.23.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a218f0f6d05669de4eabfb24f31ce802035c952429d037507b4a4a39f0e60c5b"
+checksum = "05cff451f60db80f490f3c182b77c35260baace73209e9cdbbe526bfe3a4d402"
 dependencies = [
  "aws-lc-rs",
  "log",
@@ -6434,7 +6434,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "rustls-pemfile 2.1.2",
 ]
 
@@ -6446,7 +6446,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "rustls-pemfile 2.1.2",
 ]
 
@@ -7751,7 +7751,7 @@ dependencies = [
  "env_logger",
  "eyre",
  "log",
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "rustls-pemfile 2.1.2",
  "tokio",
 ]
@@ -7948,7 +7948,7 @@ version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c7bc40d0e5a97695bb96e27995cd3a08538541b0a846f65bba7a359f36700d4"
 dependencies = [
- "rustls 0.23.9",
+ "rustls 0.23.10",
  "rustls-pki-types",
  "tokio",
 ]
