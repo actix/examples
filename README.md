@@ -21,7 +21,7 @@
 - [Four in a Row - Server](https://github.com/ffactory-ofcl/fourinarow-server): An online version of the popular game four in a row, written in Rust on the server side and Flutter + Dart on the client.
 - [Nitro Repo](https://github.com/wherkamp/nitro_repo): An open source artifact manager. Rust back-end and Vue front-end.
 - [mCaptcha](https://github.com/mCaptcha/mCaptcha/): Proof of work based, privacy focused, libre CAPTCHA system. Crates used: `actix-web`, `sqlx`, `redis`, and `lettre`.
-- [Zero2prod](https://github.com/LukeMathWalker/zero-to-production/): Source code of zero to production series [zero2prod.com](https://www.zero2prod.com). Paid book but some of the chapters is available online for free. The book compares and explains the chosen technologies, like Actix Web and SQLx.
+- [Zero2prod](https://github.com/LukeMathWalker/zero-to-production/): Source code of zero to production book [zero2prod.com](https://www.zero2prod.com). Paid book but some of the chapters are available online for free. The book compares and explains the chosen technologies, like Actix Web and SQLx.
 - [Triox](https://github.com/Trioxidation/Triox): A free file hosting server that focuses on speed, reliability and security.
 - [binserve](https://github.com/mufeedvh/binserve): A fast, secure, and easy to set up static web server written on top of Actix Web with routing, templating, and various other features.
 - [Roseline](https://github.com/DoumanAsh/roseline.rs): A personal web site and discord & IRC bot to access simple SQLite database. Demonstrates usage of various Actix and Actix Web concepts.
@@ -54,7 +54,7 @@
 - [rayspace.dev](https://github.com/ryspc/rayspace.dev): Minimalist dev portfolio and blog implemented as a Rust-powered SPA, featuring GitHub OAuth, session management, static file serving, API endpoints, and SQLx integration.
 - [Blog with markdown rendering](https://github.com/gemini-15/blog-engine): Blog example built with Actix Web, diesel (with Postgres) and r2d2 rendering articles in markdown with metadata and a front-end with React. 
 - [Rust, Angular, PostgreSQL and JWT Security](https://github.com/stav121/actix-angular-project-template): Boilerplate project that implements an Angular + Actix Web application with login and registration pages, that is pre-dockerized.
-- [planters_cycle](https://github.com/grimm-integrations/planters_cycle): Another boilerplate fullstack appliction with identity system, prisma and NextJs. 
+- [planters_cycle](https://github.com/grimm-integrations/planters_cycle): Another boilerplate fullstack application with identity system, prisma and NextJs. 
 
 ## Paid Resources
 
