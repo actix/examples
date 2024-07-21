@@ -28,7 +28,7 @@ async fn echo_heartbeat_ws(req: HttpRequest, stream: web::Payload) -> Result<Htt
 
 /// Handshake and start basic WebSocket handler.
 ///
-/// This example is just for demonstration of simplicity. In reality, you likely want to include
+/// This example is just for simple demonstration. In reality, you likely want to include
 /// some handling of heartbeats for connection health tracking to free up server resources when
 /// connections die or network issues arise.
 async fn echo_ws(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {

@@ -1,5 +1,5 @@
-//! `ChatServer` is an actor. It maintains list of connection client session.
-//! And manages available rooms. Peers send messages to other peers in same
+//! `ChatServer` is an actor. It maintains a list of connection client sessions.
+//! It also manages available rooms. Peers send messages to other peers in same
 //! room through `ChatServer`.
 
 use std::{
