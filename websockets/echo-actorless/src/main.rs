@@ -65,7 +65,6 @@ async fn broadcast_ws(
     Ok(res)
 }
 
-// note that the actor-based WebSocket examples would NOT work under `tokio::main`
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));

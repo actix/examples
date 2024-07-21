@@ -220,6 +220,7 @@ impl WsChatSession {
     }
 }
 
+// the actor-based WebSocket examples REQUIRE `actix_web::main` for actor support
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
