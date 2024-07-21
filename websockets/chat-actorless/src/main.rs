@@ -2,6 +2,8 @@
 //!
 //! Open `http://localhost:8080/` in browser to test.
 
+use std::io;
+
 use actix_files::NamedFile;
 use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
 use tokio::{
@@ -45,9 +47,9 @@ async fn chat_ws(
     Ok(res)
 }
 
-// note that the `actix` based WebSocket handling would NOT work under `tokio::main`
+// note that the actor-based WebSocket examples would NOT work under `tokio::main`
 #[tokio::main(flavor = "current_thread")]
-async fn main() -> std::io::Result<()> {
+async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     log::info!("starting HTTP server at http://localhost:8080");
@@ -63,7 +65,8 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/").to(index))
             // websocket routes
             .service(web::resource("/ws").route(web::get().to(chat_ws)))
-            // enable logger
+            // standard middleware
+            .wrap(middleware::NormalizePath::trim())
             .wrap(middleware::Logger::default())
     })
     .workers(2)
