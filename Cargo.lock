@@ -8932,10 +8932,12 @@ dependencies = [
  "actix-files",
  "actix-web",
  "actix-ws",
+ "awc",
  "env_logger",
  "futures-util",
  "log",
  "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
