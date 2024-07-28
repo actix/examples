@@ -60,12 +60,12 @@ On many Linux distributions you may prefix the shell commands with `sudo -u post
 
    ```ini
    SERVER_ADDR=127.0.0.1:8080
-   PG.USER=test_user
-   PG.PASSWORD=testing
-   PG.HOST=127.0.0.1
-   PG.PORT=5432
-   PG.DBNAME=testing_db
-   PG.POOL.MAX_SIZE=16
+   PG__USER=test_user
+   PG__PASSWORD=testing
+   PG__HOST=127.0.0.1
+   PG__PORT=5432
+   PG__DBNAME=testing_db
+   PG__POOL_MAX_SIZE=16
    ```
 
 6. Run the server:
