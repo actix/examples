@@ -11,7 +11,7 @@ cargo run
 ### web client
 
 - [http://localhost:8080/user/info](http://localhost:8080/user/info)
-  ```json5
+  ```json
   // payload structure
   {
     "username": "username",

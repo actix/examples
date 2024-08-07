@@ -11,8 +11,7 @@
 
 ### NOTE:
 
-You may need to ensure that you are running the commands with the correct SQL user.
-On many Linux distributions you may prefix the shell commands with `sudo -u postgres`
+You may need to ensure that you are running the commands with the correct SQL user. On many Linux distributions you may prefix the shell commands with `sudo -u postgres`
 
 1. Create database user
 
@@ -25,6 +24,7 @@ On many Linux distributions you may prefix the shell commands with `sudo -u post
    This step is **optional** and you can also use an existing database user for that. Just make sure to replace `test_user` by the database user of your choice in the following steps and change the `.env` file containing the configuration accordingly.
 
    An alternative using SQL:
+
    ```sql
    CREATE USER test_user WITH PASSWORD 'testing';
    ```
@@ -36,6 +36,7 @@ On many Linux distributions you may prefix the shell commands with `sudo -u post
    ```
 
    An alternative using SQL:
+
    ```sql
    CREATE DATABASE testing_db OWNER test_user;
    ```
@@ -54,7 +55,7 @@ On many Linux distributions you may prefix the shell commands with `sudo -u post
    GRANT ALL PRIVILEGES ON SCHEMA testing TO test_user;
    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA testing TO test_user;
    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA testing TO test_user;
-   ``` 
+   ```
 
 5. Create `.env` file:
 

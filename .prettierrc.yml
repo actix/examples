@@ -1,8 +1,7 @@
-singleQuote: true
-arrowParens: avoid
+arrowParens: "avoid"
 semi: false
 overrides:
-  - files: '*.md'
+  - files: "*.md"
     options:
       printWidth: 9999
-      proseWrap: never
+      proseWrap: "never"

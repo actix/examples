@@ -2,8 +2,12 @@
 
 > Curated examples using the Actix ecosystem.
 
+<!-- prettier-ignore-start -->
+
 [![build status](https://github.com/actix/examples/workflows/CI%20%28Linux%29/badge.svg?branch=master&event=push)](https://github.com/actix/examples/actions)
 [![Chat on Discord](https://img.shields.io/discord/771444961383153695?label=chat&logo=discord)](https://discord.gg/NWpN5mmg3x)
+
+<!-- prettier-ignore-end -->
 
 ## Community Showcase
 
@@ -52,9 +56,9 @@
 - [Fullstack-Rust](https://github.com/vascokk/fullstack-rust): A Full Stack Rust application (Connect5 game) with Actix Web, Yew, Bulma CSS and Diesel.
 - [Mozilla Services Skeleton App](https://github.com/mozilla-services/skeleton)
 - [rayspace.dev](https://github.com/ryspc/rayspace.dev): Minimalist dev portfolio and blog implemented as a Rust-powered SPA, featuring GitHub OAuth, session management, static file serving, API endpoints, and SQLx integration.
-- [Blog with markdown rendering](https://github.com/gemini-15/blog-engine): Blog example built with Actix Web, diesel (with Postgres) and r2d2 rendering articles in markdown with metadata and a front-end with React. 
+- [Blog with markdown rendering](https://github.com/gemini-15/blog-engine): Blog example built with Actix Web, diesel (with Postgres) and r2d2 rendering articles in markdown with metadata and a front-end with React.
 - [Rust, Angular, PostgreSQL and JWT Security](https://github.com/stav121/actix-angular-project-template): Boilerplate project that implements an Angular + Actix Web application with login and registration pages, that is pre-dockerized.
-- [planters_cycle](https://github.com/grimm-integrations/planters_cycle): Another boilerplate fullstack application with identity system, prisma and NextJs. 
+- [planters_cycle](https://github.com/grimm-integrations/planters_cycle): Another boilerplate fullstack application with identity system, prisma and NextJs.
 
 ## Paid Resources
 

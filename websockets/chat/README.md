@@ -31,13 +31,13 @@ cargo run --bin websocket-chat-server
 
 ## WebSocket Browser Client
 
-Open url: [http://localhost:8080/](http://localhost:8080/)
-Use two tabs to set up a proper conversation.
+- Open in browser: <http://localhost:8080/>.
+- Use two tabs to set up a proper conversation.
 
 ## Python Client using aiohttp
 
-Client connects to server. Reads input from stdin and sends to server.
-Create a venv environment `python3 -m venv venv`
-Launch venv environment `source ./venv/bin/activate`
-Fetch the needed python libraries `pip3 install -r requirements.txt`
-Then start client as `./client.py`
+- Client connects to server. Reads input from stdin and sends to server.
+- Create a venv environment `python3 -m venv venv`.
+- Launch venv environment `source ./venv/bin/activate`.
+- Fetch the needed python libraries `pip3 install -r requirements.txt`.
+- Then start client as `./client.py`.

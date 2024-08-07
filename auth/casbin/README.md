@@ -20,6 +20,7 @@ cargo run (or ``cargo watch -x run``)
 ```
 
 In this example, you can get the:
+
 - successful result at [http://localhost:8080/success](http://localhost:8080/success) (accessible)
 - failed result at [http://localhost:8080/fail](http://localhost:8080/fail) (inaccessible, `ERR_EMPTY_RESPONSE`).
 

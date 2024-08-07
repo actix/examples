@@ -47,9 +47,7 @@ _Mutation example:_
 
 ```graphql
 mutation {
-  createHuman(
-    newHuman: { name: "Fresh Kid Ice", appearsIn: EMPIRE, homePlanet: "earth" }
-  ) {
+  createHuman(newHuman: { name: "Fresh Kid Ice", appearsIn: EMPIRE, homePlanet: "earth" }) {
     id
     name
     appearsIn
