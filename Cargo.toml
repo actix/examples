@@ -87,13 +87,13 @@ actix-http = "3.5"
 actix-identity = "0.7"
 actix-multipart = "0.7"
 actix-protobuf = "0.11"
-actix-session = "0.9"
+actix-session = "0.10"
 actix-test = "0.1"
 actix-tls = "3.4"
 actix-utils = "3"
 actix-web = "4.7"
 actix-web-actors = "4.1"
-actix-web-lab = "0.20"
+actix-web-lab = "0.21"
 actix-ws = "0.3"
 awc = "3.2"
 
@@ -109,6 +109,7 @@ openssl = { version = "0.10.60", features = ["v110"] }
 parking_lot = "0.12"
 pin-project-lite = "0.2"
 rand = "0.8"
+reqwest = { version = "0.12", features = ["json", "stream"] }
 rustls = "0.23"
 rustls-pemfile = "2"
 serde = { version = "1", features = ["derive"] }

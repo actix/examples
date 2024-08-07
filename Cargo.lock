@@ -223,7 +223,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2c99b7a5614b72a78f04aa2021e5370fc1aef2475fffeffc0c1266b99007062"
 dependencies = [
  "actix-service",
- "actix-session",
+ "actix-session 0.9.0",
  "actix-utils",
  "actix-web",
  "derive_more",
@@ -357,8 +357,24 @@ dependencies = [
  "actix-web",
  "anyhow",
  "derive_more",
+ "serde",
+ "serde_json",
+ "tracing",
+]
+
+[[package]]
+name = "actix-session"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ac013ca53d36acb0cc60f5437381c97c291f51a12a5bd8d02febc3a3aaf53390"
+dependencies = [
+ "actix-service",
+ "actix-utils",
+ "actix-web",
+ "anyhow",
+ "derive_more",
  "rand",
- "redis 0.24.0",
+ "redis 0.26.1",
  "serde",
  "serde_json",
  "tracing",
@@ -494,9 +510,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web-lab"
-version = "0.20.2"
+version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7675c1a84eec1b179c844cdea8488e3e409d8e4984026e92fa96c87dd86f33c6"
+checksum = "993cb5477d926300f11d7daede86368dbf797ccae3564aadfb41cb5b3aee2d23"
 dependencies = [
  "actix-http",
  "actix-router",
@@ -506,7 +522,6 @@ dependencies = [
  "actix-web-lab-derive",
  "ahash 0.8.11",
  "arc-swap",
- "async-trait",
  "bytes",
  "bytestring",
  "csv",
@@ -515,7 +530,7 @@ dependencies = [
  "futures-util",
  "http 0.2.9",
  "impl-more",
- "itertools",
+ "itertools 0.13.0",
  "local-channel",
  "mediatype",
  "mime",
@@ -532,9 +547,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web-lab-derive"
-version = "0.20.0"
+version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9aa0b287c8de4a76b691f29dbb5451e8dd5b79d777eaf87350c9b0cbfdb5e968"
+checksum = "5aa1bc8506ff10e35419d82d2502e182b94bafa1a68f5651e8e1e6c6717fe1d3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -768,9 +783,9 @@ checksum = "b3d1d046238990b9cf5bcde22a3fb3584ee5cf65fb2765f454ed428c7a0063da"
 
 [[package]]
 name = "apalis"
-version = "0.6.0-rc.2"
+version = "0.6.0-rc.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e78684d69b4361d01bddf318a5117c18179c52396c7792fc0ebb04da46abbb2"
+checksum = "940921ba55b294cdb5535bb67a0fc29a8b637e0225f99337e4c86432d80da3f0"
 dependencies = [
  "apalis-core",
  "futures",
@@ -785,9 +800,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-core"
-version = "0.6.0-rc.2"
+version = "0.6.0-rc.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94c70a31bd587ce6ffe53af31d9693257af40b47f515999b3cf70b8d7353d259"
+checksum = "9ca0df44161ac62045e29a56fd7d4356b6ac138413b761a23e5a0ce9973c1239"
 dependencies = [
  "async-oneshot",
  "futures",
@@ -802,9 +817,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-redis"
-version = "0.6.0-rc.2"
+version = "0.6.0-rc.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2ae52c1baf49b8faa59b2b03d5cb47ebf9bed90411d7b5878bc97600752761c"
+checksum = "58b90be4cc2db77f062b3ee08ed913dffba0c509b71fd944e4e8241c2618705f"
 dependencies = [
  "apalis-core",
  "async-stream",
@@ -814,7 +829,9 @@ dependencies = [
  "log",
  "redis 0.25.4",
  "serde",
+ "serde_json",
  "tokio",
+ "tower",
 ]
 
 [[package]]
@@ -1681,7 +1698,7 @@ name = "basics"
 version = "1.0.0"
 dependencies = [
  "actix-files",
- "actix-session",
+ "actix-session 0.10.0",
  "actix-web",
  "actix-web-lab",
  "async-stream",
@@ -1709,7 +1726,7 @@ dependencies = [
  "bitflags 2.4.1",
  "cexpr",
  "clang-sys",
- "itertools",
+ "itertools 0.12.1",
  "lazy_static",
  "lazycell",
  "log",
@@ -2240,7 +2257,7 @@ name = "cookie-auth"
 version = "1.0.0"
 dependencies = [
  "actix-identity",
- "actix-session",
+ "actix-session 0.10.0",
  "actix-web",
  "env_logger",
  "log",
@@ -2250,7 +2267,7 @@ dependencies = [
 name = "cookie-session"
 version = "1.0.0"
 dependencies = [
- "actix-session",
+ "actix-session 0.10.0",
  "actix-web",
  "env_logger",
  "log",
@@ -4147,6 +4164,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4645,7 +4671,7 @@ dependencies = [
  "actix-web",
  "actix-web-lab",
  "aes-gcm-siv",
- "base64 0.22.1",
+ "base64 0.21.7",
  "env_logger",
  "log",
  "serde",
@@ -5102,11 +5128,10 @@ dependencies = [
 
 [[package]]
 name = "num-bigint"
-version = "0.4.4"
+version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "608e7659b5c3d7cba262d894801b9ec9d00de989e8a82bd4bef91d08da45cdc0"
+checksum = "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9"
 dependencies = [
- "autocfg",
  "num-integer",
  "num-traits",
 ]
@@ -5821,7 +5846,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81bddcdb20abf9501610992b6759a4c888aef7d1a7247ef75e2404275ac24af1"
 dependencies = [
  "anyhow",
- "itertools",
+ "itertools 0.12.1",
  "proc-macro2",
  "quote",
  "syn 2.0.69",
@@ -5834,7 +5859,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "18bec9b0adc4eba778b33684b7ba3e7137789434769ee3ce3930463ef904cfca"
 dependencies = [
  "anyhow",
- "itertools",
+ "itertools 0.12.1",
  "proc-macro2",
  "quote",
  "syn 2.0.69",
@@ -5969,28 +5994,6 @@ dependencies = [
 
 [[package]]
 name = "redis"
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c580d9cbbe1d1b479e8d67cf9daf6a62c957e6846048408b80b43ac3f6af84cd"
-dependencies = [
- "arc-swap",
- "async-trait",
- "bytes",
- "combine",
- "futures",
- "futures-util",
- "itoa",
- "percent-encoding",
- "pin-project-lite",
- "ryu",
- "tokio",
- "tokio-retry",
- "tokio-util",
- "url",
-]
-
-[[package]]
-name = "redis"
 version = "0.25.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e0d7a6955c7511f60f3ba9e86c6d02b3c3f144f8c24b288d1f4e18074ab8bbec"
@@ -6014,10 +6017,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "redis"
+version = "0.26.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e902a69d09078829137b4a5d9d082e0490393537badd7c91a3d69d14639e115f"
+dependencies = [
+ "arc-swap",
+ "async-trait",
+ "bytes",
+ "combine",
+ "futures",
+ "futures-util",
+ "itoa",
+ "num-bigint",
+ "percent-encoding",
+ "pin-project-lite",
+ "ryu",
+ "tokio",
+ "tokio-retry",
+ "tokio-util",
+ "url",
+]
+
+[[package]]
 name = "redis-session-example"
 version = "1.0.0"
 dependencies = [
- "actix-session",
+ "actix-session 0.10.0",
  "actix-test",
  "actix-web",
  "env_logger",
@@ -6932,7 +6958,7 @@ name = "simple-auth-server"
 version = "1.0.0"
 dependencies = [
  "actix-identity",
- "actix-session",
+ "actix-session 0.10.0",
  "actix-web",
  "chrono",
  "derive_more",
@@ -7775,7 +7801,7 @@ name = "todo"
 version = "1.0.0"
 dependencies = [
  "actix-files",
- "actix-session",
+ "actix-session 0.10.0",
  "actix-web",
  "dotenvy",
  "env_logger",
