@@ -22,4 +22,4 @@ env_logger.workspace = true
 futures-util = { workspace = true, features = ["sink"] }
 log.workspace = true
 tokio = { workspace = true, features = ["full"] }
-tokio-stream = "0.1.8"
+tokio-stream.workspace = true

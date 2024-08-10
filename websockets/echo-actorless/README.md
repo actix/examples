@@ -8,13 +8,20 @@ Simple echo websocket server using [`actix-ws`].
 
 ```sh
 cd websockets/echo-actorless
-cargo run
+cargo run --bin websocket-server
 # starting HTTP server at http://localhost:8080
 ```
 
 ### Browser Client
 
 Go to <http://localhost:8080> in a browser.
+
+### rust client
+
+```sh
+cd websockets/echo-actorless
+cargo run --bin websocket-client
+```
 
 ### CLI Client
 
