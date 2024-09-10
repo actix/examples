@@ -116,7 +116,7 @@ pub async fn chat_ws(
         };
     };
 
-    chat_server.disconnect(conn_id);
+    chat_server.disconnect(conn_id).await;
 
     // attempt to close connection gracefully
     let _ = session.close(close_reason).await;
