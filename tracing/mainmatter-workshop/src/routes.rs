@@ -1,7 +1,6 @@
 use std::time::Duration;
 
-use actix_web::{get, HttpResponse, Responder};
-use actix_web_lab::extract::ThinData;
+use actix_web::{get, web::ThinData, HttpResponse, Responder};
 use metrics_exporter_prometheus::PrometheusHandle;
 
 #[get("/hello")]

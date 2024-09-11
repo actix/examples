@@ -989,7 +989,6 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab",
  "async-graphql",
  "async-graphql-actix-web",
  "env_logger",
@@ -2000,15 +1999,12 @@ dependencies = [
 name = "cert-watch"
 version = "1.0.0"
 dependencies = [
- "actix-files",
  "actix-web",
  "color-eyre",
  "env_logger",
  "eyre",
- "futures-util",
  "log",
  "notify 6.1.1",
- "parking_lot",
  "rustls 0.23.13",
  "rustls-pemfile 2.1.3",
  "tokio",
@@ -4349,7 +4345,6 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab",
  "dotenvy",
  "env_logger",
  "juniper",
@@ -4366,7 +4361,6 @@ version = "1.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "juniper",
  "log",
@@ -4739,9 +4733,8 @@ version = "1.0.0"
 dependencies = [
  "actix-http",
  "actix-web",
- "actix-web-lab",
  "aes-gcm-siv",
- "base64 0.21.7",
+ "base64 0.22.1",
  "env_logger",
  "log",
  "serde",
@@ -4787,7 +4780,6 @@ version = "1.0.0"
 dependencies = [
  "actix-http",
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "futures-util",
  "log",
@@ -7624,7 +7616,6 @@ name = "templating-askama"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
  "askama",
  "env_logger",
  "log",
@@ -7648,7 +7639,6 @@ name = "templating-handlebars"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "handlebars 5.1.2",
  "serde_json",
@@ -7660,7 +7650,6 @@ version = "1.0.0"
 dependencies = [
  "actix-utils",
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "log",
  "minijinja",
@@ -7672,7 +7661,6 @@ name = "templating-sailfish"
 version = "0.1.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "log",
  "sailfish",
@@ -7683,7 +7671,6 @@ name = "templating-tera"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
  "env_logger",
  "log",
  "tera",
@@ -8334,7 +8321,6 @@ name = "tracing-mainmatter-workshop"
 version = "1.0.0"
 dependencies = [
  "actix-web",
- "actix-web-lab",
  "dotenvy",
  "metrics",
  "metrics-exporter-prometheus",
@@ -8902,12 +8888,8 @@ dependencies = [
  "actix-files",
  "actix-web",
  "actix-web-actors",
- "awc",
  "env_logger",
- "futures-util",
  "log",
- "tokio",
- "tokio-stream",
 ]
 
 [[package]]

@@ -1,7 +1,6 @@
 use std::io;
 
-use actix_web::{middleware::from_fn, App, HttpServer};
-use actix_web_lab::extract::ThinData;
+use actix_web::{middleware::from_fn, web::ThinData, App, HttpServer};
 use tracing_actix_web::TracingLogger;
 
 mod logging;

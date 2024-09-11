@@ -7,7 +7,6 @@ rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-actix-web-lab.workspace = true
 dotenvy.workspace = true
 metrics = "0.23"
 metrics-exporter-prometheus = { version = "0.15", default-features = false }

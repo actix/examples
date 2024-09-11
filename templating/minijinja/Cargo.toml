@@ -5,9 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-actix-web-lab.workspace = true
 actix-utils.workspace = true
-
 env_logger.workspace = true
 log.workspace = true
 minijinja = { version = "2", features = ["loader"] }

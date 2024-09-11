@@ -5,12 +5,9 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-actix-web-lab.workspace = true
 actix-cors.workspace = true
-
 async-graphql = "6"
 async-graphql-actix-web = "6"
-
 env_logger.workspace = true
 log.workspace = true
 slab = "0.4"

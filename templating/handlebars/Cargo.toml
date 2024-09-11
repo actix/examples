@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-actix-web-lab.workspace = true
 env_logger.workspace = true
 handlebars = { version = "5", features = ["dir_source"] }
 serde_json.workspace = true

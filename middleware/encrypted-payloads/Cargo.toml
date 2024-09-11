@@ -7,10 +7,8 @@ edition.workspace = true
 [dependencies]
 actix-http.workspace = true
 actix-web.workspace = true
-actix-web-lab.workspace = true
-
 aes-gcm-siv = "0.11"
-base64 = "0.21"
+base64 = "0.22"
 env_logger.workspace = true
 log.workspace = true
 serde.workspace = true

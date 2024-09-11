@@ -4,7 +4,6 @@ version = "1.0.0"
 edition = "2021"
 
 [dependencies]
-actix-web-lab.workspace = true
 actix-web.workspace = true
 askama = "0.12"
 env_logger.workspace = true
