@@ -1,16 +1,18 @@
 use std::time::Duration;
 
-use actix_http::body::MessageBody;
-use actix_web::{dev, rt::time, web, App, Error, HttpServer};
-use actix_web_lab::middleware::{from_fn, Next};
+use actix_web::{
+    body::MessageBody,
+    dev,
+    middleware::{from_fn, Next},
+    rt::time,
+    web, App, Error, HttpServer,
+};
 
 mod read_request_body;
 mod read_response_body;
 mod redirect;
 mod simple;
 
-// See more examples of from_fn middleware here:
-// https://github.com/robjtede/actix-web-lab/blob/main/actix-web-lab/examples/from_fn.rs
 async fn timeout_10secs(
     req: dev::ServiceRequest,
     next: Next<impl MessageBody + 'static>,

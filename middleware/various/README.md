@@ -33,4 +33,4 @@ A minimal middleware demonstrating the sequence of operations in an actix middle
 
 ## See Also
 
-- The `from_fn` middleware constructor from [`actix-web-lab`](https://crates.io/crates/actix-web-lab).
+- The [`from_fn` middleware constructor](https://docs.rs/actix-web/4/actix_web/middleware/fn.from_fn.html).
