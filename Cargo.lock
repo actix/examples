@@ -8888,8 +8888,12 @@ dependencies = [
  "actix-files",
  "actix-web",
  "actix-web-actors",
+ "awc",
  "env_logger",
+ "futures-util",
  "log",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
