@@ -364,15 +364,15 @@ dependencies = [
 
 [[package]]
 name = "actix-session"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ac013ca53d36acb0cc60f5437381c97c291f51a12a5bd8d02febc3a3aaf53390"
+checksum = "efe6976a74f34f1b6d07a6c05aadc0ed0359304a7781c367fa5b4029418db08f"
 dependencies = [
  "actix-service",
  "actix-utils",
  "actix-web",
  "anyhow",
- "derive_more 0.99.18",
+ "derive_more 1.0.0",
  "rand",
  "redis 0.26.1",
  "serde",
@@ -1707,7 +1707,7 @@ name = "basics"
 version = "1.0.0"
 dependencies = [
  "actix-files",
- "actix-session 0.10.0",
+ "actix-session 0.10.1",
  "actix-web",
  "actix-web-lab",
  "async-stream",
@@ -2281,7 +2281,7 @@ name = "cookie-auth"
 version = "1.0.0"
 dependencies = [
  "actix-identity",
- "actix-session 0.10.0",
+ "actix-session 0.10.1",
  "actix-web",
  "env_logger",
  "log",
@@ -2291,7 +2291,7 @@ dependencies = [
 name = "cookie-session"
 version = "1.0.0"
 dependencies = [
- "actix-session 0.10.0",
+ "actix-session 0.10.1",
  "actix-web",
  "env_logger",
  "log",
@@ -4505,7 +4505,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -6166,7 +6166,7 @@ dependencies = [
 name = "redis-session-example"
 version = "1.0.0"
 dependencies = [
- "actix-session 0.10.0",
+ "actix-session 0.10.1",
  "actix-test",
  "actix-web",
  "env_logger",
@@ -7074,7 +7074,7 @@ name = "simple-auth-server"
 version = "1.0.0"
 dependencies = [
  "actix-identity",
- "actix-session 0.10.0",
+ "actix-session 0.10.1",
  "actix-web",
  "chrono",
  "derive_more 0.99.18",
@@ -7906,7 +7906,7 @@ name = "todo"
 version = "1.0.0"
 dependencies = [
  "actix-files",
- "actix-session 0.10.0",
+ "actix-session 0.10.1",
  "actix-web",
  "dotenvy",
  "env_logger",
