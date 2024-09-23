@@ -289,7 +289,7 @@ dependencies = [
  "actix-web",
  "derive_more 0.99.18",
  "futures-util",
- "prost 0.13.2",
+ "prost 0.13.3",
 ]
 
 [[package]]
@@ -2592,7 +2592,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "redis 0.26.1",
+ "redis 0.25.4",
  "serde",
 ]
 
@@ -4506,7 +4506,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -5907,12 +5907,12 @@ dependencies = [
 
 [[package]]
 name = "prost"
-version = "0.13.2"
+version = "0.13.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b2ecbe40f08db5c006b5764a2645f7f3f141ce756412ac9e1dd6087e6d32995"
+checksum = "7b0487d90e047de87f984913713b85c601c05609aad5b0df4b4573fbf69aa13f"
 dependencies = [
  "bytes",
- "prost-derive 0.13.2",
+ "prost-derive 0.13.3",
 ]
 
 [[package]]
@@ -5930,9 +5930,9 @@ dependencies = [
 
 [[package]]
 name = "prost-derive"
-version = "0.13.2"
+version = "0.13.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "acf0c195eebb4af52c752bec4f52f645da98b6e92077a04110c7f349477ae5ac"
+checksum = "e9552f850d5f0964a4e4d0bf306459ac29323ddfbae05e35a7c0d35cb0803cc5"
 dependencies = [
  "anyhow",
  "itertools 0.13.0",
@@ -5949,7 +5949,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "prost 0.13.2",
+ "prost 0.13.3",
 ]
 
 [[package]]
@@ -6133,6 +6133,7 @@ dependencies = [
  "pin-project-lite",
  "ryu",
  "sha1_smol",
+ "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
@@ -6156,8 +6157,6 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "ryu",
- "sha1_smol",
- "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
