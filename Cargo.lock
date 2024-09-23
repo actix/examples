@@ -2197,9 +2197,9 @@ dependencies = [
 
 [[package]]
 name = "confik"
-version = "0.11.7"
+version = "0.11.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "621e0282e2354dccefd421b94fed2be61dc5836836e0953ac0172bdfd9ce028a"
+checksum = "43c19ecdad309c763db5a51fb7202640d2ba51cd650144e9332c3849715fe3ac"
 dependencies = [
  "cfg-if",
  "confik-macros",
@@ -2592,7 +2592,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "redis 0.26.1",
+ "redis 0.25.4",
  "serde",
 ]
 
@@ -4506,7 +4506,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -6133,6 +6133,7 @@ dependencies = [
  "pin-project-lite",
  "ryu",
  "sha1_smol",
+ "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
@@ -6156,8 +6157,6 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "ryu",
- "sha1_smol",
- "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
