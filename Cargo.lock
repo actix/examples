@@ -1257,9 +1257,9 @@ dependencies = [
 
 [[package]]
 name = "aws-sdk-s3"
-version = "1.49.0"
+version = "1.51.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e518950d4ac43508c8bfc2fe4e24b0752d99eab80134461d5e162dcda0214b55"
+checksum = "c09fd4b5c7ed75f52b913b4f3ff0501dae7f8cb9125f6d45db4553980cbc0528"
 dependencies = [
  "ahash 0.8.11",
  "aws-credential-types",
@@ -2592,7 +2592,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "redis 0.26.1",
+ "redis 0.25.4",
  "serde",
 ]
 
@@ -4506,7 +4506,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -6133,6 +6133,7 @@ dependencies = [
  "pin-project-lite",
  "ryu",
  "sha1_smol",
+ "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
@@ -6156,8 +6157,6 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "ryu",
- "sha1_smol",
- "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
