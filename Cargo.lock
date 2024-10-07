@@ -2592,7 +2592,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "redis 0.25.4",
+ "redis 0.26.1",
  "serde",
 ]
 
@@ -6135,7 +6135,6 @@ dependencies = [
  "pin-project-lite",
  "ryu",
  "sha1_smol",
- "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
@@ -6159,6 +6158,8 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "ryu",
+ "sha1_smol",
+ "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
