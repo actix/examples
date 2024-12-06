@@ -34,15 +34,13 @@ pub(crate) async fn start_processing_email_queue() -> eyre::Result<RedisStorage<
     let storage = RedisStorage::new_with_config(conn, config);
 
     // create unmonitored workers for handling emails
-    let workers = WorkerBuilder::new("job-handler")
+    let worker = WorkerBuilder::new("job-handler")
+        .concurrency(2)
         .backend(storage.clone())
-        .build_fn(process_email_job)
-        .with_executor_instances(2, TokioExecutor);
+        .build_fn(process_email_job);
 
-    for worker in workers {
-        #[allow(clippy::let_underscore_future)]
-        let _ = tokio::spawn(worker.run());
-    }
+    #[allow(clippy::let_underscore_future)]
+    let _ = tokio::spawn(worker.run());
 
     Ok(storage)
 }
