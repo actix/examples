@@ -2591,7 +2591,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
- "redis 0.25.4",
+ "redis 0.26.1",
  "serde",
 ]
 
@@ -4634,7 +4634,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -6250,7 +6250,6 @@ dependencies = [
  "pin-project-lite",
  "ryu",
  "sha1_smol",
- "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
@@ -6274,6 +6273,8 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "ryu",
+ "sha1_smol",
+ "socket2",
  "tokio",
  "tokio-retry",
  "tokio-util",
