@@ -808,9 +808,9 @@ dependencies = [
 
 [[package]]
 name = "apalis-core"
-version = "0.6.0"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4aecdd2202aba3d0efdd9cf6368696fe928847544542ba49e33b2660d4bf8aeb"
+checksum = "d0e822826152ef9f344bc61833036f3603d3a4d1d9556e4220505b18e24dc5c2"
 dependencies = [
  "futures",
  "futures-timer",
@@ -824,22 +824,18 @@ dependencies = [
 
 [[package]]
 name = "apalis-redis"
-version = "0.6.0"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03205caed91151b659fe80f29f5c5f315d36ac2d9791accf833f9ce08fec7957"
+checksum = "2aed7b5442cf844e5ebe3fe705b66902fedbd654cb2cf27d3a162760cd7cbb58"
 dependencies = [
  "apalis-core",
- "async-stream",
- "async-trait",
  "chrono",
  "futures",
  "log",
  "redis 0.27.6",
  "serde",
- "serde_json",
  "thiserror 2.0.4",
  "tokio",
- "tower 0.5.1",
 ]
 
 [[package]]
@@ -4634,7 +4630,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
