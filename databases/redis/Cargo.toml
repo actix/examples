@@ -5,8 +5,7 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-
 env_logger.workspace = true
-log.workspace = true
-redis = { version = "0.25", features = ["tokio-comp", "connection-manager"] }
+redis = { workspace = true, features = ["tokio-comp", "connection-manager"] }
 serde.workspace = true
+tracing.workspace = true
