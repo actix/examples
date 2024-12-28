@@ -6,6 +6,7 @@
         "askama",
         "autoclean",
         "autoreload",
+        "binstall",
         "chrono",
         "deadpool",
         "dotenv",

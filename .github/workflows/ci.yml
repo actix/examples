@@ -26,10 +26,15 @@ jobs:
         with:
           toolchain: ${{ matrix.version }}
 
+      - name: Install cargo-binstall,cargo-ci-cache-clean
+        uses: taiki-e/install-action@v2.46.20
+        with:
+          tool: cargo-binstall,cargo-ci-cache-clean
+
       - name: Install DB CLI tools
         run: |
-          cargo install sqlx-cli --no-default-features --features=rustls,sqlite
-          cargo install diesel_cli --no-default-features --features sqlite
+          cargo binstall sqlx-cli --no-default-features --features=rustls,sqlite
+          cargo binstall diesel_cli --no-default-features --features sqlite
 
       - name: Create Test DBs
         env:
@@ -62,11 +67,6 @@ jobs:
           chmod a+rwx test.db
           cargo test -p=db-diesel --no-fail-fast -- --nocapture
         timeout-minutes: 10
-
-      - name: Install cargo-ci-cache-clean
-        uses: taiki-e/install-action@v2.46.20
-        with:
-          tool: cargo-ci-cache-clean
 
       - name: CI cache clean
         run: cargo-ci-cache-clean
