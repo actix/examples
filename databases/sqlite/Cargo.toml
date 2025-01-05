@@ -3,7 +3,7 @@ name = "db-sqlite"
 version = "1.0.0"
 edition = "2021"
 
-# Do not use workspace deps as they this package isn't part of the workspace.
+# Do not use workspace deps as this package isn't part of the workspace.
 [dependencies]
 actix-web = "4"
 env_logger = "0.11"
