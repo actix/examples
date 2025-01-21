@@ -2604,6 +2604,8 @@ dependencies = [
  "diesel",
  "diesel-async",
  "dotenvy",
+ "env_logger",
+ "log",
  "serde",
  "uuid",
 ]

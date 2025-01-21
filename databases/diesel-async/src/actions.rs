@@ -18,8 +18,7 @@ pub async fn find_item_by_uid(
     let item = items
         .filter(id.eq(uid))
         .select(models::Item::as_select())
-        // execute the query via the provided
-        // async `diesel_async::RunQueryDsl`
+        // execute the query via the provided async `diesel_async::RunQueryDsl`
         .first::<models::Item>(conn)
         .await
         .optional()?;

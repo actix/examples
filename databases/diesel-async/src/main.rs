@@ -1,9 +1,11 @@
 #[macro_use]
 extern crate diesel;
 
-use actix_web::{error, get, post, web, App, HttpResponse, HttpServer, Responder};
-use diesel_async::pooled_connection::{bb8::Pool, AsyncDieselConnectionManager};
-use diesel_async::AsyncPgConnection;
+use actix_web::{error, get, middleware, post, web, App, HttpResponse, HttpServer, Responder};
+use diesel_async::{
+    pooled_connection::{bb8::Pool, AsyncDieselConnectionManager},
+    AsyncPgConnection,
+};
 use dotenvy::dotenv;
 use std::{env, io};
 use uuid::Uuid;
@@ -72,19 +74,109 @@ async fn add_item(
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     dotenv().ok();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let db_url = env::var("DATABASE_URL").expect("Env var `DATABASE_URL` not set");
+    // initialize DB pool outside `HttpServer::new` so that it is shared across all workers
+    let pool = initialize_db_pool().await;
 
-    let mgr = AsyncDieselConnectionManager::<AsyncPgConnection>::new(db_url);
-    let pool = Pool::builder().build(mgr).await.unwrap();
+    log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
+            // add DB pool handle to app data; enables use of `web::Data<DbPool>` extractor
             .app_data(web::Data::new(pool.clone()))
+            // add request logger middleware
+            .wrap(middleware::Logger::default())
+            // add route handlers
             .service(add_item)
             .service(get_item)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
+}
+
+/// Initialize database connection pool based on `DATABASE_URL` environment variable.
+///
+/// See more: <https://docs.rs/diesel/latest/diesel/r2d2/index.html>.
+async fn initialize_db_pool() -> DbPool {
+    let db_url = env::var("DATABASE_URL").expect("Env var `DATABASE_URL` not set");
+
+    let connection_manager = AsyncDieselConnectionManager::<AsyncPgConnection>::new(db_url);
+    Pool::builder().build(connection_manager).await.unwrap()
+}
+
+#[cfg(test)]
+mod tests {
+    use actix_web::{http::StatusCode, test};
+    use diesel::prelude::*;
+    use diesel_async::RunQueryDsl;
+
+    use super::*;
+
+    #[actix_web::test]
+    async fn item_routes() {
+        dotenv().ok();
+        env_logger::try_init_from_env(env_logger::Env::new().default_filter_or("info")).ok();
+
+        let pool = initialize_db_pool().await;
+
+        let app = test::init_service(
+            App::new()
+                .app_data(web::Data::new(pool.clone()))
+                .wrap(middleware::Logger::default())
+                .service(get_item)
+                .service(add_item),
+        )
+        .await;
+
+        // send something that isn't a UUID to `get_item`
+        let req = test::TestRequest::get().uri("/item/123").to_request();
+        let res = test::call_service(&app, req).await;
+        assert_eq!(res.status(), StatusCode::NOT_FOUND);
+        let body = test::read_body(res).await;
+        assert!(
+            body.starts_with(b"UUID parsing failed"),
+            "unexpected body: {body:?}",
+        );
+
+        // try to find a non-existent item
+        let req = test::TestRequest::get()
+            .uri(&format!("/item/{}", Uuid::nil()))
+            .to_request();
+        let res = test::call_service(&app, req).await;
+        assert_eq!(res.status(), StatusCode::NOT_FOUND);
+        let body = test::read_body(res).await;
+        assert!(
+            body.starts_with(b"No item found"),
+            "unexpected body: {body:?}",
+        );
+
+        // create new item
+        let req = test::TestRequest::post()
+            .uri("/item")
+            .set_json(models::NewItem::new("Test item"))
+            .to_request();
+        let res: models::Item = test::call_and_read_body_json(&app, req).await;
+        assert_eq!(res.name, "Test item");
+
+        // get an item
+        let req = test::TestRequest::get()
+            .uri(&format!("/item/{}", res.id))
+            .to_request();
+        let res: models::Item = test::call_and_read_body_json(&app, req).await;
+        assert_eq!(res.name, "Test item");
+
+        // delete new item from table
+        use crate::schema::items::dsl::*;
+        diesel::delete(items.filter(id.eq(res.id)))
+            .execute(
+                &mut pool
+                    .get()
+                    .await
+                    .expect("couldn't get db connection from pool"),
+            )
+            .await
+            .expect("couldn't delete test item from table");
+    }
 }

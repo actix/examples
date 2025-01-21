@@ -5,8 +5,10 @@ edition = "2021"
 
 [dependencies]
 actix-web.workspace = true
-diesel = { version = "*", default-features = false, features = ["uuid"] }
-diesel-async = { version = "*", features = ["postgres", "bb8", "async-connection-wrapper"] }
+diesel = { version = "2", default-features = false, features = ["uuid"] }
+diesel-async = { version = "0.5", features = ["postgres", "bb8", "async-connection-wrapper"] }
 serde.workspace = true
 uuid.workspace = true
 dotenvy.workspace = true
+env_logger.workspace = true
+log.workspace = true
