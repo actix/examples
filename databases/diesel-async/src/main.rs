@@ -131,7 +131,7 @@ mod tests {
         .await;
 
         // send something that isn't a UUID to `get_item`
-        let req = test::TestRequest::get().uri("/item/123").to_request();
+        let req = test::TestRequest::get().uri("/items/123").to_request();
         let res = test::call_service(&app, req).await;
         assert_eq!(res.status(), StatusCode::NOT_FOUND);
         let body = test::read_body(res).await;
@@ -142,7 +142,7 @@ mod tests {
 
         // try to find a non-existent item
         let req = test::TestRequest::get()
-            .uri(&format!("/item/{}", Uuid::nil()))
+            .uri(&format!("/items/{}", Uuid::nil()))
             .to_request();
         let res = test::call_service(&app, req).await;
         assert_eq!(res.status(), StatusCode::NOT_FOUND);
@@ -154,7 +154,7 @@ mod tests {
 
         // create new item
         let req = test::TestRequest::post()
-            .uri("/item")
+            .uri("/items")
             .set_json(models::NewItem::new("Test item"))
             .to_request();
         let res: models::Item = test::call_and_read_body_json(&app, req).await;
@@ -162,7 +162,7 @@ mod tests {
 
         // get an item
         let req = test::TestRequest::get()
-            .uri(&format!("/item/{}", res.id))
+            .uri(&format!("/items/{}", res.id))
             .to_request();
         let res: models::Item = test::call_and_read_body_json(&app, req).await;
         assert_eq!(res.name, "Test item");
