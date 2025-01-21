@@ -38,7 +38,7 @@ cargo run
 
 ### Available Routes
 
-#### `POST /item`
+#### `POST /items`
 
 Inserts a new item into the PostgreSQL DB.
 
@@ -63,18 +63,18 @@ On success, a response like the following is returned:
 Using [HTTPie]:
 
 ```sh
-http POST localhost:8080/item name=bill
+http POST localhost:8080/items name=bill
 ```
 
 Using cURL:
 
 ```sh
-curl -S -X POST --header "Content-Type: application/json" --data '{"name":"bill"}' http://localhost:8080/item
+curl -S -X POST --header "Content-Type: application/json" --data '{"name":"bill"}' http://localhost:8080/items
 ```
 
 </details>
 
-#### `GET /item/{item_uid}`
+#### `GET /items/{item_uid}`
 
 Gets an item from the DB using its UID (returned from the insert request or taken from the DB directly). Returns a 404 when no item exists with that UID.
 
@@ -84,13 +84,13 @@ Gets an item from the DB using its UID (returned from the insert request or take
 Using [HTTPie]:
 
 ```sh
-http localhost:8080/item/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
+http localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 ```
 
 Using cURL:
 
 ```sh
-curl -S http://localhost:8080/item/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
+curl -S http://localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 ```
 
 </details>
