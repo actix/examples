@@ -27,27 +27,27 @@ pub async fn find_item_by_uid(
     Ok(item)
 }
 
- /// Run query using Diesel to insert a new database row and return the result.
+/// Run query using Diesel to insert a new database row and return the result.
 pub async fn insert_new_item(
     conn: &mut AsyncPgConnection,
     nm: &str, // prevent collision with `name` column imported inside the function
 ) -> Result<models::Item, DbError> {
-     // It is common when using Diesel with Actix Web to import schema-related
-     // modules inside a function's scope (rather than the normal module's scope)
-     // to prevent import collisions and namespace pollution.
-     use crate::schema::items::dsl::*;
-     
-     let new_item = models::Item {
-     id: Uuid::new_v7(Timestamp::now(NoContext)),
-     name: nm.to_owned(),
+    // It is common when using Diesel with Actix Web to import schema-related
+    // modules inside a function's scope (rather than the normal module's scope)
+    // to prevent import collisions and namespace pollution.
+    use crate::schema::items::dsl::*;
+
+    let new_item = models::Item {
+        id: Uuid::new_v7(Timestamp::now(NoContext)),
+        name: nm.to_owned(),
     };
-    
+
     let item = diesel::insert_into(items)
-     .values(&new_item)
-     .returning(models::Item::as_returning())
-     .get_result(conn)
-     .await
-     .expect("Error inserting person");
-    
+        .values(&new_item)
+        .returning(models::Item::as_returning())
+        .get_result(conn)
+        .await
+        .expect("Error inserting person");
+
     Ok(item)
 }
