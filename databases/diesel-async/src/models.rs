@@ -1,6 +1,6 @@
+use super::schema::items;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use super::schema::items;
 
 /// Item details.
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Insertable)]
@@ -20,6 +20,6 @@ impl NewItem {
     /// Constructs new item details from name.
     #[cfg(test)] // only needed in tests
     pub fn new(name: impl Into<String>) -> Self {
-        Self { name: name.into(), ..Default::default() }
+        Self { name: name.into() }
     }
 }
