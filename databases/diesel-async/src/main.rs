@@ -98,7 +98,7 @@ async fn main() -> io::Result<()> {
 
 /// Initialize database connection pool based on `DATABASE_URL` environment variable.
 ///
-/// See more: <https://docs.rs/diesel/latest/diesel/r2d2/index.html>.
+/// See more: <https://docs.rs/diesel-async/latest/diesel_async/pooled_connection/index.html#modules>.
 async fn initialize_db_pool() -> DbPool {
     let db_url = env::var("DATABASE_URL").expect("Env var `DATABASE_URL` not set");
 
