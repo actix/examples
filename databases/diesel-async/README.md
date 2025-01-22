@@ -45,7 +45,7 @@ Inserts a new item into the PostgreSQL DB.
 Provide a JSON payload with a name. Eg:
 
 ```json
-{ "name": "bill" }
+{ "name": "thingamajig" }
 ```
 
 On success, a response like the following is returned:
@@ -53,7 +53,7 @@ On success, a response like the following is returned:
 ```json
 {
   "id": "01948982-67d0-7a55-b4b1-8b8b962d8c6b",
-  "name": "bill"
+  "name": "thingamajig"
 }
 ```
 
@@ -63,13 +63,13 @@ On success, a response like the following is returned:
 Using [HTTPie]:
 
 ```sh
-http POST localhost:8080/items name=bill
+http POST localhost:8080/items name=thingamajig
 ```
 
 Using cURL:
 
 ```sh
-curl -S -X POST --header "Content-Type: application/json" --data '{"name":"bill"}' http://localhost:8080/items
+curl -S -X POST --header "Content-Type: application/json" --data '{"name":"thingamajig"}' http://localhost:8080/items
 ```
 
 </details>
