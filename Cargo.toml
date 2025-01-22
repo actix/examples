@@ -17,6 +17,7 @@ members = [
   "cors/backend",
   "data-factory",
   "databases/diesel",
+  "databases/diesel-async",
   "databases/mongodb",
   "databases/mysql",
   "databases/postgres",
