@@ -24,16 +24,16 @@ type DbPool = Pool<AsyncPgConnection>;
 #[get("/items/{item_id}")]
 async fn get_item(
     pool: web::Data<DbPool>,
-    item_uid: web::Path<Uuid>,
+    item_id: web::Path<Uuid>,
 ) -> actix_web::Result<impl Responder> {
-    let item_uid = item_uid.into_inner();
+    let item_id = item_id.into_inner();
 
     let mut conn = pool
         .get()
         .await
         .expect("Couldn't get db connection from the pool");
 
-    let item = actions::find_item_by_uid(&mut conn, item_uid)
+    let item = actions::find_item_by_id(&mut conn, item_id)
         .await
         // map diesel query errors to a 500 error response
         .map_err(error::ErrorInternalServerError)?;
@@ -43,7 +43,7 @@ async fn get_item(
         Some(item) => HttpResponse::Ok().json(item),
 
         // item was not found; return 404 response with error message
-        None => HttpResponse::NotFound().body(format!("No item found with UID: {item_uid}")),
+        None => HttpResponse::NotFound().body(format!("No item found with UID: {item_id}")),
     })
 }
 

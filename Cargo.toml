@@ -85,7 +85,7 @@ actix-codec = "0.5"
 actix-cors = "0.7"
 actix-files = "0.6"
 actix-http = "3.5"
-actix-identity = "0.7"
+actix-identity = "0.8"
 actix-multipart = "0.7"
 actix-protobuf = "0.11"
 actix-session = "0.10"
@@ -94,12 +94,12 @@ actix-tls = "3.4"
 actix-utils = "3"
 actix-web = "4.9"
 actix-web-actors = "4.1"
-actix-web-lab = "0.22"
+actix-web-lab = "0.23"
 actix-ws = "0.3"
 awc = "3.2"
 
 chrono = { version = "0.4.30", features = ["serde"] }
-derive_more = "0.99.7"
+derive_more = "1"
 dotenvy = "0.15"
 env_logger = "0.11"
 eyre = { version = "0.6", default-features = false, features = ["auto-install", "track-caller"] }
@@ -109,8 +109,8 @@ log = "0.4"
 openssl = { version = "0.10.60", features = ["v110"] }
 parking_lot = "0.12"
 pin-project-lite = "0.2"
-rand = "0.8"
-redis = { version = "0.27" }
+rand = "0.9"
+redis = { version = "0.28" }
 reqwest = { version = "0.12", features = ["json", "stream"] }
 rustls = "0.23"
 rustls-pemfile = "2"
