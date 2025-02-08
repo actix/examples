@@ -9,7 +9,7 @@ use diesel_async::RunQueryDsl;
 type DbError = Box<dyn std::error::Error + Send + Sync>;
 
 // /// Run query using Diesel to find item by uid and return it.
-pub async fn find_item_by_uid(
+pub async fn find_item_by_id(
     conn: &mut AsyncPgConnection,
     uid: Uuid,
 ) -> Result<Option<models::Item>, DbError> {
