@@ -19,7 +19,7 @@ use rand::{rngs::ThreadRng, Rng};
 pub struct Message(pub String);
 
 /// Message for chat server communications
-
+///
 /// New chat session is created
 #[derive(Message)]
 #[rtype(usize)]

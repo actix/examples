@@ -10,7 +10,7 @@ use rand::{rngs::ThreadRng, Rng};
 use crate::session;
 
 /// Message for chat server communications
-
+///
 /// New chat session is created
 #[derive(Message)]
 #[rtype(usize)]

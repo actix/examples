@@ -17,7 +17,7 @@ mod v1 {
             ctx.head()
                 .headers()
                 .get("Accept-Version")
-                .map_or(false, |hv| hv.as_bytes() == b"1")
+                .is_some_and(|hv| hv.as_bytes() == b"1")
         }
     }
 
@@ -37,7 +37,7 @@ mod v2 {
             ctx.head()
                 .headers()
                 .get("Accept-Version")
-                .map_or(false, |hv| hv.as_bytes() == b"2")
+                .is_some_and(|hv| hv.as_bytes() == b"2")
         }
     }
 

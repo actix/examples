@@ -52,11 +52,11 @@ async fn main() -> std::io::Result<()> {
                     Either::Left(srv.call(sreq).map(|res| res))
                 } else {
                     println!("An http request has arrived here, i will redirect it to use https");
-                    return Either::Right(future::ready(Ok(sreq.into_response(
+                    Either::Right(future::ready(Ok(sreq.into_response(
                         HttpResponse::MovedPermanently()
                             .append_header((http::header::LOCATION, url))
                             .finish(),
-                    ))));
+                    ))))
                 }
             })
             .service(index)
