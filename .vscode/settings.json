@@ -20,6 +20,7 @@
         "pemfile",
         "prost",
         "protobuf",
+        "ractor",
         "reqwest",
         "rustls",
         "rustup",
