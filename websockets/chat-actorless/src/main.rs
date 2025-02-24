@@ -17,7 +17,7 @@ mod server;
 pub use self::server::{ChatServer, ChatServerHandle};
 
 /// Connection ID.
-pub type ConnId = usize;
+pub type ConnId = u64;
 
 /// Room ID.
 pub type RoomId = String;

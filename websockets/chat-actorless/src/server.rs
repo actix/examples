@@ -9,7 +9,7 @@ use std::{
     },
 };
 
-use rand::{thread_rng, Rng as _};
+use rand::Rng as _;
 use tokio::sync::{mpsc, oneshot};
 
 use crate::{ConnId, Msg, RoomId};
@@ -124,7 +124,7 @@ impl ChatServer {
         self.send_system_message("main", 0, "Someone joined").await;
 
         // register session with random connection ID
-        let id = thread_rng().gen::<ConnId>();
+        let id = rand::rng().random::<ConnId>();
         self.sessions.insert(id, tx);
 
         // auto join session to main room

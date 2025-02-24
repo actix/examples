@@ -14,7 +14,7 @@ const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 #[derive(Debug)]
 pub struct WsChatSession {
     /// unique session id
-    pub id: usize,
+    pub id: u64,
 
     /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
     /// otherwise we drop connection.
