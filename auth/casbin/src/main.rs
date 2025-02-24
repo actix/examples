@@ -1,22 +1,23 @@
 use std::io;
 
-use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{middleware, web, App, HttpResponse, HttpServer};
 use casbin::{CoreApi, DefaultModel, Enforcer, FileAdapter, RbacApi};
-use tokio::sync::RwLock;
 
 /// simple handle
-async fn success(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpResponse {
-    let mut e = enforcer.write().await;
-    println!("{req:?}");
-    assert_eq!(vec!["data2_admin"], e.get_roles_for_user("alice", None));
+async fn success(enforcer: web::Data<Enforcer>) -> HttpResponse {
+    assert_eq!(
+        vec!["data2_admin"],
+        enforcer.get_roles_for_user("alice", None)
+    );
 
     HttpResponse::Ok().body("Success: alice is data2_admin.")
 }
 
-async fn fail(enforcer: web::Data<RwLock<Enforcer>>, req: HttpRequest) -> HttpResponse {
-    let mut e = enforcer.write().await;
-    println!("{req:?}");
-    assert_eq!(vec!["data1_admin"], e.get_roles_for_user("alice", None));
+async fn fail(enforcer: web::Data<Enforcer>) -> HttpResponse {
+    assert_eq!(
+        vec!["data1_admin"],
+        enforcer.get_roles_for_user("alice", None)
+    );
 
     HttpResponse::Ok().body("Fail: alice is not data1_admin.") // In fact, it can't be displayed.
 }
@@ -30,18 +31,18 @@ async fn main() -> io::Result<()> {
         .unwrap();
     let adapter = FileAdapter::new("rbac/rbac_policy.csv");
 
-    let e = Enforcer::new(model, adapter).await.unwrap();
-    let e = web::Data::new(RwLock::new(e)); // wrap enforcer into actix-state
+    let enforcer = Enforcer::new(model, adapter).await.unwrap();
+    let enforcer = web::Data::new(enforcer);
 
-    //move is necessary to give closure below ownership of counter
+    // move is necessary to give closure below ownership of data
     HttpServer::new(move || {
         App::new()
-            .app_data(e.clone()) // <- create app with shared state
-            // enable logger
-            .wrap(middleware::Logger::default())
+            .app_data(enforcer.clone()) // <- create app with shared data
             // register simple handler, handle all methods
             .service(web::resource("/success").to(success))
             .service(web::resource("/fail").to(fail))
+            // enable logger
+            .wrap(middleware::Logger::default())
     })
     .bind(("127.0.0.1", 8080))?
     .run()
