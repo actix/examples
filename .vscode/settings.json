@@ -7,6 +7,7 @@
         "autoclean",
         "autoreload",
         "binstall",
+        "casbin",
         "chrono",
         "deadpool",
         "dotenv",
