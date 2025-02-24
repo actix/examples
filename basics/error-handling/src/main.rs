@@ -13,7 +13,7 @@ http errors will be chosen, each with an equal chance of being selected:
 */
 
 use actix_web::{web, App, Error, HttpResponse, HttpServer, ResponseError};
-use derive_more::Display; // naming it clearly for illustration purposes
+use derive_more::Display;
 use rand::{
     distr::{Distribution, StandardUniform},
     Rng,
@@ -21,13 +21,13 @@ use rand::{
 
 #[derive(Debug, Display)]
 pub enum CustomError {
-    #[display(fmt = "Custom Error 1")]
+    #[display("Custom Error 1")]
     CustomOne,
-    #[display(fmt = "Custom Error 2")]
+    #[display("Custom Error 2")]
     CustomTwo,
-    #[display(fmt = "Custom Error 3")]
+    #[display("Custom Error 3")]
     CustomThree,
-    #[display(fmt = "Custom Error 4")]
+    #[display("Custom Error 4")]
     CustomFour,
 }
 

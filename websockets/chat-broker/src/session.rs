@@ -9,7 +9,7 @@ use crate::{
 
 #[derive(Default)]
 pub struct WsChatSession {
-    id: usize,
+    id: u64,
     room: String,
     name: Option<String>,
 }

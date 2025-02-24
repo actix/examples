@@ -7,7 +7,7 @@ edition = "2021"
 actix-web.workspace = true
 confik = "0.11"
 deadpool-postgres = { version = "0.12", features = ["serde"] }
-derive_more.workspace = true
+derive_more = { workspace = true, features = ["display", "error", "from"] }
 dotenvy.workspace = true
 serde.workspace = true
 tokio-pg-mapper = "0.2.0"

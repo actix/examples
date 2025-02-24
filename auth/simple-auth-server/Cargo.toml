@@ -9,7 +9,7 @@ actix-session = { workspace = true, features = ["cookie-session"] }
 actix-web.workspace = true
 
 chrono.workspace = true
-derive_more.workspace = true
+derive_more = { workspace = true, features = ["display"] }
 diesel = { version = "2", features = ["postgres", "r2d2", "uuid", "chrono"] }
 dotenvy.workspace = true
 env_logger.workspace = true

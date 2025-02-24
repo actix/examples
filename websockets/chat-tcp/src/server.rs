@@ -5,7 +5,7 @@
 use std::collections::{HashMap, HashSet};
 
 use actix::prelude::*;
-use rand::{rngs::ThreadRng, Rng};
+use rand::Rng as _;
 
 use crate::session;
 
@@ -13,7 +13,7 @@ use crate::session;
 ///
 /// New chat session is created
 #[derive(Message)]
-#[rtype(usize)]
+#[rtype(u64)]
 pub struct Connect {
     pub addr: Recipient<session::Message>,
 }
@@ -22,7 +22,7 @@ pub struct Connect {
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct Disconnect {
-    pub id: usize,
+    pub id: u64,
 }
 
 /// Send message to specific room
@@ -30,7 +30,7 @@ pub struct Disconnect {
 #[rtype(result = "()")]
 pub struct Message {
     /// Id of the client session
-    pub id: usize,
+    pub id: u64,
     /// Peer message
     pub msg: String,
     /// Room name
@@ -49,7 +49,7 @@ impl actix::Message for ListRooms {
 #[rtype(result = "()")]
 pub struct Join {
     /// Client id
-    pub id: usize,
+    pub id: u64,
     /// Room name
     pub name: String,
 }
@@ -57,8 +57,8 @@ pub struct Join {
 /// `ChatServer` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
 pub struct ChatServer {
-    sessions: HashMap<usize, Recipient<session::Message>>,
-    rooms: HashMap<String, HashSet<usize>>,
+    sessions: HashMap<u64, Recipient<session::Message>>,
+    rooms: HashMap<String, HashSet<u64>>,
 }
 
 impl Default for ChatServer {
@@ -76,7 +76,7 @@ impl Default for ChatServer {
 
 impl ChatServer {
     /// Send message to all users in the room
-    fn send_message(&self, room: &str, message: &str, skip_id: usize) {
+    fn send_message(&self, room: &str, message: &str, skip_id: u64) {
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {
                 if *id != skip_id {
@@ -100,7 +100,7 @@ impl Actor for ChatServer {
 ///
 /// Register new session and assign unique id to this session
 impl Handler<Connect> for ChatServer {
-    type Result = usize;
+    type Result = u64;
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
         println!("Someone joined");
@@ -109,7 +109,7 @@ impl Handler<Connect> for ChatServer {
         self.send_message("main", "Someone joined", 0);
 
         // register session with random id
-        let id = rand::rng().random::<usize>();
+        let id = rand::rng().random::<u64>();
         self.sessions.insert(id, msg.addr);
 
         // auto join session to main room

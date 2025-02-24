@@ -5,13 +5,13 @@ use uuid::Error as ParseError;
 
 #[derive(Debug, Display)]
 pub enum ServiceError {
-    #[display(fmt = "Internal Server Error")]
+    #[display("Internal Server Error")]
     InternalServerError,
 
-    #[display(fmt = "BadRequest: {_0}")]
+    #[display("BadRequest: {_0}")]
     BadRequest(String),
 
-    #[display(fmt = "Unauthorized")]
+    #[display("Unauthorized")]
     Unauthorized,
 }
 

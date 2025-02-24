@@ -27,7 +27,7 @@ pub struct Message(pub String);
 /// `ChatSession` actor is responsible for tcp peer communications.
 pub struct ChatSession {
     /// unique session id
-    id: usize,
+    id: u64,
     /// this is address of chat server
     addr: Addr<ChatServer>,
     /// Client must send ping at least once per 10 seconds, otherwise we drop

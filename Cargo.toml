@@ -98,7 +98,7 @@ actix-ws = "0.3"
 awc = "3.2"
 
 chrono = { version = "0.4.30", features = ["serde"] }
-derive_more = "0.99.7"
+derive_more = "2"
 dotenvy = "0.15"
 env_logger = "0.11"
 eyre = { version = "0.6", default-features = false, features = ["auto-install", "track-caller"] }

@@ -6,7 +6,7 @@ use actix_broker::BrokerSubscribe;
 use crate::message::{ChatMessage, JoinRoom, LeaveRoom, ListRooms, SendMessage};
 
 type Client = Recipient<ChatMessage>;
-type Room = HashMap<usize, Client>;
+type Room = HashMap<u64, Client>;
 
 #[derive(Default)]
 pub struct WsChatServer {
@@ -20,13 +20,13 @@ impl WsChatServer {
         Some(room)
     }
 
-    fn add_client_to_room(&mut self, room_name: &str, id: Option<usize>, client: Client) -> usize {
-        let mut id = id.unwrap_or_else(rand::random::<usize>);
+    fn add_client_to_room(&mut self, room_name: &str, id: Option<u64>, client: Client) -> u64 {
+        let mut id = id.unwrap_or_else(rand::random);
 
         if let Some(room) = self.rooms.get_mut(room_name) {
             loop {
                 if room.contains_key(&id) {
-                    id = rand::random::<usize>();
+                    id = rand::random();
                 } else {
                     break;
                 }
@@ -45,7 +45,7 @@ impl WsChatServer {
         id
     }
 
-    fn send_chat_message(&mut self, room_name: &str, msg: &str, _src: usize) -> Option<()> {
+    fn send_chat_message(&mut self, room_name: &str, msg: &str, _src: u64) -> Option<()> {
         let mut room = self.take_room(room_name)?;
 
         for (id, client) in room.drain() {
