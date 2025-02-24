@@ -15,8 +15,8 @@ http errors will be chosen, each with an equal chance of being selected:
 use actix_web::{web, App, Error, HttpResponse, HttpServer, ResponseError};
 use derive_more::Display; // naming it clearly for illustration purposes
 use rand::{
-    distributions::{Distribution, Standard},
-    thread_rng, Rng,
+    distr::{Distribution, StandardUniform},
+    Rng,
 };
 
 #[derive(Debug, Display)]
@@ -31,9 +31,9 @@ pub enum CustomError {
     CustomFour,
 }
 
-impl Distribution<CustomError> for Standard {
+impl Distribution<CustomError> for StandardUniform {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> CustomError {
-        match rng.gen_range(0..4) {
+        match rng.random_range(0..4) {
             0 => CustomError::CustomOne,
             1 => CustomError::CustomTwo,
             2 => CustomError::CustomThree,
@@ -71,10 +71,10 @@ impl ResponseError for CustomError {
 
 /// randomly returns either () or one of the 4 CustomError variants
 async fn do_something_random() -> Result<(), CustomError> {
-    let mut rng = thread_rng();
+    let mut rng = rand::rng();
 
     // 20% chance that () will be returned by this function
-    if rng.gen_bool(2.0 / 10.0) {
+    if rng.random_bool(2.0 / 10.0) {
         Ok(())
     } else {
         Err(rand::random::<CustomError>())

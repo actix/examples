@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use apalis::prelude::*;
 use apalis_redis::{Config, RedisStorage};
-use rand::distributions::{Alphanumeric, DistString as _};
+use rand::distr::{Alphanumeric, SampleString as _};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -14,7 +14,7 @@ pub(crate) struct Email {
 
 impl Email {
     pub(crate) fn random() -> Self {
-        let user = Alphanumeric.sample_string(&mut rand::thread_rng(), 10);
+        let user = Alphanumeric.sample_string(&mut rand::rng(), 10);
         let to = format!("{user}@fake-mail.com");
         Self { to }
     }
