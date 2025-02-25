@@ -21,6 +21,12 @@ jobs:
         with:
           toolchain: ${{ matrix.version }}
 
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install sqlite3
+          sudo apt-get -y install libpq-dev
+
       - name: Install DB CLI tools
         run: |
           cargo install --force sqlx-cli --no-default-features --features=sqlite,rustls
@@ -30,7 +36,6 @@ jobs:
         env:
           DATABASE_URL: sqlite://./todo.db
         run: |
-          sudo apt-get update && sudo apt-get install sqlite3
           sqlx database create
           chmod a+rwx ./todo.db
           sqlx migrate run --source=./basics/todo/migrations
