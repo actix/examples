@@ -3,6 +3,9 @@ name = "db-diesel-async"
 version = "1.0.0"
 edition = "2021"
 
+[features]
+postgres_tests = []
+
 [dependencies]
 actix-web.workspace = true
 diesel = { version = "2", default-features = false, features = ["uuid"] }

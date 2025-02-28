@@ -106,7 +106,8 @@ async fn initialize_db_pool() -> DbPool {
     Pool::builder().build(connection_manager).await.unwrap()
 }
 
-#[cfg(test)]
+#[cfg(not(feature = "postgres_tests"))]
+#[allow(unused_imports)]
 mod tests {
     use actix_web::{http::StatusCode, test};
     use diesel::prelude::*;
