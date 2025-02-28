@@ -16,6 +16,7 @@ pub struct NewItem {
     pub name: String,
 }
 
+#[cfg(not(feature = "postgres_tests"))]
 impl NewItem {
     /// Constructs new item details from name.
     #[cfg(test)] // only needed in tests
