@@ -1084,9 +1084,9 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "awc"
-version = "3.5.1"
+version = "3.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79049b2461279b886e46f1107efc347ebecc7b88d74d023dda010551a124967b"
+checksum = "caa7cbf905267e0e80a33142717a85e334e73d878be234c62ff116cf48731ddc"
 dependencies = [
  "actix-codec",
  "actix-http",
@@ -1098,7 +1098,7 @@ dependencies = [
  "bytes",
  "cfg-if",
  "cookie",
- "derive_more 0.99.19",
+ "derive_more 2.0.1",
  "futures-core",
  "futures-util",
  "h2 0.3.26",
@@ -1109,7 +1109,7 @@ dependencies = [
  "openssl",
  "percent-encoding",
  "pin-project-lite",
- "rand 0.8.5",
+ "rand 0.9.0",
  "rustls 0.23.23",
  "serde",
  "serde_json",
@@ -4730,7 +4730,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -9509,7 +9509,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
