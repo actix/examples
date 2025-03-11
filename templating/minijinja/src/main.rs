@@ -1,12 +1,13 @@
 use std::{collections::HashMap, env, path::PathBuf};
 
-use actix_utils::future::{ready, Ready};
+use actix_utils::future::{Ready, ready};
 use actix_web::{
+    App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder, Result,
     dev::{self, ServiceResponse},
     error,
-    http::{header::ContentType, StatusCode},
+    http::{StatusCode, header::ContentType},
     middleware::{ErrorHandlerResponse, ErrorHandlers, Logger},
-    web, App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder, Result,
+    web,
 };
 use minijinja::path_loader;
 use minijinja_autoreload::AutoReloader;
@@ -16,11 +17,11 @@ struct MiniJinjaRenderer {
 }
 
 impl MiniJinjaRenderer {
-    fn render(
+    fn render<T: Into<minijinja::value::Value>>(
         &self,
         tmpl: &str,
-        ctx: impl Into<minijinja::value::Value>,
-    ) -> actix_web::Result<impl Responder> {
+        ctx: T,
+    ) -> actix_web::Result<impl Responder + use<T>> {
         self.tmpl_env
             .acquire_env()
             .map_err(|_| error::ErrorInternalServerError("could not acquire template env"))?

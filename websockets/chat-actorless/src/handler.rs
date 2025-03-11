@@ -5,8 +5,8 @@ use std::{
 
 use actix_ws::AggregatedMessage;
 use futures_util::{
-    future::{select, Either},
     StreamExt as _,
+    future::{Either, select},
 };
 use tokio::{sync::mpsc, time::interval};
 
@@ -182,7 +182,7 @@ async fn process_text_msg(
     } else {
         // prefix message with our name, if assigned
         let msg = match name {
-            Some(ref name) => format!("{name}: {msg}"),
+            Some(name) => format!("{name}: {msg}"),
             None => msg.to_owned(),
         };
 

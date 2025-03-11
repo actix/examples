@@ -1,8 +1,7 @@
 [package]
 name = "middleware-request-extensions"
-version = "1.0.0"
-publish.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true

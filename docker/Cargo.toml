@@ -1,7 +1,7 @@
 [package]
 name = "docker_sample"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 # Do not use workspace deps as they won't work in docker context.
 [dependencies]

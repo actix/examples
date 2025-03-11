@@ -1,8 +1,7 @@
 [package]
 name = "middleware-various"
-version = "1.0.0"
-publish.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-http.workspace = true

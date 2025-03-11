@@ -9,6 +9,7 @@
         "binstall",
         "casbin",
         "chrono",
+        "clippy",
         "deadpool",
         "dotenv",
         "dotenvy",

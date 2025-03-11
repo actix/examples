@@ -1,7 +1,5 @@
 [package]
 name = "tracing-mainmatter-workshop"
-version = "1.0.0"
-publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

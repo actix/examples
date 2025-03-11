@@ -1,8 +1,7 @@
 [package]
 name = "tls-acme"
-version = "1.0.0"
-publish = false
 edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 acme-rfc8555 = "0.1"

@@ -1,5 +1,5 @@
 [workspace]
-resolver = "2"
+resolver = "3"
 members = [
   "auth/casbin",
   "auth/cookie-auth",
@@ -74,8 +74,8 @@ exclude = [
 
 [workspace.package]
 publish = false
-edition = "2021"
-rust-version = "1.72"
+edition = "2024"
+rust-version = "1.85"
 
 [workspace.dependencies]
 actix = "0.13"
@@ -83,7 +83,7 @@ actix-broker = "0.4"
 actix-codec = "0.5"
 actix-cors = "0.7"
 actix-files = "0.6"
-actix-http = "3.5"
+actix-http = "3.10"
 actix-identity = "0.8"
 actix-multipart = "0.7"
 actix-protobuf = "0.11"
@@ -91,11 +91,11 @@ actix-session = "0.10"
 actix-test = "0.1"
 actix-tls = "3.4"
 actix-utils = "3"
-actix-web = "4.9"
+actix-web = "4.10"
 actix-web-actors = "4.1"
-actix-web-lab = "0.23"
+actix-web-lab = "0.24"
 actix-ws = "0.3"
-awc = "3.2"
+awc = "3.6"
 
 chrono = { version = "0.4.30", features = ["serde"] }
 derive_more = "2"
@@ -116,6 +116,7 @@ rustls-pemfile = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 time = "0.3"
+temp-env = "0.3"
 tokio = { version = "1.24.2", features = ["sync", "io-util"] }
 tokio-util = "0.7.4"
 tokio-stream = "0.1.1"

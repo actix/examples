@@ -30,16 +30,14 @@ pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {
 
 #[cfg(test)]
 mod tests {
-    use std::env;
-
     use actix_web::cookie::Key;
 
     use super::SECRET_KEY;
 
     #[test]
     fn secret_key_default() {
-        env::remove_var("SECRET_KEY");
-
-        assert!(Key::try_from(SECRET_KEY.as_bytes()).is_ok());
+        temp_env::with_var("SECRET_KEY", None::<&str>, || {
+            assert!(Key::try_from(SECRET_KEY.as_bytes()).is_ok());
+        });
     }
 }

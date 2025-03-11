@@ -1,4 +1,4 @@
-use actix_web::{error::ResponseError, HttpResponse};
+use actix_web::{HttpResponse, error::ResponseError};
 use derive_more::Display;
 use diesel::result::{DatabaseErrorKind, Error as DBError};
 use uuid::Error as ParseError;
@@ -22,7 +22,7 @@ impl ResponseError for ServiceError {
             ServiceError::InternalServerError => {
                 HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
             }
-            ServiceError::BadRequest(ref message) => HttpResponse::BadRequest().json(message),
+            ServiceError::BadRequest(message) => HttpResponse::BadRequest().json(message),
             ServiceError::Unauthorized => HttpResponse::Unauthorized().json("Unauthorized"),
         }
     }

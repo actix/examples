@@ -1,7 +1,7 @@
 [package]
 name = "async-graphql-demo"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
