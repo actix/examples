@@ -1,7 +1,7 @@
 use std::{io, net::ToSocketAddrs as _};
 
 use actix_web::{
-    dev::PeerAddr, error, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer,
+    App, Error, HttpRequest, HttpResponse, HttpServer, dev::PeerAddr, error, middleware, web,
 };
 use awc::Client;
 use clap::Parser;

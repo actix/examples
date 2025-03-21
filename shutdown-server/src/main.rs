@@ -1,4 +1,4 @@
-use actix_web::{dev::ServerHandle, get, middleware, post, web, App, HttpResponse, HttpServer};
+use actix_web::{App, HttpResponse, HttpServer, dev::ServerHandle, get, middleware, post, web};
 use actix_web_lab::extract::Path;
 use parking_lot::Mutex;
 

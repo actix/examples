@@ -1,9 +1,8 @@
 use std::io;
 
 use actix_web::{
-    middleware,
+    App, HttpResponse, HttpServer, middleware,
     web::{self, ReqData},
-    App, HttpResponse, HttpServer,
 };
 
 mod add_msg;

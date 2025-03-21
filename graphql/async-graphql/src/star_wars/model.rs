@@ -1,6 +1,6 @@
 use async_graphql::{
-    connection::{query, Connection, Edge},
     Context, Enum, Error, Interface, Object, OutputType, Result,
+    connection::{Connection, Edge, query},
 };
 
 use super::{StarWars, StarWarsChar};

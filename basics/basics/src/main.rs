@@ -1,14 +1,14 @@
 use std::{convert::Infallible, io};
 
 use actix_files::{Files, NamedFile};
-use actix_session::{storage::CookieSessionStore, Session, SessionMiddleware};
+use actix_session::{Session, SessionMiddleware, storage::CookieSessionStore};
 use actix_web::{
-    error, get,
+    App, Either, HttpRequest, HttpResponse, HttpServer, Responder, Result, error, get,
     http::{
-        header::{self, ContentType},
         Method, StatusCode,
+        header::{self, ContentType},
     },
-    middleware, web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder, Result,
+    middleware, web,
 };
 use actix_web_lab::extract::Path;
 use async_stream::stream;

@@ -1,13 +1,14 @@
 use std::collections::HashMap;
 
 use actix_web::{
+    App, Error, HttpResponse, HttpServer, Result,
     body::BoxBody,
     dev::ServiceResponse,
     error,
-    http::{header::ContentType, StatusCode},
+    http::{StatusCode, header::ContentType},
     middleware,
     middleware::{ErrorHandlerResponse, ErrorHandlers},
-    web, App, Error, HttpResponse, HttpServer, Result,
+    web,
 };
 use serde_json::json;
 use tinytemplate::TinyTemplate;

@@ -6,12 +6,13 @@
 //! [User guide](https://actix.rs/docs/middleware/#user-sessions)
 
 use actix_session::{
-    config::PersistentSession, storage::CookieSessionStore, Session, SessionMiddleware,
+    Session, SessionMiddleware, config::PersistentSession, storage::CookieSessionStore,
 };
 use actix_web::{
+    App, HttpRequest, HttpServer, Result,
     cookie::{self, Key},
     middleware::Logger,
-    web, App, HttpRequest, HttpServer, Result,
+    web,
 };
 
 /// simple index handler with session

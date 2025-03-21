@@ -3,7 +3,7 @@ use std::{
     io::{self, Read as _},
 };
 
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, middleware, web};
 use openssl::{
     pkey::{PKey, Private},
     ssl::{SslAcceptor, SslMethod},

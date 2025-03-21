@@ -1,15 +1,15 @@
 use std::{
-    future::{ready, Future, Ready},
+    future::{Future, Ready, ready},
     marker::PhantomData,
     pin::Pin,
     task::{Context, Poll},
 };
 
 use actix_web::{
+    Error,
     body::{BodySize, MessageBody},
     dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
     web::{Bytes, BytesMut},
-    Error,
 };
 use pin_project_lite::pin_project;
 

@@ -3,16 +3,16 @@
 use std::{
     cell::RefCell,
     cmp::min,
-    future::{ready, Ready},
+    future::{Ready, ready},
 };
 
 use actix_web::{
-    body::EitherBody,
-    dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
     Error, HttpResponse,
+    body::EitherBody,
+    dev::{Service, ServiceRequest, ServiceResponse, Transform, forward_ready},
 };
 use chrono::{DateTime, Utc};
-use futures_util::{future::LocalBoxFuture, FutureExt as _, TryFutureExt as _};
+use futures_util::{FutureExt as _, TryFutureExt as _, future::LocalBoxFuture};
 
 #[doc(hidden)]
 pub struct RateLimitService<S> {

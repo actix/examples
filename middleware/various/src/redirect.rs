@@ -1,9 +1,10 @@
-use std::future::{ready, Ready};
+use std::future::{Ready, ready};
 
 use actix_web::{
+    Error, HttpResponse,
     body::EitherBody,
     dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
-    http, Error, HttpResponse,
+    http,
 };
 use futures_util::future::LocalBoxFuture;
 

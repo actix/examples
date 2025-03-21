@@ -1,12 +1,13 @@
 use std::collections::HashMap;
 
 use actix_web::{
+    App, Error, HttpResponse, HttpServer, Responder, Result,
     body::BoxBody,
     dev::ServiceResponse,
     error,
-    http::{header::ContentType, StatusCode},
+    http::{StatusCode, header::ContentType},
     middleware::{self, ErrorHandlerResponse, ErrorHandlers},
-    web, App, Error, HttpResponse, HttpServer, Responder, Result,
+    web,
 };
 use tera::Tera;
 

@@ -1,11 +1,11 @@
 use std::{env, io};
 
 use actix_files::Files;
-use actix_session::{storage::CookieSessionStore, SessionMiddleware};
+use actix_session::{SessionMiddleware, storage::CookieSessionStore};
 use actix_web::{
-    http,
+    App, HttpServer, http,
     middleware::{ErrorHandlers, Logger},
-    web, App, HttpServer,
+    web,
 };
 use dotenvy::dotenv;
 use tera::Tera;

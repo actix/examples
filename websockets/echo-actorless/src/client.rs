@@ -18,15 +18,17 @@ async fn main() {
     let mut cmd_rx = UnboundedReceiverStream::new(cmd_rx);
 
     // run blocking terminal input reader on separate thread
-    let input_thread = thread::spawn(move || loop {
-        let mut cmd = String::with_capacity(32);
+    let input_thread = thread::spawn(move || {
+        loop {
+            let mut cmd = String::with_capacity(32);
 
-        if io::stdin().read_line(&mut cmd).is_err() {
-            log::error!("error reading line");
-            return;
+            if io::stdin().read_line(&mut cmd).is_err() {
+                log::error!("error reading line");
+                return;
+            }
+
+            cmd_tx.send(cmd).unwrap();
         }
-
-        cmd_tx.send(cmd).unwrap();
     });
 
     let (res, mut ws) = awc::Client::new()

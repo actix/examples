@@ -3,8 +3,8 @@ use std::time::{Duration, Instant};
 use actix_web::web;
 use actix_ws::Message;
 use futures_util::{
-    future::{self, Either},
     StreamExt as _,
+    future::{self, Either},
 };
 use tokio::{pin, select, sync::broadcast, time::interval};
 

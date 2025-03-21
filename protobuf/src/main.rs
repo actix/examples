@@ -1,5 +1,5 @@
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
-use actix_web::{middleware, web, App, HttpResponse, HttpServer, Result};
+use actix_web::{App, HttpResponse, HttpServer, Result, middleware, web};
 use prost::Message;
 
 #[derive(Clone, PartialEq, Eq, Message)]

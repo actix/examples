@@ -1,4 +1,4 @@
-use actix_web::{web, App, Error, HttpResponse, HttpServer};
+use actix_web::{App, Error, HttpResponse, HttpServer, web};
 use confik::{Configuration as _, EnvSource};
 use deadpool_postgres::{Client, Pool};
 use dotenvy::dotenv;

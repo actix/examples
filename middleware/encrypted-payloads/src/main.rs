@@ -1,11 +1,11 @@
 use actix_web::{
+    App, Error, HttpServer, Responder,
     body::{self, MessageBody},
     dev::{self, ServiceResponse},
-    middleware::{from_fn, Logger, Next},
+    middleware::{Logger, Next, from_fn},
     web::{self, Data, Json},
-    App, Error, HttpServer, Responder,
 };
-use aes_gcm_siv::{aead::Aead as _, Aes256GcmSiv, KeyInit as _, Nonce};
+use aes_gcm_siv::{Aes256GcmSiv, KeyInit as _, Nonce, aead::Aead as _};
 use base64::prelude::*;
 use serde::{Deserialize, Serialize};
 

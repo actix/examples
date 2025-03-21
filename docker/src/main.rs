@@ -1,4 +1,4 @@
-use actix_web::{get, middleware::Logger, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, get, middleware::Logger};
 
 #[get("/")]
 async fn index() -> impl Responder {

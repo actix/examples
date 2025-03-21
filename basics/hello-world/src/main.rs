@@ -1,4 +1,4 @@
-use actix_web::{middleware, web, App, HttpRequest, HttpServer};
+use actix_web::{App, HttpRequest, HttpServer, middleware, web};
 
 async fn index(req: HttpRequest) -> &'static str {
     println!("REQ: {req:?}");
@@ -25,7 +25,7 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use actix_web::{body::to_bytes, dev::Service, http, test, Error};
+    use actix_web::{Error, body::to_bytes, dev::Service, http, test};
 
     use super::*;
 

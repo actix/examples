@@ -1,8 +1,8 @@
 use std::time::Duration;
 
-use acme::{create_p256_key, Certificate, Directory, DirectoryUrl};
+use acme::{Certificate, Directory, DirectoryUrl, create_p256_key};
 use actix_files::Files;
-use actix_web::{rt, web, App, HttpRequest, HttpServer, Responder};
+use actix_web::{App, HttpRequest, HttpServer, Responder, rt, web};
 use eyre::eyre;
 use rustls::pki_types::{PrivateKeyDer, PrivatePkcs8KeyDer};
 use tokio::fs;

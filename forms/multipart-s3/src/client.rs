@@ -1,8 +1,8 @@
 use std::env;
 
 use aws_config::SdkConfig as AwsConfig;
-use aws_sdk_s3::{primitives::ByteStream, Client as S3Client};
-use futures_util::{stream, StreamExt as _};
+use aws_sdk_s3::{Client as S3Client, primitives::ByteStream};
+use futures_util::{StreamExt as _, stream};
 use tokio::{fs, io::AsyncReadExt as _};
 
 use crate::{TempFile, UploadedFile};

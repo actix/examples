@@ -2,11 +2,11 @@ use std::{io, time::Duration};
 
 use opentelemetry::KeyValue;
 use opentelemetry_otlp::WithExportConfig as _;
-use opentelemetry_sdk::{runtime, trace::Tracer, Resource};
+use opentelemetry_sdk::{Resource, runtime, trace::Tracer};
 use tonic::metadata::MetadataMap;
 use tracing::level_filters::LevelFilter;
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
-use tracing_subscriber::{layer::SubscriberExt as _, util::SubscriberInitExt as _, EnvFilter};
+use tracing_subscriber::{EnvFilter, layer::SubscriberExt as _, util::SubscriberInitExt as _};
 
 pub(crate) fn init() {
     let app_name = "actix-web-mainmatter-telemetry-workshop-capstone";

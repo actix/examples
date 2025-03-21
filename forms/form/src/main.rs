@@ -1,4 +1,4 @@
-use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
+use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, Result, middleware, web};
 use serde::{Deserialize, Serialize};
 
 struct AppState {
@@ -74,8 +74,8 @@ mod tests {
         body::to_bytes,
         dev::ServiceResponse,
         http::{
-            header::{HeaderValue, CONTENT_TYPE},
             StatusCode,
+            header::{CONTENT_TYPE, HeaderValue},
         },
         test::{self, TestRequest},
         web::{Bytes, Form},

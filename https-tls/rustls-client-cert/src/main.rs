@@ -5,13 +5,13 @@ use std::{any::Any, fs::File, io::BufReader, net::SocketAddr, sync::Arc};
 
 use actix_tls::accept::rustls_0_23::TlsStream;
 use actix_web::{
-    dev::Extensions, rt::net::TcpStream, web, App, HttpRequest, HttpResponse, HttpServer, Responder,
+    App, HttpRequest, HttpResponse, HttpServer, Responder, dev::Extensions, rt::net::TcpStream, web,
 };
 use log::info;
 use rustls::{
+    RootCertStore, ServerConfig,
     pki_types::{CertificateDer, PrivateKeyDer},
     server::WebPkiClientVerifier,
-    RootCertStore, ServerConfig,
 };
 use rustls_pemfile::{certs, pkcs8_private_keys};
 

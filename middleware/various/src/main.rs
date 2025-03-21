@@ -1,11 +1,12 @@
 use std::time::Duration;
 
 use actix_web::{
+    App, Error, HttpServer,
     body::MessageBody,
     dev,
-    middleware::{from_fn, Next},
+    middleware::{Next, from_fn},
     rt::time,
-    web, App, Error, HttpServer,
+    web,
 };
 
 mod read_request_body;

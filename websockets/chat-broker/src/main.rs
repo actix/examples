@@ -1,5 +1,5 @@
 use actix_files::{Files, NamedFile};
-use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder};
+use actix_web::{App, Error, HttpRequest, HttpServer, Responder, middleware::Logger, web};
 use actix_web_actors::ws;
 
 mod message;

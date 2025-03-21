@@ -1,9 +1,9 @@
 use std::{
     convert::Infallible,
-    future::{ready, Ready},
+    future::{Ready, ready},
 };
 
-use actix_web::{dev, http::header::AcceptLanguage, FromRequest, HttpMessage as _, HttpRequest};
+use actix_web::{FromRequest, HttpMessage as _, HttpRequest, dev, http::header::AcceptLanguage};
 use fluent_templates::LanguageIdentifier;
 use serde::Serialize;
 

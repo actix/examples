@@ -1,7 +1,7 @@
 use actix_web::{
-    error, get,
+    App, HttpServer, Responder, error, get,
     middleware::{Compress, Logger},
-    web, App, HttpServer, Responder,
+    web,
 };
 use sailfish::TemplateOnce;
 

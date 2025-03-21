@@ -1,9 +1,9 @@
-use actix_web::{get, route, web, Error, HttpResponse, Responder};
-use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
+use actix_web::{Error, HttpResponse, Responder, get, route, web};
+use juniper::http::{GraphQLRequest, graphiql::graphiql_source};
 
 use crate::{
     db::Pool,
-    schemas::root::{create_schema, Context, Schema},
+    schemas::root::{Context, Schema, create_schema},
 };
 
 /// GraphQL endpoint

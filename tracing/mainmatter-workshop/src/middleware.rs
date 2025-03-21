@@ -1,11 +1,11 @@
 use std::time::Instant;
 
 use actix_web::{
+    HttpMessage as _,
     body::MessageBody,
     dev::{ServiceRequest, ServiceResponse},
     http::header::{HeaderName, HeaderValue},
     middleware::Next,
-    HttpMessage as _,
 };
 use tracing_actix_web::RequestId;
 

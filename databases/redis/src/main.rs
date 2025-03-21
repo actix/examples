@@ -1,6 +1,6 @@
 use std::io;
 
-use actix_web::{error, middleware, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, error, middleware, web};
 use serde::Deserialize;
 
 async fn get_from_cache(redis: web::Data<redis::Client>) -> actix_web::Result<impl Responder> {

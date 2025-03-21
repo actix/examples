@@ -2,7 +2,7 @@
 
 use std::{fmt, io};
 
-use actix_web::{http::StatusCode, web, App, HttpResponse, HttpServer, ResponseError};
+use actix_web::{App, HttpResponse, HttpServer, ResponseError, http::StatusCode, web};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]

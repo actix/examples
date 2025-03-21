@@ -1,14 +1,14 @@
 use std::{fs, io};
 
-use actix_multipart::form::{tempfile::TempFile, text::Text, MultipartForm};
+use actix_multipart::form::{MultipartForm, tempfile::TempFile, text::Text};
 use actix_web::{
-    body::SizedStream, delete, error, get, http::Method, middleware::Logger, post, route, web, App,
-    Error, HttpResponse, HttpServer, Responder,
+    App, Error, HttpResponse, HttpServer, Responder, body::SizedStream, delete, error, get,
+    http::Method, middleware::Logger, post, route, web,
 };
 use actix_web_lab::extract::Path;
-use aws_config::{meta::region::RegionProviderChain, BehaviorVersion};
+use aws_config::{BehaviorVersion, meta::region::RegionProviderChain};
 use dotenvy::dotenv;
-use futures_util::{stream, StreamExt as _};
+use futures_util::{StreamExt as _, stream};
 use serde_json::json;
 use tokio_util::io::ReaderStream;
 

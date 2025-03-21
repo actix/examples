@@ -1,4 +1,4 @@
-use actix_web::{error, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder, error, post, web};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]

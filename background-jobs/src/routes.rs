@@ -1,14 +1,13 @@
 use actix_web::{
-    error, get, post,
+    HttpResponse, Responder, error, get, post,
     web::{self, Data},
-    HttpResponse, Responder,
 };
 use apalis::prelude::*;
 use apalis_redis::RedisStorage;
 use chrono::{TimeDelta, Utc};
 use serde::Deserialize;
 
-use crate::{persistent_jobs::Email, ItemCache};
+use crate::{ItemCache, persistent_jobs::Email};
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct CacheInsert {

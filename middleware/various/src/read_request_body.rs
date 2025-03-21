@@ -1,12 +1,13 @@
 use std::{
-    future::{ready, Ready},
+    future::{Ready, ready},
     rc::Rc,
 };
 
 use actix_http::h1;
 use actix_web::{
+    Error,
     dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
-    web, Error,
+    web,
 };
 use futures_util::future::LocalBoxFuture;
 

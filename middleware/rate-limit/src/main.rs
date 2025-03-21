@@ -2,9 +2,8 @@ use std::io;
 
 use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::{
-    middleware,
+    App, HttpResponse, HttpServer, middleware,
     web::{self},
-    App, HttpResponse, HttpServer,
 };
 
 mod rate_limit;

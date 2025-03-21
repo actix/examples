@@ -6,7 +6,7 @@ use std::io;
 
 use actix_files::NamedFile;
 use actix_web::{
-    middleware, rt, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder,
+    App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware, rt, web,
 };
 use tokio::sync::broadcast;
 

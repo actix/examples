@@ -1,6 +1,6 @@
 use std::{io, sync::Arc};
 
-use actix_web::{get, middleware::Logger, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, get, middleware::Logger, post, web};
 use actix_web_lab::extract::Path;
 
 mod broadcast;

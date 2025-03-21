@@ -1,10 +1,11 @@
 use actix_web::{
+    App, Error, HttpServer, Responder,
     body::MessageBody,
     dev::{ServiceFactory, ServiceRequest, ServiceResponse},
     get,
     guard::{Guard, GuardContext},
     middleware::DefaultHeaders,
-    web, App, Error, HttpServer, Responder,
+    web,
 };
 
 mod v1 {

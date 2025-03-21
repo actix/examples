@@ -1,13 +1,13 @@
 use std::io::Write;
 
 use actix_multipart::{
-    form::{
-        tempfile::{TempFile, TempFileConfig},
-        MultipartForm,
-    },
     Multipart,
+    form::{
+        MultipartForm,
+        tempfile::{TempFile, TempFileConfig},
+    },
 };
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer, Responder};
+use actix_web::{App, Error, HttpResponse, HttpServer, Responder, middleware, web};
 use futures_util::TryStreamExt as _;
 use uuid::Uuid;
 

@@ -4,11 +4,10 @@
 //! At login, the session key changes and session state in cache re-assigns.
 //! At logout, session state in cache is removed and cookie is invalidated.
 
-use actix_session::{storage::RedisSessionStore, Session, SessionMiddleware};
+use actix_session::{Session, SessionMiddleware, storage::RedisSessionStore};
 use actix_web::{
-    middleware, web,
+    App, HttpResponse, HttpServer, Result, middleware, web,
     web::{get, post, resource},
-    App, HttpResponse, HttpServer, Result,
 };
 use serde::{Deserialize, Serialize};
 

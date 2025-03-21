@@ -1,7 +1,7 @@
 use std::{sync::Arc, time::Instant};
 
-use actix_web::{get, middleware, web::Data, App, HttpResponse, HttpServer};
-use awc::{http::header, Client, Connector};
+use actix_web::{App, HttpResponse, HttpServer, get, middleware, web::Data};
+use awc::{Client, Connector, http::header};
 use rustls::{ClientConfig, RootCertStore};
 
 const MAP_URL: &str =

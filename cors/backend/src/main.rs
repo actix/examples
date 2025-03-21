@@ -1,7 +1,7 @@
 use std::io;
 
 use actix_cors::Cors;
-use actix_web::{http::header, middleware::Logger, App, HttpServer};
+use actix_web::{App, HttpServer, http::header, middleware::Logger};
 
 mod user;
 

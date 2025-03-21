@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use actix_web::{middleware, web, App, HttpServer, Responder, Result};
+use actix_web::{App, HttpServer, Responder, Result, middleware, web};
 use askama::Template;
 
 #[derive(Template)]

@@ -1,11 +1,11 @@
 use std::{
-    future::{ready, Ready},
+    future::{Ready, ready},
     task::{Context, Poll},
 };
 
 use actix_web::{
-    dev::{Service, ServiceRequest, ServiceResponse, Transform},
     Error, HttpMessage,
+    dev::{Service, ServiceRequest, ServiceResponse, Transform},
 };
 
 #[derive(Debug, Clone)]

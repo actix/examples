@@ -1,7 +1,7 @@
 use juniper::{
-    graphql_object, graphql_value, EmptySubscription, FieldError, FieldResult, RootNode,
+    EmptySubscription, FieldError, FieldResult, RootNode, graphql_object, graphql_value,
 };
-use mysql::{from_row, params, prelude::*, Error as DBError, Row};
+use mysql::{Error as DBError, Row, from_row, params, prelude::*};
 
 use super::{
     product::{Product, ProductInput},

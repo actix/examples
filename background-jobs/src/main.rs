@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use actix_web::{web::Data, App, HttpServer};
+use actix_web::{App, HttpServer, web::Data};
 use chrono::{DateTime, Utc};
 
 mod ephemeral_jobs;

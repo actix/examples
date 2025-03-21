@@ -1,7 +1,7 @@
 use std::{
     sync::{
-        atomic::{AtomicUsize, Ordering},
         Arc,
+        atomic::{AtomicUsize, Ordering},
     },
     time::Instant,
 };
@@ -9,7 +9,7 @@ use std::{
 use actix::*;
 use actix_files::{Files, NamedFile};
 use actix_web::{
-    middleware::Logger, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder,
+    App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware::Logger, web,
 };
 use actix_web_actors::ws;
 

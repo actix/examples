@@ -1,15 +1,16 @@
 use std::io;
 
 use actix_web::{
+    App, HttpResponse, HttpServer, Responder, Result,
     body::BoxBody,
     dev::ServiceResponse,
     get,
-    http::{header::ContentType, StatusCode},
+    http::{StatusCode, header::ContentType},
     middleware::{ErrorHandlerResponse, ErrorHandlers},
-    web, App, HttpResponse, HttpServer, Responder, Result,
+    web,
 };
 use actix_web_lab::extract::Path;
-use fluent_templates::{static_loader, FluentLoader, Loader as _};
+use fluent_templates::{FluentLoader, Loader as _, static_loader};
 use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;
 

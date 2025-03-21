@@ -5,7 +5,7 @@
 use std::io;
 
 use actix_files::NamedFile;
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware, web};
 use tokio::{
     task::{spawn, spawn_local},
     try_join,

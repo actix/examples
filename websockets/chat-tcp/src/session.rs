@@ -9,7 +9,7 @@ use std::{
 
 use actix::{prelude::*, spawn};
 use tokio::{
-    io::{split, WriteHalf},
+    io::{WriteHalf, split},
     net::{TcpListener, TcpStream},
 };
 use tokio_util::codec::FramedRead;

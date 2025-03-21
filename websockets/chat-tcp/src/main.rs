@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use actix::prelude::*;
 use actix_files::NamedFile;
-use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder};
+use actix_web::{App, Error, HttpRequest, HttpServer, Responder, middleware::Logger, web};
 use actix_web_actors::ws;
 
 mod codec;

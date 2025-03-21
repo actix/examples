@@ -12,11 +12,11 @@ http errors will be chosen, each with an equal chance of being selected:
 
 */
 
-use actix_web::{web, App, Error, HttpResponse, HttpServer, ResponseError};
+use actix_web::{App, Error, HttpResponse, HttpServer, ResponseError, web};
 use derive_more::Display;
 use rand::{
-    distr::{Distribution, StandardUniform},
     Rng,
+    distr::{Distribution, StandardUniform},
 };
 
 #[derive(Debug, Display)]

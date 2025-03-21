@@ -1,7 +1,7 @@
 #![allow(clippy::extra_unused_lifetimes)]
 
 use chrono::{NaiveDateTime, TimeDelta, Utc};
-use diesel::{r2d2::ConnectionManager, PgConnection};
+use diesel::{PgConnection, r2d2::ConnectionManager};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 

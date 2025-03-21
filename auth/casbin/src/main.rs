@@ -1,6 +1,6 @@
 use std::io;
 
-use actix_web::{middleware, web, App, HttpResponse, HttpServer};
+use actix_web::{App, HttpResponse, HttpServer, middleware, web};
 use casbin::{CoreApi, DefaultModel, Enforcer, FileAdapter, RbacApi};
 
 /// simple handle

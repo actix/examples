@@ -2,10 +2,10 @@ use std::{fs::File, io::BufReader};
 
 use actix_files::Files;
 use actix_web::{
-    http::header::ContentType, middleware, web, App, HttpRequest, HttpResponse, HttpServer,
+    App, HttpRequest, HttpResponse, HttpServer, http::header::ContentType, middleware, web,
 };
 use log::debug;
-use rustls::{pki_types::PrivateKeyDer, ServerConfig};
+use rustls::{ServerConfig, pki_types::PrivateKeyDer};
 use rustls_pemfile::{certs, pkcs8_private_keys};
 
 /// simple handle

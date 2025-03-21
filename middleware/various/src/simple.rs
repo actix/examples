@@ -1,8 +1,8 @@
-use std::future::{ready, Ready};
+use std::future::{Ready, ready};
 
 use actix_web::{
-    dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
     Error,
+    dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
 };
 use futures_util::future::LocalBoxFuture;
 

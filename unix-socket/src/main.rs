@@ -1,4 +1,4 @@
-use actix_web::{middleware, web, App, HttpRequest, HttpServer};
+use actix_web::{App, HttpRequest, HttpServer, middleware, web};
 
 async fn index(_req: HttpRequest) -> &'static str {
     "Hello world!"

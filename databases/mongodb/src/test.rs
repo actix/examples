@@ -1,5 +1,5 @@
 use actix_web::{
-    test::{call_and_read_body, call_and_read_body_json, init_service, TestRequest},
+    test::{TestRequest, call_and_read_body, call_and_read_body_json, init_service},
     web::Bytes,
 };
 

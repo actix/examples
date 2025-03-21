@@ -3,7 +3,7 @@
 //! Open `http://localhost:8080/` in browser to test.
 
 use actix_files::NamedFile;
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware, web};
 use ractor::Actor;
 
 mod server;

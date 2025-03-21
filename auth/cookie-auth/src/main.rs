@@ -1,10 +1,11 @@
 use actix_identity::{Identity, IdentityMiddleware};
-use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
+use actix_session::{SessionMiddleware, config::PersistentSession, storage::CookieSessionStore};
 use actix_web::{
-    cookie::{time::Duration, Key},
+    App, HttpMessage as _, HttpRequest, HttpServer, Responder,
+    cookie::{Key, time::Duration},
     error,
     http::StatusCode,
-    middleware, web, App, HttpMessage as _, HttpRequest, HttpServer, Responder,
+    middleware, web,
 };
 
 const ONE_MINUTE: Duration = Duration::minutes(1);

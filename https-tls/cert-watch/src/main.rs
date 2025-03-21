@@ -1,11 +1,11 @@
 use std::{fs::File, io::BufReader, path::Path};
 
 use actix_web::{
-    http::header::ContentType, middleware, web, App, HttpRequest, HttpResponse, HttpServer,
+    App, HttpRequest, HttpResponse, HttpServer, http::header::ContentType, middleware, web,
 };
 use log::debug;
 use notify::{Event, RecursiveMode, Watcher as _};
-use rustls::{pki_types::PrivateKeyDer, ServerConfig};
+use rustls::{ServerConfig, pki_types::PrivateKeyDer};
 use rustls_pemfile::{certs, pkcs8_private_keys};
 use tokio::sync::mpsc;
 

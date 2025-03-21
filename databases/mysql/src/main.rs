@@ -1,6 +1,6 @@
 use std::{env, io};
 
-use actix_web::{web, App, HttpServer};
+use actix_web::{App, HttpServer, web};
 
 mod models;
 mod persistence;

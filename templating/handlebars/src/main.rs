@@ -1,12 +1,13 @@
 use std::io;
 
 use actix_web::{
+    App, HttpResponse, HttpServer, Responder, Result,
     body::BoxBody,
     dev::ServiceResponse,
     get,
-    http::{header::ContentType, StatusCode},
+    http::{StatusCode, header::ContentType},
     middleware::{ErrorHandlerResponse, ErrorHandlers},
-    web, App, HttpResponse, HttpServer, Responder, Result,
+    web,
 };
 use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;

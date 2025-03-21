@@ -6,7 +6,7 @@
 #[macro_use]
 extern crate diesel;
 
-use actix_web::{error, get, middleware, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, error, get, middleware, post, web};
 use diesel::{prelude::*, r2d2};
 use uuid::Uuid;
 

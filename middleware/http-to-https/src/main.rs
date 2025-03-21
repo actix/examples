@@ -1,8 +1,8 @@
 use std::{fs::File, io::BufReader};
 
-use actix_web::{dev::Service, get, http, App, HttpResponse, HttpServer};
+use actix_web::{App, HttpResponse, HttpServer, dev::Service, get, http};
 use futures_util::future::{self, Either, FutureExt};
-use rustls::{pki_types::PrivateKeyDer, ServerConfig};
+use rustls::{ServerConfig, pki_types::PrivateKeyDer};
 use rustls_pemfile::{certs, pkcs8_private_keys};
 
 #[get("/")]

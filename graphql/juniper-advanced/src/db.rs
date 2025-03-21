@@ -1,6 +1,6 @@
 use r2d2_mysql::{
-    mysql::{Opts, OptsBuilder},
     MySqlConnectionManager,
+    mysql::{Opts, OptsBuilder},
 };
 
 pub type Pool = r2d2::Pool<MySqlConnectionManager>;
