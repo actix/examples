@@ -59,7 +59,7 @@ jobs:
         timeout-minutes: 10
 
       - name: Install cargo-ci-cache-clean
-        uses: taiki-e/install-action@v2.49.34
+        uses: taiki-e/install-action@v2.49.40
         with:
           tool: cargo-ci-cache-clean
 
