@@ -1,9 +1,9 @@
-use std::{fs::File, io::BufReader};
-
 use actix_web::{App, HttpResponse, HttpServer, dev::Service, get, http};
 use futures_util::future::{self, Either, FutureExt};
-use rustls::{ServerConfig, pki_types::PrivateKeyDer};
-use rustls_pemfile::{certs, pkcs8_private_keys};
+use rustls::{
+    ServerConfig,
+    pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject},
+};
 
 #[get("/")]
 async fn index() -> String {
@@ -18,18 +18,17 @@ async fn main() -> std::io::Result<()> {
         .install_default()
         .unwrap();
 
-    let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
-    let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
+    let cert_chain = CertificateDer::pem_file_iter("cert.pem")
+        .unwrap()
+        .flatten()
+        .collect();
 
-    let cert_chain = certs(cert_file).collect::<Result<Vec<_>, _>>().unwrap();
-    let mut keys = pkcs8_private_keys(key_file)
-        .map(|key| key.map(PrivateKeyDer::Pkcs8))
-        .collect::<Result<Vec<_>, _>>()
-        .unwrap();
+    let key_der =
+        PrivateKeyDer::from_pem_file("key.pem").expect("Could not locate PKCS 8 private keys.");
 
     let config = ServerConfig::builder()
         .with_no_client_auth()
-        .with_single_cert(cert_chain, keys.remove(0))
+        .with_single_cert(cert_chain, key_der)
         .unwrap();
 
     log::info!(
