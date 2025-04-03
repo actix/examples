@@ -12,5 +12,4 @@ env_logger.workspace = true
 eyre.workspace = true
 log.workspace = true
 rustls.workspace = true
-rustls-pemfile.workspace = true
 tokio = { workspace = true, features = ["fs"] }
