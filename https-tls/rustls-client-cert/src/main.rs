@@ -1,7 +1,7 @@
 //! This example shows how to use `actix_web::HttpServer::on_connect` to access client certificates
 //! pass them to a handler through connection-local data.
 
-use std::{any::Any, fs::File, io::BufReader, net::SocketAddr, sync::Arc};
+use std::{any::Any, net::SocketAddr, sync::Arc};
 
 use actix_tls::accept::rustls_0_23::TlsStream;
 use actix_web::{
@@ -10,10 +10,9 @@ use actix_web::{
 use log::info;
 use rustls::{
     RootCertStore, ServerConfig,
-    pki_types::{CertificateDer, PrivateKeyDer},
+    pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject},
     server::WebPkiClientVerifier,
 };
-use rustls_pemfile::{certs, pkcs8_private_keys};
 
 const CA_CERT: &str = "certs/rootCA.pem";
 const SERVER_CERT: &str = "certs/server-cert.pem";
@@ -80,29 +79,27 @@ async fn main() -> std::io::Result<()> {
     let mut cert_store = RootCertStore::empty();
 
     // import CA cert
-    let ca_cert = &mut BufReader::new(File::open(CA_CERT)?);
-    let ca_cert = certs(ca_cert).collect::<Result<Vec<_>, _>>().unwrap();
-
-    for cert in ca_cert {
-        cert_store.add(cert).expect("root CA not added to store");
-    }
+    CertificateDer::pem_file_iter(CA_CERT)
+        .unwrap()
+        .flatten()
+        .for_each(|der| cert_store.add(der).unwrap());
 
     // set up client authentication requirements
     let client_auth = WebPkiClientVerifier::builder(Arc::new(cert_store))
         .build()
         .unwrap();
-    let config = ServerConfig::builder().with_client_cert_verifier(client_auth);
 
     // import server cert and key
-    let cert_file = &mut BufReader::new(File::open(SERVER_CERT)?);
-    let key_file = &mut BufReader::new(File::open(SERVER_KEY)?);
+    let key_der = PrivateKeyDer::from_pem_file(SERVER_KEY).unwrap();
+    let cert_chain = CertificateDer::pem_file_iter(SERVER_CERT)
+        .unwrap()
+        .flatten()
+        .collect();
 
-    let cert_chain = certs(cert_file).collect::<Result<Vec<_>, _>>().unwrap();
-    let mut keys = pkcs8_private_keys(key_file)
-        .map(|key| key.map(PrivateKeyDer::Pkcs8))
-        .collect::<Result<Vec<_>, _>>()
+    let config = ServerConfig::builder()
+        .with_client_cert_verifier(client_auth)
+        .with_single_cert(cert_chain, key_der)
         .unwrap();
-    let config = config.with_single_cert(cert_chain, keys.remove(0)).unwrap();
 
     log::info!("starting HTTP server at http://localhost:8080 and https://localhost:8443");
 
