@@ -11,5 +11,4 @@ eyre.workspace = true
 log.workspace = true
 notify = "6"
 rustls.workspace = true
-rustls-pemfile.workspace = true
 tokio = { workspace = true, features = ["time", "rt", "macros"] }
