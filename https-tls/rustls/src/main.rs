@@ -1,12 +1,12 @@
-use std::{fs::File, io::BufReader};
-
 use actix_files::Files;
 use actix_web::{
     App, HttpRequest, HttpResponse, HttpServer, http::header::ContentType, middleware, web,
 };
 use log::debug;
-use rustls::{ServerConfig, pki_types::PrivateKeyDer};
-use rustls_pemfile::{certs, pkcs8_private_keys};
+use rustls::{
+    ServerConfig,
+    pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject},
+};
 
 /// simple handle
 async fn index(req: HttpRequest) -> HttpResponse {
@@ -46,25 +46,17 @@ fn load_rustls_config() -> rustls::ServerConfig {
         .install_default()
         .unwrap();
 
-    // init server config builder with safe defaults
-    let config = ServerConfig::builder().with_no_client_auth();
-
     // load TLS key/cert files
-    let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
-    let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
+    let cert_chain = CertificateDer::pem_file_iter("cert.pem")
+        .unwrap()
+        .flatten()
+        .collect();
 
-    // convert files to key/cert objects
-    let cert_chain = certs(cert_file).collect::<Result<Vec<_>, _>>().unwrap();
-    let mut keys = pkcs8_private_keys(key_file)
-        .map(|key| key.map(PrivateKeyDer::Pkcs8))
-        .collect::<Result<Vec<_>, _>>()
-        .unwrap();
+    let key_der =
+        PrivateKeyDer::from_pem_file("key.pem").expect("Could not locate PKCS 8 private keys.");
 
-    // exit if no keys could be parsed
-    if keys.is_empty() {
-        eprintln!("Could not locate PKCS 8 private keys.");
-        std::process::exit(1);
-    }
-
-    config.with_single_cert(cert_chain, keys.remove(0)).unwrap()
+    ServerConfig::builder()
+        .with_no_client_auth()
+        .with_single_cert(cert_chain, key_der)
+        .unwrap()
 }
