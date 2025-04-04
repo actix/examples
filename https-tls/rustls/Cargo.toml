@@ -10,4 +10,3 @@ actix-files.workspace = true
 env_logger.workspace = true
 log.workspace = true
 rustls.workspace = true
-rustls-pemfile.workspace = true

@@ -4,7 +4,7 @@ use acme::{Certificate, Directory, DirectoryUrl, create_p256_key};
 use actix_files::Files;
 use actix_web::{App, HttpRequest, HttpServer, Responder, rt, web};
 use eyre::eyre;
-use rustls::pki_types::{PrivateKeyDer, PrivatePkcs8KeyDer};
+use rustls::pki_types::{CertificateDer, PrivateKeyDer, PrivatePkcs8KeyDer, pem::PemObject};
 use tokio::fs;
 
 const CHALLENGE_DIR: &str = "./acme-challenges";
@@ -188,10 +188,9 @@ fn load_rustls_config(cert: Certificate) -> eyre::Result<rustls::ServerConfig> {
     let private_key = PrivateKeyDer::Pkcs8(PrivatePkcs8KeyDer::from(cert.private_key_der()?));
 
     // convert ACME-obtained certificate chain
-    let cert_chain =
-        rustls_pemfile::certs(&mut std::io::BufReader::new(cert.certificate().as_bytes()))
-            .collect::<Result<Vec<_>, _>>()
-            .unwrap();
+    let cert_chain = CertificateDer::pem_slice_iter(cert.certificate().as_bytes())
+        .flatten()
+        .collect();
 
     Ok(config.with_single_cert(cert_chain, private_key)?)
 }

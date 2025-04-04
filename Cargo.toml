@@ -112,7 +112,6 @@ rand = "0.9"
 redis = { version = "0.27" }
 reqwest = { version = "0.12", features = ["json", "stream"] }
 rustls = "0.23"
-rustls-pemfile = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 time = "0.3"

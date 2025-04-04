@@ -2047,7 +2047,6 @@ dependencies = [
  "log",
  "notify 6.1.1",
  "rustls 0.23.25",
- "rustls-pemfile 2.2.0",
  "tokio",
 ]
 
@@ -5094,7 +5093,6 @@ dependencies = [
  "futures-util",
  "log",
  "rustls 0.23.25",
- "rustls-pemfile 2.2.0",
 ]
 
 [[package]]
@@ -6995,7 +6993,6 @@ dependencies = [
  "env_logger",
  "log",
  "rustls 0.23.25",
- "rustls-pemfile 2.2.0",
 ]
 
 [[package]]
@@ -7007,7 +7004,6 @@ dependencies = [
  "env_logger",
  "log",
  "rustls 0.23.25",
- "rustls-pemfile 2.2.0",
 ]
 
 [[package]]
@@ -8412,7 +8408,6 @@ dependencies = [
  "eyre",
  "log",
  "rustls 0.23.25",
- "rustls-pemfile 2.2.0",
  "tokio",
 ]
 
