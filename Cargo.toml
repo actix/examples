@@ -110,7 +110,7 @@ openssl = { version = "0.10.60", features = ["v110"] }
 parking_lot = "0.12"
 pin-project-lite = "0.2"
 rand = "0.9"
-redis = { version = "0.28" }
+redis = { version = "0.27" }
 reqwest = { version = "0.12", features = ["json", "stream"] }
 rustls = "0.23"
 rustls-pemfile = "2"
