@@ -24,7 +24,7 @@ docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
 cd databases/diesel-async
 cargo install diesel_cli --no-default-features --features postgres
 
-echo DATABASE_URL=postgres://test-user:password@localhost:5432/test_db > .env
+echo DATABASE_URL=postgres://test-user:password@localhost:5432/actix_example_diesel_async > .env
 diesel setup
 diesel migration run
 ```
@@ -32,7 +32,7 @@ diesel migration run
 The database will now be created in your PostgreSQL instance.
 
 ```sh
-docker exec -i postgresql psql -U test-user -c "\l"
+docker exec -i postgresql psql -U test-user -l
 ```
 
 ### Running Server
@@ -68,16 +68,16 @@ On success, a response like the following is returned:
 <details>
   <summary>Client Examples</summary>
 
-Using [HTTPie]:
+Using [HTTPie] / [xh]:
 
 ```sh
-http POST localhost:8080/items name=thingamajig
+http POST :8080/items name=thingamajig
 ```
 
 Using cURL:
 
 ```sh
-curl -S -X POST --header "Content-Type: application/json" --data '{"name":"thingamajig"}' http://localhost:8080/items
+curl --show-error -X POST --header "Content-Type: application/json" --data '{"name":"thingamajig"}' http://localhost:8080/items
 ```
 
 </details>
@@ -89,7 +89,7 @@ Gets an item from the DB using its UID (returned from the insert request or take
 <details>
   <summary>Client Examples</summary>
 
-Using [HTTPie]:
+Using [HTTPie] / [xh]:
 
 ```sh
 http localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
@@ -98,7 +98,7 @@ http localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 Using cURL:
 
 ```sh
-curl -S http://localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
+curl --show-error http://localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 ```
 
 </details>
@@ -106,11 +106,8 @@ curl -S http://localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 ### Explore The PostgreSQL DB
 
 ```sh
-docker exec -i postgresql psql -U test-user -d test_db -c "select * from public.items"
+docker exec -i postgresql psql -U test-user -d actix_example_diesel_async -c "SELECT * from public.items"
 ```
 
-## Using Other Databases
-
-You can find a complete example of Diesel + PostgreSQL at: [https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Rust/actix](https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Rust/actix)
-
+[xh]: https://httpie.io/cli
 [httpie]: https://httpie.io/cli

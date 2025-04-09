@@ -1,4 +1,3 @@
--- Your SQL goes here
 CREATE TABLE IF NOT EXISTS items
 (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,

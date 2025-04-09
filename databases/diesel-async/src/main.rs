@@ -3,10 +3,10 @@ extern crate diesel;
 
 use std::{env, io};
 
-use actix_web::{error, get, middleware, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, error, get, middleware, post, web};
 use diesel_async::{
-    pooled_connection::{bb8::Pool, AsyncDieselConnectionManager},
     AsyncPgConnection,
+    pooled_connection::{AsyncDieselConnectionManager, bb8::Pool},
 };
 use dotenvy::dotenv;
 use uuid::Uuid;
@@ -86,11 +86,9 @@ async fn main() -> io::Result<()> {
         App::new()
             // add DB pool handle to app data; enables use of `web::Data<DbPool>` extractor
             .app_data(web::Data::new(pool.clone()))
-            // add request logger middleware
-            .wrap(middleware::Logger::default())
-            // add route handlers
             .service(add_item)
             .service(get_item)
+            .wrap(middleware::Logger::default())
     })
     .bind(("127.0.0.1", 8080))?
     .run()
