@@ -69,9 +69,7 @@ members = [
   "websockets/echo-actorless",
   "websockets/echo",
 ]
-exclude = [
-  "databases/sqlite",
-]
+exclude = ["databases/sqlite"]
 
 [workspace.package]
 publish = false

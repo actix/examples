@@ -4,8 +4,8 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-actix-web.workspace = true
 actix-cors.workspace = true
+actix-web.workspace = true
 async-graphql = "6"
 async-graphql-actix-web = "6"
 env_logger.workspace = true

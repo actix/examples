@@ -4,9 +4,9 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-actix-web.workspace = true
 actix-identity.workspace = true
 actix-session = { workspace = true, features = ["cookie-session"] }
+actix-web.workspace = true
 
 env_logger.workspace = true
 log.workspace = true

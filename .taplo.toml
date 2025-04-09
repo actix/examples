@@ -1,0 +1,19 @@
+exclude = ["target/*"]
+include = ["**/*.toml"]
+
+[formatting]
+column_width = 100
+
+[[rule]]
+include = ["**/Cargo.toml"]
+keys = ["dependencies", "*-dependencies"]
+
+[rule.formatting]
+reorder_keys = true
+
+[[rule]]
+include = ["**/Cargo.toml"]
+keys = ["dependencies.*", "*-dependencies.*"]
+
+[rule.formatting]
+reorder_keys = false

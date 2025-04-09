@@ -26,5 +26,5 @@ rand.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tokio = { workspace = true, features = ["full"] }
-tokio-util.workspace = true
 tokio-stream = "0.1.8"
+tokio-util.workspace = true

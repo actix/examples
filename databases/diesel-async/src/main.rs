@@ -1,13 +1,14 @@
 #[macro_use]
 extern crate diesel;
 
+use std::{env, io};
+
 use actix_web::{error, get, middleware, post, web, App, HttpResponse, HttpServer, Responder};
 use diesel_async::{
     pooled_connection::{bb8::Pool, AsyncDieselConnectionManager},
     AsyncPgConnection,
 };
 use dotenvy::dotenv;
-use std::{env, io};
 use uuid::Uuid;
 
 mod actions;

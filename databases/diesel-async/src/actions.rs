@@ -1,10 +1,8 @@
 use diesel::prelude::*;
+use diesel_async::{AsyncPgConnection, RunQueryDsl};
 use uuid::{NoContext, Timestamp, Uuid};
 
 use crate::models;
-
-use diesel_async::AsyncPgConnection;
-use diesel_async::RunQueryDsl;
 
 type DbError = Box<dyn std::error::Error + Send + Sync>;
 

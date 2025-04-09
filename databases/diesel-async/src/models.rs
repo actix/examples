@@ -1,6 +1,7 @@
-use super::schema::items;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+
+use super::schema::items;
 
 /// Item details.
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Insertable)]

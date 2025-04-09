@@ -6,7 +6,7 @@ publish = false
 
 [package.metadata.cargo-machete]
 ignored = [
-    "yarte_helpers" # only used as build dependency
+  "yarte_helpers", # only used as build dependency
 ]
 
 [dependencies]

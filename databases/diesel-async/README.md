@@ -10,7 +10,9 @@ Basic integration of [Diesel-async](https://github.com/weiznich/diesel_async) us
 # on any OS
 docker run -d --restart unless-stopped --name postgresql -e POSTGRES_USER=test-user -e POSTGRES_PASSWORD=password -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres:alpine
 ```
+
 make sure it has successfully started up and is running
+
 ```sh
 # on any OS
 docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
@@ -28,6 +30,7 @@ diesel migration run
 ```
 
 The database will now be created in your PostgreSQL instance.
+
 ```sh
 docker exec -i postgresql psql -U test-user -c "\l"
 ```
