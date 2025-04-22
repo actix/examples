@@ -182,7 +182,7 @@ dependencies = [
  "mime",
  "percent-encoding",
  "pin-project-lite",
- "rand 0.9.0",
+ "rand 0.9.1",
  "sha1",
  "smallvec",
  "tokio",
@@ -1108,7 +1108,7 @@ dependencies = [
  "openssl",
  "percent-encoding",
  "pin-project-lite",
- "rand 0.9.0",
+ "rand 0.9.1",
  "rustls 0.23.25",
  "serde",
  "serde_json",
@@ -1626,7 +1626,7 @@ dependencies = [
  "env_logger",
  "eyre",
  "log",
- "rand 0.9.0",
+ "rand 0.9.1",
  "serde",
  "tokio",
  "tokio-util",
@@ -1923,7 +1923,7 @@ dependencies = [
  "indexmap 2.8.0",
  "js-sys",
  "once_cell",
- "rand 0.9.0",
+ "rand 0.9.1",
  "serde",
  "serde_bytes",
  "serde_json",
@@ -3140,7 +3140,7 @@ dependencies = [
  "derive_more 2.0.1",
  "env_logger",
  "log",
- "rand 0.9.0",
+ "rand 0.9.1",
 ]
 
 [[package]]
@@ -6172,7 +6172,7 @@ dependencies = [
  "hmac",
  "md-5",
  "memchr",
- "rand 0.9.0",
+ "rand 0.9.1",
  "sha2",
  "stringprep",
 ]
@@ -6426,7 +6426,7 @@ checksum = "b820744eb4dc9b57a3398183639c511b5a26d2ed702cedd3febaa1393caa22cc"
 dependencies = [
  "bytes",
  "getrandom 0.3.2",
- "rand 0.9.0",
+ "rand 0.9.1",
  "ring",
  "rustc-hash 2.1.1",
  "rustls 0.23.25",
@@ -6524,13 +6524,12 @@ dependencies = [
 
 [[package]]
 name = "rand"
-version = "0.9.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3779b94aeb87e8bd4e834cee3650289ee9e0d5677f976ecdb6d219e5f4f6cd94"
+checksum = "9fbfd9d094a40bf3ae768db9361049ace4c0e04a4fd6b359518bd7b73a73dd97"
 dependencies = [
  "rand_chacha 0.9.0",
  "rand_core 0.9.3",
- "zerocopy 0.8.23",
 ]
 
 [[package]]
@@ -8608,7 +8607,7 @@ dependencies = [
  "pin-project-lite",
  "postgres-protocol",
  "postgres-types",
- "rand 0.9.0",
+ "rand 0.9.1",
  "socket2",
  "tokio",
  "tokio-util",
@@ -9071,7 +9070,7 @@ version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "470dbf6591da1b39d43c14523b2b469c86879a53e8b758c8e090a470fe7b1fbe"
 dependencies = [
- "rand 0.9.0",
+ "rand 0.9.1",
  "web-time",
 ]
 
@@ -9596,7 +9595,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rand 0.9.0",
+ "rand 0.9.1",
  "tokio",
 ]
 
@@ -9611,7 +9610,7 @@ dependencies = [
  "actix-web-actors",
  "env_logger",
  "log",
- "rand 0.9.0",
+ "rand 0.9.1",
 ]
 
 [[package]]
@@ -9624,7 +9623,7 @@ dependencies = [
  "actix-web-actors",
  "env_logger",
  "log",
- "rand 0.9.0",
+ "rand 0.9.1",
 ]
 
 [[package]]
@@ -9640,7 +9639,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rand 0.9.0",
+ "rand 0.9.1",
  "serde",
  "serde_json",
  "tokio",
