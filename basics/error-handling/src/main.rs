@@ -87,10 +87,8 @@ impl ResponseError for CustomError {
 /// randomly returns either () or one of the 4 CustomError variants
 async fn do_something_random() -> Result<(), CustomError> {
     let mut rng = rand::rng();
-    
     // 20% chance of success
     const SUCCESS_PROBABILITY: f64 = 0.2;
-    
     if rng.random_bool(SUCCESS_PROBABILITY) {
         log::info!("Random operation succeeded");
         Ok(())
