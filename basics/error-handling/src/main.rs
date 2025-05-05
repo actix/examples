@@ -116,8 +116,7 @@ async fn main() -> std::io::Result<()> {
     log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
-        App::new()
-            .service(web::resource("/something").route(web::get().to(do_something)))
+        App::new().service(web::resource("/something").route(web::get().to(do_something)))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
