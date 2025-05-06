@@ -10,3 +10,5 @@ derive_more = { workspace = true, features = ["display"] }
 env_logger.workspace = true
 log.workspace = true
 rand.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
