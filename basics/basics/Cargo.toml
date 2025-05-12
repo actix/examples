@@ -1,14 +1,13 @@
 [package]
-name = "basics"
+name = "example-basics"
 edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-actix-files.workspace = true
+actix-files = { workspace = true }
 actix-session = { workspace = true, features = ["cookie-session"] }
-actix-web.workspace = true
-actix-web-lab.workspace = true
-
-async-stream = "0.3"
-env_logger.workspace = true
-log.workspace = true
+actix-web = { workspace = true }
+actix-web-lab = { workspace = true }
+async-stream = { workspace = true }
+examples-common = { workspace = true }
+tracing = { workspace = true }

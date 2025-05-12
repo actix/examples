@@ -78,12 +78,12 @@ async fn with_param(req: HttpRequest, Path((name,)): Path<(String,)>) -> HttpRes
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    examples_common::init_standard_logger();
 
     // random key means that restarting server will invalidate existing session cookies
     let key = actix_web::cookie::Key::from(SESSION_SIGNING_KEY);
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
@@ -96,7 +96,7 @@ async fn main() -> io::Result<()> {
                     .build(),
             )
             // enable logger - always register Actix Web Logger middleware last
-            .wrap(middleware::Logger::default())
+            .wrap(middleware::Logger::default().log_target("@"))
             // register favicon
             .service(favicon)
             // register simple route, handle all methods
@@ -114,7 +114,7 @@ async fn main() -> io::Result<()> {
             )
             .service(web::resource("/error").to(|| async {
                 error::InternalError::new(
-                    io::Error::new(io::ErrorKind::Other, "test"),
+                    io::Error::other("test"),
                     StatusCode::INTERNAL_SERVER_ERROR,
                 )
             }))

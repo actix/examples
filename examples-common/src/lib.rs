@@ -9,7 +9,7 @@ pub fn init_standard_logger() {
                 .with_default_directive(LevelFilter::INFO.into())
                 .from_env_lossy(),
         )
-        .with(tracing_subscriber::fmt::layer())
+        .with(tracing_subscriber::fmt::layer().without_time())
         .init();
 }
 

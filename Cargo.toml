@@ -98,6 +98,7 @@ actix-web-lab = "0.24"
 actix-ws = "0.3"
 awc = "3.7"
 
+async-stream = "0.3"
 chrono = { version = "0.4.30", features = ["serde"] }
 color-eyre = "0.6"
 derive_more = "2"

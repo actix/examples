@@ -1,8 +1,8 @@
-# basics
+# Basics
 
 ## Usage
 
-### server
+### Server
 
 ```sh
 cd basics/basics
@@ -10,7 +10,7 @@ cargo run
 # Started http server: 127.0.0.1:8080
 ```
 
-### web client
+### Browser
 
 - [http://localhost:8080/async-body/bob](http://localhost:8080/async-body/bob)
 - [http://localhost:8080/user/bob/](http://localhost:8080/user/bob) text/plain download
