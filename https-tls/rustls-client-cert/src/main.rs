@@ -5,7 +5,8 @@ use std::{any::Any, net::SocketAddr, sync::Arc};
 
 use actix_tls::accept::rustls_0_23::TlsStream;
 use actix_web::{
-    App, HttpRequest, HttpResponse, HttpServer, Responder, dev::Extensions, rt::net::TcpStream, web,
+    App, HttpRequest, HttpResponse, HttpServer, Responder, dev::Extensions, middleware::Logger,
+    rt::net::TcpStream, web,
 };
 use log::info;
 use rustls::{
@@ -101,13 +102,17 @@ async fn main() -> std::io::Result<()> {
         .with_single_cert(cert_chain, key_der)
         .unwrap();
 
-    log::info!("starting HTTP server at http://localhost:8080 and https://localhost:8443");
+    log::info!("Starting HTTP server at http://localhost:8080 and https://localhost:8443");
 
-    HttpServer::new(|| App::new().default_service(web::to(route_whoami)))
-        .on_connect(get_client_cert)
-        .bind(("localhost", 8080))?
-        .bind_rustls_0_23(("localhost", 8443), config)?
-        .workers(1)
-        .run()
-        .await
+    HttpServer::new(|| {
+        App::new()
+            .default_service(web::to(route_whoami))
+            .wrap(Logger::default())
+    })
+    .on_connect(get_client_cert)
+    .bind(("localhost", 8080))?
+    .bind_rustls_0_23(("localhost", 8443), config)?
+    .workers(2)
+    .run()
+    .await
 }

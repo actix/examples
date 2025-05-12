@@ -6,6 +6,6 @@ rust-version.workspace = true
 [dependencies]
 actix-tls = { workspace = true, features = ["rustls-0_23"] }
 actix-web = { workspace = true, features = ["rustls-0_23"] }
-env_logger.workspace = true
-log.workspace = true
-rustls.workspace = true
+env_logger = { workspace = true }
+log = { workspace = true }
+rustls = { workspace = true }
