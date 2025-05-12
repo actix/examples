@@ -23,6 +23,7 @@ members = [
   "databases/postgres",
   "databases/redis",
   "docker",
+  "examples-common",
   "forms/form",
   "forms/multipart-s3",
   "forms/multipart",
@@ -34,6 +35,7 @@ members = [
   "https-tls/acme-letsencrypt",
   "https-tls/awc-https",
   "https-tls/cert-watch",
+  "https-tls/hot-reload",
   "https-tls/openssl",
   "https-tls/rustls-client-cert",
   "https-tls/rustls",
@@ -101,6 +103,7 @@ color-eyre = "0.6"
 derive_more = "2"
 dotenvy = "0.15"
 env_logger = "0.11"
+examples-common = { path = "./examples-common" }
 eyre = { version = "0.6", default-features = false, features = ["auto-install", "track-caller"] }
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"

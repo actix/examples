@@ -1,0 +1,9 @@
+[package]
+name = "examples-common"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+rustls = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }

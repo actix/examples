@@ -1,0 +1,15 @@
+[package]
+name = "example-tls-hot-reload"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-web = { workspace = true, features = ["rustls-0_23"] }
+color-eyre = { workspace = true }
+examples-common = { workspace = true }
+eyre = { workspace = true }
+notify = { workspace = true }
+rustls = { workspace = true }
+rustls-channel-resolver = "0.3"
+tokio = { workspace = true, features = ["time", "rt", "macros"] }
+tracing = { workspace = true }

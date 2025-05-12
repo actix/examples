@@ -4,8 +4,6 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-actix-web.workspace = true
-
+actix-web = { workspace = true }
 casbin = "2"
-env_logger.workspace = true
-tokio.workspace = true
+env_logger = { workspace = true }

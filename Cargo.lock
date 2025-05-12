@@ -81,7 +81,6 @@ dependencies = [
  "actix-web",
  "casbin",
  "env_logger",
- "tokio",
 ]
 
 [[package]]
@@ -3155,6 +3154,30 @@ dependencies = [
  "notify",
  "rustls 0.23.27",
  "tokio",
+]
+
+[[package]]
+name = "example-tls-hot-reload"
+version = "0.0.0"
+dependencies = [
+ "actix-web",
+ "color-eyre",
+ "examples-common",
+ "eyre",
+ "notify",
+ "rustls 0.23.27",
+ "rustls-channel-resolver",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "examples-common"
+version = "0.0.0"
+dependencies = [
+ "rustls 0.23.27",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
@@ -6965,6 +6988,16 @@ dependencies = [
  "rustls-webpki 0.103.3",
  "subtle",
  "zeroize",
+]
+
+[[package]]
+name = "rustls-channel-resolver"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "173e7e58f0cbb61d2ea2b21af1b5ed6e35fa6c17818fc2cc5d903b44b4715d01"
+dependencies = [
+ "rand 0.9.1",
+ "rustls 0.23.27",
 ]
 
 [[package]]
