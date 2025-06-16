@@ -65,12 +65,12 @@ dependencies = [
 
 [[package]]
 name = "actix-broker"
-version = "0.4.3"
+version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e089b5c4d0cf02d72a9eca0b6c80aebff1ccd3d1e99c83d1f7b9baeff39dc5e9"
+checksum = "4d1b33c405e9ddb48ac2e4dba41fe547572010b3976be1e59fc54ca60569d890"
 dependencies = [
  "actix",
- "ahash 0.7.8",
+ "ahash 0.8.12",
  "log",
 ]
 
