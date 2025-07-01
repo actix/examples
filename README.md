@@ -4,7 +4,7 @@
 
 <!-- prettier-ignore-start -->
 
-[![build status](https://github.com/actix/examples/workflows/CI%20%28Linux%29/badge.svg?branch=master&event=push)](https://github.com/actix/examples/actions)
+[![CI status](https://github.com/actix/examples/actions/workflows/ci.yml/badge.svg)](https://github.com/actix/examples/actions)
 [![Chat on Discord](https://img.shields.io/discord/771444961383153695?label=chat&logo=discord)](https://discord.gg/NWpN5mmg3x)
 
 <!-- prettier-ignore-end -->
