@@ -22,7 +22,7 @@ Requires the `Accept-Version` header to be present and set to `1` or `2`.
 Using [HTTPie]:
 
 ```sh
-http :8080/api/hello Accept-Version:1
+http://localhost:8080/api/hello Accept-Version:1
 ```
 
 Using [cURL]:
