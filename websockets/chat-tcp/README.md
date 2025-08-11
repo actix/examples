@@ -22,7 +22,7 @@ To start server run
 
 ```sh
 cd websockets/chat-tcp
-cargo run --bin websocket-tcp-server`
+cargo run --bin websocket-tcp-server
 ```
 
 If the current directory is not correct, the server will look for `index.html` in the wrong place.
