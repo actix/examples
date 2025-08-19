@@ -6465,18 +6465,21 @@ dependencies = [
 
 [[package]]
 name = "ractor"
-version = "0.15.6"
+version = "0.15.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "164cbdac94cb8f5c3bbb031f959643619e7e74f13d94381d69ba6161640f063e"
+checksum = "b2a03628f080f90360ed29f8a577b90ad9488820e561d33d22f34f241e58845d"
 dependencies = [
  "bon",
  "dashmap 6.1.0",
  "futures",
+ "js-sys",
  "once_cell",
  "strum 0.26.3",
  "tokio",
  "tokio_with_wasm",
  "tracing",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
  "web-time",
 ]
 
