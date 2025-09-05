@@ -1,4 +1,7 @@
-use actix_web::{App, Error, HttpResponse, HttpServer, web};
+use actix_web::{
+    App, Error, HttpResponse, HttpServer,
+    web::{self, ThinData},
+};
 use confik::{Configuration as _, EnvSource};
 use deadpool_postgres::{Client, Pool};
 use dotenvy::dotenv;
@@ -13,7 +16,7 @@ mod models;
 
 use self::{errors::MyError, models::User};
 
-pub async fn get_users(db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
+pub async fn get_users(ThinData(db_pool): web::ThinData<Pool>) -> Result<HttpResponse, Error> {
     let client: Client = db_pool.get().await.map_err(MyError::PoolError)?;
 
     let users = db::get_users(&client).await?;
@@ -23,7 +26,7 @@ pub async fn get_users(db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> 
 
 pub async fn add_user(
     user: web::Json<User>,
-    db_pool: web::Data<Pool>,
+    ThinData(db_pool): web::ThinData<Pool>,
 ) -> Result<HttpResponse, Error> {
     let user_info: User = user.into_inner();
 
@@ -46,7 +49,7 @@ async fn main() -> std::io::Result<()> {
     let pool = config.pg.create_pool(None, NoTls).unwrap();
 
     let server = HttpServer::new(move || {
-        App::new().app_data(web::Data::new(pool.clone())).service(
+        App::new().app_data(web::ThinData(pool.clone())).service(
             web::resource("/users")
                 .route(web::post().to(add_user))
                 .route(web::get().to(get_users)),
@@ -54,6 +57,7 @@ async fn main() -> std::io::Result<()> {
     })
     .bind(config.server_addr.clone())?
     .run();
+
     println!("Server running at http://{}/", config.server_addr);
 
     server.await
