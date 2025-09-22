@@ -1989,13 +1989,13 @@ dependencies = [
 
 [[package]]
 name = "casbin"
-version = "2.10.1"
+version = "2.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a100183440478aa2b64e6f432295fa90c052d53011c9799b655b7283b6e6707c"
+checksum = "424eb0e083835595d27d82ec284f5721cbdda11ccf8a0694e0978d7ad9195414"
 dependencies = [
  "async-trait",
  "fixedbitset",
- "getrandom 0.2.16",
+ "getrandom 0.3.3",
  "hashlink 0.9.1",
  "once_cell",
  "parking_lot",
