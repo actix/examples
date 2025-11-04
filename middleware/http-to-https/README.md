@@ -6,7 +6,7 @@ A pre-built solution is soon to be built-in. For now, see [`RedirectHttps`](http
 
 ## This Example
 
-This example is the next step after implementing this example : [Setup TLS via rustls](https://github.com/actix/examples/tree/master/https-tls/rustls).
+This example is the next step after implementing this example : [Setup TLS via rustls](https://github.com/actix/examples/tree/main/https-tls/rustls).
 
 You might have already implemented TLS (using one of the ways mentioned in the example of security section), and have setup your server to listen to port 443 (for HTTPS).
 
