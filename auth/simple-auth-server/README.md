@@ -21,7 +21,7 @@
 - [rust-argon2](https://crates.io/crates/rust-argon2) // crate for hashing passwords using the cryptographically-secure Argon2 hashing algorithm.
 - [chrono](https://crates.io/crates/chrono) // Date and time library for Rust.
 - [diesel](https://crates.io/crates/diesel) // A safe, extensible ORM and Query Builder for PostgreSQL, SQLite, and MySQL.
-- [dotenv](https://crates.io/crates/dotenv) // A dotenv implementation for Rust.
+- [dotenvy](https://crates.io/crates/dotenvy) // A well-maintained dotenv implementation for Rust.
 - [derive_more](https://crates.io/crates/derive_more) // Convenience macros to derive traits easily
 - [env_logger](https://crates.io/crates/env_logger) // A logging implementation for log which is configured via an environment variable.
 - [futures](https://crates.io/crates/futures) // An implementation of futures and streams featuring zero allocations, composability, and iterator-like interfaces.
