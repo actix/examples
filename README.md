@@ -13,6 +13,7 @@
 
 - [Merino](https://github.com/mozilla-services/merino): Web service for Firefox Suggest.
 - [Contile](https://github.com/mozilla-services/contile): The back-end server for the Mozilla Tile Service (MTS).
+- [Fractalbits](https://github.com/fractalbits-labs/fractalbits-main): The ultimate S3 compatible high performance object storage in the AI era.
 - [lemmy](https://github.com/dessalines/lemmy): A federated alternative to reddit in Rust.
 - [MeiliSearch](https://github.com/meilisearch/MeiliSearch): Fast, Relevant and Typo-Tolerant Search Engine. Open source alternative to Algolia.
 - [Martin](https://github.com/maplibre/martin): Blazing fast and lightweight PostGIS, MBtiles and PMtiles tile server.
