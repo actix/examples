@@ -5140,7 +5140,6 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "pin-project-lite",
  "serde",
 ]
 
