@@ -3,10 +3,9 @@ name = "cache-redis"
 version = "1.0.0"
 publish = false
 authors = ["Jatutep Bunupuradah <bangbaew@gmail.com>"]
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-actix-web-lab.workspace = true
 actix-web.workspace = true
 env_logger.workspace = true
-redis = { version = "0.23.1", features = ["tls-native-tls"] }
+redis = { version = "0.27", features = ["tls-native-tls"] }
