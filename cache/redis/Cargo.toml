@@ -8,4 +8,4 @@ edition = "2024"
 [dependencies]
 actix-web.workspace = true
 env_logger.workspace = true
-redis = { version = "0.27", features = ["tls-native-tls"] }
+redis = { version = "0.27", features = ["tokio-native-tls-comp"] }
