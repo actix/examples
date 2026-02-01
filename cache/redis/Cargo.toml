@@ -1,0 +1,11 @@
+[package]
+name = "cache-redis"
+version = "1.0.0"
+publish = false
+authors = ["Jatutep Bunupuradah <bangbaew@gmail.com>"]
+edition = "2024"
+
+[dependencies]
+actix-web.workspace = true
+env_logger.workspace = true
+redis = { version = "0.27", features = ["tokio-native-tls-comp"] }

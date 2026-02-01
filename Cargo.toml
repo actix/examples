@@ -14,6 +14,7 @@ members = [
   "basics/state",
   "basics/static-files",
   "basics/todo",
+  "cache/redis",
   "cors/backend",
   "data-factory",
   "databases/diesel",

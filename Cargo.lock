@@ -1728,7 +1728,7 @@ dependencies = [
  "bitflags 2.9.0",
  "cexpr",
  "clang-sys",
- "itertools 0.12.1",
+ "itertools 0.13.0",
  "log",
  "prettyplease 0.2.32",
  "proc-macro2",
@@ -1958,6 +1958,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e465647ae23b2823b0753f50decb2d5a86d2bb2cac04788fafd1f80e45378e5f"
 dependencies = [
  "bytes",
+]
+
+[[package]]
+name = "cache-redis"
+version = "1.0.0"
+dependencies = [
+ "actix-web",
+ "env_logger",
+ "redis 0.27.6",
 ]
 
 [[package]]
@@ -4823,7 +4832,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a793df0d7afeac54f95b471d3af7f0d4fb975699f972341a4b76988d49cdf0c"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.53.0",
 ]
 
 [[package]]
@@ -6578,6 +6587,7 @@ dependencies = [
  "futures-util",
  "itertools 0.13.0",
  "itoa",
+ "native-tls",
  "num-bigint",
  "percent-encoding",
  "pin-project-lite",
@@ -6585,6 +6595,7 @@ dependencies = [
  "sha1_smol",
  "socket2 0.5.9",
  "tokio",
+ "tokio-native-tls",
  "tokio-util",
  "url",
 ]
@@ -9714,7 +9725,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
