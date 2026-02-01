@@ -46,6 +46,7 @@ members = [
   "json/json",
   "json/jsonrpc",
   "middleware/encrypted-payloads",
+  "middleware/http-response",
   "middleware/http-to-https",
   "middleware/rate-limit",
   "middleware/request-extensions",

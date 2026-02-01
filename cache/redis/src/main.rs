@@ -1,6 +1,5 @@
 use std::env;
 
-use actix_web::middleware::{Next, from_fn};
 use actix_web::{
     App, Error, HttpResponse, HttpServer, Responder,
     body::{self, MessageBody},
@@ -9,7 +8,9 @@ use actix_web::{
         Method, StatusCode,
         header::{CACHE_CONTROL, CACHE_STATUS, CONTENT_TYPE, CacheDirective, HeaderValue},
     },
-    middleware, web,
+    middleware,
+    middleware::{Next, from_fn},
+    web,
 };
 use redis::{Client as RedisClient, Commands, RedisError};
 
