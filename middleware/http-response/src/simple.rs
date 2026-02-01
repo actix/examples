@@ -1,16 +1,14 @@
 use std::{
-    future::{ready, Ready},
-    rc::Rc
+    future::{Ready, ready},
+    rc::Rc,
 };
 
 use actix_web::{
+    Error, HttpResponseBuilder,
     dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
-    Error,
-    http::{header, StatusCode}, HttpResponseBuilder
+    http::{StatusCode, header},
 };
 use futures_util::future::LocalBoxFuture;
-
-
 // You can move this struct to a separate file.
 // this struct below just for example.
 use serde::{Deserialize, Serialize};
@@ -28,13 +26,12 @@ impl Default for HttpData {
     }
 }
 
-
 pub struct ReturnHttpResponse;
 
 impl<S: 'static> Transform<S, ServiceRequest> for ReturnHttpResponse
 where
     S: Service<ServiceRequest, Response = ServiceResponse, Error = Error>,
-    S::Future: 'static
+    S::Future: 'static,
 {
     type Response = ServiceResponse;
     type Error = Error;
@@ -57,7 +54,7 @@ pub struct AuthMiddleware<S> {
 impl<S> Service<ServiceRequest> for AuthMiddleware<S>
 where
     S: Service<ServiceRequest, Response = ServiceResponse, Error = Error> + 'static,
-    S::Future: 'static
+    S::Future: 'static,
 {
     type Response = ServiceResponse;
     type Error = Error;
@@ -69,21 +66,20 @@ where
         let svc = self.service.clone();
 
         Box::pin(async move {
-            
-            let headers =  req.headers();
+            let headers = req.headers();
             let _ = match headers.get("Authorization") {
                 Some(e) => e,
                 None => {
                     let new_response = HttpResponseBuilder::new(StatusCode::BAD_REQUEST)
-                            .insert_header((header::CONTENT_TYPE, "application/json"))
-                            .json(HttpData::default());
+                        .insert_header((header::CONTENT_TYPE, "application/json"))
+                        .json(HttpData::default());
                     return Ok(ServiceResponse::new(
-                        req.request().to_owned(), /* or req.request().clone() */ 
-                        new_response
-                    ))
+                        req.request().to_owned(), /* or req.request().clone() */
+                        new_response,
+                    ));
                 }
             };
-            
+
             let res = svc.call(req).await?;
             Ok(res)
         })

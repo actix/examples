@@ -5133,6 +5133,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "middleware-return-http-response"
+version = "1.0.0"
+dependencies = [
+ "actix-web",
+ "env_logger",
+ "futures-util",
+ "log",
+ "pin-project-lite",
+ "serde",
+]
+
+[[package]]
 name = "middleware-various"
 version = "0.0.0"
 dependencies = [

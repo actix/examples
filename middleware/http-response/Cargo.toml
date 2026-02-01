@@ -1,0 +1,12 @@
+[package]
+name = "middleware-return-http-response"
+version = "1.0.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-web.workspace = true
+env_logger.workspace = true
+futures-util.workspace = true
+log.workspace = true
+serde.workspace = true

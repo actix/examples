@@ -1,4 +1,4 @@
-use actix_web::{web, App, HttpServer, HttpResponse};
+use actix_web::{App, HttpResponse, HttpServer, web};
 
 mod simple;
 
@@ -26,13 +26,9 @@ async fn main() -> std::io::Result<()> {
     log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
-        App::new()
-            .wrap(simple::ReturnHttpResponse)
-            .service(
-                web::resource("/").to(|| async {
-                    HttpResponse::Ok().json(HttpData::default())
-                }),
-            )
+        App::new().wrap(simple::ReturnHttpResponse).service(
+            web::resource("/").to(|| async { HttpResponse::Ok().json(HttpData::default()) }),
+        )
     })
     .bind(("127.0.0.1", 8080))?
     .run()
