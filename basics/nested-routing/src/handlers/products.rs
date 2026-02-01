@@ -1,4 +1,4 @@
-use actix_web::{web, Error, HttpResponse};
+use actix_web::{Error, HttpResponse, web};
 
 use crate::common::{Part, Product};
 
@@ -21,9 +21,10 @@ pub async fn remove_product(_id: web::Path<String>) -> Result<HttpResponse, Erro
 #[cfg(test)]
 mod tests {
     use actix_web::{
+        App,
         dev::Service,
-        http::{header, StatusCode},
-        test, App,
+        http::{StatusCode, header},
+        test,
     };
 
     use crate::app_config::config_app;

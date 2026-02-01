@@ -1,18 +1,18 @@
 use actix_web::{
-    error, get, post,
+    HttpResponse, Responder, error, get, post,
     web::{self, Data},
-    HttpResponse, Responder,
 };
-use apalis::{prelude::*, redis::RedisStorage};
-use chrono::{Duration, Utc};
+use apalis::prelude::*;
+use apalis_redis::RedisStorage;
+use chrono::{TimeDelta, Utc};
 use serde::Deserialize;
 
-use crate::{persistent_jobs::Email, ItemCache};
+use crate::{ItemCache, persistent_jobs::Email};
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct CacheInsert {
     data: String,
-    duration: u64,
+    duration: u32,
 }
 
 #[get("/cache")]
@@ -26,7 +26,7 @@ pub(crate) async fn cache_item(
     cache: Data<ItemCache>,
     web::Json(form): web::Json<CacheInsert>,
 ) -> actix_web::Result<impl Responder> {
-    let expires = Utc::now() + Duration::seconds(form.duration as i64);
+    let expires = Utc::now() + TimeDelta::try_seconds(form.duration as i64).unwrap();
 
     // insert into item cache
     cache.lock().unwrap().insert(form.data, expires);

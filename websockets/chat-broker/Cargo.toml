@@ -1,7 +1,7 @@
 [package]
 name = "websocket-chat-broker"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [[bin]]
 name = "server"

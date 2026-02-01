@@ -3,12 +3,11 @@
 //! Every request gets a session, corresponding to a cache entry and cookie.
 //! At login, the session key changes and session state in cache re-assigns.
 //! At logout, session state in cache is removed and cookie is invalidated.
-//!
-use actix_session::{storage::RedisActorSessionStore, Session, SessionMiddleware};
+
+use actix_session::{Session, SessionMiddleware, storage::RedisSessionStore};
 use actix_web::{
-    middleware, web,
+    App, HttpResponse, HttpServer, Result, middleware, web,
     web::{get, post, resource},
-    App, HttpResponse, HttpServer, Result,
 };
 use serde::{Deserialize, Serialize};
 
@@ -81,16 +80,14 @@ async fn main() -> std::io::Result<()> {
     // authentication cookies for any user!
     let private_key = actix_web::cookie::Key::generate();
 
+    let store = RedisSessionStore::new("redis://127.0.0.1:6379")
+        .await
+        .unwrap();
+
     HttpServer::new(move || {
         App::new()
             // redis session middleware
-            .wrap(
-                SessionMiddleware::builder(
-                    RedisActorSessionStore::new("127.0.0.1:6379"),
-                    private_key.clone(),
-                )
-                .build(),
-            )
+            .wrap(SessionMiddleware::builder(store.clone(), private_key.clone()).build())
             // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .service(resource("/").route(get().to(index)))
@@ -105,11 +102,6 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod test {
-    use actix_web::{
-        middleware,
-        web::{get, post, resource},
-        App,
-    };
     use serde_json::json;
 
     use super::*;
@@ -117,15 +109,16 @@ mod test {
     #[actix_web::test]
     async fn test_workflow() {
         let private_key = actix_web::cookie::Key::generate();
+        let store = RedisSessionStore::new("redis://127.0.0.1:6379")
+            .await
+            .unwrap();
+
         let srv = actix_test::start(move || {
             App::new()
                 .wrap(
-                    SessionMiddleware::builder(
-                        RedisActorSessionStore::new("127.0.0.1:6379"),
-                        private_key.clone(),
-                    )
-                    .cookie_name("test-session".to_owned())
-                    .build(),
+                    SessionMiddleware::builder(store.clone(), private_key.clone())
+                        .cookie_name("test-session".to_owned())
+                        .build(),
                 )
                 .wrap(middleware::Logger::default())
                 .service(resource("/").route(get().to(index)))

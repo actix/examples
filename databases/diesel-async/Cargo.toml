@@ -1,0 +1,17 @@
+[package]
+name = "db-diesel-async"
+edition.workspace = true
+rust-version.workspace = true
+
+[features]
+postgres_tests = []
+
+[dependencies]
+actix-web = { workspace = true }
+diesel = { version = "2", default-features = false, features = ["uuid"] }
+diesel-async = { version = "0.5", features = ["postgres", "bb8", "async-connection-wrapper"] }
+dotenvy = { workspace = true }
+env_logger = { workspace = true }
+log = { workspace = true }
+serde = { workspace = true }
+uuid = { workspace = true }

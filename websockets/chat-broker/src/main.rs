@@ -1,5 +1,5 @@
 use actix_files::{Files, NamedFile};
-use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder};
+use actix_web::{App, Error, HttpRequest, HttpServer, Responder, middleware::Logger, web};
 use actix_web_actors::ws;
 
 mod message;
@@ -16,6 +16,7 @@ async fn chat_ws(req: HttpRequest, stream: web::Payload) -> Result<impl Responde
     ws::start(WsChatSession::default(), &req, stream)
 }
 
+// the actor-based WebSocket examples REQUIRE `actix_web::main` for actor support
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));

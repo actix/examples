@@ -9,7 +9,7 @@ All the self-signed certificate are in the ./certs directory, including the CA c
 ### Server
 
 ```sh
-cd security/rustls-client-cert
+cd https-tls/rustls-client-cert
 cargo run
 ```
 

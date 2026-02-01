@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use actix::prelude::*;
 use actix_files::NamedFile;
-use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpServer, Responder};
+use actix_web::{App, Error, HttpRequest, HttpServer, Responder, middleware::Logger, web};
 use actix_web_actors::ws;
 
 mod codec;
@@ -40,7 +40,7 @@ async fn chat_route(
 
 struct WsChatSession {
     /// unique session id
-    id: usize,
+    id: u64,
     /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
     /// otherwise we drop connection.
     hb: Instant,
@@ -150,7 +150,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsChatSession {
                         }
                         "/join" => {
                             if v.len() == 2 {
-                                self.room = v[1].to_owned();
+                                v[1].clone_into(&mut self.room);
                                 self.addr.do_send(server::Join {
                                     id: self.id,
                                     name: self.room.clone(),
@@ -220,6 +220,7 @@ impl WsChatSession {
     }
 }
 
+// the actor-based WebSocket examples REQUIRE `actix_web::main` for actor support
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));

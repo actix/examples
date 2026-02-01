@@ -1,8 +1,7 @@
 use actix_web::{
-    test::{call_and_read_body, call_and_read_body_json, init_service, TestRequest},
+    test::{TestRequest, call_and_read_body, call_and_read_body_json, init_service},
     web::Bytes,
 };
-use mongodb::Client;
 
 use super::*;
 
@@ -17,7 +16,7 @@ async fn test() {
     client
         .database(DB_NAME)
         .collection::<User>(COLL_NAME)
-        .drop(None)
+        .drop()
         .await
         .expect("drop collection should succeed");
 

@@ -1,13 +1,13 @@
 use std::io::Write;
 
 use actix_multipart::{
-    form::{
-        tempfile::{TempFile, TempFileConfig},
-        MultipartForm,
-    },
     Multipart,
+    form::{
+        MultipartForm,
+        tempfile::{TempFile, TempFileConfig},
+    },
 };
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer, Responder};
+use actix_web::{App, Error, HttpResponse, HttpServer, Responder, middleware, web};
 use futures_util::TryStreamExt as _;
 use uuid::Uuid;
 
@@ -74,7 +74,9 @@ async fn save_file_manual(mut payload: Multipart) -> Result<HttpResponse, Error>
     // iterate over multipart stream
     while let Some(mut field) = payload.try_next().await? {
         // A multipart/form-data stream has to contain `content_disposition`
-        let content_disposition = field.content_disposition();
+        let Some(content_disposition) = field.content_disposition() else {
+            continue;
+        };
 
         let filename = content_disposition
             .get_filename()

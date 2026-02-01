@@ -1,15 +1,15 @@
 [package]
 name = "db-sqlite"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
+# Do not use workspace deps as this package isn't part of the workspace.
 [dependencies]
-actix-web.workspace = true
-
-env_logger.workspace = true
-futures-util.workspace = true
-log.workspace = true
+actix-web = "4"
+env_logger = "0.11"
+futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+log = "0.4"
 r2d2 = "0.8"
-r2d2_sqlite = "0.22"
-rusqlite = "0.29"
-serde.workspace = true
+r2d2_sqlite = "0.24"
+rusqlite = "0.31"
+serde = { version = "1", features = ["derive"] }

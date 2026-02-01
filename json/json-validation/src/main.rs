@@ -15,9 +15,9 @@
 use std::io;
 
 use actix_web::{
+    App, Error, HttpResponse, HttpServer,
     error::ErrorBadRequest,
     web::{self, BytesMut},
-    App, Error, HttpResponse, HttpServer,
 };
 use awc::Client;
 use futures_util::StreamExt as _;

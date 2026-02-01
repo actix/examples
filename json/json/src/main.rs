@@ -1,4 +1,4 @@
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, middleware, web};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -55,7 +55,7 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use actix_web::{body::to_bytes, dev::Service, http, test, web, App};
+    use actix_web::{body::to_bytes, dev::Service, http, test};
 
     use super::*;
 

@@ -1,12 +1,12 @@
-use std::{fs::File, io::BufReader};
-
 use actix_files::Files;
 use actix_web::{
-    http::header::ContentType, middleware, web, App, HttpRequest, HttpResponse, HttpServer,
+    App, HttpRequest, HttpResponse, HttpServer, http::header::ContentType, middleware, web,
 };
 use log::debug;
-use rustls::{Certificate, PrivateKey, ServerConfig};
-use rustls_pemfile::{certs, pkcs8_private_keys};
+use rustls::{
+    ServerConfig,
+    pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject},
+};
 
 /// simple handle
 async fn index(req: HttpRequest) -> HttpResponse {
@@ -36,38 +36,27 @@ async fn main() -> std::io::Result<()> {
             .service(web::redirect("/", "/index.html"))
             .service(Files::new("/static", "static"))
     })
-    .bind_rustls("127.0.0.1:8443", config)?
+    .bind_rustls_0_23("127.0.0.1:8443", config)?
     .run()
     .await
 }
 
 fn load_rustls_config() -> rustls::ServerConfig {
-    // init server config builder with safe defaults
-    let config = ServerConfig::builder()
-        .with_safe_defaults()
-        .with_no_client_auth();
+    rustls::crypto::aws_lc_rs::default_provider()
+        .install_default()
+        .unwrap();
 
     // load TLS key/cert files
-    let cert_file = &mut BufReader::new(File::open("cert.pem").unwrap());
-    let key_file = &mut BufReader::new(File::open("key.pem").unwrap());
-
-    // convert files to key/cert objects
-    let cert_chain = certs(cert_file)
+    let cert_chain = CertificateDer::pem_file_iter("cert.pem")
         .unwrap()
-        .into_iter()
-        .map(Certificate)
-        .collect();
-    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)
-        .unwrap()
-        .into_iter()
-        .map(PrivateKey)
+        .flatten()
         .collect();
 
-    // exit if no keys could be parsed
-    if keys.is_empty() {
-        eprintln!("Could not locate PKCS 8 private keys.");
-        std::process::exit(1);
-    }
+    let key_der =
+        PrivateKeyDer::from_pem_file("key.pem").expect("Could not locate PKCS 8 private keys.");
 
-    config.with_single_cert(cert_chain, keys.remove(0)).unwrap()
+    ServerConfig::builder()
+        .with_no_client_auth()
+        .with_single_cert(cert_chain, key_der)
+        .unwrap()
 }

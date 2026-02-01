@@ -1,14 +1,14 @@
 [package]
 name = "todo"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-files.workspace = true
 actix-session = { workspace = true, features = ["cookie-session"] }
 actix-web.workspace = true
 
-dotenv = "0.15"
+dotenvy.workspace = true
 env_logger.workspace = true
 log.workspace = true
 serde.workspace = true

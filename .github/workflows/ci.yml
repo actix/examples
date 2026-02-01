@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  merge_group:
+    types: [checks_requested]
+  push:
+    branches: [main]
+
+jobs:
+  build_and_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [stable]
+
+    name: ${{ matrix.version }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust (${{ matrix.version }})
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.2
+        with:
+          toolchain: ${{ matrix.version }}
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install sqlite3
+          sudo apt-get -y install libpq-dev
+
+      - name: Install DB CLI tools
+        run: |
+          cargo install --force sqlx-cli --no-default-features --features=sqlite,rustls
+          cargo install --force diesel_cli --no-default-features --features=sqlite,postgres
+
+      - name: Create Test DBs
+        env:
+          DATABASE_URL: sqlite://./todo.db
+        run: |
+          sqlx database create
+          chmod a+rwx ./todo.db
+          sqlx migrate run --source=./basics/todo/migrations
+
+      - name: cargo check
+        run: cargo check --workspace --bins --examples --tests
+        timeout-minutes: 30
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@v2
+        with:
+          redis-version: 6
+
+      - name: cargo test
+        run: cargo test --workspace --all-features --no-fail-fast --exclude=db-diesel -- --nocapture
+        timeout-minutes: 30
+
+      - name: cargo test (diesel)
+        env:
+          DATABASE_URL: test.db
+        run: |
+          cd databases/diesel
+          diesel migration run
+          chmod a+rwx test.db
+          cargo test -p=db-diesel --no-fail-fast -- --nocapture
+        timeout-minutes: 10
+
+      - name: Install cargo-ci-cache-clean
+        uses: taiki-e/install-action@v2.67.13
+        with:
+          tool: cargo-ci-cache-clean
+
+      - name: CI cache clean
+        run: cargo-ci-cache-clean

@@ -1,16 +1,18 @@
 [package]
 name = "background-jobs"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
 
-anyhow = "1"
-apalis = { version = "0.4", features = ["redis"] }
+apalis = { version = "0.6", features = ["limit"] }
+apalis-redis = { version = "0.6" }
 chrono.workspace = true
-dotenv = "0.15"
+color-eyre.workspace = true
+dotenvy.workspace = true
 env_logger.workspace = true
+eyre.workspace = true
 log.workspace = true
 rand.workspace = true
 serde.workspace = true

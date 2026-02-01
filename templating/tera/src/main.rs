@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 
 use actix_web::{
+    App, Error, HttpResponse, HttpServer, Responder, Result,
     body::BoxBody,
     dev::ServiceResponse,
     error,
-    http::{header::ContentType, StatusCode},
+    http::{StatusCode, header::ContentType},
     middleware::{self, ErrorHandlerResponse, ErrorHandlers},
-    web, App, Error, HttpResponse, HttpServer, Responder, Result,
+    web,
 };
-use actix_web_lab::respond::Html;
 use tera::Tera;
 
 // store tera template in application state
@@ -16,7 +16,7 @@ async fn index(
     tmpl: web::Data<tera::Tera>,
     query: web::Query<HashMap<String, String>>,
 ) -> Result<impl Responder, Error> {
-    let s = if let Some(name) = query.get("name") {
+    let html = if let Some(name) = query.get("name") {
         // submitted form
         let mut ctx = tera::Context::new();
         ctx.insert("name", name);
@@ -28,7 +28,7 @@ async fn index(
             .map_err(|_| error::ErrorInternalServerError("Template error"))?
     };
 
-    Ok(Html(s))
+    Ok(web::Html::new(html))
 }
 
 #[actix_web::main]

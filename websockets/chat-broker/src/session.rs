@@ -1,4 +1,4 @@
-use actix::{fut, prelude::*};
+use actix::prelude::*;
 use actix_broker::BrokerIssue;
 use actix_web_actors::ws;
 
@@ -9,7 +9,7 @@ use crate::{
 
 #[derive(Default)]
 pub struct WsChatSession {
-    id: usize,
+    id: u64,
     room: String,
     name: Option<String>,
 }

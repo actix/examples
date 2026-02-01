@@ -1,0 +1,19 @@
+[package]
+name = "tracing-mainmatter-workshop"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-web.workspace = true
+dotenvy.workspace = true
+metrics = "0.23"
+metrics-exporter-prometheus = { version = "0.15", default-features = false }
+opentelemetry = "0.23"
+opentelemetry_sdk = { version = "0.23", features = ["rt-tokio-current-thread"] }
+opentelemetry-otlp = { version = "0.16", features = ["tls-roots"] }
+tonic = "0.11"
+tracing-actix-web = { version = "0.7.11", features = ["opentelemetry_0_23", "uuid_v7"] }
+tracing-opentelemetry = "0.24"
+tracing-subscriber.workspace = true
+tracing-bunyan-formatter = "0.3"
+tracing.workspace = true

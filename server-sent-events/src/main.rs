@@ -1,7 +1,7 @@
 use std::{io, sync::Arc};
 
-use actix_web::{get, middleware::Logger, post, web, App, HttpResponse, HttpServer, Responder};
-use actix_web_lab::{extract::Path, respond::Html};
+use actix_web::{App, HttpResponse, HttpServer, Responder, get, middleware::Logger, post, web};
+use actix_web_lab::extract::Path;
 
 mod broadcast;
 use self::broadcast::Broadcaster;
@@ -30,7 +30,7 @@ async fn main() -> io::Result<()> {
 
 #[get("/")]
 async fn index() -> impl Responder {
-    Html(include_str!("index.html").to_owned())
+    web::Html::new(include_str!("index.html").to_owned())
 }
 
 #[get("/events")]

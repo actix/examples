@@ -1,16 +1,17 @@
 use std::io;
 
 use actix_web::{
+    App, HttpResponse, HttpServer, Responder, Result,
     body::BoxBody,
     dev::ServiceResponse,
     get,
-    http::{header::ContentType, StatusCode},
+    http::{StatusCode, header::ContentType},
     middleware::{ErrorHandlerResponse, ErrorHandlers},
-    web, App, HttpResponse, HttpServer, Responder, Result,
+    web,
 };
-use actix_web_lab::{extract::Path, respond::Html};
-use fluent_templates::{static_loader, FluentLoader, Loader as _};
-use handlebars::Handlebars;
+use actix_web_lab::extract::Path;
+use fluent_templates::{FluentLoader, Loader as _, static_loader};
+use handlebars::{DirectorySourceOptions, Handlebars};
 use serde_json::json;
 
 mod lang_choice;
@@ -31,7 +32,7 @@ static_loader! {
 async fn index(hb: web::Data<Handlebars<'_>>, lang: LangChoice) -> impl Responder {
     let data = json!({ "lang": lang });
     let body = hb.render("index", &data).unwrap();
-    Html(body)
+    web::Html::new(body)
 }
 
 #[get("/{user}/{data}")]
@@ -46,18 +47,27 @@ async fn user(
         "data": info.1
     });
     let body = hb.render("user", &data).unwrap();
-    Html(body)
+    web::Html::new(body)
 }
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     // Handlebars uses a repository for the compiled templates. This object must be shared between
     // the application threads, and is therefore passed to the App in an Arc.
     let mut handlebars = Handlebars::new();
 
     // register template dir with Handlebars registry
     handlebars
-        .register_templates_directory(".html", "./templates")
+        .register_templates_directory(
+            "./templates",
+            DirectorySourceOptions {
+                tpl_extension: ".html".to_owned(),
+                hidden: false,
+                temporary: false,
+            },
+        )
         .unwrap();
 
     // register Fluent helper with Handlebars registry
@@ -72,6 +82,7 @@ async fn main() -> io::Result<()> {
             .service(index)
             .service(user)
     })
+    .workers(2)
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
@@ -85,7 +96,7 @@ fn error_handlers() -> ErrorHandlers<BoxBody> {
 // Error handler for a 404 Page not found error.
 fn not_found<B>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<BoxBody>> {
     let lang = LangChoice::from_req(res.request()).lang_id();
-    let error = LOCALES.lookup(&lang, "error-not-found").unwrap();
+    let error = LOCALES.lookup(&lang, "error-not-found");
 
     let response = get_error_response(&res, &error);
 

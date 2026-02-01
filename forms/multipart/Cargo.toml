@@ -1,12 +1,7 @@
 [package]
 name = "multipart-example"
-version = "1.0.0"
-edition = "2021"
-license = "MIT"
-description = "Simple file uploader in Actix Web with Async/Await"
-keywords = ["actix", "actix-web", "multipart"]
-repository = "https://github.com/actix/examples"
-readme = "README.md"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-multipart.workspace = true
@@ -15,5 +10,5 @@ actix-web.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
-sanitize-filename = "0.4"
-uuid = { version = "1", features = ["v4"] }
+sanitize-filename = "0.5"
+uuid.workspace = true

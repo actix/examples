@@ -1,10 +1,11 @@
 use actix_web::{
+    App, Error, HttpServer, Responder,
     body::MessageBody,
     dev::{ServiceFactory, ServiceRequest, ServiceResponse},
     get,
     guard::{Guard, GuardContext},
     middleware::DefaultHeaders,
-    web, App, Error, HttpServer, Responder,
+    web,
 };
 
 mod v1 {
@@ -17,7 +18,7 @@ mod v1 {
             ctx.head()
                 .headers()
                 .get("Accept-Version")
-                .map_or(false, |hv| hv.as_bytes() == b"1")
+                .is_some_and(|hv| hv.as_bytes() == b"1")
         }
     }
 
@@ -37,7 +38,7 @@ mod v2 {
             ctx.head()
                 .headers()
                 .get("Accept-Version")
-                .map_or(false, |hv| hv.as_bytes() == b"2")
+                .is_some_and(|hv| hv.as_bytes() == b"2")
         }
     }
 

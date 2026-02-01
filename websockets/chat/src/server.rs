@@ -1,17 +1,17 @@
-//! `ChatServer` is an actor. It maintains list of connection client session.
-//! And manages available rooms. Peers send messages to other peers in same
+//! `ChatServer` is an actor. It maintains a list of connection client sessions.
+//! It also manages available rooms. Peers send messages to other peers in same
 //! room through `ChatServer`.
 
 use std::{
     collections::{HashMap, HashSet},
     sync::{
-        atomic::{AtomicUsize, Ordering},
         Arc,
+        atomic::{AtomicUsize, Ordering},
     },
 };
 
 use actix::prelude::*;
-use rand::{self, rngs::ThreadRng, Rng};
+use rand::Rng as _;
 
 /// Chat server sends this messages to session
 #[derive(Message)]
@@ -19,10 +19,10 @@ use rand::{self, rngs::ThreadRng, Rng};
 pub struct Message(pub String);
 
 /// Message for chat server communications
-
+///
 /// New chat session is created
 #[derive(Message)]
-#[rtype(usize)]
+#[rtype(u64)]
 pub struct Connect {
     pub addr: Recipient<Message>,
 }
@@ -31,7 +31,7 @@ pub struct Connect {
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct Disconnect {
-    pub id: usize,
+    pub id: u64,
 }
 
 /// Send message to specific room
@@ -39,7 +39,7 @@ pub struct Disconnect {
 #[rtype(result = "()")]
 pub struct ClientMessage {
     /// Id of the client session
-    pub id: usize,
+    pub id: u64,
     /// Peer message
     pub msg: String,
     /// Room name
@@ -58,7 +58,7 @@ impl actix::Message for ListRooms {
 #[rtype(result = "()")]
 pub struct Join {
     /// Client ID
-    pub id: usize,
+    pub id: u64,
 
     /// Room name
     pub name: String,
@@ -69,9 +69,8 @@ pub struct Join {
 /// Implementation is very naïve.
 #[derive(Debug)]
 pub struct ChatServer {
-    sessions: HashMap<usize, Recipient<Message>>,
-    rooms: HashMap<String, HashSet<usize>>,
-    rng: ThreadRng,
+    sessions: HashMap<u64, Recipient<Message>>,
+    rooms: HashMap<String, HashSet<u64>>,
     visitor_count: Arc<AtomicUsize>,
 }
 
@@ -84,7 +83,6 @@ impl ChatServer {
         ChatServer {
             sessions: HashMap::new(),
             rooms,
-            rng: rand::thread_rng(),
             visitor_count,
         }
     }
@@ -92,7 +90,7 @@ impl ChatServer {
 
 impl ChatServer {
     /// Send message to all users in the room
-    fn send_message(&self, room: &str, message: &str, skip_id: usize) {
+    fn send_message(&self, room: &str, message: &str, skip_id: u64) {
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {
                 if *id != skip_id {
@@ -116,7 +114,7 @@ impl Actor for ChatServer {
 ///
 /// Register new session and assign unique id to this session
 impl Handler<Connect> for ChatServer {
-    type Result = usize;
+    type Result = u64;
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
         println!("Someone joined");
@@ -125,14 +123,11 @@ impl Handler<Connect> for ChatServer {
         self.send_message("main", "Someone joined", 0);
 
         // register session with random id
-        let id = self.rng.gen::<usize>();
+        let id = rand::rng().random::<u64>();
         self.sessions.insert(id, msg.addr);
 
         // auto join session to main room
-        self.rooms
-            .entry("main".to_owned())
-            .or_insert_with(HashSet::new)
-            .insert(id);
+        self.rooms.entry("main".to_owned()).or_default().insert(id);
 
         let count = self.visitor_count.fetch_add(1, Ordering::SeqCst);
         self.send_message("main", &format!("Total visitors {count}"), 0);
@@ -211,10 +206,7 @@ impl Handler<Join> for ChatServer {
             self.send_message(&room, "Someone disconnected", 0);
         }
 
-        self.rooms
-            .entry(name.clone())
-            .or_insert_with(HashSet::new)
-            .insert(id);
+        self.rooms.entry(name.clone()).or_default().insert(id);
 
         self.send_message(&name, "Someone connected", id);
     }

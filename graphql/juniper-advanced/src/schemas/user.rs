@@ -1,5 +1,5 @@
-use juniper::{graphql_object, GraphQLInputObject};
-use mysql::{from_row, params, prelude::*, Row};
+use juniper::{GraphQLInputObject, graphql_object};
+use mysql::{Row, from_row, params, prelude::*};
 
 use crate::schemas::{product::Product, root::Context};
 

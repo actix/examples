@@ -9,7 +9,7 @@ use std::{
 
 use actix::{prelude::*, spawn};
 use tokio::{
-    io::{split, WriteHalf},
+    io::{WriteHalf, split},
     net::{TcpListener, TcpStream},
 };
 use tokio_util::codec::FramedRead;
@@ -27,7 +27,7 @@ pub struct Message(pub String);
 /// `ChatSession` actor is responsible for tcp peer communications.
 pub struct ChatSession {
     /// unique session id
-    id: usize,
+    id: u64,
     /// this is address of chat server
     addr: Addr<ChatServer>,
     /// Client must send ping at least once per 10 seconds, otherwise we drop
@@ -103,7 +103,7 @@ impl StreamHandler<Result<ChatRequest, io::Error>> for ChatSession {
             }
             Ok(ChatRequest::Join(name)) => {
                 println!("Join to room: {name}");
-                self.room = name.clone();
+                name.clone_into(&mut self.room);
                 self.addr.do_send(server::Join {
                     id: self.id,
                     name: name.clone(),

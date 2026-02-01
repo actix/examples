@@ -1,5 +1,5 @@
 use once_cell::sync::Lazy;
-use sparkpost::transmission::{
+use sparklepost::transmission::{
     EmailAddress, Message, Options, Recipient, Transmission, TransmissionResponse,
 };
 

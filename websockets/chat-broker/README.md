@@ -1,6 +1,6 @@
 # Websocket chat broker example
 
-This is a different implementation of the [websocket chat example](https://github.com/actix/examples/tree/master/websockets/chat)
+This is a different implementation of the [websocket chat example](https://github.com/actix/examples/tree/main/websockets/chat)
 
 Differences:
 

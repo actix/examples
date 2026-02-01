@@ -6,21 +6,19 @@ use std::{io, sync::Arc};
 
 use actix_cors::Cors;
 use actix_web::{
-    get, middleware, route,
+    App, HttpResponse, HttpServer, Responder, get, middleware, route,
     web::{self, Data},
-    App, HttpResponse, HttpServer, Responder,
 };
-use actix_web_lab::respond::Html;
-use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
+use juniper::http::{GraphQLRequest, graphiql::graphiql_source};
 
 mod schema;
 
-use crate::schema::{create_schema, Schema};
+use crate::schema::{Schema, create_schema};
 
 /// GraphiQL playground UI
 #[get("/graphiql")]
 async fn graphql_playground() -> impl Responder {
-    Html(graphiql_source("/graphql", None))
+    web::Html::new(graphiql_source("/graphql", None))
 }
 
 /// GraphQL endpoint

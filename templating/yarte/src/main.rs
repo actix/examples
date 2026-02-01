@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use actix_web::{
-    get, middleware::Logger, web, App, Error, HttpResponse, HttpServer, ResponseError,
+    App, Error, HttpResponse, HttpServer, ResponseError, get, middleware::Logger, web,
 };
 use derive_more::Display;
 use yarte::{auto, ywrite_min};

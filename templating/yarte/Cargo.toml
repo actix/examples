@@ -1,22 +1,20 @@
 [package]
 name = "templating-yarte"
-version = "1.0.0"
+edition.workspace = true
+rust-version.workspace = true
 publish = false
-edition = "2021"
 
 [package.metadata.cargo-machete]
 ignored = [
-    "yarte_helpers", # only build dep
+  "yarte_helpers", # only used as build dependency
 ]
 
 [dependencies]
 actix-web.workspace = true
-derive_more.workspace = true
+derive_more = { workspace = true, features = ["display"] }
 env_logger.workspace = true
 log.workspace = true
 yarte = { version = "0.15", features = ["bytes-buf", "html-min"] }
 
-[build-dependencies.yarte_helpers]
-version = "0.15.6"
-default-features = false
-features = ["config"]
+[build-dependencies]
+yarte_helpers = { version = "0.15", default-features = false, features = ["config"] }

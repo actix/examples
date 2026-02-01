@@ -1,11 +1,11 @@
 [package]
 name = "json_decode_error"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
 
 env_logger.workspace = true
 log.workspace = true
-serde = "1"
+serde.workspace = true

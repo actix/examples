@@ -1,17 +1,19 @@
 //! This example shows how to use `actix_web::HttpServer::on_connect` to access client certificates
 //! pass them to a handler through connection-local data.
 
-use std::{any::Any, fs::File, io::BufReader, net::SocketAddr};
+use std::{any::Any, net::SocketAddr, sync::Arc};
 
-use actix_tls::accept::rustls::{reexports::ServerConfig, TlsStream};
+use actix_tls::accept::rustls_0_23::TlsStream;
 use actix_web::{
-    dev::Extensions, rt::net::TcpStream, web, App, HttpRequest, HttpResponse, HttpServer, Responder,
+    App, HttpRequest, HttpResponse, HttpServer, Responder, dev::Extensions, middleware::Logger,
+    rt::net::TcpStream, web,
 };
 use log::info;
 use rustls::{
-    server::AllowAnyAnonymousOrAuthenticatedClient, Certificate, PrivateKey, RootCertStore,
+    RootCertStore, ServerConfig,
+    pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject},
+    server::WebPkiClientVerifier,
 };
-use rustls_pemfile::{certs, pkcs8_private_keys};
 
 const CA_CERT: &str = "certs/rootCA.pem";
 const SERVER_CERT: &str = "certs/server-cert.pem";
@@ -27,7 +29,7 @@ struct ConnectionInfo {
 
 async fn route_whoami(req: HttpRequest) -> impl Responder {
     let conn_info = req.conn_data::<ConnectionInfo>().unwrap();
-    let client_cert = req.conn_data::<Certificate>();
+    let client_cert = req.conn_data::<CertificateDer<'static>>();
 
     if let Some(cert) = client_cert {
         HttpResponse::Ok().body(format!("{:?}\n\n{:?}", &conn_info, &cert))
@@ -71,45 +73,46 @@ fn get_client_cert(connection: &dyn Any, data: &mut Extensions) {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
+    rustls::crypto::aws_lc_rs::default_provider()
+        .install_default()
+        .unwrap();
+
     let mut cert_store = RootCertStore::empty();
 
     // import CA cert
-    let ca_cert = &mut BufReader::new(File::open(CA_CERT)?);
-    let ca_cert = Certificate(certs(ca_cert).unwrap()[0].clone());
-
-    cert_store
-        .add(&ca_cert)
-        .expect("root CA not added to store");
+    CertificateDer::pem_file_iter(CA_CERT)
+        .unwrap()
+        .flatten()
+        .for_each(|der| cert_store.add(der).unwrap());
 
     // set up client authentication requirements
-    let client_auth = AllowAnyAnonymousOrAuthenticatedClient::new(cert_store);
-    let config = ServerConfig::builder()
-        .with_safe_defaults()
-        .with_client_cert_verifier(client_auth);
+    let client_auth = WebPkiClientVerifier::builder(Arc::new(cert_store))
+        .build()
+        .unwrap();
 
     // import server cert and key
-    let cert_file = &mut BufReader::new(File::open(SERVER_CERT)?);
-    let key_file = &mut BufReader::new(File::open(SERVER_KEY)?);
-
-    let cert_chain = certs(cert_file)
+    let key_der = PrivateKeyDer::from_pem_file(SERVER_KEY).unwrap();
+    let cert_chain = CertificateDer::pem_file_iter(SERVER_CERT)
         .unwrap()
-        .into_iter()
-        .map(Certificate)
+        .flatten()
         .collect();
-    let mut keys: Vec<PrivateKey> = pkcs8_private_keys(key_file)
-        .unwrap()
-        .into_iter()
-        .map(PrivateKey)
-        .collect();
-    let config = config.with_single_cert(cert_chain, keys.remove(0)).unwrap();
 
-    log::info!("starting HTTP server at http://localhost:8080 and https://localhost:8443");
+    let config = ServerConfig::builder()
+        .with_client_cert_verifier(client_auth)
+        .with_single_cert(cert_chain, key_der)
+        .unwrap();
 
-    HttpServer::new(|| App::new().default_service(web::to(route_whoami)))
-        .on_connect(get_client_cert)
-        .bind(("localhost", 8080))?
-        .bind_rustls(("localhost", 8443), config)?
-        .workers(1)
-        .run()
-        .await
+    log::info!("Starting HTTP server at http://localhost:8080 and https://localhost:8443");
+
+    HttpServer::new(|| {
+        App::new()
+            .default_service(web::to(route_whoami))
+            .wrap(Logger::default())
+    })
+    .on_connect(get_client_cert)
+    .bind(("localhost", 8080))?
+    .bind_rustls_0_23(("localhost", 8443), config)?
+    .workers(2)
+    .run()
+    .await
 }

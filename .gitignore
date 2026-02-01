@@ -13,6 +13,9 @@
 # intellij files
 **/.idea/**
 
+# direnv
+/.direnv/
+
 .history/
 
 # For multipart example
@@ -27,3 +30,6 @@ upload.png
 # todo example database
 todo.db
 todo.db-*
+
+# macOS files
+.DS_Store

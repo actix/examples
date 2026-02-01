@@ -1,0 +1,14 @@
+[package]
+name = "example-cert-watch"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-web = { workspace = true, features = ["rustls-0_23"] }
+color-eyre.workspace = true
+env_logger.workspace = true
+eyre.workspace = true
+log.workspace = true
+notify = { workspace = true }
+rustls.workspace = true
+tokio = { workspace = true, features = ["time", "rt", "macros"] }

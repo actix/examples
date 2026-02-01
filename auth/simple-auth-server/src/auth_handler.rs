@@ -1,8 +1,8 @@
-use std::future::{ready, Ready};
+use std::future::{Ready, ready};
 
 use actix_identity::Identity;
 use actix_web::{
-    dev::Payload, web, Error, FromRequest, HttpMessage as _, HttpRequest, HttpResponse,
+    Error, FromRequest, HttpMessage as _, HttpRequest, HttpResponse, dev::Payload, web,
 };
 use diesel::prelude::*;
 use serde::Deserialize;

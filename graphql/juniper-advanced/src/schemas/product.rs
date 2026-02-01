@@ -1,5 +1,5 @@
 use juniper::GraphQLInputObject;
-use mysql::{from_row, params, prelude::*, Error as DBError, Row};
+use mysql::{Error as DBError, Row, from_row, params, prelude::*};
 
 use crate::schemas::{root::Context, user::User};
 

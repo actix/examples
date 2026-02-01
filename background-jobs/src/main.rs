@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use actix_web::{web::Data, App, HttpServer};
+use actix_web::{App, HttpServer, web::Data};
 use chrono::{DateTime, Utc};
 
 mod ephemeral_jobs;
@@ -14,8 +14,9 @@ mod routes;
 pub(crate) type ItemCache = Mutex<HashMap<String, DateTime<Utc>>>;
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    dotenv::dotenv().ok();
+async fn main() -> eyre::Result<()> {
+    color_eyre::install()?;
+    dotenvy::dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // background jobs relating to local, disposable tasks

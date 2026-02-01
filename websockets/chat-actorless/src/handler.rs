@@ -1,11 +1,8 @@
 use std::time::{Duration, Instant};
 
-use actix_ws::Message;
-use futures_util::{
-    future::{select, Either},
-    StreamExt as _,
-};
-use tokio::{pin, sync::mpsc, time::interval};
+use actix_ws::AggregatedMessage;
+use futures_util::StreamExt as _;
+use tokio::{sync::mpsc, time::interval};
 
 use crate::{ChatServerHandle, ConnId};
 
@@ -20,11 +17,11 @@ const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 pub async fn chat_ws(
     chat_server: ChatServerHandle,
     mut session: actix_ws::Session,
-    mut msg_stream: actix_ws::MessageStream,
+    msg_stream: actix_ws::MessageStream,
 ) {
     log::info!("connected");
 
-    let mut name = None;
+    let mut name: Option<String> = None;
     let mut last_heartbeat = Instant::now();
     let mut interval = interval(HEARTBEAT_INTERVAL);
 
@@ -33,85 +30,54 @@ pub async fn chat_ws(
     // unwrap: chat server is not dropped before the HTTP server
     let conn_id = chat_server.connect(conn_tx).await;
 
+    let mut msg_stream = msg_stream
+        .max_frame_size(128 * 1024)
+        .aggregate_continuations()
+        .max_continuation_size(2 * 1024 * 1024);
+
     let close_reason = loop {
-        // most of the futures we process need to be stack-pinned to work with select()
-
-        let tick = interval.tick();
-        pin!(tick);
-
-        let msg_rx = conn_rx.recv();
-        pin!(msg_rx);
-
-        // TODO: nested select is pretty gross for readability on the match
-        let messages = select(msg_stream.next(), msg_rx);
-        pin!(messages);
-
-        match select(messages, tick).await {
-            // commands & messages received from client
-            Either::Left((Either::Left((Some(Ok(msg)), _)), _)) => {
+        tokio::select! {
+            Some(Ok(msg)) = msg_stream.next() => {
                 log::debug!("msg: {msg:?}");
 
                 match msg {
-                    Message::Ping(bytes) => {
+                    AggregatedMessage::Ping(bytes) => {
                         last_heartbeat = Instant::now();
-                        // unwrap:
                         session.pong(&bytes).await.unwrap();
                     }
 
-                    Message::Pong(_) => {
+                    AggregatedMessage::Pong(_) => {
                         last_heartbeat = Instant::now();
                     }
 
-                    Message::Text(text) => {
+                    AggregatedMessage::Text(text) => {
                         process_text_msg(&chat_server, &mut session, &text, conn_id, &mut name)
                             .await;
                     }
 
-                    Message::Binary(_bin) => {
+                    AggregatedMessage::Binary(_bin) => {
                         log::warn!("unexpected binary message");
                     }
 
-                    Message::Close(reason) => break reason,
-
-                    _ => {
-                        break None;
-                    }
+                    AggregatedMessage::Close(reason) => break reason,
                 }
             }
 
-            // client WebSocket stream error
-            Either::Left((Either::Left((Some(Err(err)), _)), _)) => {
-                log::error!("{}", err);
-                break None;
+            Some(chat_msg) = conn_rx.recv() => {
+                 session.text(chat_msg).await.unwrap();
             }
 
-            // client WebSocket stream ended
-            Either::Left((Either::Left((None, _)), _)) => break None,
-
-            // chat messages received from other room participants
-            Either::Left((Either::Right((Some(chat_msg), _)), _)) => {
-                session.text(chat_msg).await.unwrap();
-            }
-
-            // all connection's message senders were dropped
-            Either::Left((Either::Right((None, _)), _)) => unreachable!(
-                "all connection message senders were dropped; chat server may have panicked"
-            ),
-
-            // heartbeat internal tick
-            Either::Right((_inst, _)) => {
-                // if no heartbeat ping/pong received recently, close the connection
+            _ = interval.tick() => {
                 if Instant::now().duration_since(last_heartbeat) > CLIENT_TIMEOUT {
-                    log::info!(
-                        "client has not sent heartbeat in over {CLIENT_TIMEOUT:?}; disconnecting"
-                    );
                     break None;
                 }
-
-                // send heartbeat ping
                 let _ = session.ping(b"").await;
             }
-        };
+
+            else => {
+                break None;
+            }
+        }
     };
 
     chat_server.disconnect(conn_id);
@@ -180,7 +146,7 @@ async fn process_text_msg(
     } else {
         // prefix message with our name, if assigned
         let msg = match name {
-            Some(ref name) => format!("{name}: {msg}"),
+            Some(name) => format!("{name}: {msg}"),
             None => msg.to_owned(),
         };
 

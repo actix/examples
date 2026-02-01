@@ -2,7 +2,7 @@
 
 [Juniper](https://github.com/graphql-rust/juniper) integration for Actix Web. If you want more advanced example, see also the [juniper-advanced example].
 
-[juniper-advanced example]: https://github.com/actix/examples/tree/master/graphql/juniper-advanced
+[juniper-advanced example]: https://github.com/actix/examples/tree/main/graphql/juniper-advanced
 
 ## Usage
 
@@ -47,9 +47,7 @@ _Mutation example:_
 
 ```graphql
 mutation {
-  createHuman(
-    newHuman: { name: "Fresh Kid Ice", appearsIn: EMPIRE, homePlanet: "earth" }
-  ) {
+  createHuman(newHuman: { name: "Fresh Kid Ice", appearsIn: EMPIRE, homePlanet: "earth" }) {
     id
     name
     appearsIn

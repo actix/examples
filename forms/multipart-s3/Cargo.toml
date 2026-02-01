@@ -1,20 +1,21 @@
 [package]
 name = "multipart-s3-example"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-multipart.workspace = true
 actix-web.workspace = true
 actix-web-lab.workspace = true
 
-aws-config = "0.55"
-aws-sdk-s3 = "0.28"
+aws-config = "1"
+aws-sdk-s3 = "1"
 
-dotenv = "0.15"
+dotenvy.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tokio = { workspace = true, features = ["io-util", "fs"] }
+tokio-util = "0.7"

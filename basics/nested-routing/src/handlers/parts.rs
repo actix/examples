@@ -1,4 +1,4 @@
-use actix_web::{web, Error, HttpResponse};
+use actix_web::{Error, HttpResponse, web};
 
 use crate::common::{Part, Product};
 

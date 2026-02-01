@@ -2,8 +2,8 @@
 extern crate diesel;
 
 use actix_identity::IdentityMiddleware;
-use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
-use actix_web::{cookie::Key, middleware, web, App, HttpServer};
+use actix_session::{SessionMiddleware, config::PersistentSession, storage::CookieSessionStore};
+use actix_web::{App, HttpServer, cookie::Key, middleware, web};
 use diesel::{prelude::*, r2d2};
 use time::Duration;
 
@@ -18,7 +18,7 @@ mod utils;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");

@@ -1,103 +1,129 @@
 [workspace]
+resolver = "3"
 members = [
-   "auth/casbin",
-   "auth/cookie-auth",
-   "auth/cookie-session",
-   "auth/redis-session",
-   "auth/simple-auth-server",
-   "background-jobs",
-   "basics/basics",
-   "basics/error-handling",
-   "basics/hello-world",
-   "basics/nested-routing",
-   "basics/state",
-   "basics/static-files",
-   "basics/todo",
-   "cache/redis",
-   "cors/backend",
-   "data-factory",
-   "databases/diesel",
-   "databases/mongodb",
-   "databases/mysql",
-   "databases/postgres",
-   "databases/redis",
-   "databases/sqlite",
-   "docker",
-   "forms/form",
-   "forms/multipart-s3",
-   "forms/multipart",
-   "graphql/async-graphql",
-   "graphql/juniper-advanced",
-   "graphql/juniper",
-   "guards",
-   "http-proxy",
-   "https-tls/awc-https",
-   "https-tls/openssl-auto-le",
-   "https-tls/openssl",
-   "https-tls/rustls-client-cert",
-   "https-tls/rustls",
-   "json/json-decode-error",
-   "json/json-error",
-   "json/json-validation",
-   "json/json",
-   "json/jsonrpc",
-   "middleware/middleware-encrypted-payloads",
-   "middleware/middleware-ext-mut",
-   "middleware/middleware-http-to-https",
-   "middleware/middleware",
-   "protobuf",
-   "run-in-thread",
-   "server-sent-events",
-   "shutdown-server",
-   "templating/askama",
-   "templating/fluent",
-   "templating/handlebars",
-   "templating/minijinja",
-   "templating/sailfish",
-   "templating/tera",
-   "templating/tinytemplate",
-   "templating/yarte",
-   "unix-socket",
-   "websockets/autobahn",
-   "websockets/chat-actorless",
-   "websockets/chat-broker",
-   "websockets/chat-tcp",
-   "websockets/chat",
-   "websockets/echo-actorless",
-   "websockets/echo",
+  "auth/casbin",
+  "auth/cookie-auth",
+  "auth/cookie-session",
+  "auth/redis-session",
+  "auth/simple-auth-server",
+  "background-jobs",
+  "basics/basics",
+  "basics/error-handling",
+  "basics/hello-world",
+  "basics/nested-routing",
+  "basics/state",
+  "basics/static-files",
+  "basics/todo",
+  "cors/backend",
+  "data-factory",
+  "databases/diesel",
+  "databases/diesel-async",
+  "databases/mongodb",
+  "databases/mysql",
+  "databases/postgres",
+  "databases/redis",
+  "docker",
+  "examples-common",
+  "forms/form",
+  "forms/multipart-s3",
+  "forms/multipart",
+  "graphql/async-graphql",
+  "graphql/juniper-advanced",
+  "graphql/juniper",
+  "guards",
+  "http-proxy",
+  "https-tls/acme-letsencrypt",
+  "https-tls/awc-https",
+  "https-tls/cert-watch",
+  "https-tls/hot-reload",
+  "https-tls/openssl",
+  "https-tls/rustls-client-cert",
+  "https-tls/rustls",
+  "json/json-decode-error",
+  "json/json-error",
+  "json/json-validation",
+  "json/json",
+  "json/jsonrpc",
+  "middleware/encrypted-payloads",
+  "middleware/http-to-https",
+  "middleware/rate-limit",
+  "middleware/request-extensions",
+  "middleware/various",
+  "protobuf",
+  "run-in-thread",
+  "server-sent-events",
+  "shutdown-server",
+  "templating/askama",
+  "templating/fluent",
+  "templating/handlebars",
+  "templating/minijinja",
+  "templating/sailfish",
+  "templating/tera",
+  "templating/tinytemplate",
+  "templating/yarte",
+  "tracing/mainmatter-workshop",
+  "unix-socket",
+  "websockets/autobahn",
+  "websockets/chat-actorless",
+  "websockets/chat-broker",
+  "websockets/chat-tcp",
+  "websockets/chat",
+  "websockets/echo-actorless",
+  "websockets/echo",
 ]
-resolver = "2"
+exclude = ["databases/sqlite"]
+
+[workspace.package]
+publish = false
+edition = "2024"
+rust-version = "1.85"
 
 [workspace.dependencies]
 actix = "0.13"
 actix-broker = "0.4"
 actix-codec = "0.5"
-actix-cors = "0.6"
+actix-cors = "0.7"
 actix-files = "0.6"
-actix-http = "3"
-actix-identity = "0.5"
-actix-multipart = "0.6"
-actix-multipart-derive = "0.6"
-actix-protobuf = "0.9"
-actix-session = "0.7"
+actix-http = "3.11"
+actix-identity = "0.9"
+actix-multipart = "0.7"
+actix-protobuf = "0.11"
+actix-session = "0.11"
 actix-test = "0.1"
-actix-tls = "3"
+actix-tls = "3.4"
 actix-utils = "3"
-actix-web = "4.3"
-actix-web-actors = "4.1"
-actix-web-lab = "0.19"
-actix-ws = "0.2.5"
-awc = "3"
+actix-web = "4.11"
+actix-web-actors = "4.3"
+actix-web-lab = "0.24"
+actix-ws = "0.3"
+awc = "3.7"
 
-chrono = { version = "0.4.20", default-features = false, features = ["clock", "serde"] }
-derive_more = "0.99.7"
-dotenv = "0.15"
-env_logger = "0.10"
+async-stream = "0.3"
+chrono = { version = "0.4.30", features = ["serde"] }
+color-eyre = "0.6"
+derive_more = "2"
+dotenvy = "0.15"
+env_logger = "0.11"
+examples-common = { path = "./examples-common" }
+eyre = { version = "0.6", default-features = false, features = ["auto-install", "track-caller"] }
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
 log = "0.4"
-openssl = { version = "0.10.55", features = ["v110"] }
-rand = "0.8"
+mime = "0.3"
+notify = "8"
+openssl = { version = "0.10.60", features = ["v110"] }
+parking_lot = "0.12"
+pin-project-lite = "0.2"
+rand = "0.9"
+redis = { version = "0.27" }
+reqwest = { version = "0.12", features = ["json", "stream"] }
+rustls = "0.23"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+temp-env = "0.3"
+time = "0.3"
 tokio = { version = "1.24.2", features = ["sync", "io-util"] }
+tokio-stream = "0.1.1"
 tokio-util = "0.7.4"
+tracing = "0.1.30"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+uuid = { version = "1.6", features = ["v4", "v7", "serde"] }

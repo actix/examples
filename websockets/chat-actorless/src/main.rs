@@ -2,8 +2,10 @@
 //!
 //! Open `http://localhost:8080/` in browser to test.
 
+use std::io;
+
 use actix_files::NamedFile;
-use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware, web};
 use tokio::{
     task::{spawn, spawn_local},
     try_join,
@@ -15,7 +17,7 @@ mod server;
 pub use self::server::{ChatServer, ChatServerHandle};
 
 /// Connection ID.
-pub type ConnId = usize;
+pub type ConnId = u64;
 
 /// Room ID.
 pub type RoomId = String;
@@ -45,9 +47,8 @@ async fn chat_ws(
     Ok(res)
 }
 
-// note that the `actix` based WebSocket handling would NOT work under `tokio::main`
 #[tokio::main(flavor = "current_thread")]
-async fn main() -> std::io::Result<()> {
+async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     log::info!("starting HTTP server at http://localhost:8080");
@@ -63,7 +64,8 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/").to(index))
             // websocket routes
             .service(web::resource("/ws").route(web::get().to(chat_ws)))
-            // enable logger
+            // standard middleware
+            .wrap(middleware::NormalizePath::trim())
             .wrap(middleware::Logger::default())
     })
     .workers(2)

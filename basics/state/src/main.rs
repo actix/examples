@@ -22,15 +22,14 @@ use std::{
     cell::Cell,
     io,
     sync::{
-        atomic::{AtomicUsize, Ordering},
         Mutex,
+        atomic::{AtomicUsize, Ordering},
     },
 };
 
 use actix_web::{
-    middleware,
+    App, HttpRequest, HttpResponse, HttpServer, middleware,
     web::{self, Data},
-    App, HttpRequest, HttpResponse, HttpServer,
 };
 
 /// simple handle

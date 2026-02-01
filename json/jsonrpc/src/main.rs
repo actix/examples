@@ -1,15 +1,11 @@
-// Allow this lint since it's fine to use type directly in the short example.
-#![allow(clippy::type_complexity)]
-
 use std::{
     error,
-    future::Future,
     pin::Pin,
     sync::{Arc, RwLock},
     time::Duration,
 };
 
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{App, Error, HttpResponse, HttpServer, middleware, web};
 use bytes::Bytes;
 use futures_util::FutureExt as _;
 use serde_json::Value;
@@ -88,9 +84,12 @@ async fn rpc_select(
 
 pub trait ImplNetwork {
     fn ping(&self) -> String;
+
+    #[allow(clippy::type_complexity)]
     fn wait(&self, d: u64) -> Pin<Box<dyn Future<Output = Result<String, Box<dyn error::Error>>>>>;
 
     fn get(&self) -> u32;
+
     fn inc(&mut self);
 }
 

@@ -1,0 +1,11 @@
+[package]
+name = "middleware-http-to-https"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-web = { workspace = true, features = ["rustls-0_23"] }
+env_logger.workspace = true
+futures-util.workspace = true
+log.workspace = true
+rustls.workspace = true

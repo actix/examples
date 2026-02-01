@@ -1,12 +1,11 @@
 [package]
 name = "db-redis"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-
 env_logger.workspace = true
-log.workspace = true
-redis = { version = "0.23", default-features = false, features = ["tokio-comp", "connection-manager"] }
+redis = { workspace = true, features = ["tokio-comp", "connection-manager"] }
 serde.workspace = true
+tracing.workspace = true

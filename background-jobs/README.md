@@ -5,7 +5,7 @@
 ### server
 
 ```sh
-cd basics/background-jobs
+cd background-jobs
 cargo run
 # starting HTTP server at http://localhost:8080
 ```

@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
-use actix_web::{middleware, web, App, HttpServer, Responder, Result};
-use actix_web_lab::respond::Html;
+use actix_web::{App, HttpServer, Responder, Result, middleware, web};
 use askama::Template;
 
 #[derive(Template)]
@@ -27,7 +26,7 @@ async fn index(query: web::Query<HashMap<String, String>>) -> Result<impl Respon
         Index.render().expect("template should be valid")
     };
 
-    Ok(Html(html))
+    Ok(web::Html::new(html))
 }
 
 #[actix_web::main]

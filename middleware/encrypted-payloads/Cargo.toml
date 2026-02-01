@@ -1,0 +1,14 @@
+[package]
+name = "middleware-encrypted-payloads"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-http.workspace = true
+actix-web.workspace = true
+aes-gcm-siv = "0.11"
+base64 = "0.22"
+env_logger.workspace = true
+log.workspace = true
+serde.workspace = true
+serde_json.workspace = true

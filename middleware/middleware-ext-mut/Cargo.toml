@@ -1,9 +1,0 @@
-[package]
-name = "middleware-ext-mut"
-version = "1.0.0"
-edition = "2021"
-
-[dependencies]
-actix-web.workspace = true
-log.workspace = true
-env_logger.workspace = true

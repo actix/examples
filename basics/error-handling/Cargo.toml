@@ -1,12 +1,14 @@
 [package]
-name = "error_handling"
-version = "1.0.0"
-edition = "2021"
+name = "error-handling"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
 
-derive_more.workspace = true
+derive_more = { workspace = true, features = ["display"] }
 env_logger.workspace = true
 log.workspace = true
 rand.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true

@@ -1,12 +1,11 @@
 [package]
 name = "protobuf-example"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-protobuf.workspace = true
 actix-web.workspace = true
-
 env_logger.workspace = true
 log.workspace = true
-prost = { version = "0.11", features = ["prost-derive"] }
+prost = { version = "0.13", features = ["prost-derive"] }

@@ -1,14 +1,16 @@
-use std::fs;
+use std::{fs, io};
 
-use actix_multipart::form::{tempfile::TempFile, text::Text, MultipartForm};
+use actix_multipart::form::{MultipartForm, tempfile::TempFile, text::Text};
 use actix_web::{
-    body::SizedStream, delete, error, get, middleware::Logger, post, web, App, Error, HttpResponse,
-    HttpServer, Responder,
+    App, Error, HttpResponse, HttpServer, Responder, body::SizedStream, delete, error, get,
+    http::Method, middleware::Logger, post, route, web,
 };
-use actix_web_lab::{extract::Path, respond::Html};
-use aws_config::meta::region::RegionProviderChain;
-use dotenv::dotenv;
+use actix_web_lab::extract::Path;
+use aws_config::{BehaviorVersion, meta::region::RegionProviderChain};
+use dotenvy::dotenv;
+use futures_util::{StreamExt as _, stream};
 use serde_json::json;
+use tokio_util::io::ReaderStream;
 
 mod client;
 mod upload_file;
@@ -46,9 +48,10 @@ async fn upload_to_s3(
     })))
 }
 
-#[get("/file/{s3_key}*")]
+#[route("/file/{s3_key}*", method = "GET", method = "HEAD")]
 async fn fetch_from_s3(
     s3_client: web::Data<Client>,
+    method: Method,
     Path((s3_key,)): Path<(String,)>,
 ) -> Result<impl Responder, Error> {
     let (file_size, file_stream) = s3_client
@@ -56,7 +59,19 @@ async fn fetch_from_s3(
         .await
         .ok_or_else(|| error::ErrorNotFound("file with specified key not found"))?;
 
-    Ok(HttpResponse::Ok().body(SizedStream::new(file_size, file_stream)))
+    let stream = match method {
+        // data stream for GET requests
+        Method::GET => ReaderStream::new(file_stream.into_async_read()).boxed_local(),
+
+        // empty stream for HEAD requests
+        Method::HEAD => stream::empty::<Result<_, io::Error>>().boxed_local(),
+
+        _ => unreachable!(),
+    };
+
+    Ok(HttpResponse::Ok()
+        .no_chunking(file_size)
+        .body(SizedStream::new(file_size, stream)))
 }
 
 #[delete("/file/{s3_key}*")]
@@ -73,7 +88,7 @@ async fn delete_from_s3(
 
 #[get("/")]
 async fn index() -> impl Responder {
-    Html(include_str!("./index.html").to_owned())
+    web::Html::new(include_str!("./index.html").to_owned())
 }
 
 #[actix_web::main]
@@ -87,7 +102,10 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("configuring S3 client");
     let aws_region = RegionProviderChain::default_provider().or_else("us-east-1");
-    let aws_config = aws_config::from_env().region(aws_region).load().await;
+    let aws_config = aws_config::defaults(BehaviorVersion::latest())
+        .region(aws_region)
+        .load()
+        .await;
 
     // create singleton S3 client
     let s3_client = Client::new(&aws_config);
@@ -98,12 +116,12 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .app_data(web::Data::new(s3_client.clone()))
             .service(index)
             .service(upload_to_s3)
             .service(fetch_from_s3)
             .service(delete_from_s3)
             .wrap(Logger::default())
-            .app_data(web::Data::new(s3_client.clone()))
     })
     .workers(2)
     .bind(("127.0.0.1", 8080))?

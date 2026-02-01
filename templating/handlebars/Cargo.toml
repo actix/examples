@@ -1,9 +1,10 @@
 [package]
 name = "templating-handlebars"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-handlebars = { version = "4.2.1", features = ["dir_source"] }
+env_logger.workspace = true
+handlebars = { version = "5", features = ["dir_source"] }
 serde_json.workspace = true

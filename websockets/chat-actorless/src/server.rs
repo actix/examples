@@ -4,12 +4,12 @@ use std::{
     collections::{HashMap, HashSet},
     io,
     sync::{
-        atomic::{AtomicUsize, Ordering},
         Arc,
+        atomic::{AtomicUsize, Ordering},
     },
 };
 
-use rand::{thread_rng, Rng as _};
+use rand::Rng as _;
 use tokio::sync::{mpsc, oneshot};
 
 use crate::{ConnId, Msg, RoomId};
@@ -87,7 +87,7 @@ impl ChatServer {
     /// Send message to users in a room.
     ///
     /// `skip` is used to prevent messages triggered by a connection also being received by it.
-    async fn send_system_message(&self, room: &str, skip: ConnId, msg: impl Into<String>) {
+    async fn send_system_message(&self, room: &str, skip: ConnId, msg: impl Into<Msg>) {
         if let Some(sessions) = self.rooms.get(room) {
             let msg = msg.into();
 
@@ -106,7 +106,7 @@ impl ChatServer {
     ///
     /// `conn` is used to find current room and prevent messages sent by a connection also being
     /// received by it.
-    async fn send_message(&self, conn: ConnId, msg: impl Into<String>) {
+    async fn send_message(&self, conn: ConnId, msg: impl Into<Msg>) {
         if let Some(room) = self
             .rooms
             .iter()
@@ -124,14 +124,11 @@ impl ChatServer {
         self.send_system_message("main", 0, "Someone joined").await;
 
         // register session with random connection ID
-        let id = thread_rng().gen::<usize>();
+        let id = rand::rng().random::<ConnId>();
         self.sessions.insert(id, tx);
 
         // auto join session to main room
-        self.rooms
-            .entry("main".to_owned())
-            .or_insert_with(HashSet::new)
-            .insert(id);
+        self.rooms.entry("main".to_owned()).or_default().insert(id);
 
         let count = self.visitor_count.fetch_add(1, Ordering::SeqCst);
         self.send_system_message("main", 0, format!("Total visitors {count}"))
@@ -145,7 +142,7 @@ impl ChatServer {
     async fn disconnect(&mut self, conn_id: ConnId) {
         println!("Someone disconnected");
 
-        let mut rooms: Vec<String> = Vec::new();
+        let mut rooms: Vec<RoomId> = Vec::new();
 
         // remove sender
         if self.sessions.remove(&conn_id).is_some() {
@@ -165,12 +162,12 @@ impl ChatServer {
     }
 
     /// Returns list of created room names.
-    fn list_rooms(&mut self) -> Vec<String> {
+    fn list_rooms(&mut self) -> Vec<RoomId> {
         self.rooms.keys().cloned().collect()
     }
 
     /// Join room, send disconnect message to old room send join message to new room.
-    async fn join_room(&mut self, conn_id: ConnId, room: String) {
+    async fn join_room(&mut self, conn_id: ConnId, room: RoomId) {
         let mut rooms = Vec::new();
 
         // remove session from all rooms
@@ -185,10 +182,7 @@ impl ChatServer {
                 .await;
         }
 
-        self.rooms
-            .entry(room.clone())
-            .or_insert_with(HashSet::new)
-            .insert(conn_id);
+        self.rooms.entry(room.clone()).or_default().insert(conn_id);
 
         self.send_system_message(&room, conn_id, "Someone connected")
             .await;
@@ -236,7 +230,7 @@ pub struct ChatServerHandle {
 
 impl ChatServerHandle {
     /// Register client message sender and obtain connection ID.
-    pub async fn connect(&self, conn_tx: mpsc::UnboundedSender<String>) -> ConnId {
+    pub async fn connect(&self, conn_tx: mpsc::UnboundedSender<Msg>) -> ConnId {
         let (res_tx, res_rx) = oneshot::channel();
 
         // unwrap: chat server should not have been dropped
@@ -249,7 +243,7 @@ impl ChatServerHandle {
     }
 
     /// List all created rooms.
-    pub async fn list_rooms(&self) -> Vec<String> {
+    pub async fn list_rooms(&self) -> Vec<RoomId> {
         let (res_tx, res_rx) = oneshot::channel();
 
         // unwrap: chat server should not have been dropped
@@ -260,7 +254,7 @@ impl ChatServerHandle {
     }
 
     /// Join `room`, creating it if it does not exist.
-    pub async fn join_room(&self, conn: ConnId, room: impl Into<String>) {
+    pub async fn join_room(&self, conn: ConnId, room: impl Into<RoomId>) {
         let (res_tx, res_rx) = oneshot::channel();
 
         // unwrap: chat server should not have been dropped
@@ -277,7 +271,7 @@ impl ChatServerHandle {
     }
 
     /// Broadcast message to current room.
-    pub async fn send_message(&self, conn: ConnId, msg: impl Into<String>) {
+    pub async fn send_message(&self, conn: ConnId, msg: impl Into<Msg>) {
         let (res_tx, res_rx) = oneshot::channel();
 
         // unwrap: chat server should not have been dropped

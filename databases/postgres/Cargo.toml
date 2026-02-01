@@ -1,15 +1,15 @@
 [package]
-name = "async_pg"
-version = "1.0.0"
-edition = "2021"
+name = "db-postgres"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-config = "0.13.1"
-deadpool-postgres = { version = "0.10.2", features = ["serde"] }
-derive_more.workspace = true
-dotenv = "0.15.0"
-serde = { version = "1.0.137", features = ["derive"] }
+confik = "0.15"
+deadpool-postgres = { version = "0.14", features = ["serde"] }
+derive_more = { workspace = true, features = ["display", "error", "from"] }
+dotenvy.workspace = true
+serde.workspace = true
 tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
-tokio-postgres = "0.7.6"
+tokio-postgres = "0.7"

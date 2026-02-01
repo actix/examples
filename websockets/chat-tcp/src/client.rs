@@ -16,20 +16,22 @@ async fn main() {
     let mut cmd_rx = UnboundedReceiverStream::new(cmd_rx);
 
     // run blocking terminal input reader on separate thread
-    let input_thread = thread::spawn(move || loop {
-        let mut cmd = String::with_capacity(32);
+    let input_thread = thread::spawn(move || {
+        loop {
+            let mut cmd = String::with_capacity(32);
 
-        if io::stdin().read_line(&mut cmd).is_err() {
-            log::error!("error reading line");
-            return;
+            if io::stdin().read_line(&mut cmd).is_err() {
+                log::error!("error reading line");
+                return;
+            }
+
+            if cmd.trim() == "/exit" {
+                println!("exiting input loop");
+                return;
+            }
+
+            cmd_tx.send(cmd).unwrap();
         }
-
-        if cmd == "/exit" {
-            println!("exiting input loop");
-            return;
-        }
-
-        cmd_tx.send(cmd).unwrap();
     });
 
     let io = TcpStream::connect(("127.0.0.1", 12345)).await.unwrap();

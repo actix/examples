@@ -1,15 +1,16 @@
 use std::{convert::Infallible, io};
 
 use actix_files::{Files, NamedFile};
-use actix_session::{storage::CookieSessionStore, Session, SessionMiddleware};
+use actix_session::{Session, SessionMiddleware, storage::CookieSessionStore};
 use actix_web::{
-    error, get,
+    App, Either, HttpRequest, HttpResponse, HttpServer, Responder, Result, error, get,
     http::{
-        header::{self, ContentType},
         Method, StatusCode,
+        header::{self, ContentType},
     },
-    middleware, web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder, Result,
+    middleware, web,
 };
+use actix_web_lab::extract::Path;
 use async_stream::stream;
 
 // NOTE: Not a suitable session key for production.
@@ -54,8 +55,7 @@ async fn default_handler(req_method: Method) -> Result<impl Responder> {
     }
 }
 
-/// response body
-async fn response_body(path: web::Path<String>) -> HttpResponse {
+async fn streaming_response(path: web::Path<String>) -> HttpResponse {
     let name = path.into_inner();
 
     HttpResponse::Ok()
@@ -67,23 +67,23 @@ async fn response_body(path: web::Path<String>) -> HttpResponse {
         })
 }
 
-/// handler with path parameters like `/user/{name}/`
-async fn with_param(req: HttpRequest, path: web::Path<(String,)>) -> HttpResponse {
+/// handler with path parameters like `/user/{name}`
+async fn with_param(req: HttpRequest, Path((name,)): Path<(String,)>) -> HttpResponse {
     println!("{req:?}");
 
     HttpResponse::Ok()
         .content_type(ContentType::plaintext())
-        .body(format!("Hello {}!", path.0))
+        .body(format!("Hello {name}!"))
 }
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    examples_common::init_standard_logger();
 
     // random key means that restarting server will invalidate existing session cookies
     let key = actix_web::cookie::Key::from(SESSION_SIGNING_KEY);
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
@@ -96,7 +96,7 @@ async fn main() -> io::Result<()> {
                     .build(),
             )
             // enable logger - always register Actix Web Logger middleware last
-            .wrap(middleware::Logger::default())
+            .wrap(middleware::Logger::default().log_target("@"))
             // register favicon
             .service(favicon)
             // register simple route, handle all methods
@@ -104,7 +104,7 @@ async fn main() -> io::Result<()> {
             // with path parameters
             .service(web::resource("/user/{name}").route(web::get().to(with_param)))
             // async response body
-            .service(web::resource("/async-body/{name}").route(web::get().to(response_body)))
+            .service(web::resource("/async-body/{name}").route(web::get().to(streaming_response)))
             .service(
                 web::resource("/test").to(|req: HttpRequest| match *req.method() {
                     Method::GET => HttpResponse::Ok(),
@@ -114,7 +114,7 @@ async fn main() -> io::Result<()> {
             )
             .service(web::resource("/error").to(|| async {
                 error::InternalError::new(
-                    io::Error::new(io::ErrorKind::Other, "test"),
+                    io::Error::other("test"),
                     StatusCode::INTERNAL_SERVER_ERROR,
                 )
             }))

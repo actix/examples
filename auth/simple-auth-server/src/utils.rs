@@ -1,4 +1,3 @@
-use argon2::{self, Config};
 use once_cell::sync::Lazy;
 
 use crate::errors::ServiceError;
@@ -10,9 +9,9 @@ const SALT: &[u8] = b"supersecuresalt";
 
 // PLEASE NOTE THIS IS ONLY FOR DEMO PLEASE DO MORE RESEARCH FOR PRODUCTION USE
 pub fn hash_password(password: &str) -> Result<String, ServiceError> {
-    let config = Config {
+    let config = argon2::Config {
         secret: SECRET_KEY.as_bytes(),
-        ..Default::default()
+        ..argon2::Config::rfc9106_low_mem()
     };
     argon2::hash_encoded(password.as_bytes(), SALT, &config).map_err(|err| {
         dbg!(err);
@@ -31,16 +30,14 @@ pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {
 
 #[cfg(test)]
 mod tests {
-    use std::env;
-
     use actix_web::cookie::Key;
 
     use super::SECRET_KEY;
 
     #[test]
     fn secret_key_default() {
-        env::remove_var("SECRET_KEY");
-
-        assert!(Key::try_from(SECRET_KEY.as_bytes()).is_ok());
+        temp_env::with_var("SECRET_KEY", None::<&str>, || {
+            assert!(Key::try_from(SECRET_KEY.as_bytes()).is_ok());
+        });
     }
 }

@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1.5.0
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.2
         with:
           toolchain: stable
           components: rustfmt
@@ -30,10 +30,10 @@ jobs:
       CARGO_INCREMENTAL: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1.5.0
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.2
         with:
           toolchain: stable
           components: clippy
@@ -51,6 +51,6 @@ jobs:
         timeout-minutes: 30
         uses: giraffate/clippy-action@v1
         with:
-          reporter: 'github-pr-check'
+          reporter: "github-pr-check"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           clippy_flags: --workspace --all-features --tests

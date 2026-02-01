@@ -1,12 +1,10 @@
 [package]
 name = "templating-tera"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-actix-web-lab.workspace = true
-
 env_logger.workspace = true
 log.workspace = true
 tera = "1.8"

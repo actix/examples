@@ -1,7 +1,21 @@
 use std::io;
 
-use actix_web::{error, middleware, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, error, middleware, web};
 use serde::Deserialize;
+
+async fn get_from_cache(redis: web::Data<redis::Client>) -> actix_web::Result<impl Responder> {
+    let mut conn = redis
+        .get_connection_manager()
+        .await
+        .map_err(error::ErrorInternalServerError)?;
+
+    let res = redis::Cmd::mget(&["my_domain:one", "my_domain:two", "my_domain:three"])
+        .query_async::<Vec<String>>(&mut conn)
+        .await
+        .map_err(error::ErrorInternalServerError)?;
+
+    Ok(HttpResponse::Ok().json(res))
+}
 
 #[derive(Deserialize)]
 pub struct CacheInfo {
@@ -15,7 +29,7 @@ async fn cache_stuff(
     redis: web::Data<redis::Client>,
 ) -> actix_web::Result<impl Responder> {
     let mut conn = redis
-        .get_tokio_connection_manager()
+        .get_connection_manager()
         .await
         .map_err(error::ErrorInternalServerError)?;
 
@@ -24,7 +38,7 @@ async fn cache_stuff(
         ("my_domain:two", info.two),
         ("my_domain:three", info.three),
     ])
-    .query_async::<_, String>(&mut conn)
+    .query_async::<String>(&mut conn)
     .await
     .map_err(error::ErrorInternalServerError)?;
 
@@ -38,12 +52,12 @@ async fn cache_stuff(
 
 async fn del_stuff(redis: web::Data<redis::Client>) -> actix_web::Result<impl Responder> {
     let mut conn = redis
-        .get_tokio_connection_manager()
+        .get_connection_manager()
         .await
         .map_err(error::ErrorInternalServerError)?;
 
     let res = redis::Cmd::del(&["my_domain:one", "my_domain:two", "my_domain:three"])
-        .query_async::<_, usize>(&mut conn)
+        .query_async::<usize>(&mut conn)
         .await
         .map_err(error::ErrorInternalServerError)?;
 
@@ -51,7 +65,7 @@ async fn del_stuff(redis: web::Data<redis::Client>) -> actix_web::Result<impl Re
     if res == 3 {
         Ok(HttpResponse::Ok().body("successfully deleted values"))
     } else {
-        log::error!("deleted {res} keys");
+        tracing::error!("deleted {res} keys");
         Ok(HttpResponse::InternalServerError().finish())
     }
 }
@@ -60,19 +74,21 @@ async fn del_stuff(redis: web::Data<redis::Client>) -> actix_web::Result<impl Re
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("starting HTTP server at http://localhost:8080");
 
     let redis = redis::Client::open("redis://127.0.0.1:6379").unwrap();
 
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(redis.clone()))
-            .wrap(middleware::Logger::default())
             .service(
                 web::resource("/stuff")
+                    .route(web::get().to(get_from_cache))
                     .route(web::post().to(cache_stuff))
                     .route(web::delete().to(del_stuff)),
             )
+            .wrap(middleware::NormalizePath::trim())
+            .wrap(middleware::Logger::default())
     })
     .workers(2)
     .bind(("127.0.0.1", 8080))?

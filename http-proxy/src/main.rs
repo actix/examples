@@ -1,8 +1,7 @@
-use std::net::ToSocketAddrs;
+use std::{io, net::ToSocketAddrs as _};
 
 use actix_web::{
-    dev::PeerAddr, error, http::Method, middleware, web, App, Error, HttpRequest, HttpResponse,
-    HttpServer,
+    App, Error, HttpRequest, HttpResponse, HttpServer, dev::PeerAddr, error, middleware, web,
 };
 use awc::Client;
 use clap::Parser;
@@ -57,7 +56,7 @@ async fn forward(
 async fn forward_reqwest(
     req: HttpRequest,
     mut payload: web::Payload,
-    method: Method,
+    method: actix_web::http::Method,
     peer_addr: Option<PeerAddr>,
     url: web::Data<Url>,
     client: web::Data<reqwest::Client>,
@@ -81,7 +80,10 @@ async fn forward_reqwest(
     });
 
     let forwarded_req = client
-        .request(method, new_url)
+        .request(
+            reqwest::Method::from_bytes(method.as_str().as_bytes()).unwrap(),
+            new_url,
+        )
         .body(reqwest::Body::wrap_stream(UnboundedReceiverStream::new(rx)));
 
     // TODO: This forwarded implementation is incomplete as it only handles the unofficial
@@ -96,11 +98,16 @@ async fn forward_reqwest(
         .await
         .map_err(error::ErrorInternalServerError)?;
 
-    let mut client_resp = HttpResponse::build(res.status());
+    let mut client_resp =
+        HttpResponse::build(actix_web::http::StatusCode::from_u16(res.status().as_u16()).unwrap());
+
     // Remove `Connection` as per
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection#Directives
     for (header_name, header_value) in res.headers().iter().filter(|(h, _)| *h != "connection") {
-        client_resp.insert_header((header_name.clone(), header_value.clone()));
+        client_resp.insert_header((
+            actix_web::http::header::HeaderName::from_bytes(header_name.as_ref()).unwrap(),
+            actix_web::http::header::HeaderValue::from_bytes(header_value.as_ref()).unwrap(),
+        ));
     }
 
     Ok(client_resp.streaming(res.bytes_stream()))
@@ -115,7 +122,7 @@ struct CliArguments {
 }
 
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let args = CliArguments::parse();

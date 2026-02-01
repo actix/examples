@@ -1,6 +1,6 @@
 use async_graphql::{
-    connection::{query, Connection, Edge},
     Context, Enum, Error, Interface, Object, OutputType, Result,
+    connection::{Connection, Edge, query},
 };
 
 use super::{StarWars, StarWarsChar};
@@ -22,7 +22,7 @@ pub struct Human<'a>(&'a StarWarsChar);
 
 /// A humanoid creature in the Star Wars universe.
 #[Object]
-impl<'a> Human<'a> {
+impl Human<'_> {
     /// The id of the human.
     async fn id(&self) -> &str {
         self.0.id
@@ -63,7 +63,7 @@ pub struct Droid<'a>(&'a StarWarsChar);
 
 /// A mechanical creature in the Star Wars universe.
 #[Object]
-impl<'a> Droid<'a> {
+impl Droid<'_> {
     /// The id of the droid.
     async fn id(&self) -> &str {
         self.0.id
@@ -168,12 +168,13 @@ impl QueryRoot {
     }
 }
 
+#[allow(clippy::duplicated_attributes)] // false positive
 #[derive(Interface)]
 #[graphql(
-    field(name = "id", type = "&str"),
-    field(name = "name", type = "&str"),
-    field(name = "friends", type = "Vec<Character<'ctx>>"),
-    field(name = "appears_in", type = "&[Episode]")
+    field(name = "id", ty = "&str"),
+    field(name = "name", ty = "&str"),
+    field(name = "friends", ty = "Vec<Character<'ctx>>"),
+    field(name = "appears_in", ty = "&[Episode]")
 )]
 pub enum Character<'a> {
     Human(Human<'a>),

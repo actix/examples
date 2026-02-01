@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_web::{middleware::Logger, web::Data, App, HttpServer};
+use actix_web::{App, HttpServer, middleware::Logger, web::Data};
 
 mod db;
 mod handlers;
@@ -9,7 +9,7 @@ use self::{db::get_db_pool, handlers::register};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let pool = get_db_pool();

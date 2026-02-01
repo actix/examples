@@ -4,9 +4,9 @@ mod model;
 #[cfg(test)]
 mod test;
 
-use actix_web::{get, post, web, App, HttpResponse, HttpServer};
+use actix_web::{App, HttpResponse, HttpServer, get, post, web};
 use model::User;
-use mongodb::{bson::doc, options::IndexOptions, Client, Collection, IndexModel};
+use mongodb::{Client, Collection, IndexModel, bson::doc, options::IndexOptions};
 
 const DB_NAME: &str = "myApp";
 const COLL_NAME: &str = "users";
@@ -15,7 +15,7 @@ const COLL_NAME: &str = "users";
 #[post("/add_user")]
 async fn add_user(client: web::Data<Client>, form: web::Form<User>) -> HttpResponse {
     let collection = client.database(DB_NAME).collection(COLL_NAME);
-    let result = collection.insert_one(form.into_inner(), None).await;
+    let result = collection.insert_one(form.into_inner()).await;
     match result {
         Ok(_) => HttpResponse::Ok().body("user added"),
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
@@ -27,10 +27,7 @@ async fn add_user(client: web::Data<Client>, form: web::Form<User>) -> HttpRespo
 async fn get_user(client: web::Data<Client>, username: web::Path<String>) -> HttpResponse {
     let username = username.into_inner();
     let collection: Collection<User> = client.database(DB_NAME).collection(COLL_NAME);
-    match collection
-        .find_one(doc! { "username": &username }, None)
-        .await
-    {
+    match collection.find_one(doc! { "username": &username }).await {
         Ok(Some(user)) => HttpResponse::Ok().json(user),
         Ok(None) => {
             HttpResponse::NotFound().body(format!("No user found with username {username}"))
@@ -49,7 +46,7 @@ async fn create_username_index(client: &Client) {
     client
         .database(DB_NAME)
         .collection::<User>(COLL_NAME)
-        .create_index(model, None)
+        .create_index(model)
         .await
         .expect("creating an index should succeed");
 }

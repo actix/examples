@@ -1,16 +1,13 @@
 [package]
 name = "async-graphql-demo"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
-actix-web.workspace = true
-actix-web-lab.workspace = true
 actix-cors.workspace = true
-
-async-graphql = "5"
-async-graphql-actix-web = "5"
-
+actix-web.workspace = true
+async-graphql = "6"
+async-graphql-actix-web = "6"
 env_logger.workspace = true
 log.workspace = true
 slab = "0.4"

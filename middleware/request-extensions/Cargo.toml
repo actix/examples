@@ -1,0 +1,9 @@
+[package]
+name = "middleware-request-extensions"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-web.workspace = true
+log.workspace = true
+env_logger.workspace = true

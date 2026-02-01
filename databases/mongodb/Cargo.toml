@@ -1,9 +1,9 @@
 [package]
-name = "mongodb"
-version = "1.0.0"
-edition = "2021"
+name = "db-mongo"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-mongodb = "2"
+mongodb = "3"
 serde.workspace = true

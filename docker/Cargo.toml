@@ -1,9 +1,10 @@
 [package]
 name = "docker_sample"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
+# Do not use workspace deps as they won't work in docker context.
 [dependencies]
-actix-web.workspace = true
-env_logger.workspace = true
-log.workspace = true
+actix-web = "4"
+env_logger = "0.11"
+log = "0.4"

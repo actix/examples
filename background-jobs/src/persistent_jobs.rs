@@ -2,8 +2,9 @@
 
 use std::time::Duration;
 
-use apalis::{prelude::*, redis::RedisStorage};
-use rand::Rng as _;
+use apalis::prelude::*;
+use apalis_redis::{Config, RedisStorage};
+use rand::distr::{Alphanumeric, SampleString as _};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -13,49 +14,33 @@ pub(crate) struct Email {
 
 impl Email {
     pub(crate) fn random() -> Self {
-        let user = (&mut rand::thread_rng())
-            .sample_iter(rand::distributions::Alphanumeric)
-            .take(10)
-            .map(char::from)
-            .collect::<String>();
-
+        let user = Alphanumeric.sample_string(&mut rand::rng(), 10);
         let to = format!("{user}@fake-mail.com");
-
         Self { to }
     }
 }
 
-impl Job for Email {
-    const NAME: &'static str = "send_email";
-}
-
-async fn process_email_job(job: Email, _ctx: JobContext) -> Result<(), JobError> {
+async fn process_email_job(job: Email) {
     log::info!("sending email to {}", &job.to);
 
     // simulate time taken to send email
     tokio::time::sleep(rand_delay_with_jitter()).await;
-
-    Ok(())
 }
 
-pub(crate) async fn start_processing_email_queue() -> anyhow::Result<RedisStorage<Email>> {
+pub(crate) async fn start_processing_email_queue() -> eyre::Result<RedisStorage<Email>> {
     let redis_url = std::env::var("REDIS_URL").expect("Missing env variable REDIS_URL");
-    let storage = RedisStorage::connect(redis_url).await?;
+    let conn = apalis_redis::connect(redis_url).await?;
+    let config = Config::default().set_namespace("send_email");
+    let storage = RedisStorage::new_with_config(conn, config);
 
-    // create job monitor(s) and attach email job handler
-    let monitor = Monitor::new().register_with_count(2, {
-        let storage = storage.clone();
-        move |n| {
-            WorkerBuilder::new(format!("job-handler-{n}"))
-                .with_storage(storage.clone())
-                .build_fn(process_email_job)
-        }
-    });
+    // create unmonitored workers for handling emails
+    let worker = WorkerBuilder::new("job-handler")
+        .concurrency(2)
+        .backend(storage.clone())
+        .build_fn(process_email_job);
 
-    // spawn job monitor into background
-    // the monitor manages itself otherwise so we don't need to return a join handle
     #[allow(clippy::let_underscore_future)]
-    let _ = tokio::spawn(monitor.run());
+    let _ = tokio::spawn(worker.run());
 
     Ok(storage)
 }

@@ -16,7 +16,7 @@ use std::io;
 
 use actix_web::{middleware, web, App, Error as AWError, HttpResponse, HttpServer};
 use futures_util::future::join_all;
-use r2d2_sqlite::{self, SqliteConnectionManager};
+use r2d2_sqlite::SqliteConnectionManager;
 
 mod db;
 use db::{Pool, Queries};

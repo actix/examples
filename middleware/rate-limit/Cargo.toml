@@ -1,0 +1,12 @@
+[package]
+name = "middleware-rate-limit"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-governor = "0.5"
+actix-web.workspace = true
+chrono.workspace = true
+env_logger.workspace = true
+futures-util.workspace = true
+log.workspace = true

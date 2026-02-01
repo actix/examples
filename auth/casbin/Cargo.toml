@@ -1,11 +1,9 @@
 [package]
 name = "actix-casbin-example"
-version = "1.0.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
-actix-web.workspace = true
-
+actix-web = { workspace = true }
 casbin = "2"
-env_logger.workspace = true
-tokio.workspace = true
+env_logger = { workspace = true }
