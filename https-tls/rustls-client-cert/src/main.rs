@@ -53,8 +53,10 @@ fn get_client_cert(connection: &dyn Any, data: &mut Extensions) {
         if let Some(certs) = tls_session.peer_certificates() {
             info!("client certificate found");
 
-            // insert a `rustls::Certificate` into request data
-            data.insert(certs.last().unwrap().clone());
+            // Insert the peer (end-entity) certificate into request data.
+            if let Some(cert) = certs.first() {
+                data.insert(cert.clone());
+            }
         }
     } else if let Some(socket) = connection.downcast_ref::<TcpStream>() {
         info!("plaintext on_connect");
