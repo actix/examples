@@ -4,7 +4,7 @@ use actix_web::{
 };
 use confik::{Configuration as _, EnvSource};
 use deadpool_postgres::{Client, Pool};
-use dotenvy::dotenv;
+use dotenvor::dotenv;
 use tokio_postgres::NoTls;
 
 use crate::config::ExampleConfig;
@@ -39,7 +39,7 @@ pub async fn add_user(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv().ok();
+    unsafe { dotenv() }.ok();
 
     let config = ExampleConfig::builder()
         .override_with(EnvSource::new())

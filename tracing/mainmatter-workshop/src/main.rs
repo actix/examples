@@ -11,7 +11,7 @@ mod routes;
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    dotenvy::dotenv().ok();
+    unsafe { dotenvor::dotenv() }.ok();
     logging::init();
     let handle = prometheus::init();
 

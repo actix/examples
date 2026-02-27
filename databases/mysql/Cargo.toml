@@ -6,7 +6,7 @@ rust-version.workspace = true
 [dependencies]
 actix-web.workspace = true
 derive_more = { workspace = true, features = ["display", "error", "from"] }
-dotenvy.workspace = true
+dotenvor.workspace = true
 env_logger.workspace = true
 log.workspace = true
 mysql = "24"

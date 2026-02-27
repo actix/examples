@@ -7,7 +7,7 @@ use actix_web::{
     middleware::{ErrorHandlers, Logger},
     web,
 };
-use dotenvy::dotenv;
+use dotenvor::dotenv;
 use tera::Tera;
 
 mod api;
@@ -20,7 +20,7 @@ static SESSION_SIGNING_KEY: &[u8] = &[0; 64];
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    dotenv().ok();
+    unsafe { dotenv() }.ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let key = actix_web::cookie::Key::from(SESSION_SIGNING_KEY);

@@ -7,7 +7,7 @@ use actix_web::{
 };
 use actix_web_lab::extract::Path;
 use aws_config::{BehaviorVersion, meta::region::RegionProviderChain};
-use dotenvy::dotenv;
+use dotenvor::dotenv;
 use futures_util::{StreamExt as _, stream};
 use serde_json::json;
 use tokio_util::io::ReaderStream;
@@ -93,7 +93,7 @@ async fn index() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv().ok();
+    unsafe { dotenv() }.ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     log::info!("creating temporary upload directory");

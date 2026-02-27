@@ -5,7 +5,7 @@
 - `tokio_postgres`
 - use of `tokio_pg_mapper` for postgres data mapping
 - `deadpool_postgres` for connection pooling
-- `dotenvy` + `confik` for configuration
+- `dotenvor` + `confik` for configuration
 
 ## Instructions
 

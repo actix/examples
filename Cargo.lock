@@ -1601,7 +1601,7 @@ dependencies = [
  "apalis-redis",
  "chrono",
  "color-eyre",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "eyre",
  "log",
@@ -2625,7 +2625,7 @@ version = "0.0.0"
 dependencies = [
  "actix-web",
  "diesel",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "log",
  "serde",
@@ -2639,7 +2639,7 @@ dependencies = [
  "actix-web",
  "diesel",
  "diesel-async",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "log",
  "serde",
@@ -2663,7 +2663,7 @@ dependencies = [
  "confik",
  "deadpool-postgres",
  "derive_more 2.0.1",
- "dotenvy",
+ "dotenvor",
  "serde",
  "tokio-pg-mapper",
  "tokio-pg-mapper-derive",
@@ -2921,6 +2921,12 @@ dependencies = [
  "env_logger",
  "log",
 ]
+
+[[package]]
+name = "dotenvor"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f48f26ebd931c54a0e1e315b8ae0cb476ad18a29e68a44f4dd0bf5306911307"
 
 [[package]]
 name = "dotenvy"
@@ -4678,7 +4684,7 @@ version = "0.0.0"
 dependencies = [
  "actix-cors",
  "actix-web",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "juniper",
  "log",
@@ -5363,7 +5369,7 @@ dependencies = [
  "actix-web-lab",
  "aws-config",
  "aws-sdk-s3",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "futures-util",
  "log",
@@ -5385,7 +5391,7 @@ version = "0.0.0"
 dependencies = [
  "actix-web",
  "derive_more 2.0.1",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "log",
  "mysql 24.0.0",
@@ -7619,7 +7625,7 @@ dependencies = [
  "chrono",
  "derive_more 2.0.1",
  "diesel",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "log",
  "once_cell",
@@ -8529,7 +8535,7 @@ dependencies = [
  "actix-files",
  "actix-session",
  "actix-web",
- "dotenvy",
+ "dotenvor",
  "env_logger",
  "log",
  "serde",
@@ -9007,7 +9013,7 @@ name = "tracing-mainmatter-workshop"
 version = "0.0.0"
 dependencies = [
  "actix-web",
- "dotenvy",
+ "dotenvor",
  "metrics",
  "metrics-exporter-prometheus",
  "opentelemetry",

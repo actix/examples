@@ -10,7 +10,7 @@ apalis = { version = "0.6", features = ["limit"] }
 apalis-redis = { version = "0.6" }
 chrono.workspace = true
 color-eyre.workspace = true
-dotenvy.workspace = true
+dotenvor.workspace = true
 env_logger.workspace = true
 eyre.workspace = true
 log.workspace = true
