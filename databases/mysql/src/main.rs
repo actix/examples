@@ -24,7 +24,7 @@ fn get_conn_builder(
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     // initialize environment
-    dotenvy::dotenv().ok();
+    unsafe { dotenvor::dotenv() }.ok();
 
     // initialize logger
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));

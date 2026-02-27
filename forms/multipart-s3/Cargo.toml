@@ -11,7 +11,7 @@ actix-web-lab.workspace = true
 aws-config = "1"
 aws-sdk-s3 = "1"
 
-dotenvy.workspace = true
+dotenvor.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true

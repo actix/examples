@@ -5,7 +5,7 @@ rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-dotenvy.workspace = true
+dotenvor.workspace = true
 metrics = "0.23"
 metrics-exporter-prometheus = { version = "0.15", default-features = false }
 opentelemetry = "0.23"

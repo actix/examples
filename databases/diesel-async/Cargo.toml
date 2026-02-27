@@ -10,7 +10,7 @@ postgres_tests = []
 actix-web = { workspace = true }
 diesel = { version = "2", default-features = false, features = ["uuid"] }
 diesel-async = { version = "0.5", features = ["postgres", "bb8", "async-connection-wrapper"] }
-dotenvy = { workspace = true }
+dotenvor = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }

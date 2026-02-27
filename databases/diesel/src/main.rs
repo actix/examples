@@ -76,7 +76,7 @@ async fn add_user(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenvy::dotenv().ok();
+    unsafe { dotenvor::dotenv() }.ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // initialize DB pool outside of `HttpServer::new` so that it is shared across all workers
@@ -118,7 +118,7 @@ mod tests {
 
     #[actix_web::test]
     async fn user_routes() {
-        dotenvy::dotenv().ok();
+        unsafe { dotenvor::dotenv() }.ok();
         env_logger::try_init_from_env(env_logger::Env::new().default_filter_or("info")).ok();
 
         let pool = initialize_db_pool();

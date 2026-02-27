@@ -8,7 +8,7 @@ use diesel_async::{
     AsyncPgConnection,
     pooled_connection::{AsyncDieselConnectionManager, bb8::Pool},
 };
-use dotenvy::dotenv;
+use dotenvor::dotenv;
 use uuid::Uuid;
 
 mod actions;
@@ -74,7 +74,7 @@ async fn add_item(
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    dotenv().ok();
+    unsafe { dotenv() }.ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     // initialize DB pool outside `HttpServer::new` so that it is shared across all workers
@@ -116,7 +116,7 @@ mod tests {
 
     #[actix_web::test]
     async fn item_routes() {
-        dotenv().ok();
+        unsafe { dotenv() }.ok();
         env_logger::try_init_from_env(env_logger::Env::new().default_filter_or("info")).ok();
 
         let pool = initialize_db_pool().await;
