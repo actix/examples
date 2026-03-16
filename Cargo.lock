@@ -6497,9 +6497,9 @@ dependencies = [
 
 [[package]]
 name = "ractor"
-version = "0.15.9"
+version = "0.15.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9500e0be6f12a0539cb1154d654ef2e888bf8529164e54aff4a097baad5bb001"
+checksum = "4a64ac8ba2e8d71b25c55ab7acafc481ae4c9175f3ee8f7c36b66c4cad369bb5"
 dependencies = [
  "bon",
  "dashmap 6.1.0",
