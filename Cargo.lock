@@ -2194,9 +2194,9 @@ dependencies = [
 
 [[package]]
 name = "confik"
-version = "0.15.3"
+version = "0.15.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b686649ba0660eb04af85b78d4a5facca4500300fb1477d30e8fdca79e49afb"
+checksum = "94ba34ca43c71d3ca69a207990c6660fbc3c43598c1036dbb9b76b8b47cb86ae"
 dependencies = [
  "cfg-if",
  "confik-macros",
@@ -2208,9 +2208,9 @@ dependencies = [
 
 [[package]]
 name = "confik-macros"
-version = "0.15.2"
+version = "0.15.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d0e620fd9199be268359ff4e08bef088c515e4c9dd0055a2112b3fee2deb2f0"
+checksum = "069b63bb6e1794329e90fe6e76fa58424815d5ae2a701469dea914758c483d13"
 dependencies = [
  "darling 0.21.3",
  "proc-macro2",
