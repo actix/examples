@@ -2194,9 +2194,9 @@ dependencies = [
 
 [[package]]
 name = "confik"
-version = "0.15.10"
+version = "0.15.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94ba34ca43c71d3ca69a207990c6660fbc3c43598c1036dbb9b76b8b47cb86ae"
+checksum = "2faee06297b202a0336ebc618e2fc9a911a207fb0e848d218de6ba415e2f8126"
 dependencies = [
  "cfg-if",
  "confik-macros",
