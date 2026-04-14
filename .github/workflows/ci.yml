@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install Rust (${{ matrix.version }})
-        uses: actions-rust-lang/setup-rust-toolchain@v1.15.4
+        uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
         with:
           toolchain: ${{ matrix.version }}
 
@@ -31,6 +31,7 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install sqlite3
           sudo apt-get -y install libpq-dev
+          sudo apt-get -y install redis-server
 
       - name: Install DB CLI tools
         run: |
@@ -45,14 +46,16 @@ jobs:
           chmod a+rwx ./todo.db
           sqlx migrate run --source=./basics/todo/migrations
 
+      - name: Start Redis
+        run: |
+          if ! redis-cli ping; then
+            redis-server --daemonize yes
+          fi
+          redis-cli ping
+
       - name: cargo check
         run: cargo check --workspace --bins --examples --tests
         timeout-minutes: 30
-
-      - name: Start Redis
-        uses: supercharge/redis-github-action@v2
-        with:
-          redis-version: 6
 
       - name: cargo test
         run: cargo test --workspace --all-features --no-fail-fast --exclude=db-diesel -- --nocapture
@@ -69,7 +72,7 @@ jobs:
         timeout-minutes: 10
 
       - name: Install cargo-ci-cache-clean
-        uses: taiki-e/install-action@v2.75.10
+        uses: taiki-e/install-action@85b24a67ef0c632dfefad70b9d5ce8fddb040754 # v2.75.10
         with:
           tool: cargo-ci-cache-clean
 

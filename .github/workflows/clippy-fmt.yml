@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1.15.4
+        uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
         with:
           toolchain: stable
           components: rustfmt
 
       - name: rustfmt
-        uses: actions-rust-lang/rustfmt@v1
+        uses: actions-rust-lang/rustfmt@4066006ec54a31931b9b1fddfd38f2fdf2d27143 # v1.1.2
 
   clippy:
     name: clippy check
@@ -30,27 +30,14 @@ jobs:
       CARGO_INCREMENTAL: false
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1.15.4
+        uses: actions-rust-lang/setup-rust-toolchain@150fca883cd4034361b621bd4e6a9d34e5143606 # v1.15.4
         with:
           toolchain: stable
           components: clippy
 
-      # - name: Create test DBs
-      #   run: |
-      #     sudo apt-get update && sudo apt-get install sqlite3
-      #     cargo install sqlx-cli --no-default-features --features=rustls,sqlite
-      #     cd basics/todo
-      #     DATABASE_URL="sqlite://./todo.db" sqlx database create
-      #     chmod a+rwx todo.db
-      #     DATABASE_URL="sqlite://./todo.db" sqlx migrate run
-
       - name: clippy
         timeout-minutes: 30
-        uses: giraffate/clippy-action@v1
-        with:
-          reporter: "github-pr-check"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          clippy_flags: --workspace --all-features --tests
+        run: cargo clippy --workspace --all-features --tests -- -D warnings
