@@ -1728,7 +1728,7 @@ dependencies = [
  "bitflags 2.9.0",
  "cexpr",
  "clang-sys",
- "itertools 0.12.1",
+ "itertools 0.13.0",
  "log",
  "prettyplease 0.2.32",
  "proc-macro2",
@@ -2194,9 +2194,9 @@ dependencies = [
 
 [[package]]
 name = "confik"
-version = "0.15.11"
+version = "0.15.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2faee06297b202a0336ebc618e2fc9a911a207fb0e848d218de6ba415e2f8126"
+checksum = "f0616a3752a6d5595718197fc85b8239ff92c34a1ac0b8765d15d68b7224e4ac"
 dependencies = [
  "cfg-if",
  "confik-macros",
@@ -4873,7 +4873,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a793df0d7afeac54f95b471d3af7f0d4fb975699f972341a4b76988d49cdf0c"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.53.0",
 ]
 
 [[package]]
