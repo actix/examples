@@ -39,7 +39,6 @@
 - [rustypaste](https://github.com/orhun/rustypaste): A minimal file upload/pastebin service
 - [rustus](https://github.com/s3rius/rustus): A TUS protocol implementation that helps you handle file uploads
 - [gcs-proxy](https://github.com/guaychou/gcs-proxy): A Google Cloud Storage download proxy
-- [Actix-Web Shuttle Template](https://github.com/sentinel1909/shuttle-templat-actix): A somewhat opinionated template for getting started with an Actix Web API and hosting it on Shuttle.
 - [trieve](https://github.com/devflowinc/trieve): All-in-one infrastructure for building search, recommendations, and RAG.
 - [openapi-rs](https://github.com/baerwang/openapi-rs/tree/main/examples/actix-web): This project adds a middleware layer to Actix Web using openapi-rs, enabling automatic request validation and processing based on OpenAPI 3.1 specifications. It helps ensure that the server behavior strictly follows the OpenAPI contract
 
