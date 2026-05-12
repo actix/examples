@@ -6536,16 +6536,16 @@ dependencies = [
 
 [[package]]
 name = "ractor"
-version = "0.15.12"
+version = "0.15.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a64ac8ba2e8d71b25c55ab7acafc481ae4c9175f3ee8f7c36b66c4cad369bb5"
+checksum = "f12c86deb2af198b10a04c4fb3fba73baf3bb300df765a29272f0e5583da7510"
 dependencies = [
  "bon",
  "dashmap 6.1.0",
  "futures",
  "js-sys",
  "once_cell",
- "strum 0.26.3",
+ "strum 0.28.0",
  "tokio",
  "tokio_with_wasm",
  "tracing",
@@ -8099,11 +8099,11 @@ dependencies = [
 
 [[package]]
 name = "strum"
-version = "0.26.3"
+version = "0.28.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8fec0f0aef304996cf250b31b5a10dee7980c85da9d759361292b8bca5a18f06"
+checksum = "9628de9b8791db39ceda2b119bbe13134770b56c138ec1d3af810d045c04f9bd"
 dependencies = [
- "strum_macros 0.26.4",
+ "strum_macros 0.28.0",
 ]
 
 [[package]]
@@ -8121,14 +8121,13 @@ dependencies = [
 
 [[package]]
 name = "strum_macros"
-version = "0.26.4"
+version = "0.28.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c6bee85a5a24955dc440386795aa378cd9cf82acd5f764469152d2270e581be"
+checksum = "ab85eea0270ee17587ed4156089e10b9e6880ee688791d45a905f5b1ca36f664"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
  "quote",
- "rustversion",
  "syn 2.0.101",
 ]
 
@@ -9833,7 +9832,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
