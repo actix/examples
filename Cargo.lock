@@ -5305,9 +5305,9 @@ dependencies = [
 
 [[package]]
 name = "minijinja-autoreload"
-version = "2.20.0"
+version = "2.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4fe52ab806b888c2cf4538a2e0a2e613025adf5015b40d71eff92ac9027dabdc"
+checksum = "ae3beccb89ba701d64c9e496c9fec7a57a203945bb7bf76b2373ad1407364975"
 dependencies = [
  "minijinja",
  "notify",
