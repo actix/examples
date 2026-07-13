@@ -355,7 +355,7 @@ dependencies = [
  "actix-web",
  "anyhow",
  "derive_more 2.1.1",
- "rand 0.9.4",
+ "rand 0.9.5",
  "redis 0.32.5",
  "serde",
  "serde_json",
@@ -1095,7 +1095,7 @@ dependencies = [
  "openssl",
  "percent-encoding",
  "pin-project-lite",
- "rand 0.9.4",
+ "rand 0.9.5",
  "rustls 0.23.41",
  "serde",
  "serde_json",
@@ -1605,7 +1605,7 @@ dependencies = [
  "env_logger",
  "eyre",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
  "serde",
  "tokio",
  "tokio-util",
@@ -1877,7 +1877,7 @@ dependencies = [
  "indexmap 2.9.0",
  "js-sys",
  "once_cell",
- "rand 0.9.4",
+ "rand 0.9.5",
  "serde",
  "serde_bytes",
  "serde_json",
@@ -3179,7 +3179,7 @@ dependencies = [
  "derive_more 2.1.1",
  "env_logger",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
  "serde",
  "serde_json",
 ]
@@ -4013,7 +4013,7 @@ dependencies = [
  "idna 1.0.3",
  "ipnet",
  "once_cell",
- "rand 0.9.4",
+ "rand 0.9.5",
  "ring",
  "thiserror 2.0.12",
  "tinyvec",
@@ -4035,7 +4035,7 @@ dependencies = [
  "moka",
  "once_cell",
  "parking_lot",
- "rand 0.9.4",
+ "rand 0.9.5",
  "resolv-conf",
  "smallvec",
  "thiserror 2.0.12",
@@ -5400,7 +5400,7 @@ dependencies = [
  "mongodb-internal-macros",
  "pbkdf2",
  "percent-encoding",
- "rand 0.9.4",
+ "rand 0.9.5",
  "rustc_version_runtime",
  "rustls 0.23.41",
  "rustversion",
@@ -6273,7 +6273,7 @@ dependencies = [
  "hmac",
  "md-5",
  "memchr",
- "rand 0.9.4",
+ "rand 0.9.5",
  "sha2",
  "stringprep",
 ]
@@ -6537,7 +6537,7 @@ dependencies = [
  "bytes",
  "getrandom 0.3.3",
  "lru-slab",
- "rand 0.9.4",
+ "rand 0.9.5",
  "ring",
  "rustc-hash 2.1.1",
  "rustls 0.23.41",
@@ -6644,9 +6644,9 @@ dependencies = [
 
 [[package]]
 name = "rand"
-version = "0.9.4"
+version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44c5af06bb1b7d3216d91932aed5265164bf384dc89cd6ba05cf59a35f5f76ea"
+checksum = "b9ef1d0d795eb7d84685bca4f72f3649f064e6641543d3a8c415898726a57b41"
 dependencies = [
  "rand_chacha 0.9.0",
  "rand_core 0.9.3",
@@ -7141,7 +7141,7 @@ version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "173e7e58f0cbb61d2ea2b21af1b5ed6e35fa6c17818fc2cc5d903b44b4715d01"
 dependencies = [
- "rand 0.9.4",
+ "rand 0.9.5",
  "rustls 0.23.41",
 ]
 
@@ -8778,7 +8778,7 @@ dependencies = [
  "pin-project-lite",
  "postgres-protocol",
  "postgres-types",
- "rand 0.9.4",
+ "rand 0.9.5",
  "socket2 0.6.0",
  "tokio",
  "tokio-util",
@@ -9277,7 +9277,7 @@ version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "470dbf6591da1b39d43c14523b2b469c86879a53e8b758c8e090a470fe7b1fbe"
 dependencies = [
- "rand 0.9.4",
+ "rand 0.9.5",
  "web-time",
 ]
 
@@ -9825,7 +9825,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
  "tokio",
 ]
 
@@ -9840,7 +9840,7 @@ dependencies = [
  "actix-web-actors",
  "env_logger",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
 ]
 
 [[package]]
@@ -9853,7 +9853,7 @@ dependencies = [
  "actix-web-actors",
  "env_logger",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
 ]
 
 [[package]]
@@ -9869,7 +9869,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rand 0.9.4",
+ "rand 0.9.5",
  "serde",
  "serde_json",
  "tokio",
