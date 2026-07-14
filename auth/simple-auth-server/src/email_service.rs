@@ -54,7 +54,7 @@ pub fn send_invitation(invitation: &Invitation) -> Result<(), ServiceError> {
                 Ok(())
             }
             TransmissionResponse::ApiError(errors) => {
-                println!("Response Errors: \n {:#?}", &errors);
+                println!("Response Errors: \n {:#?}", errors);
                 Err(ServiceError::InternalServerError)
             }
         },
