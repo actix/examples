@@ -44,7 +44,7 @@ async fn test() {
     assert_eq!(response, Bytes::from_static(b"user added"));
 
     let req = TestRequest::get()
-        .uri(&format!("/get_user/{}", &user.username))
+        .uri(&format!("/get_user/{}", user.username))
         .to_request();
 
     let response: User = call_and_read_body_json(&app, req).await;

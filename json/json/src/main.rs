@@ -9,7 +9,7 @@ struct MyObj {
 
 /// This handler uses json extractor
 async fn index(item: web::Json<MyObj>) -> HttpResponse {
-    println!("model: {:?}", &item);
+    println!("model: {:?}", item);
     HttpResponse::Ok().json(item.0) // <- send response
 }
 
