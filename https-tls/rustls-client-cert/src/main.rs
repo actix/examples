@@ -32,7 +32,7 @@ async fn route_whoami(req: HttpRequest) -> impl Responder {
     let client_cert = req.conn_data::<CertificateDer<'static>>();
 
     if let Some(cert) = client_cert {
-        HttpResponse::Ok().body(format!("{:?}\n\n{:?}", &conn_info, &cert))
+        HttpResponse::Ok().body(format!("{:?}\n\n{:?}", conn_info, cert))
     } else {
         HttpResponse::Unauthorized().body("No client certificate provided.")
     }

@@ -137,7 +137,7 @@ async fn main() -> io::Result<()> {
 
     log::info!(
         "starting HTTP server at http://{}:{}",
-        &args.listen_addr,
+        args.listen_addr,
         args.listen_port
     );
 

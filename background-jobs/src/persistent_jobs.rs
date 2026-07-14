@@ -21,7 +21,7 @@ impl Email {
 }
 
 async fn process_email_job(job: Email) {
-    log::info!("sending email to {}", &job.to);
+    log::info!("sending email to {}", job.to);
 
     // simulate time taken to send email
     tokio::time::sleep(rand_delay_with_jitter()).await;
