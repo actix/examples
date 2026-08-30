@@ -17,7 +17,7 @@ mod server;
 mod session;
 
 async fn index() -> impl Responder {
-    NamedFile::open_async("./static/index.html").await.unwrap()
+    NamedFile::open("./static/index.html").unwrap()
 }
 
 /// Entry point for our websocket route

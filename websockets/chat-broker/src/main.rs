@@ -9,7 +9,7 @@ mod session;
 use session::WsChatSession;
 
 async fn index() -> impl Responder {
-    NamedFile::open_async("./static/index.html").await.unwrap()
+    NamedFile::open("./static/index.html").unwrap()
 }
 
 async fn chat_ws(req: HttpRequest, stream: web::Payload) -> Result<impl Responder, Error> {

@@ -13,7 +13,7 @@ use tokio::sync::broadcast;
 mod handler;
 
 async fn index() -> impl Responder {
-    NamedFile::open_async("./static/index.html").await.unwrap()
+    NamedFile::open("./static/index.html").unwrap()
 }
 
 /// Handshake and start WebSocket handler with heartbeats.

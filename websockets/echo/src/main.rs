@@ -10,7 +10,7 @@ mod server;
 use self::server::{MyWebSocket, WsMessage};
 
 async fn index() -> impl Responder {
-    NamedFile::open_async("./static/index.html").await.unwrap()
+    NamedFile::open("./static/index.html").unwrap()
 }
 
 /// WebSocket handshake and start `MyWebSocket` actor.

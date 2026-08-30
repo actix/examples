@@ -26,7 +26,7 @@ pub type RoomId = String;
 pub type Msg = String;
 
 async fn index() -> impl Responder {
-    NamedFile::open_async("./static/index.html").await.unwrap()
+    NamedFile::open("./static/index.html").unwrap()
 }
 
 /// Handshake and start WebSocket handler with heartbeats.
