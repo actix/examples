@@ -1602,7 +1602,7 @@ dependencies = [
  "env_logger",
  "eyre",
  "log",
- "rand 0.9.5",
+ "rand 0.10.2",
  "serde",
  "tokio",
  "tokio-util",
@@ -3237,7 +3237,7 @@ dependencies = [
  "derive_more 2.1.1",
  "env_logger",
  "log",
- "rand 0.9.5",
+ "rand 0.10.2",
  "serde",
  "serde_json",
 ]
@@ -10006,7 +10006,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rand 0.9.5",
+ "rand 0.10.2",
  "tokio",
 ]
 
@@ -10021,7 +10021,7 @@ dependencies = [
  "actix-web-actors",
  "env_logger",
  "log",
- "rand 0.9.5",
+ "rand 0.10.2",
 ]
 
 [[package]]
@@ -10034,7 +10034,7 @@ dependencies = [
  "actix-web-actors",
  "env_logger",
  "log",
- "rand 0.9.5",
+ "rand 0.10.2",
 ]
 
 [[package]]
@@ -10050,7 +10050,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
- "rand 0.9.5",
+ "rand 0.10.2",
  "serde",
  "serde_json",
  "tokio",

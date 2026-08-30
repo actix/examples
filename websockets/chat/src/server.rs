@@ -11,7 +11,7 @@ use std::{
 };
 
 use actix::prelude::*;
-use rand::Rng as _;
+use rand::RngExt as _;
 
 /// Chat server sends this messages to session
 #[derive(Message)]

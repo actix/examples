@@ -15,7 +15,7 @@ http errors will be chosen, each with an equal chance of being selected:
 use actix_web::{App, Error, HttpResponse, HttpServer, ResponseError, web};
 use derive_more::Display;
 use rand::{
-    Rng,
+    RngExt,
     distr::{Distribution, StandardUniform},
 };
 use serde::Serialize;
@@ -41,7 +41,7 @@ struct ErrorResponse {
 }
 
 impl Distribution<CustomError> for StandardUniform {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> CustomError {
+    fn sample<R: RngExt + ?Sized>(&self, rng: &mut R) -> CustomError {
         match rng.random_range(0..4) {
             0 => CustomError::CustomOne,
             1 => CustomError::CustomTwo,

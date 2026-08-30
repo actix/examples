@@ -9,7 +9,7 @@ use std::{
     },
 };
 
-use rand::Rng as _;
+use rand::RngExt as _;
 use tokio::sync::{mpsc, oneshot};
 
 use crate::{ConnId, Msg, RoomId};
