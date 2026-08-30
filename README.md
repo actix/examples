@@ -2,6 +2,16 @@
 
 > Curated examples using the Actix ecosystem.
 
+## Development
+
+Enter the full local development shell with `nix develop`. It provides native libraries, database tools, and project tooling used by the examples. Rust must be available in the host environment.
+
+The lighter CI shell is available with `nix develop .#ci`. It provides the database and service packages used by CI, without the extra local development tooling. CI selects its Rust toolchain separately.
+
+Initialize the SQLite databases used by the examples with `just init-db` from the repository root. The same operation is also available as `nix run .#init-db` for use outside a development shell.
+
+Run the local CI build and test sequence with `just ci` inside the default development shell.
+
 <!-- prettier-ignore-start -->
 
 [![CI status](https://github.com/actix/examples/actions/workflows/ci.yml/badge.svg)](https://github.com/actix/examples/actions)
