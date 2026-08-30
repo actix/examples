@@ -2,6 +2,7 @@ name: CI (nightly)
 
 on:
   schedule: [cron: "40 1 * * *"]
+  workflow_dispatch:
 
 jobs:
   build_and_test:
