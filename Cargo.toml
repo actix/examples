@@ -78,7 +78,7 @@ exclude = ["databases/sqlite"]
 [workspace.package]
 publish = false
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.98"
 
 [workspace.dependencies]
 actix = "0.13"

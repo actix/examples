@@ -13,6 +13,7 @@ A Middleware example which returning HttpResponse.
 ## How to test
 
 ### success case
+
 ```sh
 curl http://127.0.0.1:8080/ -H 'Authorization:ok' | json_pp -json_opt pretty,canonical
  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -24,6 +25,7 @@ curl http://127.0.0.1:8080/ -H 'Authorization:ok' | json_pp -json_opt pretty,can
 ```
 
 ### failed case
+
 ```sh
 curl http://127.0.0.1:8080/ | json_pp -json_opt pretty,canonical
  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current

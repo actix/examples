@@ -79,10 +79,10 @@ impl ChatServer {
     fn send_message(&self, room: &str, message: &str, skip_id: u64) {
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {
-                if *id != skip_id {
-                    if let Some(addr) = self.sessions.get(id) {
-                        addr.do_send(session::Message(message.to_owned()));
-                    }
+                if *id != skip_id
+                    && let Some(addr) = self.sessions.get(id)
+                {
+                    addr.do_send(session::Message(message.to_owned()));
                 }
             }
         }
