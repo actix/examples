@@ -6,8 +6,8 @@ rust-version.workspace = true
 [dependencies]
 actix-web.workspace = true
 
-apalis = { version = "0.6", features = ["limit"] }
-apalis-redis = { version = "0.6" }
+apalis = { version = "1.0.0-rc.9", features = ["limit"] }
+apalis-redis = { version = "1.0.0-rc.8" }
 chrono.workspace = true
 color-eyre.workspace = true
 dotenvor.workspace = true

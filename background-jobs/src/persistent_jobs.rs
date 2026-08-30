@@ -3,7 +3,7 @@
 use std::time::Duration;
 
 use apalis::prelude::*;
-use apalis_redis::{Config, RedisStorage};
+use apalis_redis::{RedisConfig, RedisStorage};
 use rand::distr::{Alphanumeric, SampleString as _};
 use serde::{Deserialize, Serialize};
 
@@ -30,14 +30,14 @@ async fn process_email_job(job: Email) {
 pub(crate) async fn start_processing_email_queue() -> eyre::Result<RedisStorage<Email>> {
     let redis_url = std::env::var("REDIS_URL").expect("Missing env variable REDIS_URL");
     let conn = apalis_redis::connect(redis_url).await?;
-    let config = Config::default().set_namespace("send_email");
+    let config = RedisConfig::default().set_namespace("send_email");
     let storage = RedisStorage::new_with_config(conn, config);
 
     // create unmonitored workers for handling emails
     let worker = WorkerBuilder::new("job-handler")
-        .concurrency(2)
         .backend(storage.clone())
-        .build_fn(process_email_job);
+        .concurrency(2)
+        .build(process_email_job);
 
     #[allow(clippy::let_underscore_future)]
     let _ = tokio::spawn(worker.run());
