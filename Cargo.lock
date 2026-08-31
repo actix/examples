@@ -319,9 +319,9 @@ dependencies = [
 
 [[package]]
 name = "actix-server"
-version = "2.6.0"
+version = "2.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a65064ea4a457eaf07f2fba30b4c695bf43b721790e9530d26cb6f9019ff7502"
+checksum = "5d44ae8a6516f4ac7bfc7b61aabcd286104e96b4b24c747ce220832a016056d9"
 dependencies = [
  "actix-rt",
  "actix-service",
@@ -329,7 +329,7 @@ dependencies = [
  "futures-core",
  "futures-util",
  "mio",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "tokio",
  "tracing",
 ]
@@ -397,7 +397,7 @@ dependencies = [
  "futures-core",
  "http 0.2.12",
  "http 1.5.0",
- "impl-more",
+ "impl-more 0.1.9",
  "openssl",
  "pin-project-lite",
  "rustls-pki-types",
@@ -420,9 +420,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web"
-version = "4.12.1"
+version = "4.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1654a77ba142e37f049637a3e5685f864514af11fcbc51cb51eb6596afe5b8d6"
+checksum = "bbacab3593b6b4f7be815076fc52d60a83c873426824675417e2abdd229e2e36"
 dependencies = [
  "actix-codec",
  "actix-http",
@@ -440,10 +440,10 @@ dependencies = [
  "cookie",
  "derive_more 2.1.1",
  "encoding_rs",
- "foldhash 0.1.5",
+ "foldhash 0.2.0",
  "futures-core",
  "futures-util",
- "impl-more",
+ "impl-more 0.3.5",
  "itoa",
  "language-tags",
  "log",
@@ -514,7 +514,7 @@ dependencies = [
  "futures-core",
  "futures-util",
  "http 0.2.12",
- "impl-more",
+ "impl-more 0.1.9",
  "itertools 0.14.0",
  "local-channel",
  "mime",
@@ -4656,6 +4656,12 @@ name = "impl-more"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8a5a9a0ff0086c7a148acb942baaabeadf9504d10400b5a05645853729b9cd2"
+
+[[package]]
+name = "impl-more"
+version = "0.3.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "277ff51754a3f68f12f58446c5d006aa8baa4914ea273cce24a599cfaff33d4f"
 
 [[package]]
 name = "indenter"
