@@ -1,43 +1,56 @@
-use actix::prelude::*;
+use std::io;
+
 use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, middleware, web};
-use actix_web_actors::ws;
+use actix_ws::AggregatedMessage;
+use examples_common::init_standard_logger;
+use tokio::task::spawn_local;
 
 async fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    ws::start(AutobahnWebSocket, &r, stream)
-}
+    let (res, mut session, msg_stream) = actix_ws::handle(&r, stream)?;
 
-#[derive(Debug, Clone, Default)]
-struct AutobahnWebSocket;
+    spawn_local(async move {
+        let mut msg_stream = msg_stream.aggregate_continuations();
 
-impl Actor for AutobahnWebSocket {
-    type Context = ws::WebsocketContext<Self>;
-}
-
-impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for AutobahnWebSocket {
-    fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
-        if let Ok(msg) = msg {
-            match msg {
-                ws::Message::Text(text) => ctx.text(text),
-                ws::Message::Binary(bin) => ctx.binary(bin),
-                ws::Message::Ping(bytes) => ctx.pong(&bytes),
-                ws::Message::Close(reason) => {
-                    ctx.close(reason);
-                    ctx.stop();
+        let close_reason = loop {
+            match msg_stream.recv().await {
+                Some(Ok(msg)) => match msg {
+                    AggregatedMessage::Text(text) => {
+                        if session.text(text).await.is_err() {
+                            break None;
+                        }
+                    }
+                    AggregatedMessage::Binary(bin) => {
+                        if session.binary(bin).await.is_err() {
+                            break None;
+                        }
+                    }
+                    AggregatedMessage::Ping(bytes) => {
+                        if session.pong(&bytes).await.is_err() {
+                            break None;
+                        }
+                    }
+                    AggregatedMessage::Pong(_) => {}
+                    AggregatedMessage::Close(reason) => break reason,
+                },
+                Some(Err(err)) => {
+                    tracing::error!("WebSocket protocol error: {err}");
+                    break None;
                 }
-                _ => {}
+                None => break None,
             }
-        } else {
-            ctx.stop();
-        }
-    }
+        };
+
+        let _ = session.close(close_reason).await;
+    });
+
+    Ok(res)
 }
 
-// the actor-based WebSocket examples REQUIRE `actix_web::main` for actor support
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+#[tokio::main(flavor = "local")]
+async fn main() -> io::Result<()> {
+    init_standard_logger();
 
-    log::info!("starting HTTP server at http://localhost:9001");
+    tracing::info!("starting HTTP server at http://localhost:9001");
 
     HttpServer::new(|| {
         App::new()

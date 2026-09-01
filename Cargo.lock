@@ -10234,11 +10234,11 @@ dependencies = [
 name = "websocket-autobahn"
 version = "0.0.0"
 dependencies = [
- "actix",
  "actix-web",
- "actix-web-actors",
- "env_logger",
- "log",
+ "actix-ws",
+ "examples-common",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

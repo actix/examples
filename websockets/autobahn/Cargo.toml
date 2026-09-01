@@ -8,9 +8,8 @@ name = "websocket-autobahn-server"
 path = "src/main.rs"
 
 [dependencies]
-actix.workspace = true
-actix-web.workspace = true
-actix-web-actors.workspace = true
-
-env_logger.workspace = true
-log.workspace = true
+actix-web = { workspace = true }
+actix-ws = { workspace = true }
+examples-common = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt"] }

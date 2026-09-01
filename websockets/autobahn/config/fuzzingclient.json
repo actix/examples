@@ -2,7 +2,7 @@
   "outdir": "./reports/servers",
   "servers": [
     {
-      "agent": "actix-web-actors",
+      "agent": "actix-ws",
       "url": "ws://host.docker.internal:9001"
     }
   ],
