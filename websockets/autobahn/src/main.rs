@@ -9,7 +9,10 @@ async fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, 
     let (res, mut session, msg_stream) = actix_ws::handle(&r, stream)?;
 
     spawn_local(async move {
-        let mut msg_stream = msg_stream.aggregate_continuations();
+        let mut msg_stream = msg_stream
+            .max_frame_size(16 * 1024 * 1024)
+            .aggregate_continuations()
+            .max_continuation_size(4 * 1024 * 1024);
 
         let close_reason = loop {
             match msg_stream.recv().await {
