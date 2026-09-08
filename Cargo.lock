@@ -116,6 +116,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-csrf-middleware"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2f0e88e3cc12a9608ea60351d980bb9a3d0f5dad3c529c4d1990c238cf9c039"
+dependencies = [
+ "actix-http",
+ "actix-session",
+ "actix-utils",
+ "actix-web",
+ "base64 0.22.1",
+ "futures-util",
+ "hex",
+ "hmac 0.13.0",
+ "log",
+ "pin-project-lite",
+ "rand 0.10.2",
+ "serde",
+ "serde_json",
+ "sha2 0.11.0",
+ "subtle",
+ "url",
+ "zeroize",
+]
+
+[[package]]
 name = "actix-files"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5445,6 +5470,29 @@ dependencies = [
  "num_cpus",
  "quanta",
  "sketches-ddsketch",
+]
+
+[[package]]
+name = "middleware-csrf-double-submit"
+version = "0.0.0"
+dependencies = [
+ "actix-csrf-middleware",
+ "actix-web",
+ "env_logger",
+ "log",
+ "serde",
+]
+
+[[package]]
+name = "middleware-csrf-synchronizer"
+version = "0.0.0"
+dependencies = [
+ "actix-csrf-middleware",
+ "actix-session",
+ "actix-web",
+ "env_logger",
+ "log",
+ "serde",
 ]
 
 [[package]]
