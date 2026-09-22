@@ -11,5 +11,5 @@ path = "src/main.rs"
 actix-web = { workspace = true }
 actix-ws = { workspace = true }
 examples-common = { workspace = true }
-tracing = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt"] }
+tracing = { workspace = true }
