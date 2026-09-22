@@ -1,6 +1,10 @@
-use std::{collections::HashMap, env, path::PathBuf};
+use std::{
+    collections::HashMap,
+    env,
+    future::{Ready, ready},
+    path::PathBuf,
+};
 
-use actix_utils::future::{Ready, ready};
 use actix_web::{
     App, FromRequest, HttpRequest, HttpResponse, HttpServer, Responder, Result,
     dev::{self, ServiceResponse},
@@ -9,6 +13,7 @@ use actix_web::{
     middleware::{ErrorHandlerResponse, ErrorHandlers, Logger},
     web,
 };
+use err_report::Report;
 use minijinja::path_loader;
 use minijinja_autoreload::AutoReloader;
 
@@ -30,7 +35,7 @@ impl MiniJinjaRenderer {
             .render(ctx.into())
             .map(web::Html::new)
             .map_err(|err| {
-                log::error!("{err}");
+                tracing::error!(error = %Report::new(&err));
                 error::ErrorInternalServerError("template error")
             })
     }
@@ -68,15 +73,15 @@ async fn index(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    examples_common::init_standard_logger();
 
     // If TEMPLATE_AUTORELOAD is set, then the path tracking is enabled.
     let enable_template_autoreload = env::var("TEMPLATE_AUTORELOAD").as_deref() == Ok("true");
 
     if enable_template_autoreload {
-        log::info!("template auto-reloading is enabled");
+        tracing::info!("template auto-reloading is enabled");
     } else {
-        log::info!(
+        tracing::info!(
             "template auto-reloading is disabled; run with TEMPLATE_AUTORELOAD=true to enable"
         );
     }
@@ -99,7 +104,7 @@ async fn main() -> std::io::Result<()> {
 
     let tmpl_reloader = web::Data::new(tmpl_reloader);
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
