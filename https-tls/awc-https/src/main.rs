@@ -39,7 +39,7 @@ async fn fetch_image(client: ThinData<Client>) -> HttpResponse {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let client_tls_config = Arc::new(rustls_config());
+    let client_tls_config = Arc::new(rustls_config()?);
 
     log::info!("Starting HTTP server at http://localhost:8080");
 
@@ -64,7 +64,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 /// Create simple `rustls` client config.
-fn rustls_config() -> rustls::ClientConfig {
+fn rustls_config() -> Result<rustls::ClientConfig, std::io::Error> {
     use rustls_platform_verifier::ConfigVerifierExt as _;
 
     rustls::crypto::aws_lc_rs::default_provider()
@@ -73,5 +73,5 @@ fn rustls_config() -> rustls::ClientConfig {
 
     // The benefits of the platform verifier are clear; see:
     // https://github.com/rustls/rustls-platform-verifier#readme
-    rustls::ClientConfig::with_platform_verifier()
+    rustls::ClientConfig::with_platform_verifier().map_err(std::io::Error::other)
 }
