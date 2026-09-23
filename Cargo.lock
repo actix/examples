@@ -7761,11 +7761,11 @@ dependencies = [
 
 [[package]]
 name = "rustls-channel-resolver"
-version = "0.3.2"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "173e7e58f0cbb61d2ea2b21af1b5ed6e35fa6c17818fc2cc5d903b44b4715d01"
+checksum = "55f535172b91e881ec5c33400d1a24ad821bc559f176a23792d7f6fcbfa3ff60"
 dependencies = [
- "rand 0.9.5",
+ "rand 0.10.3",
  "rustls 0.23.45",
 ]
 

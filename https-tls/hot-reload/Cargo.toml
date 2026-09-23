@@ -11,6 +11,6 @@ examples-common = { workspace = true }
 eyre = { workspace = true }
 notify = { workspace = true }
 rustls = { workspace = true }
-rustls-channel-resolver = "0.3"
+rustls-channel-resolver = "0.4"
 tokio = { workspace = true, features = ["time", "rt", "macros"] }
 tracing = { workspace = true }
