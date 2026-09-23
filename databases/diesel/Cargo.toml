@@ -6,7 +6,7 @@ rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-diesel = { version = "2", features = ["sqlite", "r2d2", "uuid"] }
+diesel = { version = "2.3", features = ["sqlite", "r2d2", "uuid"] }
 dotenvor.workspace = true
 env_logger.workspace = true
 log.workspace = true
