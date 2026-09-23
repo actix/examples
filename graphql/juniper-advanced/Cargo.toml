@@ -7,10 +7,10 @@ rust-version.workspace = true
 [dependencies]
 actix-web.workspace = true
 actix-cors.workspace = true
-juniper = "0.16"
-mysql = "24"
+juniper = "0.17"
+mysql = "28"
 r2d2 = "0.8"
-r2d2_mysql = "24"
+r2d2_mysql = "28"
 dotenvor.workspace = true
 env_logger.workspace = true
 log.workspace = true
