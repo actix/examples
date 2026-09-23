@@ -5,7 +5,7 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-actix-governor = "0.5"
+actix-governor = "0.10"
 actix-web.workspace = true
 chrono.workspace = true
 env_logger.workspace = true
