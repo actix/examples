@@ -8,7 +8,7 @@ rust-version.workspace = true
 actix-web.workspace = true
 actix-web-lab.workspace = true
 env_logger.workspace = true
-fluent-templates = { version = "0.9", features = ["handlebars"] }
-handlebars = { version = "5", features = ["dir_source"] }
+fluent-templates = { version = "0.15", features = ["handlebars"] }
+handlebars = { version = "6.4", features = ["dir_source"] }
 serde.workspace = true
 serde_json.workspace = true
