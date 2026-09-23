@@ -1,1 +1,1 @@
-Page id is <%= id %>!!!
+Page id is <%= self.id %>!!!
