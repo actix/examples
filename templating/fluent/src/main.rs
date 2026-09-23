@@ -11,7 +11,7 @@ use actix_web::{
 };
 use actix_web_lab::extract::Path;
 use fluent_templates::{FluentLoader, Loader as _, static_loader};
-use handlebars::{DirectorySourceOptions, Handlebars};
+use handlebars::{DirectorySourceOptionsBuilder, Handlebars};
 use serde_json::json;
 
 mod lang_choice;
@@ -62,11 +62,10 @@ async fn main() -> io::Result<()> {
     handlebars
         .register_templates_directory(
             "./templates",
-            DirectorySourceOptions {
-                tpl_extension: ".html".to_owned(),
-                hidden: false,
-                temporary: false,
-            },
+            DirectorySourceOptionsBuilder::default()
+                .tpl_extension(".html")
+                .build()
+                .unwrap(),
         )
         .unwrap();
 
