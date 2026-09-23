@@ -21,6 +21,6 @@ awc.workspace = true
 env_logger.workspace = true
 futures-util = { workspace = true, features = ["sink"] }
 log.workspace = true
-ractor = { version = "0.15", default-features = false }
+ractor = { version = "0.16", default-features = false }
 tokio = { workspace = true, features = ["full"] }
 tokio-stream.workspace = true
