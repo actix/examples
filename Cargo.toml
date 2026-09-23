@@ -45,6 +45,8 @@ members = [
   "json/json-validation",
   "json/json",
   "json/jsonrpc",
+  "middleware/csrf-double-submit",
+  "middleware/csrf-synchronizer",
   "middleware/encrypted-payloads",
   "middleware/http-response",
   "middleware/http-to-https",
