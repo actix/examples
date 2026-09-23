@@ -7,6 +7,6 @@ rust-version.workspace = true
 [dependencies]
 actix-web.workspace = true
 actix-cors.workspace = true
-juniper = "0.16"
+juniper = "0.17"
 env_logger.workspace = true
 log.workspace = true
