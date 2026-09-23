@@ -6,6 +6,6 @@ rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
-askama = "0.12"
+askama = "0.16"
 env_logger.workspace = true
 log.workspace = true
