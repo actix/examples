@@ -33,10 +33,10 @@ async fn make_encrypted(
     log::info!("creating encrypted sample request for ID = {id:?}");
 
     // this nonce should actually be unique per message in a production environment
-    let nonce = Nonce::from_slice(b"unique nonce");
-    let nonce_b64 = Some(BASE64_STANDARD.encode(nonce));
+    let nonce = Nonce::try_from(b"unique nonce".as_slice()).unwrap();
+    let nonce_b64 = Some(BASE64_STANDARD.encode(&nonce));
 
-    let data_enc = cipher.encrypt(nonce, data.as_bytes()).unwrap();
+    let data_enc = cipher.encrypt(&nonce, data.as_bytes()).unwrap();
     let data_enc = BASE64_STANDARD.encode(data_enc);
 
     web::Json(Req {
@@ -99,11 +99,11 @@ async fn encrypt_payloads(
 
     // decode nonce from payload
     let nonce = BASE64_STANDARD.decode(nonce.unwrap()).unwrap();
-    let nonce = Nonce::from_slice(&nonce);
+    let nonce = Nonce::try_from(nonce.as_slice()).unwrap();
 
     // decode and decrypt data field
     let data_enc = BASE64_STANDARD.decode(&data).unwrap();
-    let data = cipher.decrypt(nonce, data_enc.as_slice()).unwrap();
+    let data = cipher.decrypt(&nonce, data_enc.as_slice()).unwrap();
 
     // construct request body format with plaintext data
     let req_body = Req {
@@ -135,11 +135,11 @@ async fn encrypt_payloads(
     let Res { data, .. } = serde_json::from_slice(&body).unwrap();
 
     // generate and encode nonce for later
-    let nonce = Nonce::from_slice(b"unique nonce");
-    let nonce_b64 = Some(BASE64_STANDARD.encode(nonce));
+    let nonce = Nonce::try_from(b"unique nonce".as_slice()).unwrap();
+    let nonce_b64 = Some(BASE64_STANDARD.encode(&nonce));
 
     // encrypt and encode data field
-    let data_enc = cipher.encrypt(nonce, data.as_bytes()).unwrap();
+    let data_enc = cipher.encrypt(&nonce, data.as_bytes()).unwrap();
     let data_enc = BASE64_STANDARD.encode(data_enc);
 
     // re-pack response into JSON format
