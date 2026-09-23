@@ -4219,6 +4219,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.20",
+ "walkdir",
 ]
 
 [[package]]
@@ -9154,7 +9155,7 @@ version = "0.0.0"
 dependencies = [
  "actix-web",
  "env_logger",
- "handlebars 5.1.2",
+ "handlebars 6.4.4",
  "serde_json",
 ]
 
