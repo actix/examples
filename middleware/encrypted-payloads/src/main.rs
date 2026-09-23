@@ -34,7 +34,7 @@ async fn make_encrypted(
 
     // this nonce should actually be unique per message in a production environment
     let nonce = Nonce::try_from(b"unique nonce".as_slice()).unwrap();
-    let nonce_b64 = Some(BASE64_STANDARD.encode(&nonce));
+    let nonce_b64 = Some(BASE64_STANDARD.encode(nonce));
 
     let data_enc = cipher.encrypt(&nonce, data.as_bytes()).unwrap();
     let data_enc = BASE64_STANDARD.encode(data_enc);
@@ -136,7 +136,7 @@ async fn encrypt_payloads(
 
     // generate and encode nonce for later
     let nonce = Nonce::try_from(b"unique nonce".as_slice()).unwrap();
-    let nonce_b64 = Some(BASE64_STANDARD.encode(&nonce));
+    let nonce_b64 = Some(BASE64_STANDARD.encode(nonce));
 
     // encrypt and encode data field
     let data_enc = cipher.encrypt(&nonce, data.as_bytes()).unwrap();
