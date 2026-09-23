@@ -7,14 +7,18 @@ rust-version.workspace = true
 [dependencies]
 actix-web.workspace = true
 dotenvor.workspace = true
-metrics = "0.23"
-metrics-exporter-prometheus = { version = "0.15", default-features = false }
-opentelemetry = "0.23"
-opentelemetry_sdk = { version = "0.23", features = ["rt-tokio-current-thread"] }
-opentelemetry-otlp = { version = "0.16", features = ["tls-roots"] }
-tonic = "0.11"
-tracing-actix-web = { version = "0.7.11", features = ["opentelemetry_0_23", "uuid_v7"] }
-tracing-opentelemetry = "0.24"
+metrics = "0.24"
+metrics-exporter-prometheus = { version = "0.18", default-features = false }
+opentelemetry = "0.33"
+opentelemetry_sdk.version = "0.33"
+opentelemetry_sdk.features = [
+  "experimental_trace_batch_span_processor_with_async_runtime",
+  "rt-tokio-current-thread",
+]
+opentelemetry-otlp = { version = "0.33", features = ["grpc-tonic", "tls-roots"] }
+tonic = "0.14"
+tracing-actix-web = { version = "0.7.25", features = ["opentelemetry_0_32", "uuid_v7"] }
+tracing-opentelemetry = "0.34"
 tracing-subscriber.workspace = true
 tracing-bunyan-formatter = "0.3"
 tracing.workspace = true
