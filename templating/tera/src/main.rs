@@ -38,7 +38,9 @@ async fn main() -> std::io::Result<()> {
     log::info!("starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
-        let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();
+        let mut tera = Tera::new();
+        tera.load_from_glob(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*"))
+            .unwrap();
 
         App::new()
             .app_data(web::Data::new(tera))

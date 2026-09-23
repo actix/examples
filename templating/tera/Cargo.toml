@@ -8,4 +8,4 @@ rust-version.workspace = true
 actix-web.workspace = true
 env_logger.workspace = true
 log.workspace = true
-tera = "1.8"
+tera = { version = "2", features = ["glob_fs"] }
