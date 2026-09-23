@@ -2097,6 +2097,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37b2a672a2cb129a2e41c10b1224bb368f9f37a2b16b612598138befd7b37eb5"
 
 [[package]]
+name = "castaway"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dec551ab6e7578819132c713a93c022a05d60159dc86e7a7050223577484c55a"
+dependencies = [
+ "rustversion",
+]
+
+[[package]]
 name = "cc"
 version = "1.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2303,6 +2312,20 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tokio-util",
+]
+
+[[package]]
+name = "compact_str"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9dfdd1c2274d9aa354115b09dc9a901d6c5576818cdf70d14cae2bdb47df00ab"
+dependencies = [
+ "castaway",
+ "cfg-if",
+ "itoa",
+ "rustversion",
+ "ryu",
+ "static_assertions",
 ]
 
 [[package]]
@@ -5126,9 +5149,30 @@ dependencies = [
  "fnv",
  "futures",
  "indexmap 2.14.2",
- "juniper_codegen",
+ "juniper_codegen 0.16.0",
  "serde",
  "smartstring",
+ "static_assertions",
+]
+
+[[package]]
+name = "juniper"
+version = "0.17.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "118749c965e171dcccffb7ca0dff6ab00451b08ba2710914caaaebc3686a7c3f"
+dependencies = [
+ "arcstr",
+ "async-trait",
+ "auto_enums",
+ "compact_str",
+ "derive_more 2.1.1",
+ "fnv",
+ "futures",
+ "indexmap 2.14.2",
+ "itertools 0.14.0",
+ "juniper_codegen 0.17.0",
+ "ref-cast",
+ "serde",
  "static_assertions",
 ]
 
@@ -5140,7 +5184,7 @@ dependencies = [
  "actix-web",
  "dotenvor",
  "env_logger",
- "juniper",
+ "juniper 0.16.2",
  "log",
  "mysql 24.0.0",
  "r2d2",
@@ -5155,7 +5199,7 @@ dependencies = [
  "actix-cors",
  "actix-web",
  "env_logger",
- "juniper",
+ "juniper 0.17.1",
  "log",
 ]
 
@@ -5165,6 +5209,19 @@ version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "760dbe46660494d469023d661e8d268f413b2cb68c999975dcc237407096a693"
 dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
+ "url",
+]
+
+[[package]]
+name = "juniper_codegen"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8634f500d6d2ec5c91c115b83e15d998d9ea05645aaa43f7afec09e660c483ba"
+dependencies = [
+ "derive_more 2.1.1",
  "proc-macro2",
  "quote",
  "syn 2.0.119",
@@ -7461,6 +7518,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "737970939a87c6fa31e7acad13307bccbb017a073b695b6089a2c484f929e20e"
 dependencies = [
  "bitflags 2.13.2",
+]
+
+[[package]]
+name = "ref-cast"
+version = "1.0.27"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7e440fb4e4b4147295338efb76001ab9e4efc0e5839df2c47fc5ac2381d365c3"
+dependencies = [
+ "ref-cast-impl",
+]
+
+[[package]]
+name = "ref-cast-impl"
+version = "1.0.27"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "92ecd8964f8453721699a1ed72037b0db49ce2f5a5138486ee89bed6f67cdf3a"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 3.0.6",
 ]
 
 [[package]]
