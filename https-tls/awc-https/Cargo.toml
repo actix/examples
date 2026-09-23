@@ -11,4 +11,4 @@ env_logger = { workspace = true }
 log = { workspace = true }
 mime = { workspace = true }
 rustls = { workspace = true }
-rustls-platform-verifier = "0.5"
+rustls-platform-verifier = "0.7"
