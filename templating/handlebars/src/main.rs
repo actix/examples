@@ -9,7 +9,7 @@ use actix_web::{
     middleware::{ErrorHandlerResponse, ErrorHandlers},
     web,
 };
-use handlebars::{DirectorySourceOptions, Handlebars};
+use handlebars::{DirectorySourceOptionsBuilder, Handlebars};
 use serde_json::json;
 
 #[get("/")]
@@ -45,11 +45,12 @@ async fn main() -> io::Result<()> {
     handlebars
         .register_templates_directory(
             "./templates",
-            DirectorySourceOptions {
-                tpl_extension: ".html".to_owned(),
-                hidden: false,
-                temporary: false,
-            },
+            DirectorySourceOptionsBuilder::default()
+                .tpl_extension(".html")
+                .hidden(false)
+                .temporary(false)
+                .build()
+                .unwrap(),
         )
         .unwrap();
     let handlebars_ref = web::Data::new(handlebars);
