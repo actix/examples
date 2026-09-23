@@ -12,7 +12,7 @@ mod routes;
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     unsafe { dotenvor::dotenv() }.ok();
-    logging::init();
+    let tracer_provider = logging::init();
     let handle = prometheus::init();
 
     HttpServer::new(move || {
@@ -29,11 +29,10 @@ async fn main() -> io::Result<()> {
     .run()
     .await?;
 
-    actix_web::web::block(move || {
-        opentelemetry::global::shutdown_tracer_provider();
-    })
-    .await
-    .unwrap();
+    actix_web::web::block(move || tracer_provider.shutdown())
+        .await
+        .unwrap()
+        .unwrap();
 
     Ok(())
 }
