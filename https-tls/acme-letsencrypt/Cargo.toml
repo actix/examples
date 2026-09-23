@@ -5,7 +5,7 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-acme-rfc8555 = "0.1"
+acme-rfc8555 = "0.4"
 actix-files.workspace = true
 actix-web = { workspace = true, features = ["rustls-0_23"] }
 color-eyre.workspace = true
