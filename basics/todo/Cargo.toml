@@ -13,5 +13,5 @@ dotenvor.workspace = true
 env_logger.workspace = true
 log.workspace = true
 serde.workspace = true
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite"] }
-tera = "1.5"
+sqlx = { version = "0.9", features = ["runtime-tokio", "tls-rustls", "sqlite"] }
+tera = { version = "2", features = ["glob_fs"] }
