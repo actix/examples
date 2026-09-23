@@ -10,5 +10,5 @@ derive_more = { workspace = true, features = ["display", "error", "from"] }
 dotenvor.workspace = true
 env_logger.workspace = true
 log.workspace = true
-mysql = "24"
+mysql = "28"
 serde.workspace = true
