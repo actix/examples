@@ -7,8 +7,8 @@ rust-version.workspace = true
 [dependencies]
 actix-cors.workspace = true
 actix-web.workspace = true
-async-graphql = "6"
-async-graphql-actix-web = "6"
+async-graphql = "7.2"
+async-graphql-actix-web = "7.2"
 env_logger.workspace = true
 log.workspace = true
 slab = "0.4"
