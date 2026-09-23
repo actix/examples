@@ -1,5 +1,6 @@
 [package]
 name = "http-proxy"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

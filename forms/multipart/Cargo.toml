@@ -1,5 +1,6 @@
 [package]
 name = "multipart-example"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

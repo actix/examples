@@ -1,5 +1,6 @@
 [package]
 name = "rustls-example"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

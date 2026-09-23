@@ -1,5 +1,6 @@
 [package]
 name = "templating-askama"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 
@@ -8,6 +9,3 @@ actix-web.workspace = true
 askama = "0.12"
 env_logger.workspace = true
 log.workspace = true
-
-[build-dependencies]
-askama = "0.12"

@@ -1,5 +1,6 @@
 [package]
 name = "server-sent-events"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

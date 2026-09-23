@@ -1,5 +1,6 @@
 [package]
 name = "json_decode_error"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

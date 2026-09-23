@@ -1,5 +1,6 @@
 [package]
 name = "guards"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

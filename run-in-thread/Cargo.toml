@@ -1,5 +1,6 @@
 [package]
 name = "run-in-thread"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 description = "Run Actix Web in separate thread"

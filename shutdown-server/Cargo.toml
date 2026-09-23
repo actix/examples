@@ -1,5 +1,6 @@
 [package]
 name = "shutdown-server"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 description = "Send a request to the server to shut it down"

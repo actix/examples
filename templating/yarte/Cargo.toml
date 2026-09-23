@@ -1,8 +1,8 @@
 [package]
 name = "templating-yarte"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
-publish = false
 
 [package.metadata.cargo-machete]
 ignored = [

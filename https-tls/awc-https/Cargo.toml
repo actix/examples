@@ -1,5 +1,6 @@
 [package]
 name = "awc_https"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

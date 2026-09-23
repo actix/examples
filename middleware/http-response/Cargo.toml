@@ -1,6 +1,7 @@
 [package]
 name = "middleware-return-http-response"
 version = "1.0.0"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

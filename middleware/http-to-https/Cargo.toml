@@ -1,5 +1,6 @@
 [package]
 name = "middleware-http-to-https"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

@@ -1,5 +1,6 @@
 [package]
 name = "background-jobs"
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 

@@ -1,9 +1,10 @@
 [package]
 name = "cache-redis"
 version = "1.0.0"
-publish = false
+publish.workspace = true
 authors = ["Jatutep Bunupuradah <bangbaew@gmail.com>"]
-edition = "2024"
+edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 actix-web.workspace = true
