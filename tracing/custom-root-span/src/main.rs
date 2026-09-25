@@ -52,7 +52,7 @@ async fn personal_hello(root_span: RootSpan, name: web::Path<String>) -> String 
     format!("Hello {}!", name)
 }
 
-#[actix_web::main]
+#[tokio::main]
 async fn main() -> io::Result<()> {
     let provider = init_telemetry();
 

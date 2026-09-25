@@ -7,4 +7,6 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 actix-web.workspace = true
+examples-common.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tracing-actix-web.workspace = true

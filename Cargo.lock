@@ -9170,6 +9170,7 @@ dependencies = [
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk 0.32.1",
+ "tokio",
  "tracing",
  "tracing-actix-web",
  "tracing-bunyan-formatter",
@@ -9269,6 +9270,7 @@ dependencies = [
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk 0.32.1",
+ "tokio",
  "tracing",
  "tracing-actix-web",
  "tracing-bunyan-formatter",
@@ -9281,6 +9283,8 @@ name = "tracing-request-id-response-header"
 version = "0.0.0"
 dependencies = [
  "actix-web",
+ "examples-common",
+ "tokio",
  "tracing-actix-web",
 ]
 

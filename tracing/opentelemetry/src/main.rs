@@ -56,7 +56,7 @@ fn init_telemetry() -> opentelemetry_sdk::trace::SdkTracerProvider {
     provider
 }
 
-#[actix_web::main]
+#[tokio::main]
 async fn main() -> io::Result<()> {
     let provider = init_telemetry();
 
