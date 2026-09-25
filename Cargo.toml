@@ -63,7 +63,10 @@ members = [
   "templating/tera",
   "templating/tinytemplate",
   "templating/yarte",
+  "tracing/custom-root-span",
   "tracing/mainmatter-workshop",
+  "tracing/opentelemetry",
+  "tracing/request-id-response-header",
   "unix-socket",
   "websockets/autobahn",
   "websockets/chat-actorless",
@@ -127,5 +130,6 @@ tokio = { version = "1.24.2", features = ["sync", "io-util"] }
 tokio-stream = "0.1.1"
 tokio-util = "0.7.4"
 tracing = "0.1.30"
+tracing-actix-web = "0.7.25"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 uuid = { version = "1.6", features = ["v4", "v7", "serde"] }

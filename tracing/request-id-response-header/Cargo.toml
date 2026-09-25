@@ -1,0 +1,10 @@
+[package]
+name = "tracing-request-id-response-header"
+publish.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+actix-web.workspace = true
+tracing-actix-web.workspace = true
