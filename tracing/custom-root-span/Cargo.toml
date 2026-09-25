@@ -1,0 +1,20 @@
+[package]
+name = "tracing-custom-root-span"
+authors = ["LukeMathWalker <contact@lpalmieri.com>"]
+publish.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+actix-web.workspace = true
+opentelemetry = "0.32"
+opentelemetry-otlp = { version = "0.32", features = ["grpc-tonic"] }
+opentelemetry_sdk = { version = "0.32", features = ["rt-tokio-current-thread"] }
+opentelemetry-semantic-conventions = "0.32"
+tokio = { workspace = true, features = ["macros", "rt"] }
+tracing-opentelemetry = "0.33"
+tracing.workspace = true
+tracing-actix-web = { workspace = true, features = ["opentelemetry_0_32"] }
+tracing-bunyan-formatter = "0.3"
+tracing-subscriber.workspace = true
