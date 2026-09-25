@@ -56,7 +56,7 @@ fn init_telemetry() -> opentelemetry_sdk::trace::SdkTracerProvider {
     provider
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     let provider = init_telemetry();
 
@@ -69,9 +69,10 @@ async fn main() -> io::Result<()> {
     .run()
     .await?;
 
-    // Ensure all spans have been shipped to Jaeger.
-    provider
-        .shutdown()
+    // Flush spans without blocking the local runtime thread.
+    tokio::task::spawn_blocking(move || provider.shutdown())
+        .await
+        .expect("Tracer shutdown task failed")
         .expect("Failed to close tracer provider");
 
     Ok(())

@@ -32,7 +32,7 @@ async fn request_id_header(
     Ok(res)
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     examples_common::init_standard_logger();
 

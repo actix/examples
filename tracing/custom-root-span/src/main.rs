@@ -52,7 +52,7 @@ async fn personal_hello(root_span: RootSpan, name: web::Path<String>) -> String 
     format!("Hello {}!", name)
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     let provider = init_telemetry();
 
@@ -66,8 +66,11 @@ async fn main() -> io::Result<()> {
     .run()
     .await?;
 
-    // Ensure all spans have been shipped to Jaeger.
-    provider.shutdown().expect("Failed to shut down provider");
+    // Flush spans without blocking the local runtime thread.
+    tokio::task::spawn_blocking(move || provider.shutdown())
+        .await
+        .expect("Tracer shutdown task failed")
+        .expect("Failed to shut down provider");
 
     Ok(())
 }
