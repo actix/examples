@@ -1,0 +1,11 @@
+[package]
+name = "middleware-csrf-double-submit"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-csrf-middleware = "0.9"
+actix-web.workspace = true
+env_logger.workspace = true
+log.workspace = true
+serde.workspace = true
