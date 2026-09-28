@@ -769,13 +769,14 @@ checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
 
 [[package]]
 name = "apalis"
-version = "1.0.0-rc.9"
+version = "1.0.0-rc.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7780d1e7082500a4fdb463b0a6fc1c00e4012cd9b2af101c26fcabbb2f390f2c"
+checksum = "cc96f8162b465147c3bbf0fe27b3803d468456823d1e2e5db17a3cc9206f1ccc"
 dependencies = [
  "apalis-core",
  "futures-util",
  "pin-project",
+ "serde",
  "thiserror 2.0.20",
  "tower",
  "tracing",
@@ -794,21 +795,25 @@ dependencies = [
 
 [[package]]
 name = "apalis-core"
-version = "1.0.0-rc.9"
+version = "1.0.0-rc.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "797af42a40f6bc297365f2fed187b74d089c63641f57ce2a5e0f629db560cb47"
+checksum = "736bb41e6475dafb9489fe67302f787381d5a511dbfa039cfe69e585bda6956a"
 dependencies = [
+ "dashmap",
  "futures-channel",
  "futures-core",
  "futures-sink",
  "futures-timer",
  "futures-util",
  "pin-project",
+ "rand 0.10.3",
  "serde",
  "thiserror 2.0.20",
  "tower-layer",
  "tower-service",
  "tracing",
+ "ulid 3.0.0",
+ "uuid",
 ]
 
 [[package]]
@@ -829,7 +834,7 @@ dependencies = [
  "thiserror 2.0.20",
  "tokio",
  "tower",
- "ulid",
+ "ulid 1.2.1",
 ]
 
 [[package]]
@@ -9384,6 +9389,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "ulid"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "947dde63b6d514cc5e044edad4e0ca7261afd1099d16c83d942cb2b2f348689c"
+dependencies = [
+ "rand 0.10.3",
+ "serde",
+ "uuid",
+ "web-time",
+]
+
+[[package]]
 name = "unic-langid"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -9557,6 +9574,7 @@ dependencies = [
  "getrandom 0.4.3",
  "js-sys",
  "serde_core",
+ "sha1_smol",
  "wasm-bindgen",
 ]
 
