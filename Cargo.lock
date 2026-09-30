@@ -6120,8 +6120,6 @@ dependencies = [
  "portable-atomic",
  "rand 0.9.5",
  "thiserror 2.0.20",
- "tokio",
- "tokio-stream",
 ]
 
 [[package]]
@@ -8459,7 +8457,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.3.4",
+ "getrandom 0.4.3",
  "once_cell",
  "rustix",
  "windows-sys 0.52.0",
@@ -9169,7 +9167,7 @@ dependencies = [
  "opentelemetry 0.32.0",
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
- "opentelemetry_sdk 0.32.1",
+ "opentelemetry_sdk 0.33.0",
  "tokio",
  "tracing",
  "tracing-actix-web",
@@ -9269,7 +9267,7 @@ dependencies = [
  "opentelemetry 0.32.0",
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
- "opentelemetry_sdk 0.32.1",
+ "opentelemetry_sdk 0.33.0",
  "tokio",
  "tracing",
  "tracing-actix-web",
