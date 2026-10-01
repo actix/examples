@@ -3,7 +3,7 @@
 use std::time::Duration;
 
 use apalis::prelude::*;
-use apalis_redis::{RedisConfig, RedisStorage};
+use apalis_redis::{Config, RedisStorage};
 use rand::distr::{Alphanumeric, SampleString as _};
 use serde::{Deserialize, Serialize};
 
@@ -30,8 +30,8 @@ async fn process_email_job(job: Email) {
 pub(crate) async fn start_processing_email_queue() -> eyre::Result<RedisStorage<Email>> {
     let redis_url = std::env::var("REDIS_URL").expect("Missing env variable REDIS_URL");
     let conn = apalis_redis::connect(redis_url).await?;
-    let config = RedisConfig::default().set_namespace("send_email");
-    let storage = RedisStorage::new_with_config(conn, config);
+    let config = Config::default().queue("send_email");
+    let storage = RedisStorage::new(conn).with_config(config);
 
     // create unmonitored workers for handling emails
     let worker = WorkerBuilder::new("job-handler")
