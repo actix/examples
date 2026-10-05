@@ -10,15 +10,16 @@ checksum = "fe438c63458706e03479442743baae6c88256498e6431708f6dfc520a26515d3"
 
 [[package]]
 name = "acme-rfc8555"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5095a09a195209526bc1492263f650f587e2a01367dc2322f8830d4d6cf01ab1"
+checksum = "d6751fb9965ae7b59c510c05fad0a7ab3dc9f68a4c4c5ad67c4afaed87de3d48"
 dependencies = [
  "base64 0.23.1",
  "der 0.8.2",
  "ecdsa 0.17.0",
  "eyre",
  "log",
+ "mediatype",
  "p256 0.14.0",
  "parking_lot",
  "pem-rfc7468 1.0.0",
@@ -5268,6 +5269,12 @@ dependencies = [
  "cfg-if",
  "digest 0.11.3",
 ]
+
+[[package]]
+name = "mediatype"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0695a693e38d35838dd34bc3ab19911395f6837ccf55c7271189cfb12cb8b57f"
 
 [[package]]
 name = "memchr"
