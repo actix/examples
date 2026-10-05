@@ -1315,7 +1315,7 @@ dependencies = [
  "hmac 0.13.0",
  "http 1.5.0",
  "http-body 1.1.0",
- "lru 0.18.5",
+ "lru",
  "percent-encoding",
  "regex-lite",
  "sha2 0.11.0",
@@ -4960,7 +4960,7 @@ dependencies = [
  "env_logger",
  "juniper",
  "log",
- "mysql 28.0.2",
+ "mysql 28.0.3",
  "r2d2",
  "r2d2_mysql",
  "uuid",
@@ -5132,12 +5132,6 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
 ]
-
-[[package]]
-name = "lru"
-version = "0.16.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f66e8d5d03f609abc3a39e6f08e4164ebf1447a732906d39eb9b99b7919ef39"
 
 [[package]]
 name = "lru"
@@ -5660,15 +5654,15 @@ dependencies = [
  "dotenvor",
  "env_logger",
  "log",
- "mysql 28.0.2",
+ "mysql 28.0.3",
  "serde",
 ]
 
 [[package]]
 name = "mysql"
-version = "28.0.2"
+version = "28.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e99968f000e2aadff1545932ac7f7ed4002eeb0207061f377f15ac95ae82626c"
+checksum = "7d3d30e2806645e218163f49c2656286061cc91ffce24d93d758fd136e70eb5d"
 dependencies = [
  "arc-swap",
  "bufstream",
@@ -5678,7 +5672,7 @@ dependencies = [
  "flate2",
  "io-enum",
  "libc",
- "lru 0.16.4",
+ "lru",
  "mysql_common",
  "named_pipe",
  "pem",
@@ -6228,11 +6222,11 @@ dependencies = [
 
 [[package]]
 name = "pem"
-version = "3.0.6"
+version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d30c53c26bc5b31a98cd02d20f25a7c8567146caf63ed593a9d87b2775291be"
+checksum = "d354a98a3d1251555de99e8fdd8afda05573c31b82f59063a7b0a29b5527f120"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "serde_core",
 ]
 
@@ -6845,7 +6839,7 @@ version = "28.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2474c54c0eca7b29c3707b70551ade0a0297d27fb71853a907fa5324951594fb"
 dependencies = [
- "mysql 28.0.2",
+ "mysql 28.0.3",
  "r2d2",
 ]
 
