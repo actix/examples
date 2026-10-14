@@ -9169,7 +9169,7 @@ name = "tracing-custom-root-span"
 version = "0.0.0"
 dependencies = [
  "actix-web",
- "opentelemetry 0.32.0",
+ "opentelemetry 0.33.0",
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk 0.32.1",
@@ -9269,7 +9269,7 @@ name = "tracing-opentelemetry-example"
 version = "0.0.0"
 dependencies = [
  "actix-web",
- "opentelemetry 0.32.0",
+ "opentelemetry 0.33.0",
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk 0.32.1",
