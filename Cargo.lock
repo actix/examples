@@ -4466,7 +4466,7 @@ dependencies = [
  "libc",
  "percent-encoding",
  "pin-project-lite",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "system-configuration",
  "tokio",
  "tower-service",
@@ -6757,7 +6757,7 @@ dependencies = [
  "quinn-udp",
  "rustc-hash",
  "rustls 0.23.45",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "thiserror 2.0.20",
  "tokio",
  "tracing",
@@ -6796,7 +6796,7 @@ dependencies = [
  "cfg_aliases",
  "libc",
  "once_cell",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "tracing",
  "windows-sys 0.52.0",
 ]
@@ -7982,9 +7982,9 @@ dependencies = [
 
 [[package]]
 name = "sparklepost"
-version = "0.6.0"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e9c00e1cfc16f0b8369bd30f480ca06b7c3b764ca29ccb706f789e45360e66c9"
+checksum = "2c4fcb0907a6c787ab6854fdf6ae8152c35b85756fd68426a219088c01509d94"
 dependencies = [
  "chrono",
  "reqwest",
