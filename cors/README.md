@@ -1,13 +1,17 @@
 # Cross-Origin Resource Sharing (CORS)
 
-## [Run Server](backend/README.md)
+## Usage
+
+### Server
+
+See the [backend README](backend/README.md) for the request format.
 
 ```sh
 cd cors/backend
 cargo run
 ```
 
-## Run Frontend
+### Frontend
 
 In a separate terminal, also run:
 
@@ -17,4 +21,4 @@ npm install
 npm run dev
 ```
 
-then open browser at: http://localhost:8080
+Open <http://localhost:8081> in your browser. The backend listens on port `8080`.

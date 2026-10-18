@@ -1,7 +1,11 @@
-## Form example
+# Forms
+
+Demonstrates how to extract HTML form data.
+
+## Usage
 
 ```sh
-cd form
+cd forms/form
 cargo run
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```

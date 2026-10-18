@@ -1,21 +1,30 @@
-This is a contrived example intended to illustrate a few important Actix Web features.
+# JSON Validation
 
-_Imagine_ that you have a process that involves 3 steps. The steps here are dumb in that they do nothing other than call an HTTP endpoint that returns the json that was posted to it. The intent here is to illustrate how to chain these steps together as futures and return a final result in a response.
+Demonstrates JSON validation and three sequential HTTP requests. Each step posts the data to HTTPBin and returns the JSON from its response.
 
 Actix Web features illustrated here include:
 
-    1. handling json input param
-    2. validating user-submitted parameters using the 'validator' crate
-    2. `awc` client features:
-          - POSTing json body
-    3. chaining futures into a single response used by an asynch endpoint
+1. Extract JSON request data.
+1. Validate the data with the `validator` crate.
+1. Post a JSON body with the `awc` client.
+1. Await each request and return the final response.
 
-### server
+## Prerequisites
+
+- Network access to `https://httpbin.org/post`.
+
+## Usage
 
 ```sh
-cd basics/json-validation
+cd json/json-validation
 cargo run
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-Example query from the command line using httpie: `echo '{"id":"1", "name": "JohnDoe"}' | http 127.0.0.1:8080/something`
+## Client
+
+Send a POST request with HTTPie:
+
+```sh
+http POST :8080/ id=1 name=JohnDoe
+```

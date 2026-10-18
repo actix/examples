@@ -1,17 +1,17 @@
-## GraphQL using `async-graphql`
+# GraphQL Using `async-graphql`
 
 > Getting started using [async-graphql](https://github.com/async-graphql/async-graphql) with Actix Web.
 
 ## Usage
 
 ```sh
-cd graphql/graphql-demo
+cd graphql/async-graphql
 cargo run
 ```
 
-## Endpoints
+## Routes
 
-```
+```text
 GET/POST  http://localhost:8080/graphql   GraphQL endpoint
 GET       http://localhost:8080/graphiql  GraphQL playground UI
 ```

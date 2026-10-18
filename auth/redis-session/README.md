@@ -1,12 +1,20 @@
-# redis-session
+# Redis Sessions
+
+Session storage using Redis.
+
+## Prerequisites
+
+- A Redis server listening on `127.0.0.1:6379`.
+
+## Usage
 
 ```sh
-cd auth/redis-sessions
+cd auth/redis-session
 cargo run
-# Starting http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-## Available Routes
+## Routes
 
 - [GET /](http://localhost:8080/)
 - [POST /do_something](http://localhost:8080/do_something)

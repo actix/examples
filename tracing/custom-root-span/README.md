@@ -1,10 +1,10 @@
-# Custom root span
+# Custom Root Span
 
-## Running
+## Usage
 
 You can launch this example with
 
-```bash
+```sh
 cd tracing/custom-root-span
 cargo run
 ```
@@ -12,7 +12,7 @@ cargo run
 An `actix-web` application will be listening on port `8080`.  
 You can fire requests to it with:
 
-```bash
+```sh
 curl -v http://localhost:8080/hello
 ```
 
@@ -22,7 +22,7 @@ Hello world!
 
 or
 
-```bash
+```sh
 curl -v http://localhost:8080/hello/my-name
 ```
 
@@ -30,12 +30,12 @@ curl -v http://localhost:8080/hello/my-name
 Hello my-name!
 ```
 
-## Visualising traces
+## Traces
 
 Spans will be also printed to the console in JSON format, as structured log records.
 
 You can look at the exported spans in your browser by visiting [http://localhost:16686](http://localhost:16686) if you launch a Jaeger instance:
 
-```bash
+```sh
 docker run -d -p6831:6831/udp -p6832:6832/udp -p16686:16686 -p4317:4317 jaegertracing/all-in-one:latest
 ```

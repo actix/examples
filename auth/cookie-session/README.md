@@ -1,7 +1,11 @@
-## Cookie session example
+# Cookie Sessions
+
+Demonstrates session storage in cookies.
+
+## Usage
 
 ```sh
 cd auth/cookie-session
 cargo run
-# Starting http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```

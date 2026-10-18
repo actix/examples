@@ -1,4 +1,4 @@
-# GraphQL using Juniper
+# GraphQL Using Juniper
 
 [Juniper](https://github.com/graphql-rust/juniper) integration for Actix Web. If you want more advanced example, see also the [juniper-advanced example].
 
@@ -13,7 +13,7 @@ cd graphql/juniper
 cargo run
 ```
 
-### Web Client
+### Browser Client
 
 Go to <http://localhost:8080/graphiql> in your browser.
 

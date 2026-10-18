@@ -1,6 +1,6 @@
-# Echo WebSocket (actor-less)
+# WebSocket Echo Without Actors
 
-Simple echo websocket server using [`actix-ws`].
+Simple echo WebSocket server using [`actix-ws`].
 
 ## Usage
 
@@ -9,14 +9,14 @@ Simple echo websocket server using [`actix-ws`].
 ```sh
 cd websockets/echo-actorless
 cargo run --bin websocket-server
-# starting HTTP server at http://localhost:8080
+# Server: http://localhost:8080
 ```
 
 ### Browser Client
 
 Go to <http://localhost:8080> in a browser.
 
-### rust client
+### Rust Client
 
 ```sh
 cd websockets/echo-actorless

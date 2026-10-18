@@ -6,11 +6,10 @@ You'll need to have a MySQL (or compatible) server running on your machine to te
 
 ## Usage
 
-All the following commands assume that your current working directory is _this_ directory. I.e.:
+Run the commands below from the example directory:
 
-```console
-$ pwd
-.../databases/mysql
+```sh
+cd databases/mysql
 ```
 
 1. Create database and tables:
@@ -25,9 +24,9 @@ $ pwd
    mysql -u root -p my_bank < sql/4_customer_details.sql
    ```
 
-   For each step you will be prompted for the root user's password. If there's no password set on the root use, just hit enter again.
+   Each command prompts for the root user's password. Press Enter if that user has no password.
 
-1. Create a `.env` file in this this directory:
+1. Create a `.env` file in this directory:
 
    ```ini
    SERVER_ADDR=127.0.0.1:8080

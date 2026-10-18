@@ -1,13 +1,13 @@
-# JSON decode errors
+# JSON Decode Errors
 
 This example demonstrates how to return useful error messages to the client when the server receives a request with invalid JSON, or which cannot be deserialized to the expected model. By configuring an `error_handler` on the route, we can set appropriate response codes and return the string representation of the error.
 
 ## Usage
 
-```shell
-cd json/json_decode_error
+```sh
+cd json/json-decode-error
 cargo run
-# Started HTTP server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
 ## Examples
@@ -16,7 +16,7 @@ The examples use `curl -i` in order to show the status line with the response co
 
 - A well-formed request
 
-  ```shell
+  ```console
   $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"name": "Alice"}'
   HTTP/1.1 200 OK
   ...
@@ -26,7 +26,7 @@ The examples use `curl -i` in order to show the status line with the response co
 
 - Missing `Content-Type` header
 
-  ```shell
+  ```console
   $ curl -i 127.0.0.1:8080 -d '{"name": "Bob"}'
   HTTP/1.1 415 Unsupported Media Type
   ...
@@ -36,7 +36,7 @@ The examples use `curl -i` in order to show the status line with the response co
 
 - Malformed JSON
 
-  ```shell
+  ```console
   $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"name": "Eve}'
   HTTP/1.1 400 Bad Request
   ...
@@ -46,7 +46,7 @@ The examples use `curl -i` in order to show the status line with the response co
 
 - JSON value of wrong type
 
-  ```shell
+  ```console
   $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"name": 350}'
   HTTP/1.1 422 Unprocessable Entity
   ...
@@ -56,7 +56,7 @@ The examples use `curl -i` in order to show the status line with the response co
 
 - Wrong JSON key
 
-  ```shell
+  ```console
   $ curl -i 127.0.0.1:8080 -H 'Content-Type: application/json' -d '{"namn": "John"}'
   HTTP/1.1 422 Unprocessable Entity
   ...
@@ -64,6 +64,6 @@ The examples use `curl -i` in order to show the status line with the response co
   Json deserialize error: missing field `name` at line 1 column 16
   ```
 
-## More documentation
+## More Documentation
 
 [`actix_web::web::JsonConfig`](https://docs.rs/actix-web/latest/actix_web/web/struct.JsonConfig.html)

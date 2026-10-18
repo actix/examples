@@ -1,16 +1,18 @@
-# Actix Web File Upload with Async/Await
+# Multipart File Upload
 
-### Run
+Uploads files with the Actix Web multipart form extractor.
+
+## Usage
 
 ```sh
 cd forms/multipart
 cargo run
 ```
 
-`open web browser to localhost:8080 and upload file(s)`
+Open <http://localhost:8080> in your browser and upload one or more files.
 
-### Result
+## Result
 
-`file(s) will show up in ./tmp in the same directory as the running process`
+The files are saved in `forms/multipart/tmp`.
 
-Note: this is a naive implementation and will panic on any error
+This example uses `unwrap` for file persistence and can panic if a file cannot be saved.

@@ -1,45 +1,48 @@
-Getting started using databases with Actix Web, asynchronously.
+# SQLite
+
+Demonstrates sequential and parallel database queries with Actix Web and SQLite.
+
+## Prerequisites
+
+- SQLite 3 and its development libraries.
+
+On Ubuntu:
+
+```sh
+sudo apt install libsqlite3-dev sqlite3
+```
 
 ## Usage
 
-### init database sqlite
-
-From the root directory of this project:
+### Database Setup
 
 ```sh
+cd databases/sqlite
 bash db/setup_db.sh
 ```
 
-This creates a sqlite database, weather.db, in the root.
+This creates `weather.db` in `databases/sqlite`.
 
-### server
+### Server
 
 ```sh
-# if ubuntu : sudo apt-get install libsqlite3-dev
-# if fedora : sudo dnf install libsqlite3x-devel
 cargo run
 ```
 
-### web client
+### Browser Client
 
-[http://127.0.0.1:8080/asyncio_weather](http://127.0.0.1:8080/asyncio_weather)
+- <http://localhost:8080/asyncio_weather>
+- <http://localhost:8080/parallel_weather>
 
-[http://127.0.0.1:8080/parallel_weather](http://127.0.0.1:8080/parallel_weather)
+### SQLite Client
 
-### sqlite client
+In another terminal, from `databases/sqlite`:
 
 ```sh
-# if ubuntu : sudo apt-get install sqlite3
-# if fedora : sudo dnf install sqlite3x
 sqlite3 weather.db
+```
+
+```console
 sqlite> .tables
 sqlite> select * from nyc_weather;
-```
-
-## Dependencies
-
-On Ubuntu 19.10:
-
-```
-sudo apt install libsqlite3-dev
 ```

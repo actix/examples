@@ -1,34 +1,36 @@
-# websocket
+# WebSocket Echo
 
-Simple echo websocket server.
+Simple echo WebSocket server.
 
 ## Usage
 
-### server
+### Server
 
 ```sh
 cd websockets/echo
 cargo run --bin websocket-server
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-### web client
+### Browser Client
 
 - [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
-### rust client
+### Rust Client
 
 ```sh
 cd websockets/echo
 cargo run --bin websocket-client
 ```
 
-### python client
+### Python Client
 
-- `pip install aiohttp`
-- `python websocket-client.py`
+In another terminal, start from the repository root:
 
-if ubuntu :
-
-- `pip3 install aiohttp`
-- `python3 websocket-client.py`
+```sh
+cd websockets/echo
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install aiohttp
+python3 websocket-client.py
+```

@@ -18,7 +18,13 @@ As stated in the exercise brief, this example will:
 
 ## Usage
 
-```console
-$ cd tracing/mainmatter-workshop
-$ cargo run
+```sh
+cd tracing/mainmatter-workshop
+cp .env.example .env
+```
+
+Set `HONEYCOMB_API_KEY` in `.env` to your Honeycomb API key, then start the server:
+
+```sh
+cargo run
 ```

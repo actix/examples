@@ -1,4 +1,4 @@
-# guards
+# Routing Guards
 
 Shows how to set up custom routing guards.
 
@@ -6,14 +6,14 @@ Shows how to set up custom routing guards.
 
 ## Usage
 
-### Running The Server
+### Server
 
 ```sh
 cd guards
 cargo run --bin=guards
 ```
 
-### Available Routes
+### Routes
 
 #### `GET /api/hello`
 
@@ -25,11 +25,11 @@ Using [HTTPie]:
 http :8080/api/hello Accept-Version:1
 ```
 
-Using [cURL]:
+Using [curl]:
 
 ```sh
 curl 'localhost:8080/api/hello' -H 'accept-version: 1'
 ```
 
-[httpie]: https://httpie.org
-[curl]: https://curl.haxx.se
+[HTTPie]: https://httpie.io/cli
+[curl]: https://curl.se

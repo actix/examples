@@ -2,7 +2,7 @@
 
 This is an example demonstrating the construction of async state with `App::data_factory`.
 
-## Reason:
+## Use Cases
 
 Use of a `data_factory` would make sense in these situations:
 
@@ -11,4 +11,19 @@ Use of a `data_factory` would make sense in these situations:
 
 ## Context
 
-The real world difference can be vary by the work you are doing but in general it's a good idea to spread your similarly-expensive async tasks evenly between threads and have as little cross threads synchronization as possible.
+The effect depends on the workload. Spread tasks with similar costs across worker threads and reduce synchronization between threads where possible.
+
+## Usage
+
+```sh
+cd data-factory
+cargo run
+```
+
+## Client
+
+```sh
+curl -i http://localhost:8080/
+```
+
+The handler reads the state created by `data_factory` and returns `204 No Content`.

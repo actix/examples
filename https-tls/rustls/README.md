@@ -1,41 +1,33 @@
-# HTTPS Server (using Rustls)
+# HTTPS Server Using Rustls
 
 ## Usage
 
+```sh
+cd https-tls/rustls
+```
+
 ### Certificate
 
-We put the self-signed certificate in this directory as an example but your browser would complain that it isn't secure. So we recommend to use [`mkcert`] to trust it. To use local CA, you should run:
+The included certificate is for demonstration. To create a certificate trusted by your browser, install [`mkcert`], install its local CA, and generate a new certificate and private key in this directory:
 
 ```sh
 mkcert -install
-```
-
-If you want to generate your own cert/private key file, then run:
-
-```sh
 mkcert -key-file key.pem -cert-file cert.pem 127.0.0.1 localhost
 ```
 
-For `rsa` keys use `rsa_private_keys` function instead `pkcs8_private_keys`
+The example loads the private key with `PrivateKeyDer::from_pem_file`, which detects the PEM key format.
 
-```rs
-let mut keys = pkcs8_private_keys(key_file).unwrap(); // pkcs8
-let mut keys = rsa_private_keys(key_file).unwrap(); // rsa
-```
-
-[`mkcert`]: https://github.com/FiloSottile/mkcert
-
-### Running the Example Server
+### Server
 
 ```sh
-cd https-tls/rustls
-cargo run # (or ``cargo watch -x run``)
-# Started http server: 127.0.0.1:8443
+cargo run
 ```
 
 If you prefer reloading you can substitute `cargo watch -x run`. That requires you install the `cargo-watch` crate.
 
-### web client
+### Browser Client
 
 - curl: `curl -v https://127.0.0.1:8443/index.html --compressed -k`
-- browser: [https://127.0.0.1:8443/index.html](https://127.0.0.1:8443/index.html)
+- Browser: [https://127.0.0.1:8443/index.html](https://127.0.0.1:8443/index.html)
+
+[`mkcert`]: https://github.com/FiloSottile/mkcert

@@ -1,6 +1,6 @@
-# Websocket chat broker example
+# WebSocket Chat With A Broker
 
-This is a different implementation of the [websocket chat example](https://github.com/actix/examples/tree/main/websockets/chat)
+An alternative implementation of the [WebSocket chat example](../chat/README.md).
 
 Differences:
 
@@ -12,17 +12,22 @@ Possible Improvements:
 
 - Could the Chat Server Actor be simultaneously a System Service (accessible to the Chat Session via the System Registry) and also run in a separate thread?
 
-## Server
+## Usage
 
-Chat server listens for incoming tcp connections. Server can access several types of message:
+```sh
+cd websockets/chat-broker
+cargo run
+```
+
+## Chat Commands
+
+The server accepts WebSocket connections and supports these messages:
 
 - `/list` - list all available rooms
 - `/join name` - join room, if room does not exist, create new one
 - `/name name` - set session name
 - `some message` - just string, send message to all peers in same room
 
-To start server use command: `cargo run`
+## Browser Client
 
-## WebSocket Browser Client
-
-Open url: [http://localhost:8080/](http://localhost:8080/)
+Open <http://localhost:8080> in your browser.

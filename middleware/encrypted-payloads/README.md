@@ -14,20 +14,37 @@ All this to say, it provides a (fairly brittle) way to have handlers not need to
 
 ## Usage
 
+```sh
+cd middleware/encrypted-payloads
+cargo run
+```
+
+## Client
+
+In another terminal, change to `middleware/encrypted-payloads`.
+
 Using [HTTPie] throughout for simplicity.
 
-```console
-$ http POST :8080/encrypt id:=1234 data=abcde > tmp.json
-HTTP/1.1 200 OK
-Content-Type: application/json
+Save the encrypted JSON body to a file:
 
+```sh
+http --body POST :8080/encrypt id:=1234 data=abcde > tmp.json
+```
+
+The body has this structure:
+
+```json
 {
-    "id": 1234,
-    "data": "kq6MKdP+I0hoI7YC7CN39yamx67T",
-    "nonce": "dW5pcXVlIG5vbmNl"
+  "id": 1234,
+  "data": "kq6MKdP+I0hoI7YC7CN39yamx67T",
+  "nonce": "dW5pcXVlIG5vbmNl"
 }
+```
 
-$ cat tmp.json | http -v POST :8080/reverse
+Send that file to the middleware-protected route:
+
+```console
+$ http -v POST :8080/reverse < tmp.json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -39,7 +56,7 @@ Content-Type: application/json
 
 The server logs would look something like
 
-```plain
+```text
 [INFO  middleware_encrypted_payloads] creating encrypted sample request for ID = 1234
 [INFO  actix_web::middleware::logger] 127.0.0.1 "POST /encrypt HTTP/1.1" 200 76 "-" "-" 0.000393
 ...
@@ -50,4 +67,4 @@ The server logs would look something like
 [INFO  actix_web::middleware::logger] 127.0.0.1 "POST /reverse HTTP/1.1" 200 66 "-" "-" 0.000425
 ```
 
-[httpie]: https://httpie.io/cli
+[HTTPie]: https://httpie.io/cli

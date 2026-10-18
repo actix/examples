@@ -1,22 +1,38 @@
-# Docker sample
+# Docker
 
-## Build image
+Build and run an Actix Web server in Docker.
 
-```shell
+## Prerequisites
+
+- Docker.
+
+## Usage
+
+```sh
+cd docker
+```
+
+### Build The Image
+
+```sh
 docker build -t actix-docker .
 ```
 
-## Run built image
+### Server
 
-```shell
-docker run -d -p 8080:8080 actix-docker
-# and the server should start instantly
-curl http://localhost:8080
+```sh
+docker run --rm -p 8080:8080 actix-docker
 ```
 
-## Running unit tests
+In another terminal, send a request:
 
-```shell
-docker build -t actix-docker:test .
-docker run --rm actix-docker:test
+```sh
+curl http://localhost:8080/
+```
+
+## Tests
+
+```sh
+docker build --target builder -t actix-docker:test .
+docker run --rm --workdir /code actix-docker:test cargo test
 ```

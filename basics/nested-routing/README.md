@@ -1,3 +1,5 @@
+# Nested Routing
+
 This example illustrates how to use nested resource registration through application-level configuration.  
 The endpoints do nothing.
 
@@ -6,10 +8,10 @@ The endpoints do nothing.
 ```sh
 cd basics/nested-routing
 cargo run
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-### Available Routes
+### Routes
 
 - [POST /products](http://localhost:8080/products)
 - [GET /products](http://localhost:8080/products)

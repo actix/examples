@@ -1,37 +1,37 @@
-## Middleware : Return HttpResponse from Middleware
+# Middleware: Return An HTTP Response
 
-```rs
-cd middleware-return-httpresponse
-cargo run
-# Started http server: 127.0.0.1:8080
-```
+Demonstrates how middleware can return an HTTP response.
 
-## What is this?
-
-A Middleware example which returning HttpResponse.
-
-## How to test
-
-### success case
+## Usage
 
 ```sh
-curl http://127.0.0.1:8080/ -H 'Authorization:ok' | json_pp -json_opt pretty,canonical
- % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100    42  100    42    0     0  42000      0 --:--:-- --:--:-- --:--:-- 42000
+cd middleware/http-response
+cargo run
+# Server: http://localhost:8080
+```
+
+## Client
+
+### Success
+
+```sh
+curl --silent --show-error http://localhost:8080/ -H 'Authorization: ok'
+```
+
+```json
 {
-   "data" : "Hello this is success response!"
+  "data": "Hello this is success response!"
 }
 ```
 
-### failed case
+### Failure
 
 ```sh
-curl http://127.0.0.1:8080/ | json_pp -json_opt pretty,canonical
- % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   102  100   102    0     0    99k      0 --:--:-- --:--:-- --:--:--   99k
+curl --silent --show-error http://localhost:8080/
+```
+
+```json
 {
-   "data" : "Hello this is default error message! you need to set Authorization header to get thru this."
+  "data": "Hello this is default error message! you need to set Authorization header to get thru this."
 }
 ```

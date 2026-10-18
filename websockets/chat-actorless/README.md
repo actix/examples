@@ -1,4 +1,4 @@
-# WebSocket Chat (actor-less)
+# WebSocket Chat Without Actors
 
 > Multi-room WebSocket chat server using [`actix-ws`].
 
@@ -7,9 +7,9 @@
 ### Server
 
 ```sh
-cd websockets/echo-actorless
+cd websockets/chat-actorless
 cargo run
-# starting HTTP server at http://localhost:8080
+# Server: http://localhost:8080
 ```
 
 ### Browser Client

@@ -1,4 +1,4 @@
-# template_tera
+# Tera
 
 Minimal example of using the template [tera](https://github.com/Keats/tera) that displays a form.
 

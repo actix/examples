@@ -2,7 +2,7 @@
 
 This is an example of how to integrate [Fluent Templates](https://crates.io/crates/fluent-templates) with Actix Web using the Handlebars templating engine.
 
-# Directory Structure
+## Directory Structure
 
 - `src`: Rust source code for web server and endpoint configuration
 - `templates`: Handlebars templates (no text content is stored in the templates)
@@ -22,12 +22,12 @@ After starting the server, you may visit the following pages:
 - http://localhost:8080/Bob/passwords
 - http://localhost:8080/some-non-existing-page - 404 error rendered using template
 
-This example implements language selection using the standard Accept-Language header, which is sent by browsers according to OS/browser settings. To view the translated pages, pass the Accept-Encoding header with `en` or `fr`. Values which do not have associated translation files will fall back to English.
+This example selects a language from the `Accept-Language` header. Browsers usually set this header from the user's language settings. To select a translation, set `Accept-Language` to `en` or `fr`. Languages without translation files fall back to English.
 
-```
+```sh
 # using HTTPie
 http :8080/Alice/documents Accept-Language:fr
 
-# using cURL
+# using curl
 curl http://localhost:8080/Alice/documents -H 'accept-language: fr'
 ```

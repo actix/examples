@@ -1,8 +1,8 @@
 [package]
 name = "docker_sample"
-publish.workspace = true
-edition.workspace = true
-rust-version.workspace = true
+publish = false
+edition = "2024"
+rust-version = "1.98"
 
 # Do not use workspace deps as they won't work in docker context.
 [dependencies]

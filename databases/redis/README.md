@@ -2,18 +2,22 @@
 
 This project illustrates how to send multiple cache requests to Redis in bulk, asynchronously. This approach resembles traditional Redis pipelining. [See here for more details about this approach.](https://github.com/benashford/redis-async-rs/issues/19#issuecomment-412208018)
 
-## Start Server
+## Prerequisites
+
+- A Redis server listening on `127.0.0.1:6379`.
+
+## Usage
 
 ```sh
 cd databases/redis
 cargo run
 ```
 
-## Endpoints
+## Routes
 
 ### `POST /stuff`
 
-To test the demo, POST a json object containing three strings to the `/stuff` endpoint:
+Send a JSON object containing three strings to the `/stuff` endpoint:
 
 ```json
 {
@@ -23,7 +27,7 @@ To test the demo, POST a json object containing three strings to the `/stuff` en
 }
 ```
 
-These three entries will cache to redis, keyed accordingly.
+The server stores these values under the keys `my_domain:one`, `my_domain:two`, and `my_domain:three`.
 
 Using [HTTPie]:
 
@@ -31,7 +35,7 @@ Using [HTTPie]:
 http :8080/stuff one="first entry" two="second entry" three="third entry"
 ```
 
-Using [cURL]:
+Using [curl]:
 
 ```sh
 curl localhost:8080/stuff -H 'content-type: application/json' -d '{"one":"first entry","two":"second entry","three":"third entry"}'
@@ -39,7 +43,7 @@ curl localhost:8080/stuff -H 'content-type: application/json' -d '{"one":"first 
 
 ### `DELETE /stuff`
 
-To delete these, simply issue a DELETE http request to /stuff endpoint
+Send a DELETE request to `/stuff` to remove the three entries.
 
 Using [HTTPie]:
 
@@ -47,7 +51,7 @@ Using [HTTPie]:
 http DELETE :8080/stuff
 ```
 
-Using [cURL]:
+Using [curl]:
 
 ```sh
 curl -XDELETE 127.0.0.1:8080/stuff
@@ -58,8 +62,8 @@ curl -XDELETE 127.0.0.1:8080/stuff
 At any time, verify the contents of Redis using its CLI:
 
 ```sh
-echo "MGET mydomain:one mydomain:two mydomain:three" | redis-cli
+redis-cli MGET my_domain:one my_domain:two my_domain:three
 ```
 
-[httpie]: https://httpie.org
-[curl]: https://curl.haxx.se
+[HTTPie]: https://httpie.io/cli
+[curl]: https://curl.se

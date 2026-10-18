@@ -2,11 +2,20 @@
 
 This project demonstrates how to implement Redis cache middleware to handle cache responses synchronously. The application should be able to function properly even if Redis is not running; however, the caching process will be disabled in such cases.
 
-## Setting up
+## Setup
 
-Configure the environment variable `REDIS_HOST`, or if not set, the default host `redis://localhost:4379` will be used. TLS is supported using the `rediss://` protocol. Run the server using `cargo run`.
+Set `REDIS_HOST` to a Redis URL, or use the default `redis://localhost:6379`. TLS is supported with the `rediss://` protocol. Redis is optional; requests still work when it is unavailable.
 
-## Endpoints
+## Usage
+
+```sh
+cd cache/redis
+cargo run
+```
+
+The HTTP server listens on port `8080`. Set `LISTEN_PORT` to use another port.
+
+## Routes
 
 ### `GET /fibonacci/{number}`
 
@@ -21,11 +30,11 @@ To test the demo, send a GET request to `/fibonacci/{number}`, where {number} is
 
 When making the first GET request to `/fibonacci/47`, it may take around 8 seconds to respond. If Redis is running and the connection is established, subsequent requests should return the cached result immediately, a `hit` cache status will be returned, but with content type `application/json`.
 
-## Known issues
+## Known Issues
 
 - Connecting to a remote Redis server might introduce significant overhead and could lead to prolonged connection times or even failure to reach the remote server.
 
-## Further implementations
+## Possible Improvements
 
 - Implement asynchronous insertion of cache responses.
 - Explore using an in-memory datastore within the application process to reduce reliance on Redis.

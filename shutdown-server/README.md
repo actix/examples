@@ -1,4 +1,4 @@
-# shutdown-server
+# Server Shutdown
 
 Demonstrates how to shutdown the web server in a couple of ways:
 
@@ -8,7 +8,7 @@ Demonstrates how to shutdown the web server in a couple of ways:
 
 ## Usage
 
-### Running The Server
+### Server
 
 ```console
 $ cd shutdown-server
@@ -18,7 +18,7 @@ $ cargo run --bin shutdown-server
 [INFO] Actix runtime found; starting in Actix runtime
 ```
 
-### Available Routes
+### Routes
 
 - [`GET /hello`](http://localhost:8080/hello)
   - Test hello world

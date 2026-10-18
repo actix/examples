@@ -1,4 +1,4 @@
-# diesel
+# Diesel
 
 Basic integration of [Diesel](https://diesel.rs) using SQLite for Actix Web.
 
@@ -33,16 +33,15 @@ diesel migration run
 
 There will now be a database file at `./test.db`.
 
-### Running Server
+### Server
 
 ```sh
-cd databases/diesel
 cargo run
 
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-### Available Routes
+### Routes
 
 #### `POST /user`
 
@@ -72,7 +71,7 @@ Using [HTTPie]:
 http POST localhost:8080/user name=bill
 ```
 
-Using cURL:
+Using curl:
 
 ```sh
 curl -S -X POST --header "Content-Type: application/json" --data '{"name":"bill"}' http://localhost:8080/user
@@ -93,7 +92,7 @@ Using [HTTPie]:
 http localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 ```
 
-Using cURL:
+Using curl:
 
 ```sh
 curl -S http://localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
@@ -107,7 +106,7 @@ curl -S http://localhost:8080/user/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 sqlite3 test.db
 ```
 
-```
+```console
 sqlite> .tables
 sqlite> SELECT * FROM users;
 ```
@@ -116,4 +115,4 @@ sqlite> SELECT * FROM users;
 
 You can find a complete example of Diesel + PostgreSQL at: [https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Rust/actix](https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Rust/actix)
 
-[httpie]: https://httpie.io/cli
+[HTTPie]: https://httpie.io/cli

@@ -1,16 +1,17 @@
-## Middleware: Redirect Any HTTP Connection To Use HTTPS Connection
+# Middleware: Redirect HTTP To HTTPS
 
 ## Alternatives
 
-A pre-built solution is soon to be built-in. For now, see [`RedirectHttps`](https://docs.rs/actix-web-lab/0.20/actix_web_lab/middleware/struct.RedirectHttps.html) from [`actix-web-lab`](https://crates.io/crates/actix-web-lab).
+For a reusable middleware, see [`RedirectHttps`](https://docs.rs/actix-web-lab/latest/actix_web_lab/middleware/struct.RedirectHttps.html) from [`actix-web-lab`](https://crates.io/crates/actix-web-lab).
 
 ## This Example
 
-This example is the next step after implementing this example : [Setup TLS via rustls](https://github.com/actix/examples/tree/main/https-tls/rustls).
+Extends the [Rustls example](../../https-tls/rustls/README.md) by listening on both HTTP port `80` and HTTPS port `443`. HTTP requests are redirected to HTTPS.
 
-You might have already implemented TLS (using one of the ways mentioned in the example of security section), and have setup your server to listen to port 443 (for HTTPS).
+## Prerequisites
 
-Now, the only problem left to solve is, to listen to **HTTP** connections as well and redirect them to use **HTTPS**
+- Permission to bind ports `80` and `443`.
+- A PEM certificate and private key in this example directory. Use the certificate instructions in the Rustls example, with this directory as the working directory.
 
 ## Usage
 

@@ -1,6 +1,6 @@
 # Handlebars
 
-This is an example of how to use Actix Web with the [Handlebars](https://crates.io/crates/handlebars) templating language, which is currently the most popular crate that achieves this.
+Demonstrates how to use Actix Web with the [Handlebars](https://crates.io/crates/handlebars) template engine.
 
 ## Usage
 

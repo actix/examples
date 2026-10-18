@@ -2,7 +2,7 @@
 
 Upload a file in multipart form to AWS S3 using [AWS S3 SDK](https://crates.io/crates/aws-sdk-s3).
 
-# Usage
+## Usage
 
 ```sh
 cd forms/multipart-s3
@@ -20,25 +20,25 @@ The AWS SDK automatically reads these environment variables to configure the S3 
 cargo run
 ```
 
-Go to <http://localhost:8080> in you browser.
+Open <http://localhost:8080> in your browser.
 
 Or, start the upload using [HTTPie]:
 
 ```sh
-http --form POST :8080/ file@Cargo.toml
-http --form POST :8080/ file@Cargo.toml file@README.md meta='{"namespace":"foo"}'
+http --form POST :8080/ namespace=foo file@Cargo.toml
+http --form POST :8080/ namespace=foo file@Cargo.toml file@README.md
 
-http GET :8080/file/<key_from_upload>
+http GET :8080/file/uploads/foo/Cargo.toml
 ```
 
-Or, using cURL:
+Or, using curl:
 
 ```sh
-curl -X POST http://localhost:8080/ -F 'file=@Cargo.toml'
-curl -X POST http://localhost:8080/ -F 'file=@Cargo.toml' -F 'file=@README.md' -F 'meta={"namespace":"foo"}'
+curl http://localhost:8080/ -F 'namespace=foo' -F 'file=@Cargo.toml'
+curl http://localhost:8080/ -F 'namespace=foo' -F 'file=@Cargo.toml' -F 'file=@README.md'
 
-curl http://localhost:8080/file/<key_from_upload>
+curl http://localhost:8080/file/uploads/foo/Cargo.toml
 ```
 
-[httpie]: https://httpie.org
-[curl]: https://curl.haxx.se
+[HTTPie]: https://httpie.io/cli
+[curl]: https://curl.se

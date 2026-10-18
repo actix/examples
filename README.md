@@ -9,6 +9,14 @@
 
 <!-- prettier-ignore-end -->
 
+## Running The Examples
+
+Use Rust 1.98 or newer.
+
+Start an example's instructions from the repository root. Each `cd` command selects the directory for the commands that follow it. Keep that directory for later setup and server commands. Use a separate terminal for client requests while the server runs.
+
+Each example README lists its prerequisites and run instructions. Examples that use external services require those services to be running first.
+
 ## Community Showcase
 
 - [Merino](https://github.com/mozilla-services/merino): Web service for Firefox Suggest.
