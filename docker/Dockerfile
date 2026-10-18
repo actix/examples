@@ -6,11 +6,10 @@
 FROM rust:1-slim-bookworm AS builder
 WORKDIR /code
 
-# Use the repository root as the build context for workspace metadata.
-COPY . .
+COPY Cargo.toml Cargo.toml
+COPY src src
 
-# Compile the Docker example from the workspace.
-RUN cargo build --release --package docker_sample
+RUN cargo build --release
 
 ###############
 ## run stage ##
