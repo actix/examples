@@ -491,14 +491,13 @@ dependencies = [
 
 [[package]]
 name = "actix-web-lab"
-version = "0.27.0"
+version = "0.29.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d113865590e5f97352dd9194edc9cfc10fda1716df38e60a4844e6dbdf2b240b"
+checksum = "1d634f96d3f94f293999b6acb4bd3c98b00e6f598be7a9b5649a35aecb90de1a"
 dependencies = [
  "actix-http",
  "actix-router",
  "actix-service",
- "actix-utils",
  "actix-web",
  "actix-web-lab-derive",
  "ahash",
@@ -508,15 +507,15 @@ dependencies = [
  "csv",
  "derive_more 2.1.1",
  "form_urlencoded",
- "futures-core",
  "futures-util",
  "http 0.2.12",
  "impl-more",
- "itertools",
+ "itertools 0.15.0",
  "local-channel",
  "mime",
  "pin-project-lite",
  "regex",
+ "russe",
  "serde",
  "serde_html_form",
  "serde_json",
@@ -529,9 +528,9 @@ dependencies = [
 
 [[package]]
 name = "actix-web-lab-derive"
-version = "0.27.0"
+version = "0.29.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67713d6e3867c3327f081a10211c56bc9b749b041d268a6cc15599356c1945f1"
+checksum = "f3e4b5439e27c9786f334a4ca6b9dc4d148fae4d6683e1e4f6d36575a61d616d"
 dependencies = [
  "quote",
  "syn 3.0.6",
@@ -4751,6 +4750,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8b4baf93f58d4425749ca49a51c50ebab072c5df6994d08fed93541c331481dc"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4942,7 +4950,7 @@ dependencies = [
  "fnv",
  "futures",
  "indexmap",
- "itertools",
+ "itertools 0.14.0",
  "juniper_codegen",
  "ref-cast",
  "serde",
@@ -6702,7 +6710,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b570b25f7617e43d59005d0990ccb79e950a423952cea19671b7a876da390adf"
 dependencies = [
  "anyhow",
- "itertools",
+ "itertools 0.14.0",
  "proc-macro2",
  "quote",
  "syn 2.0.119",
@@ -7243,6 +7251,23 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+]
+
+[[package]]
+name = "russe"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b39aee3156e397c2884b91395e69f12c13e97939e3b33cb1068888e4b3a5ced6"
+dependencies = [
+ "aho-corasick",
+ "bytes",
+ "bytestring",
+ "futures-util",
+ "impl-more",
+ "memchr",
+ "tokio",
+ "tokio-util",
+ "tracing",
 ]
 
 [[package]]
