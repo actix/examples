@@ -8,14 +8,12 @@ Build and run an Actix Web server in Docker.
 
 ## Usage
 
-```sh
-cd docker
-```
+Run the build commands from the repository root. The build uses the shared workspace metadata and lockfile. `--pull` checks for the latest stable Rust image before building.
 
 ### Build The Image
 
 ```sh
-docker build -t actix-docker .
+docker build --pull --file docker/Dockerfile -t actix-docker .
 ```
 
 ### Server
@@ -33,6 +31,6 @@ curl http://localhost:8080/
 ## Tests
 
 ```sh
-docker build --target builder -t actix-docker:test .
-docker run --rm --workdir /code actix-docker:test cargo test
+docker build --pull --file docker/Dockerfile --target builder -t actix-docker:test .
+docker run --rm --workdir /code actix-docker:test cargo test --package docker_sample
 ```

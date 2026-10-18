@@ -11,7 +11,7 @@
 
 ## Running The Examples
 
-Use Rust 1.98 or newer.
+Use the latest stable Rust toolchain.
 
 Start an example's instructions from the repository root. Each `cd` command selects the directory for the commands that follow it. Keep that directory for later setup and server commands. Use a separate terminal for client requests while the server runs.
 
