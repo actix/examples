@@ -9200,7 +9200,7 @@ dependencies = [
  "tracing",
  "tracing-actix-web",
  "tracing-bunyan-formatter",
- "tracing-opentelemetry 0.33.0",
+ "tracing-opentelemetry 0.34.0",
  "tracing-subscriber",
 ]
 
@@ -9300,7 +9300,7 @@ dependencies = [
  "tracing",
  "tracing-actix-web",
  "tracing-bunyan-formatter",
- "tracing-opentelemetry 0.33.0",
+ "tracing-opentelemetry 0.34.0",
  "tracing-subscriber",
 ]
 
