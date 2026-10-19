@@ -12,7 +12,7 @@ cd basics/static-files
 cargo run
 ```
 
-### Available Routes
+### Routes
 
 - [GET /](http://localhost:8080/)
 - [GET /images](http://localhost:8080/images)

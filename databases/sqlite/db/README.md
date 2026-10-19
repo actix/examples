@@ -1,5 +1,14 @@
+# SQLite Weather Data
+
 This directory includes weather information obtained from NOAA for NYC Central Park: https://www.ncdc.noaa.gov/cdo-web/
 
-# Setup Instructions
+## Usage
 
-Set up a sqlite3 database by executing the setup_db.sh file: `bash setup_db.sh`
+From the repository root, create the SQLite database:
+
+```sh
+cd databases/sqlite
+bash db/setup_db.sh
+```
+
+This writes `weather.db` in `databases/sqlite`. See the [example README](../README.md) for server instructions.

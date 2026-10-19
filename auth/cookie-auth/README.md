@@ -1,32 +1,37 @@
-# cookie-auth
+# Cookie Authentication
+
+Demonstrates login and logout with cookie-based identity storage.
+
+## Usage
 
 ```sh
 cd auth/cookie-auth
 cargo run
-# Starting http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-Testing with cookie auth with [curl](https://curl.haxx.se).
+## Client
 
-Login:
+In another terminal, log in and save the session cookie with [curl](https://curl.se):
 
-        curl -v -b "auth-example=user1" -X POST  http://localhost:8080/login
-        < HTTP/1.1 302 Found
-        < set-cookie: auth-example=GRm2Vku0UpFbJ3CNTKbndzIYHVGi8wc8eoXm/Axtf2BO; HttpOnly; Path=/
-        < location: /
+```sh
+curl -i -c cookies.txt -X POST http://localhost:8080/login
+```
 
-Uses a POST request with a Useridentity `user1`. A cookie is set and a redirect to home `/` follows.
+The handler logs in as `user1` and returns a redirect to `/`. The server generates a new signing key at startup, and the session expires after one minute. Use the cookie returned by the current server.
 
-Get:
+Send the saved cookie to identify the user:
 
-Now with the cookie `auth-example` sent in a GET request, the `user1` is recognized.
+```sh
+curl -b cookies.txt http://localhost:8080/
+```
 
-        curl -v -b "auth-example=GRm2Vku0UpFbJ3CNTKbndzIYHVGi8wc8eoXm/Axtf2BO" http://localhost:8080/
-        * Connected to localhost (127.0.0.1) port 8080 (#0)
-        > GET / HTTP/1.1
-        > Host: localhost:8080
-        > Cookie: auth-example=GRm2Vku0UpFbJ3CNTKbndzIYHVGi8wc8eoXm/Axtf2BO
-        >
-        < HTTP/1.1 200 OK
-        <
-        Hello user1
+```text
+Hello user1
+```
+
+Log out and update the cookie file:
+
+```sh
+curl -i -b cookies.txt -c cookies.txt -X POST http://localhost:8080/logout
+```

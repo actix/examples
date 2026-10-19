@@ -1,14 +1,26 @@
-## Unix domain socket example
+# Unix Domain Sockets
+
+Serves HTTP over a Unix domain socket. This example requires a Unix operating system.
+
+## Usage
 
 ```sh
 cd unix-socket
 cargo run
+```
 
-# in another shell
+## Client
+
+In another terminal, send a request with curl:
+
+```sh
 curl --unix-socket /tmp/actix-uds.socket http://localhost/
+```
+
+```text
 Hello world!
 ```
 
-Although this will only one thread for handling incoming connections according to the [documentation](https://actix.github.io/actix-web/actix_web/struct.HttpServer.html#method.bind_uds).
+The server uses Actix Web's default worker count. See [`HttpServer::workers`](https://docs.rs/actix-web/4/actix_web/struct.HttpServer.html#method.workers).
 
-And it does not delete the socket file (`/tmp/actix-uds.socket`) when stopping the server, so it will fail to start next time you run it unless you delete the socket file manually.
+`bind_uds` removes an existing socket file before binding, so a socket left by a previous run does not require manual removal.

@@ -6,17 +6,9 @@
 FROM rust:1-slim-bookworm AS builder
 WORKDIR /code
 
-# Download crates-io index and fetch dependency code.
-# This step avoids needing to spend time on every build downloading the index
-# which can take a long time within the docker context. Docker will cache it.
-RUN USER=root cargo init
 COPY Cargo.toml Cargo.toml
-RUN cargo fetch
-
-# copy app files
 COPY src src
 
-# compile app
 RUN cargo build --release
 
 ###############

@@ -1,26 +1,33 @@
-# protobuf
+# Protocol Buffers
+
+Demonstrates Protocol Buffers request and response bodies with Actix Web.
+
+## Prerequisites
+
+- The Protocol Buffers compiler, `protoc`, for the client commands.
+- curl.
 
 ## Usage
 
 ### Server
 
-```shell
+```sh
 cd protobuf
 cargo run
 ```
 
 ### Client
 
-```shell
-# Dependencies
-wget https://github.com/protocolbuffers/protobuf/releases/download/v3.11.2/protobuf-python-3.11.2.zip
-unzip protobuf-python-3.11.2.zip
-cd protobuf-3.11.2/python/
-python3 setup.py install
-pip3 install --upgrade pip
-pip3 install aiohttp
+In another terminal, start from the repository root. Encode a `MyObj` message with the schema in `test.proto`, send it to the server, and decode the response:
 
-# Client
-cd ../..
-python3 client.py
+```sh
+cd protobuf
+printf '%s\n' 'number: 9' 'name: "USB"' | protoc --encode=MyObj test.proto > request.pb
+curl http://localhost:8080/ \
+  -H 'Content-Type: application/protobuf' \
+  --data-binary @request.pb \
+  --output response.pb
+protoc --decode=MyObj test.proto < response.pb
 ```
+
+The response contains the same `number` and `name` fields.

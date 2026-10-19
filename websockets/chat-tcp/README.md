@@ -1,4 +1,4 @@
-# Websocket chat example
+# WebSocket And TCP Chat
 
 This is extension of the [actix chat example](https://github.com/actix/examples/tree/HEAD/websockets/chat)
 
@@ -8,9 +8,9 @@ Added features:
 - Chat server runs in separate thread
 - TCP listener runs in separate thread
 
-## Server
+## Chat Commands
 
-Chat server listens for incoming tcp connections. Server can access several types of message:
+The server accepts TCP and WebSocket connections and supports these messages:
 
 - `/list` - list all available rooms
 - `/join name` - join room, if room does not exist, create new one
@@ -18,7 +18,7 @@ Chat server listens for incoming tcp connections. Server can access several type
 - `some message` - just string, send message to all peers in same room
 - client has to send heartbeat `Ping` messages, if server does not receive a heartbeat message for 10 seconds connection gets dropped
 
-To start server run
+## Usage
 
 ```sh
 cd websockets/chat-tcp
@@ -31,8 +31,13 @@ If the current directory is not correct, the server will look for `index.html` i
 
 Client connects to server. Reads input from stdin and sends to server.
 
-To run client use command: `cargo run --bin websocket-tcp-client`
+In another terminal, start the TCP client from the repository root:
 
-## WebSocket Browser Client
+```sh
+cd websockets/chat-tcp
+cargo run --bin websocket-tcp-client
+```
+
+## Browser Client
 
 Open url: <http://localhost:8080>

@@ -1,22 +1,42 @@
-# Docker sample
+# Docker
 
-## Build image
+Build and run an Actix Web server in Docker.
 
-```shell
-docker build -t actix-docker .
+## Prerequisites
+
+- Docker.
+
+## Usage
+
+From the repository root, change to the example directory:
+
+```sh
+cd docker
 ```
 
-## Run built image
+The build uses only the files in this directory. `--pull` checks for the latest stable Rust image before building.
 
-```shell
-docker run -d -p 8080:8080 actix-docker
-# and the server should start instantly
-curl http://localhost:8080
+### Build The Image
+
+```sh
+docker build --pull -t actix-docker .
 ```
 
-## Running unit tests
+### Server
 
-```shell
-docker build -t actix-docker:test .
-docker run --rm actix-docker:test
+```sh
+docker run --rm -p 8080:8080 actix-docker
+```
+
+In another terminal, send a request:
+
+```sh
+curl http://localhost:8080/
+```
+
+## Tests
+
+```sh
+docker build --pull --target builder -t actix-docker:test .
+docker run --rm --workdir /code actix-docker:test cargo test
 ```

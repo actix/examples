@@ -6,16 +6,17 @@ A simple Todo project using a SQLite database.
 
 - SQLite 3
 
-## Change Into The Examples Workspace Root Directory
+## Usage
 
-All instructions assume you have changed into the examples workspace root:
+Keep this directory and these environment variables for all commands below:
 
-```console
-$ pwd
-.../examples
+```sh
+cd basics/todo
+export DATABASE_URL=sqlite://./todo.db
+export SQLX_OFFLINE=false
 ```
 
-## Set Up The Database
+### Database Setup
 
 Install the [sqlx](https://github.com/launchbadge/sqlx/tree/HEAD/sqlx-cli) command-line tool with the required features:
 
@@ -23,27 +24,30 @@ Install the [sqlx](https://github.com/launchbadge/sqlx/tree/HEAD/sqlx-cli) comma
 cargo install sqlx-cli --no-default-features --features=rustls,sqlite
 ```
 
-Then to create and set-up the database run:
+Create the database and apply the migrations:
 
 ```sh
-sqlx database create --database-url=sqlite://./todo.db
-sqlx migrate run --database-url=sqlite://./todo.db
+sqlx database create
+sqlx migrate run
 ```
 
-## Run The Application
+### Server
 
 Start the application with:
 
 ```sh
-cargo run --bin=todo
+cargo run
 ```
 
-The app will be viewable in the browser at <http://localhost:8080>.
+Open <http://localhost:8080> in your browser.
 
 ## Modifying The Example Database
 
-For simplicity, this example uses SQLx's offline mode. If you make any changes to the database schema, this must be turned off or the `sqlx-data.json` file regenerated using the following command:
+The commands above disable SQLx offline mode so the query macros can check the local database. After a schema change, apply the migrations and regenerate the query metadata:
 
 ```sh
-cargo sqlx prepare --database-url=sqlite://./todo.db
+sqlx migrate run
+cargo sqlx prepare
 ```
+
+SQLx writes the metadata to `.sqlx`. Set `SQLX_OFFLINE=true` only after this metadata exists and matches the schema.

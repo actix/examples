@@ -1,16 +1,16 @@
-# background-jobs
+# Background Jobs
 
 ## Usage
 
-### server
+### Server
 
 ```sh
 cd background-jobs
 cargo run
-# starting HTTP server at http://localhost:8080
+# Server: http://localhost:8080
 ```
 
-### Available Routes
+### Routes
 
 - [GET /cache](http://localhost:8080/cache)
 - [POST /cache](http://localhost:8080/cache)

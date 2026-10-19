@@ -2,38 +2,34 @@
 
 ## Usage
 
-All documentation assumes your terminal is in this directly (`cd https-tls/hot-reload`).
+```sh
+cd https-tls/hot-reload
+```
 
 ### Certificate
 
-We put the self-signed certificate in this directory as an example but your browser would complain that it isn't secure. So we recommend to use [`mkcert`] to trust it. To use local CA, you should run:
+The included certificate is for demonstration. To create a certificate trusted by your browser, install [`mkcert`], install its local CA, and generate a new certificate and private key in this directory:
 
-```shell
-$ mkcert -install
+```sh
+mkcert -install
+mkcert -key-file key.pem -cert-file cert.pem 127.0.0.1 localhost
 ```
 
-If you want to generate your own cert/private key file, then run:
+### Server
 
-```shell
-$ mkcert -key-file key.pem -cert-file cert.pem 127.0.0.1 localhost
-```
-
-### Running The Example Server
-
-```shell
-$ RUST_LOG=info,example=debug cargo run
-Starting HTTPS server at https://localhost:8443
+```sh
+RUST_LOG=info,example=debug cargo run
 ```
 
 Reload the server by modifying the certificate metadata:
 
-```shell
-$ touch cert.pem
+```sh
+touch cert.pem
 ```
 
 For a deeper inspection, use a tool like [`inspect-cert-chain`] between refreshes of the cert/key files using [`mkcert`] as shown above:
 
-```shell
+```console
 $ inspect-cert-chain --host=localhost --port=8443
 ...
 Serial Number:
@@ -54,10 +50,10 @@ Observing a change in the serial number without restarting the server demonstrat
 
 ### Client
 
-- [HTTPie]: `http --verify=no :8443`
-- cURL: `curl -v --insecure https://127.0.0.1:8443`
+- [HTTPie]: `http --verify=no https://localhost:8443/`
+- curl: `curl -v --insecure https://127.0.0.1:8443`
 - Browser: navigate to <https://127.0.0.1:8443>
 
 [`mkcert`]: https://github.com/FiloSottile/mkcert
-[httpie]: https://httpie.io/cli
+[HTTPie]: https://httpie.io/cli
 [`inspect-cert-chain`]: https://github.com/robjtede/inspect-cert-chain

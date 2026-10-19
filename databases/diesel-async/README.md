@@ -1,4 +1,4 @@
-# diesel
+# Diesel Async
 
 Basic integration of [Diesel-async](https://github.com/weiznich/diesel_async) using PostgreSQL for Actix Web.
 
@@ -11,7 +11,7 @@ Basic integration of [Diesel-async](https://github.com/weiznich/diesel_async) us
 docker run -d --restart unless-stopped --name postgresql -e POSTGRES_USER=test-user -e POSTGRES_PASSWORD=password -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres:alpine
 ```
 
-make sure it has successfully started up and is running
+Check that the container has started:
 
 ```sh
 # on any OS
@@ -35,16 +35,15 @@ The database will now be created in your PostgreSQL instance.
 docker exec -i postgresql psql -U test-user -l
 ```
 
-### Running Server
+### Server
 
 ```sh
-cd databases/diesel-async
 cargo run
 
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-### Available Routes
+### Routes
 
 #### `POST /items`
 
@@ -74,7 +73,7 @@ Using [HTTPie] / [xh]:
 http POST :8080/items name=thingamajig
 ```
 
-Using cURL:
+Using curl:
 
 ```sh
 curl --show-error -X POST --header "Content-Type: application/json" --data '{"name":"thingamajig"}' http://localhost:8080/items
@@ -95,7 +94,7 @@ Using [HTTPie] / [xh]:
 http localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
 ```
 
-Using cURL:
+Using curl:
 
 ```sh
 curl --show-error http://localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e97
@@ -109,5 +108,5 @@ curl --show-error http://localhost:8080/items/9e46baba-a001-4bb3-b4cf-4b3e5bab5e
 docker exec -i postgresql psql -U test-user -d actix_example_diesel_async -c "SELECT * from public.items"
 ```
 
-[xh]: https://httpie.io/cli
-[httpie]: https://httpie.io/cli
+[xh]: https://github.com/ducaale/xh
+[HTTPie]: https://httpie.io/cli

@@ -1,48 +1,52 @@
-# json
+# JSON
 
-Json's `Getting Started` guide using json (serde-json or json-rust) for Actix Web
+Demonstrates JSON extraction and manual deserialization with `serde_json` in Actix Web.
 
 ## Usage
 
-### server
+### Server
 
 ```sh
 cd json/json
 cargo run
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-### web client
+### Browser Client
 
-With [Postman](https://www.getpostman.com/) or [Rested](moz-extension://60daeb1c-5b1b-4afd-9842-0579ed34dfcb/dist/index.html)
+Use an HTTP client such as [Postman](https://www.postman.com/).
 
-- POST / (embed serde-json):
+- POST / (JSON extractor):
 
   - method : `POST`
   - url : `http://127.0.0.1:8080/`
   - header : `Content-Type` = `application/json`
   - body (raw) : `{"name": "Test user", "number": 100}`
 
-- POST /manual (manual serde-json):
+- POST /manual (manual deserialization):
 
   - method : `POST`
   - url : `http://127.0.0.1:8080/manual`
   - header : `Content-Type` = `application/json`
   - body (raw) : `{"name": "Test user", "number": 100}`
 
-- POST /mjsonrust (manual json-rust):
+- POST /extractor (JSON extractor with the global payload limit):
 
   - method : `POST`
-  - url : `http://127.0.0.1:8080/mjsonrust`
+  - url : `http://127.0.0.1:8080/extractor`
   - header : `Content-Type` = `application/json`
-  - body (raw) : `{"name": "Test user", "number": 100}` (you can also test `{notjson}`)
+  - body (raw) : `{"name": "Test user", "number": 100}`
 
-### python client
+- POST /extractor2 uses the same JSON body with a route-specific payload limit of 1024 bytes. The global limit is 4096 bytes.
 
-- `pip install aiohttp`
-- `python client.py`
+### Python Client
 
-if ubuntu :
+In another terminal, start from the repository root:
 
-- `pip3 install aiohttp`
-- `python3 client.py`
+```sh
+cd json/json
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install aiohttp
+python3 client.py
+```

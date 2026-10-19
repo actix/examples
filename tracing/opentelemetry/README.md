@@ -1,19 +1,19 @@
-# OpenTelemetry integration
+# OpenTelemetry Integration
 
 ## Prerequisites
 
 To execute this example you need a running Jaeger instance.  
 You can launch one using Docker:
 
-```bash
+```sh
 docker run -d -p6831:6831/udp -p6832:6832/udp -p16686:16686 -p4317:4317 jaegertracing/all-in-one:latest
 ```
 
-## Running
+## Usage
 
 You can launch this example with
 
-```bash
+```sh
 cd tracing/opentelemetry
 cargo run
 ```
@@ -21,7 +21,7 @@ cargo run
 An `actix-web` application will be listening on port `8080`.  
 You can fire requests to it with:
 
-```bash
+```sh
 curl -v http://localhost:8080/hello
 ```
 

@@ -1,6 +1,8 @@
-# actix-sse
+# Server-Sent Events
 
-Example of server-sent events, aka `EventSource`, with actix web.
+Example of server-sent events, aka `EventSource`, with Actix Web.
+
+## Usage
 
 ```sh
 cd server-sent-events
@@ -21,12 +23,12 @@ This implementation can serve thousands of clients on a 2021 MacBook with no pro
 
 Run `node ./benchmark.js` to benchmark your own system:
 
-```sh
+```console
 $ node benchmark.js
 Connected: 1000, connection time: 201 ms, total broadcast time: 20 ms^C⏎
 ```
 
-### Error _Too many open files_
+### Error: Too Many Open Files
 
 You may be limited to a maximal number of connections (open file descriptors). Setting maximum number of open file descriptors to 2048:
 
@@ -36,7 +38,7 @@ ulimit -n 2048
 
 Test maximum number of open connections with `node ./drain.js`:
 
-```sh
+```console
 $ node drain.js
 Connections dropped: 10450, accepting connections: false^C⏎
 ```

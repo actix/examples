@@ -1,26 +1,36 @@
-# actix_cors::Cors
+# CORS Backend
 
-## Running Server
+Demonstrates cross-origin requests from the frontend on `http://localhost:8081`.
+
+## Usage
 
 ```sh
 cd cors/backend
 cargo run
-# starting HTTP server at http://localhost:8080
+# Server: http://localhost:8080
 ```
 
-### web client
+## Routes
 
-- [http://localhost:8080/user/info](http://localhost:8080/user/info)
-  ```json
-  // payload structure
-  {
-    "username": "username",
-    "email": "email",
-    "password": "password",
-    "confirm_password": "password"
-  }
-  ```
+### `POST /user/info`
 
-## Others
+Send a JSON object with the following fields:
+
+```json
+{
+  "username": "username",
+  "email": "email",
+  "password": "password",
+  "confirm_password": "password"
+}
+```
+
+```sh
+curl http://localhost:8080/user/info \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"user","email":"user@example.com","password":"password","confirm_password":"password"}'
+```
+
+## See Also
 
 - For more related examples of [actix_cors](https://docs.rs/actix-cors/latest/actix_cors/struct.Cors.html)

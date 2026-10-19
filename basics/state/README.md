@@ -1,15 +1,15 @@
-# state
+# Shared State
 
 ## Usage
 
-### server
+### Server
 
 ```sh
 cd basics/state
 cargo run
-# Started http server: 127.0.0.1:8080
+# Server: http://localhost:8080
 ```
 
-### web client
+### Browser Client
 
 - [http://localhost:8080/](http://localhost:8080/)
