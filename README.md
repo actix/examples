@@ -68,6 +68,7 @@ Each example README lists its prerequisites and run instructions. Examples that 
 - [Blog with markdown rendering](https://github.com/gemini-15/blog-engine): Blog example built with Actix Web, diesel (with Postgres) and r2d2 rendering articles in markdown with metadata and a front-end with React.
 - [Rust, Angular, PostgreSQL and JWT Security](https://github.com/stav121/actix-angular-project-template): Boilerplate project that implements an Angular + Actix Web application with login and registration pages, that is pre-dockerized.
 - [planters_cycle](https://github.com/grimm-integrations/planters_cycle): Another boilerplate fullstack application with identity system, prisma and NextJs.
+- [Actix + Apalis + SQlite](https://github.com/apalis-dev/apalis-board/tree/main/examples/actix-ntfy-service): Example that shows how to dispatch and manage background jobs using actix + apalis + sqlx (sqlite)
 
 ## Paid Resources
 
