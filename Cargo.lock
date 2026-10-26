@@ -4465,7 +4465,7 @@ dependencies = [
  "libc",
  "percent-encoding",
  "pin-project-lite",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "system-configuration",
  "tokio",
  "tower-service",
@@ -4968,7 +4968,7 @@ dependencies = [
  "env_logger",
  "juniper",
  "log",
- "mysql 28.0.3",
+ "mysql 28.0.4",
  "r2d2",
  "r2d2_mysql",
  "uuid",
@@ -5662,15 +5662,15 @@ dependencies = [
  "dotenvor",
  "env_logger",
  "log",
- "mysql 28.0.3",
+ "mysql 28.0.4",
  "serde",
 ]
 
 [[package]]
 name = "mysql"
-version = "28.0.3"
+version = "28.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7d3d30e2806645e218163f49c2656286061cc91ffce24d93d758fd136e70eb5d"
+checksum = "ca3de8a73b7c70f76dbcdd4b6abc9b53bbb6c4f7bd6c79d8e8a7ea2157c02487"
 dependencies = [
  "arc-swap",
  "bufstream",
@@ -6765,7 +6765,7 @@ dependencies = [
  "quinn-udp",
  "rustc-hash",
  "rustls 0.23.46",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "thiserror 2.0.21",
  "tokio",
  "tracing",
@@ -6804,7 +6804,7 @@ dependencies = [
  "cfg_aliases",
  "libc",
  "once_cell",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "tracing",
  "windows-sys 0.61.2",
 ]
@@ -6847,7 +6847,7 @@ version = "28.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2474c54c0eca7b29c3707b70551ade0a0297d27fb71853a907fa5324951594fb"
 dependencies = [
- "mysql 28.0.3",
+ "mysql 28.0.4",
  "r2d2",
 ]
 
@@ -8488,7 +8488,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.3.4",
+ "getrandom 0.4.3",
  "once_cell",
  "rustix",
  "windows-sys 0.61.2",
