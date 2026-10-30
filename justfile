@@ -19,3 +19,7 @@ check: && clippy
 [group("lint")]
 clippy:
     cargo clippy --workspace --all-targets --all-features
+
+# Check security advisories.
+check-advisories:
+    cargo deny --log-level warn --workspace --all-features check advisories
