@@ -2264,9 +2264,9 @@ dependencies = [
 
 [[package]]
 name = "confik"
-version = "0.15.12"
+version = "0.15.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f0616a3752a6d5595718197fc85b8239ff92c34a1ac0b8765d15d68b7224e4ac"
+checksum = "5c46e8a64ab57b88aa804e2c078e4ff59960b53e82a224fe19d148dfc1d574f7"
 dependencies = [
  "cfg-if",
  "confik-macros",
@@ -2278,14 +2278,14 @@ dependencies = [
 
 [[package]]
 name = "confik-macros"
-version = "0.15.3"
+version = "0.15.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "069b63bb6e1794329e90fe6e76fa58424815d5ae2a701469dea914758c483d13"
+checksum = "134d11976ec51e1912ee014423f112f6ef399c6d9fac61bf723756ee39669bc0"
 dependencies = [
- "darling 0.21.3",
+ "darling 0.24.1",
  "proc-macro2",
  "quote",
- "syn 2.0.119",
+ "syn 3.0.6",
 ]
 
 [[package]]
@@ -3338,12 +3338,12 @@ dependencies = [
 
 [[package]]
 name = "envious"
-version = "0.2.2"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e52788a407588138195a40c991f500621fea2cffa87e7345d86dbab77287dc7"
+checksum = "55a0f92310a7f128ed0b81e4bbe2d3d445e937e3bf47979697adecbc8d498b0a"
 dependencies = [
  "serde",
- "thiserror 1.0.69",
+ "thiserror 2.0.21",
 ]
 
 [[package]]
