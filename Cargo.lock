@@ -4465,7 +4465,7 @@ dependencies = [
  "libc",
  "percent-encoding",
  "pin-project-lite",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "system-configuration",
  "tokio",
  "tower-service",
@@ -4939,9 +4939,9 @@ dependencies = [
 
 [[package]]
 name = "juniper"
-version = "0.17.1"
+version = "0.17.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "118749c965e171dcccffb7ca0dff6ab00451b08ba2710914caaaebc3686a7c3f"
+checksum = "59ab1773fa41e0512d4686dc41066bb18c8c49875f30349aec1c5e428a42cad1"
 dependencies = [
  "arcstr",
  "async-trait",
@@ -6022,6 +6022,19 @@ dependencies = [
 
 [[package]]
 name = "opentelemetry-http"
+version = "0.32.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5683015d09e2df236ef005b17f6f196f0d5f6313c4fa43a7b6a53b52776e4331"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "http 1.5.0",
+ "opentelemetry 0.32.0",
+ "reqwest",
+]
+
+[[package]]
+name = "opentelemetry-http"
 version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ee2c3625b8aa04209f7e01e513bc8044da9687fa38a9eacf59628ca5f3b87300"
@@ -6035,6 +6048,25 @@ dependencies = [
 
 [[package]]
 name = "opentelemetry-otlp"
+version = "0.32.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9966929966d17620d7c316c643ba62631826e10021409357772d5eea84f62c35"
+dependencies = [
+ "http 1.5.0",
+ "opentelemetry 0.32.0",
+ "opentelemetry-http 0.32.0",
+ "opentelemetry-proto 0.32.0",
+ "opentelemetry_sdk 0.32.1",
+ "prost",
+ "reqwest",
+ "thiserror 2.0.21",
+ "tokio",
+ "tonic",
+ "tonic-types",
+]
+
+[[package]]
+name = "opentelemetry-otlp"
 version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "699a67345e21962a231955b9059a157e428b219fa5df8efe11f08346fb23a344"
@@ -6042,8 +6074,8 @@ dependencies = [
  "http 1.5.0",
  "httpdate",
  "opentelemetry 0.33.0",
- "opentelemetry-http",
- "opentelemetry-proto",
+ "opentelemetry-http 0.33.0",
+ "opentelemetry-proto 0.33.0",
  "opentelemetry_sdk 0.33.0",
  "prost",
  "reqwest",
@@ -6051,6 +6083,19 @@ dependencies = [
  "tokio",
  "tonic",
  "tonic-types",
+]
+
+[[package]]
+name = "opentelemetry-proto"
+version = "0.32.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "56d658ba1faf63f7b9c492cfbe6e0ec365440a16132d3270c1065f7b33f1b638"
+dependencies = [
+ "opentelemetry 0.32.0",
+ "opentelemetry_sdk 0.32.1",
+ "prost",
+ "tonic",
+ "tonic-prost",
 ]
 
 [[package]]
@@ -6720,7 +6765,7 @@ dependencies = [
  "quinn-udp",
  "rustc-hash",
  "rustls 0.23.46",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "thiserror 2.0.21",
  "tokio",
  "tracing",
@@ -6759,7 +6804,7 @@ dependencies = [
  "cfg_aliases",
  "libc",
  "once_cell",
- "socket2 0.5.10",
+ "socket2 0.6.5",
  "tracing",
  "windows-sys 0.61.2",
 ]
@@ -9151,7 +9196,7 @@ version = "0.0.0"
 dependencies = [
  "actix-web",
  "opentelemetry 0.32.0",
- "opentelemetry-otlp",
+ "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk 0.32.1",
  "tokio",
@@ -9203,7 +9248,7 @@ dependencies = [
  "metrics",
  "metrics-exporter-prometheus",
  "opentelemetry 0.33.0",
- "opentelemetry-otlp",
+ "opentelemetry-otlp 0.33.0",
  "opentelemetry_sdk 0.33.0",
  "tonic",
  "tracing",
@@ -9251,7 +9296,7 @@ version = "0.0.0"
 dependencies = [
  "actix-web",
  "opentelemetry 0.32.0",
- "opentelemetry-otlp",
+ "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk 0.32.1",
  "tokio",
