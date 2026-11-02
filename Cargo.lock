@@ -3354,9 +3354,9 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "err-report"
-version = "0.1.2"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06cb69b1ae8233d2eeb09f3345fb027a271dcb3ebefe18e0982344ef18d59da4"
+checksum = "c938813462d5001478fc06956acf5debbe2e5dd74f531244ed16a03ad07b3d05"
 
 [[package]]
 name = "errno"
