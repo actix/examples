@@ -1148,9 +1148,9 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
 name = "awc"
-version = "3.8.2"
+version = "3.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7dc0207013c5059ddce268fe12045bd12b2e919318ee660c891bfe297a54f1f"
+checksum = "781f1d79630fba4f17edf409d32dafd8f85432e9574d3159e6c8e8dd1f750d20"
 dependencies = [
  "actix-codec",
  "actix-http",
@@ -1173,7 +1173,7 @@ dependencies = [
  "openssl",
  "percent-encoding",
  "pin-project-lite",
- "rand 0.9.5",
+ "rand 0.10.3",
  "rustls 0.23.46",
  "serde",
  "serde_json",
