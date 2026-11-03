@@ -1,0 +1,21 @@
+[package]
+name = "kernel-tls-handoff-example"
+publish = { workspace = true }
+edition = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+actix-http = { workspace = true }
+actix-rt = "2"
+actix-server = "2"
+actix-service = "2"
+
+err-report = "0.1"
+examples-common = { workspace = true }
+ktls = "6"
+rcgen = "0.14"
+rustls = { workspace = true }
+tokio = { workspace = true, features = ["net"] }
+tokio-rustls = "0.26"
+tokio-util = { workspace = true, features = ["time"] }
+tracing = { workspace = true }

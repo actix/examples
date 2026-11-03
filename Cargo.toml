@@ -37,6 +37,7 @@ members = [
   "https-tls/awc-https",
   "https-tls/cert-watch",
   "https-tls/hot-reload",
+  "https-tls/kernel-tls-handoff",
   "https-tls/openssl",
   "https-tls/rustls-client-cert",
   "https-tls/rustls",
