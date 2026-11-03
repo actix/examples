@@ -16,7 +16,7 @@ cargo run
 
 ```console
 $ curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "ping", "params": [], "id": 1}' http://127.0.0.1:8080
-# {"jsonrpc":"2.0","result":"pong","error":null,"id":1}
+# {"jsonrpc":"2.0","result":"pong","id":1}
 ```
 
 ### Python Client
