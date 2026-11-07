@@ -1,7 +1,7 @@
 //! WebSocket connection handling and chat command parsing.
 //!
 //! Aggregates fragmented messages, checks heartbeats, and forwards chat messages through the actor.
-//! Removes the session from the actor when the connection ends.
+//! Closes connections on shutdown and removes each session from the actor when it ends.
 
 use std::time::{Duration, Instant};
 
@@ -9,6 +9,7 @@ use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
 use ractor::{ActorProcessingErr, ActorRef};
 use tokio::sync::mpsc;
+use tokio_util::{future::FutureExt as _, sync::CancellationToken};
 
 use crate::server::Command;
 
@@ -20,6 +21,7 @@ pub async fn chat_ws(
     server: ActorRef<Command>,
     mut session: actix_ws::Session,
     messages: actix_ws::MessageStream,
+    shutdown: CancellationToken,
 ) {
     let (addr, mut inbox) = mpsc::unbounded_channel();
     let Ok(id) = ractor::call!(server, |reply| Command::Connect { addr, reply }) else {
@@ -39,6 +41,8 @@ pub async fn chat_ws(
 
     let reason = loop {
         tokio::select! {
+            _ = shutdown.cancelled() => break Some(actix_ws::CloseCode::Away.into()),
+
             incoming = messages.next() => {
                 match incoming {
                     Some(Ok(AggregatedMessage::Ping(bytes))) => {
@@ -52,16 +56,18 @@ pub async fn chat_ws(
                         }
                     }
                     Some(Ok(AggregatedMessage::Close(reason))) => break reason,
-                    Some(Ok(AggregatedMessage::Binary(_))) => log::warn!("unexpected binary message"),
+                    Some(Ok(AggregatedMessage::Binary(_))) => tracing::warn!("unexpected binary message"),
                     Some(Err(_)) | None => break None,
                 }
             }
+
             outgoing = inbox.recv() => {
                 match outgoing {
                     Some(text) => if session.text(text).await.is_err() { break None; },
                     None => break None,
                 }
             }
+
             _ = timer.tick() => {
                 if heartbeat.elapsed() > CLIENT_TIMEOUT || session.ping(b"").await.is_err() {
                     break None;
@@ -71,7 +77,9 @@ pub async fn chat_ws(
     };
 
     let _ = server.cast(Command::Disconnect { id });
-    let _ = session.close(reason).await;
+
+    // A slow peer must not hold up shutdown while the close frame is queued.
+    let _ = session.close(reason).timeout(Duration::from_secs(1)).await;
 }
 
 async fn process_text(

@@ -108,7 +108,7 @@ impl Actor for ChatServer {
     ) -> Result<(), ActorProcessingErr> {
         match message {
             Command::Connect { addr, reply } => {
-                println!("Someone joined");
+                tracing::info!("Someone joined");
 
                 // notify all users in same room
                 state.send_message("main", "Someone joined", 0);
@@ -127,7 +127,7 @@ impl Actor for ChatServer {
                 let _ = reply.send(id);
             }
             Command::Disconnect { id } => {
-                println!("Someone disconnected");
+                tracing::info!("Someone disconnected");
 
                 let mut rooms: Vec<String> = Vec::new();
 

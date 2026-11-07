@@ -16,6 +16,10 @@ futures-util.workspace = true
 ractor = { version = "0.16", default-features = false, features = ["tokio_runtime"] }
 tokio = { workspace = true, features = ["rt-multi-thread", "time", "macros"] }
 
-env_logger.workspace = true
-log.workspace = true
+tokio-util = { workspace = true, features = ["rt", "time"] }
+color-eyre.workspace = true
+eyre.workspace = true
+examples-common.workspace = true
+
+tracing.workspace = true
 rand.workspace = true
