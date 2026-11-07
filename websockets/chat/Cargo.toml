@@ -9,10 +9,12 @@ name = "websocket-chat-server"
 path = "src/main.rs"
 
 [dependencies]
-actix.workspace = true
 actix-files.workspace = true
 actix-web.workspace = true
-actix-web-actors.workspace = true
+actix-ws.workspace = true
+futures-util.workspace = true
+ractor = { version = "0.16", default-features = false, features = ["tokio_runtime"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "time", "macros"] }
 
 env_logger.workspace = true
 log.workspace = true

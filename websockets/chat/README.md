@@ -5,9 +5,9 @@ This is a multi-threaded chat server example.
 Fancy shiny features:
 
 - Browser-based WebSocket client served from static HTML and JavaScript
-- Chat server runs in separate thread
+- Chat server runs as a Ractor actor on the Tokio runtime
 - Application state is shared with the WebSocket server and a resource at `/count`
-- Uses actors for improved readability of code in the server.rs implementation
+- Uses Ractor messages and RPC replies in `server.rs`, with `actix-ws` for WebSocket connections
 
 ## Chat Commands
 
