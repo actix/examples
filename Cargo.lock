@@ -3458,7 +3458,10 @@ dependencies = [
 name = "examples-common"
 version = "0.0.0"
 dependencies = [
+ "err-report",
  "rustls 0.23.46",
+ "tokio",
+ "tokio-util",
  "tracing",
  "tracing-subscriber",
 ]
@@ -9965,12 +9968,15 @@ dependencies = [
  "actix-files",
  "actix-web",
  "actix-ws",
- "env_logger",
+ "color-eyre",
+ "examples-common",
+ "eyre",
  "futures-util",
- "log",
  "ractor",
  "rand 0.10.3",
  "tokio",
+ "tokio-util",
+ "tracing",
 ]
 
 [[package]]

@@ -5,6 +5,9 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+err-report = { workspace = true }
 rustls = { workspace = true }
+tokio = { workspace = true, features = ["rt", "signal", "macros"] }
+tokio-util = { workspace = true, features = ["rt"] }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }

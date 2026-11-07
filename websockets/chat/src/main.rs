@@ -11,7 +11,10 @@ use actix_files::{Files, NamedFile};
 use actix_web::{
     App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware::Logger, web,
 };
+use examples_common::{init_standard_logger, watch_shutdown_signal};
+use eyre::WrapErr as _;
 use ractor::{Actor, ActorRef};
+use tokio_util::sync::CancellationToken;
 
 mod server;
 mod session;
@@ -24,11 +27,12 @@ async fn index() -> impl Responder {
 async fn chat_route(
     req: HttpRequest,
     stream: web::Payload,
-    srv: web::Data<ActorRef<server::Command>>,
+    web::ThinData(srv): web::ThinData<ActorRef<server::Command>>,
+    web::ThinData(shutdown): web::ThinData<CancellationToken>,
 ) -> Result<HttpResponse, Error> {
     let (response, session, messages) = actix_ws::handle(&req, stream)?;
 
-    tokio::task::spawn_local(session::chat_ws(srv.get_ref().clone(), session, messages));
+    tokio::task::spawn_local(session::chat_ws(srv, session, messages, shutdown));
 
     Ok(response)
 }
@@ -40,8 +44,9 @@ async fn get_count(count: web::Data<AtomicUsize>) -> impl Responder {
 }
 
 #[tokio::main]
-async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+async fn main() -> eyre::Result<()> {
+    color_eyre::install()?;
+    init_standard_logger();
 
     // set up applications state
     // keep a count of the number of visitors
@@ -51,27 +56,37 @@ async fn main() -> std::io::Result<()> {
     let (server, server_task) =
         server::ChatServer::spawn(None, server::ChatServer, app_state.clone())
             .await
-            .map_err(std::io::Error::other)?;
-    let shutdown = server.clone();
+            .wrap_err("failed to start chat actor")?;
+    let actor = server.clone();
+    let shutdown = CancellationToken::new();
+    watch_shutdown_signal(shutdown.clone());
+    let worker_shutdown = shutdown.clone();
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("starting HTTP server at http://localhost:8080");
 
-    let result = HttpServer::new(move || {
+    let http_server = HttpServer::new(move || {
         App::new()
             .app_data(web::Data::from(app_state.clone()))
-            .app_data(web::Data::new(server.clone()))
+            .app_data(web::ThinData(server.clone()))
+            .app_data(web::ThinData(worker_shutdown.clone()))
             .service(web::resource("/").to(index))
             .route("/count", web::get().to(get_count))
             .route("/ws", web::get().to(chat_route))
             .service(Files::new("/static", "./static"))
             .wrap(Logger::default())
     })
+    .shutdown_signal(shutdown.clone().cancelled_owned())
     .workers(2)
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await;
+    .bind(("127.0.0.1", 8080));
 
-    shutdown.stop(None);
-    server_task.await.map_err(std::io::Error::other)?;
+    let result = match http_server {
+        Ok(http_server) => http_server.run().await.wrap_err("HTTP server failed"),
+        Err(err) => Err(err).wrap_err("failed to bind HTTP server"),
+    };
+
+    shutdown.cancel();
+    actor.stop(None);
+    server_task.await.wrap_err("chat actor task failed")?;
+
     result
 }
