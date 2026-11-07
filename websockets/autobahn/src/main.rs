@@ -53,7 +53,7 @@ async fn ws_index(r: HttpRequest, stream: web::Payload) -> Result<HttpResponse, 
 async fn main() -> io::Result<()> {
     init_standard_logger();
 
-    tracing::info!("starting HTTP server at http://localhost:9001");
+    tracing::info!("Starting HTTP server at http://localhost:9001");
 
     HttpServer::new(|| {
         App::new()

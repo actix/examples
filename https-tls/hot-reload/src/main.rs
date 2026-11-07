@@ -43,13 +43,13 @@ async fn main() -> eyre::Result<()> {
     let mut file_watcher =
         notify::recommended_watcher(move |res: notify::Result<Event>| match res {
             Ok(ev) => {
-                tracing::info!("files changed: {:?}", ev.paths);
+                tracing::info!("Files changed: {:?}", ev.paths);
 
                 let cert_key = load_certified_key().unwrap();
                 reload_tx.update(cert_key);
             }
             Err(err) => {
-                tracing::error!("file watch error: {err}");
+                tracing::error!("File watch error: {err}");
             }
         })
         .wrap_err("Failed to set up file watcher")?;

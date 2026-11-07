@@ -22,7 +22,7 @@ async fn main() -> io::Result<()> {
         .finish()
         .unwrap();
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()

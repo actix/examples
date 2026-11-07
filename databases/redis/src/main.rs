@@ -65,7 +65,7 @@ async fn del_stuff(redis: web::Data<redis::Client>) -> actix_web::Result<impl Re
     if res == 3 {
         Ok(HttpResponse::Ok().body("successfully deleted values"))
     } else {
-        tracing::error!("deleted {res} keys");
+        tracing::error!("Deleted {res} keys");
         Ok(HttpResponse::InternalServerError().finish())
     }
 }
@@ -74,7 +74,7 @@ async fn del_stuff(redis: web::Data<redis::Client>) -> actix_web::Result<impl Re
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    tracing::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("Starting HTTP server at http://localhost:8080");
 
     let redis = redis::Client::open("redis://127.0.0.1:6379").unwrap();
 

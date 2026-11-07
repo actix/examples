@@ -64,7 +64,7 @@ async fn main() -> io::Result<()> {
     let counter_mutex = Data::new(Mutex::new(0usize));
     let counter_atomic = Data::new(AtomicUsize::new(0usize));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     // move is necessary to give closure below ownership of counter1
     HttpServer::new(move || {

@@ -130,18 +130,18 @@ async fn main() -> io::Result<()> {
     let forward_socket_addr = (args.forward_addr, args.forward_port)
         .to_socket_addrs()?
         .next()
-        .expect("given forwarding address was not valid");
+        .expect("Given forwarding address was not valid");
 
     let forward_url = format!("http://{forward_socket_addr}");
     let forward_url = Url::parse(&forward_url).unwrap();
 
     log::info!(
-        "starting HTTP server at http://{}:{}",
+        "Starting HTTP server at http://{}:{}",
         args.listen_addr,
         args.listen_port
     );
 
-    log::info!("forwarding to {forward_url}");
+    log::info!("Forwarding to {forward_url}");
 
     let reqwest_client = reqwest::Client::default();
 

@@ -29,7 +29,7 @@ async fn main() -> io::Result<()> {
     // initialize logger
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("setting up app from environment");
+    log::info!("Setting up app from environment");
 
     let db_user = env::var("MYSQL_USER").expect("MYSQL_USER is not set in .env file");
     let db_password = env::var("MYSQL_PASSWORD").expect("MYSQL_PASSWORD is not set in .env file");
@@ -40,13 +40,13 @@ async fn main() -> io::Result<()> {
 
     let builder = get_conn_builder(db_user, db_password, db_host, db_port, db_name);
 
-    log::info!("initializing database connection");
+    log::info!("Initializing database connection");
 
     let pool = mysql::Pool::new(builder).unwrap();
 
     let shared_data = web::Data::new(pool);
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()

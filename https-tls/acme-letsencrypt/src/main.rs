@@ -158,7 +158,7 @@ async fn main() -> eyre::Result<()> {
 
     let rustls_config = load_rustls_config(cert)?;
 
-    log::info!("starting HTTP server at https://{DOMAIN_NAME}:443");
+    log::info!("Starting HTTP server at https://{DOMAIN_NAME}:443");
 
     // Start HTTP server!
     let srv = HttpServer::new(|| App::new().route("/", web::get().to(index)))

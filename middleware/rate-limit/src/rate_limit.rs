@@ -33,7 +33,7 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        log::info!("request is passing through the AddMsg middleware");
+        log::info!("Request is passing through the AddMsg middleware");
 
         if !self.token_bucket.borrow_mut().allow_query() {
             // request has been rate limited

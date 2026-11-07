@@ -40,11 +40,11 @@ async fn main() -> eyre::Result<()> {
     let mut file_watcher =
         notify::recommended_watcher(move |res: notify::Result<Event>| match res {
             Ok(ev) => {
-                log::info!("files changed: {:?}", ev.paths);
+                log::info!("Files changed: {:?}", ev.paths);
                 reload_tx.blocking_send(TlsUpdated).unwrap();
             }
             Err(err) => {
-                log::error!("file watch error: {err}");
+                log::error!("File watch error: {err}");
             }
         })
         .unwrap();
@@ -63,7 +63,7 @@ async fn main() -> eyre::Result<()> {
         // load TLS cert/key files
         let config = load_rustls_config()?;
 
-        log::info!("starting HTTPS server at https://localhost:8443");
+        log::info!("Starting HTTPS server at https://localhost:8443");
 
         // start running server but don't await it
         let mut server = HttpServer::new(|| {
@@ -81,7 +81,7 @@ async fn main() -> eyre::Result<()> {
         tokio::select! {
             // poll server continuously
             res = &mut server => {
-                log::info!("server shut down via signal or manual command");
+                log::info!("Server shut down via signal or manual command");
                 res?;
                 break;
             },

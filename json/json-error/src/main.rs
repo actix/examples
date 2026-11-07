@@ -27,7 +27,7 @@ impl ResponseError for Error {
 
 async fn index() -> Result<HttpResponse, Error> {
     Err(Error {
-        msg: "an example error message".to_owned(),
+        msg: "An example error message".to_owned(),
         status: 400,
     })
 }
@@ -36,7 +36,7 @@ async fn index() -> Result<HttpResponse, Error> {
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| App::new().service(web::resource("/").route(web::get().to(index))))
         .workers(2)

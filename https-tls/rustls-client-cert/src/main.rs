@@ -51,7 +51,7 @@ fn get_client_cert(connection: &dyn Any, data: &mut Extensions) {
         });
 
         if let Some(certs) = tls_session.peer_certificates() {
-            info!("client certificate found");
+            info!("Client certificate found");
 
             // Insert the peer (end-entity) certificate into request data.
             if let Some(cert) = certs.first() {
@@ -59,7 +59,7 @@ fn get_client_cert(connection: &dyn Any, data: &mut Extensions) {
             }
         }
     } else if let Some(socket) = connection.downcast_ref::<TcpStream>() {
-        info!("plaintext on_connect");
+        info!("Plaintext on_connect");
 
         data.insert(ConnectionInfo {
             bind: socket.local_addr().unwrap(),

@@ -36,9 +36,9 @@ async fn spawn_cache_sweep(cache: Arc<ItemCache>, stop_signal: CancellationToken
             let removed = size - cache.len();
 
             if removed > 0 {
-                log::info!("removed {removed} cache entries");
+                log::info!("Removed {removed} cache entries");
             } else {
-                log::debug!("cache sweep removed no entries")
+                log::debug!("Cache sweep removed no entries")
             }
         }
 
@@ -48,7 +48,7 @@ async fn spawn_cache_sweep(cache: Arc<ItemCache>, stop_signal: CancellationToken
             }
 
             _ = stop_signal.cancelled() => {
-                log::info!("gracefully shutting down cache purge job");
+                log::info!("Gracefully shutting down cache purge job");
                 break;
             }
         };

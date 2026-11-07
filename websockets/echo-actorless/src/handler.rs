@@ -22,7 +22,7 @@ pub async fn echo_heartbeat_ws(
     mut session: actix_ws::Session,
     mut msg_stream: actix_ws::MessageStream,
 ) {
-    log::info!("connected");
+    log::info!("Connected");
 
     let mut last_heartbeat = Instant::now();
     let mut interval = interval(HEARTBEAT_INTERVAL);
@@ -38,7 +38,7 @@ pub async fn echo_heartbeat_ws(
         match future::select(msg_stream.next(), tick).await {
             // received message from WebSocket client
             Either::Left((Some(Ok(msg)), _)) => {
-                log::debug!("msg: {msg:?}");
+                log::debug!("Msg: {msg:?}");
 
                 match msg {
                     Message::Text(text) => {
@@ -63,7 +63,7 @@ pub async fn echo_heartbeat_ws(
                     }
 
                     Message::Continuation(_) => {
-                        log::warn!("no support for continuation frames");
+                        log::warn!("No support for continuation frames");
                     }
 
                     // no-op; ignore
@@ -85,7 +85,7 @@ pub async fn echo_heartbeat_ws(
                 // if no heartbeat ping/pong received recently, close the connection
                 if Instant::now().duration_since(last_heartbeat) > CLIENT_TIMEOUT {
                     log::info!(
-                        "client has not sent heartbeat in over {CLIENT_TIMEOUT:?}; disconnecting"
+                        "Client has not sent heartbeat in over {CLIENT_TIMEOUT:?}; disconnecting"
                     );
 
                     break None;
@@ -100,7 +100,7 @@ pub async fn echo_heartbeat_ws(
     // attempt to close connection gracefully
     let _ = session.close(reason).await;
 
-    log::info!("disconnected");
+    log::info!("Disconnected");
 }
 
 /// Echo text & binary messages received from the client and respond to ping messages.
@@ -111,12 +111,12 @@ pub async fn echo_heartbeat_ws(
 ///
 /// See [`echo_heartbeat_ws`] for a more realistic implementation.
 pub async fn echo_ws(mut session: actix_ws::Session, mut msg_stream: actix_ws::MessageStream) {
-    log::info!("connected");
+    log::info!("Connected");
 
     let close_reason = loop {
         match msg_stream.next().await {
             Some(Ok(msg)) => {
-                log::debug!("msg: {msg:?}");
+                log::debug!("Msg: {msg:?}");
 
                 match msg {
                     Message::Text(text) => {
@@ -138,7 +138,7 @@ pub async fn echo_ws(mut session: actix_ws::Session, mut msg_stream: actix_ws::M
                     Message::Pong(_) => {}
 
                     Message::Continuation(_) => {
-                        log::warn!("no support for continuation frames");
+                        log::warn!("No support for continuation frames");
                     }
 
                     // no-op; ignore
@@ -154,7 +154,7 @@ pub async fn echo_ws(mut session: actix_ws::Session, mut msg_stream: actix_ws::M
     // attempt to close connection gracefully
     let _ = session.close(close_reason).await;
 
-    log::info!("disconnected");
+    log::info!("Disconnected");
 }
 
 /// Broadcast text & binary messages received from a client, respond to ping messages, and monitor
@@ -164,7 +164,7 @@ pub async fn broadcast_ws(
     mut msg_stream: actix_ws::MessageStream,
     mut rx: broadcast::Receiver<web::Bytes>,
 ) {
-    log::info!("connected");
+    log::info!("Connected");
 
     let mut last_heartbeat = Instant::now();
     let mut interval = interval(HEARTBEAT_INTERVAL);
@@ -197,7 +197,7 @@ pub async fn broadcast_ws(
                 // if no heartbeat ping/pong received recently, close the connection
                 if Instant::now().duration_since(last_heartbeat) > CLIENT_TIMEOUT {
                     log::info!(
-                        "client has not sent heartbeat in over {CLIENT_TIMEOUT:?}; disconnecting"
+                        "Client has not sent heartbeat in over {CLIENT_TIMEOUT:?}; disconnecting"
                     );
 
                     break None;
@@ -222,7 +222,7 @@ pub async fn broadcast_ws(
                     None => break None
                 };
 
-                log::debug!("msg: {msg:?}");
+                log::debug!("Msg: {msg:?}");
 
                 match msg {
                     Message::Text(_) => {
@@ -247,7 +247,7 @@ pub async fn broadcast_ws(
                     }
 
                     Message::Continuation(_) => {
-                        log::warn!("no support for continuation frames");
+                        log::warn!("No support for continuation frames");
                     }
 
                     // no-op; ignore
@@ -260,5 +260,5 @@ pub async fn broadcast_ws(
     // attempt to close connection gracefully
     let _ = session.close(reason).await;
 
-    log::info!("disconnected");
+    log::info!("Disconnected");
 }

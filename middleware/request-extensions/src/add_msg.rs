@@ -30,7 +30,7 @@ where
     }
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        log::info!("request is passing through the AddMsg middleware");
+        log::info!("Request is passing through the AddMsg middleware");
 
         if self.enabled {
             // insert data into extensions if enabled

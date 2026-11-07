@@ -82,7 +82,7 @@ async fn main() -> std::io::Result<()> {
     // initialize DB pool outside of `HttpServer::new` so that it is shared across all workers
     let pool = initialize_db_pool();
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
@@ -107,7 +107,7 @@ fn initialize_db_pool() -> DbPool {
     let manager = r2d2::ConnectionManager::<SqliteConnection>::new(conn_spec);
     r2d2::Pool::builder()
         .build(manager)
-        .expect("database URL should be valid path to SQLite DB file")
+        .expect("Database URL should be valid path to SQLite DB file")
 }
 
 #[cfg(test)]
@@ -172,7 +172,7 @@ mod tests {
         // delete new user from table
         use crate::schema::users::dsl::*;
         diesel::delete(users.filter(id.eq(res.id)))
-            .execute(&mut pool.get().expect("couldn't get db connection from pool"))
-            .expect("couldn't delete test user from table");
+            .execute(&mut pool.get().expect("Couldn't get db connection from pool"))
+            .expect("Couldn't delete test user from table");
     }
 }

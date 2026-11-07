@@ -30,7 +30,7 @@ async fn make_encrypted(
     cipher: Data<Aes256GcmSiv>,
     Json(Req { id, data, .. }): Json<Req>,
 ) -> impl Responder {
-    log::info!("creating encrypted sample request for ID = {id:?}");
+    log::info!("Creating encrypted sample request for ID = {id:?}");
 
     // this nonce should actually be unique per message in a production environment
     let nonce = Nonce::try_from(b"unique nonce".as_slice()).unwrap();
@@ -47,11 +47,11 @@ async fn make_encrypted(
 }
 
 async fn reverse_data(Json(Req { id, data, .. }): Json<Req>) -> impl Responder {
-    log::info!("request {id:?} with data: {data}");
+    log::info!("Request {id:?} with data: {data}");
 
     let data_rev = data.chars().rev().collect();
 
-    log::info!("response {id:?} with new data: {data_rev}");
+    log::info!("Response {id:?} with new data: {data_rev}");
 
     Json(Res {
         data: data_rev,
@@ -63,7 +63,7 @@ async fn reverse_data(Json(Req { id, data, .. }): Json<Req>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     // initialize cipher outside HttpServer closure
     let cipher = Aes256GcmSiv::new_from_slice(&[0; 32]).unwrap();
@@ -95,7 +95,7 @@ async fn encrypt_payloads(
     // extract JSON with encrypted+encoded data field
     let Json(Req { id, nonce, data }) = req.extract::<Json<Req>>().await?;
 
-    log::info!("decrypting request {id:?}");
+    log::info!("Decrypting request {id:?}");
 
     // decode nonce from payload
     let nonce = BASE64_STANDARD.decode(nonce.unwrap()).unwrap();
@@ -121,7 +121,7 @@ async fn encrypt_payloads(
     // call next service
     let res = next.call(req).await?;
 
-    log::info!("encrypting response {id:?}");
+    log::info!("Encrypting response {id:?}");
 
     // deconstruct response into parts
     let (req, res) = res.into_parts();
