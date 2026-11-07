@@ -9983,21 +9983,24 @@ dependencies = [
 name = "websocket-tcp-example"
 version = "0.0.0"
 dependencies = [
- "actix",
  "actix-codec",
  "actix-files",
  "actix-web",
- "actix-web-actors",
+ "actix-ws",
  "byteorder",
- "env_logger",
+ "color-eyre",
+ "err-report",
+ "examples-common",
+ "eyre",
  "futures-util",
- "log",
+ "ractor",
  "rand 0.10.3",
  "serde",
  "serde_json",
  "tokio",
  "tokio-stream",
  "tokio-util",
+ "tracing",
 ]
 
 [[package]]
