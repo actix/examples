@@ -1,14 +1,17 @@
+//! Interactive TCP client for the length-prefixed JSON chat protocol.
+
 use std::{io, thread};
 
+use examples_common::init_standard_logger;
 use futures_util::{SinkExt as _, StreamExt as _};
 use tokio::{net::TcpStream, select, sync::mpsc};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 
 mod codec;
 
-#[actix_web::main]
+#[tokio::main]
 async fn main() {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    init_standard_logger();
 
     println!("Running chat client");
 
@@ -21,7 +24,7 @@ async fn main() {
             let mut cmd = String::with_capacity(32);
 
             if io::stdin().read_line(&mut cmd).is_err() {
-                log::error!("error reading line");
+                tracing::error!("error reading line");
                 return;
             }
 

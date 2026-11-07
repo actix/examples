@@ -1,12 +1,12 @@
 # WebSocket And TCP Chat
 
-This is extension of the [actix chat example](https://github.com/actix/examples/tree/HEAD/websockets/chat)
+This extends the [Ractor chat example](https://github.com/actix/examples/tree/HEAD/websockets/chat).
 
 Added features:
 
 - Browser WebSocket client
-- Chat server runs in separate thread
-- TCP listener runs in separate thread
+- Shared Ractor actor manages rooms for TCP and WebSocket clients
+- Tokio TCP listener and actix-ws WebSocket connections
 
 ## Chat Commands
 
@@ -14,7 +14,7 @@ The server accepts TCP and WebSocket connections and supports these messages:
 
 - `/list` - list all available rooms
 - `/join name` - join room, if room does not exist, create new one
-- `/name name` - set session name
+- `/name name` - set session name (WebSocket clients only)
 - `some message` - just string, send message to all peers in same room
 - client has to send heartbeat `Ping` messages, if server does not receive a heartbeat message for 10 seconds connection gets dropped
 
@@ -41,3 +41,14 @@ cargo run --bin websocket-tcp-client
 ## Browser Client
 
 Open url: <http://localhost:8080>
+
+## Protocol
+
+TCP uses JSON messages with a two-byte, big-endian length prefix. The request and response formats
+remain compatible with the included TCP client. Encoded messages must fit in 65,535 bytes.
+
+## Shutdown
+
+SIGINT, SIGTERM, and SIGQUIT cancel both listeners on Unix; other platforms use Ctrl-C. WebSocket
+sessions close with code 1001. TCP sessions close their connections, and the chat actor stops after
+both listeners finish shutdown.
