@@ -25,7 +25,7 @@ async fn main() -> std::io::Result<()> {
 
     let config = load_rustls_config();
 
-    log::info!("starting HTTPS server at https://localhost:8443");
+    log::info!("Starting HTTPS server at https://localhost:8443");
 
     HttpServer::new(|| {
         App::new()

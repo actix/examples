@@ -30,7 +30,7 @@ async fn main() -> io::Result<()> {
         .await
         .expect("Failed to create pool");
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         log::debug!("Constructing the App");
@@ -38,7 +38,7 @@ async fn main() -> io::Result<()> {
         let mut templates = Tera::default();
         templates
             .load_from_glob("templates/**/*")
-            .expect("errors in tera templates");
+            .expect("Errors in tera templates");
         templates.autoescape_on(vec!["tera"]);
 
         let session_store = SessionMiddleware::builder(CookieSessionStore::default(), key.clone())

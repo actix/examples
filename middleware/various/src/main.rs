@@ -28,7 +28,7 @@ async fn timeout_10secs(
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()
@@ -38,7 +38,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(simple::SayHi)
             .wrap(from_fn(timeout_10secs))
             .service(web::resource("/login").to(|body: String| async move {
-                println!("request body (handler): {body}");
+                println!("Request body (handler): {body}");
                 "You are on /login. Go to src/redirect.rs to change this behavior."
             }))
             .service(

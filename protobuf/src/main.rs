@@ -12,7 +12,7 @@ pub struct MyObj {
 }
 
 async fn index(msg: ProtoBuf<MyObj>) -> Result<HttpResponse> {
-    log::info!("model: {msg:?}");
+    log::info!("Model: {msg:?}");
     HttpResponse::Ok().protobuf(msg.0) // <- send response
 }
 
@@ -20,7 +20,7 @@ async fn index(msg: ProtoBuf<MyObj>) -> Result<HttpResponse> {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()

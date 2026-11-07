@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
     // create the stop handle container
     let stop_handle = web::Data::new(StopHandle::default());
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     // start server as normal but don't .await after .run() yet
     let srv = HttpServer::new({

@@ -62,7 +62,7 @@ async fn main() -> eyre::Result<()> {
     watch_shutdown_signal(shutdown.clone());
     let worker_shutdown = shutdown.clone();
 
-    tracing::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("Starting HTTP server at http://localhost:8080");
 
     let http_server = HttpServer::new(move || {
         App::new()
@@ -86,7 +86,7 @@ async fn main() -> eyre::Result<()> {
 
     shutdown.cancel();
     actor.stop(None);
-    server_task.await.wrap_err("chat actor task failed")?;
+    server_task.await.wrap_err("Chat actor task failed")?;
 
     result
 }

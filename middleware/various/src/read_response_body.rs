@@ -94,7 +94,7 @@ pin_project! {
 
     impl<B> PinnedDrop for BodyLogger<B> {
         fn drop(this: Pin<&mut Self>) {
-            println!("response body: {:?}", this.body_accum);
+            println!("Response body: {:?}", this.body_accum);
         }
     }
 }

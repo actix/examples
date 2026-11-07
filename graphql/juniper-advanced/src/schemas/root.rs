@@ -43,7 +43,7 @@ impl QueryRoot {
         if let Err(_err) = user {
             return Err(FieldError::new(
                 "User Not Found",
-                graphql_value!({ "not_found": "user not found" }),
+                graphql_value!({ "not_found": "User not found" }),
             ));
         }
 
@@ -73,7 +73,7 @@ impl QueryRoot {
         if let Err(_err) = product {
             return Err(FieldError::new(
                 "Product Not Found",
-                graphql_value!({ "not_found": "product not found" }),
+                graphql_value!({ "not_found": "Product not found" }),
             ));
         }
 
@@ -113,7 +113,7 @@ impl MutationRoot {
             Err(err) => {
                 let msg = match err {
                     DBError::MySqlError(err) => err.message,
-                    _ => "internal error".to_owned(),
+                    _ => "Internal error".to_owned(),
                 };
                 Err(FieldError::new(
                     "Failed to create new user",
@@ -147,7 +147,7 @@ impl MutationRoot {
             Err(err) => {
                 let msg = match err {
                     DBError::MySqlError(err) => err.message,
-                    _ => "internal error".to_owned(),
+                    _ => "Internal error".to_owned(),
                 };
                 Err(FieldError::new(
                     "Failed to create new product",

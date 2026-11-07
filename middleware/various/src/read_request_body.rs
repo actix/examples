@@ -55,14 +55,14 @@ where
         Box::pin(async move {
             // extract bytes from request body
             let body = req.extract::<web::Bytes>().await.unwrap();
-            println!("request body (middleware): {body:?}");
+            println!("Request body (middleware): {body:?}");
 
             // re-insert body back into request to be used by handlers
             req.set_payload(bytes_to_payload(body));
 
             let res = svc.call(req).await?;
 
-            println!("response: {:?}", res.headers());
+            println!("Response: {:?}", res.headers());
             Ok(res)
         })
     }

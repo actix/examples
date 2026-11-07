@@ -19,7 +19,7 @@ pub async fn chat_ws(
     mut session: actix_ws::Session,
     msg_stream: actix_ws::MessageStream,
 ) {
-    log::info!("connected");
+    log::info!("Connected");
 
     let mut name: Option<String> = None;
     let mut last_heartbeat = Instant::now();
@@ -38,7 +38,7 @@ pub async fn chat_ws(
     let close_reason = loop {
         tokio::select! {
             Some(Ok(msg)) = msg_stream.next() => {
-                log::debug!("msg: {msg:?}");
+                log::debug!("Msg: {msg:?}");
 
                 match msg {
                     AggregatedMessage::Ping(bytes) => {
@@ -56,7 +56,7 @@ pub async fn chat_ws(
                     }
 
                     AggregatedMessage::Binary(_bin) => {
-                        log::warn!("unexpected binary message");
+                        log::warn!("Unexpected binary message");
                     }
 
                     AggregatedMessage::Close(reason) => break reason,
@@ -103,7 +103,7 @@ async fn process_text_msg(
         // unwrap: we have guaranteed non-zero string length already
         match cmd_args.next().unwrap() {
             "/list" => {
-                log::info!("conn {conn}: listing rooms");
+                log::info!("Conn {conn}: listing rooms");
 
                 let rooms = chat_server.list_rooms().await;
 
@@ -114,7 +114,7 @@ async fn process_text_msg(
 
             "/join" => match cmd_args.next() {
                 Some(room) => {
-                    log::info!("conn {conn}: joining room {room}");
+                    log::info!("Conn {conn}: joining room {room}");
 
                     chat_server.join_room(conn, room).await;
 
@@ -128,7 +128,7 @@ async fn process_text_msg(
 
             "/name" => match cmd_args.next() {
                 Some(new_name) => {
-                    log::info!("conn {conn}: setting name to: {new_name}");
+                    log::info!("Conn {conn}: setting name to: {new_name}");
                     name.replace(new_name.to_owned());
                 }
                 None => {

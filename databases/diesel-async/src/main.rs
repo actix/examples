@@ -80,7 +80,7 @@ async fn main() -> io::Result<()> {
     // initialize DB pool outside `HttpServer::new` so that it is shared across all workers
     let pool = initialize_db_pool().await;
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
@@ -174,9 +174,9 @@ mod tests {
                 &mut pool
                     .get()
                     .await
-                    .expect("couldn't get db connection from pool"),
+                    .expect("Couldn't get db connection from pool"),
             )
             .await
-            .expect("couldn't delete test item from table");
+            .expect("Couldn't delete test item from table");
     }
 }

@@ -25,7 +25,7 @@ async fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpRespons
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || App::new().wrap(Logger::default()).service(index))
         .bind(("127.0.0.1", 8080))?

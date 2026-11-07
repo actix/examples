@@ -24,12 +24,12 @@ async fn main() {
             let mut cmd = String::with_capacity(32);
 
             if io::stdin().read_line(&mut cmd).is_err() {
-                tracing::error!("error reading line");
+                tracing::error!("Error reading line");
                 return;
             }
 
             if cmd.trim() == "/exit" {
-                println!("exiting input loop");
+                println!("Exiting input loop");
                 return;
             }
 
@@ -45,10 +45,10 @@ async fn main() {
             Some(msg) = framed.next() => {
                 match msg {
                     Ok(codec::ChatResponse::Message(ref msg)) => {
-                        println!("message: {msg}");
+                        println!("Message: {msg}");
                     }
                     Ok(codec::ChatResponse::Joined(ref msg)) => {
-                        println!("!!! joined: {msg}");
+                        println!("!!! Joined: {msg}");
                     }
 
                     Ok(codec::ChatResponse::Rooms(rooms)) => {
@@ -71,7 +71,7 @@ async fn main() {
                 }
 
                 if cmd == "/exit" {
-                    println!("exiting recv loop");
+                    println!("Exiting recv loop");
                     return;
                 }
 
@@ -104,12 +104,12 @@ fn parse_client_command(msg: &str) -> Option<codec::ChatRequest> {
                 if v.len() == 2 {
                     Some(codec::ChatRequest::Join(v[1].to_owned()))
                 } else {
-                    println!("!!! room name is required");
+                    println!("!!! Room name is required");
                     None
                 }
             }
             _ => {
-                println!("!!! unknown command");
+                println!("!!! Unknown command");
                 None
             }
         }

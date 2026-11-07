@@ -48,14 +48,14 @@ async fn create_username_index(client: &Client) {
         .collection::<User>(COLL_NAME)
         .create_index(model)
         .await
-        .expect("creating an index should succeed");
+        .expect("Creating an index should succeed");
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let uri = std::env::var("MONGODB_URI").unwrap_or_else(|_| "mongodb://localhost:27017".into());
 
-    let client = Client::with_uri_str(uri).await.expect("failed to connect");
+    let client = Client::with_uri_str(uri).await.expect("Failed to connect");
     create_username_index(&client).await;
 
     HttpServer::new(move || {

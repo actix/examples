@@ -115,7 +115,7 @@ fn get_error_response<B>(res: &ServiceResponse<B>, error: &str) -> HttpResponse<
 
     let hb = req
         .app_data::<web::Data<Handlebars>>()
-        .expect("correctly set up handlebars in app data");
+        .expect("Correctly set up handlebars in app data");
 
     let data = json!({
         "lang": lang,

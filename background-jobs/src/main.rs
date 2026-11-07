@@ -25,7 +25,7 @@ async fn main() -> eyre::Result<()> {
     // background jobs that should be run even if the server is restarted
     let email_sender = persistent_jobs::start_processing_email_queue().await?;
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
@@ -47,7 +47,7 @@ async fn main() -> eyre::Result<()> {
     // wait for the cache sweep job to exit its loop gracefully
     cache_sweep_handle.await.unwrap();
 
-    log::info!("application successfully shut down gracefully");
+    log::info!("Application successfully shut down gracefully");
 
     Ok(())
 }

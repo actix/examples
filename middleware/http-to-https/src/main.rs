@@ -32,7 +32,7 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     log::info!(
-        "starting HTTP server at http://localhost:80 and HTTPS server on http://localhost:443"
+        "Starting HTTP server at http://localhost:80 and HTTPS server on http://localhost:443"
     );
 
     HttpServer::new(|| {

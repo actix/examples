@@ -31,7 +31,7 @@ async fn main() -> std::io::Result<()> {
         .data(StarWars::new())
         .finish();
 
-    log::info!("starting HTTP server on port 8080");
+    log::info!("Starting HTTP server on port 8080");
     log::info!("GraphiQL playground: http://localhost:8080/graphiql");
 
     HttpServer::new(move || {

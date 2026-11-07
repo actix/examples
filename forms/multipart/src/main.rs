@@ -22,7 +22,7 @@ async fn save_files(
 ) -> Result<impl Responder, Error> {
     for f in form.files {
         let path = format!("./tmp/{}", f.file_name.unwrap());
-        log::info!("saving to {path}");
+        log::info!("Saving to {path}");
         f.file.persist(path).unwrap();
     }
 
@@ -47,10 +47,10 @@ async fn index() -> HttpResponse {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("creating temporary upload directory");
+    log::info!("Creating temporary upload directory");
     std::fs::create_dir_all("./tmp")?;
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()
