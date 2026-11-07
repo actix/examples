@@ -8836,6 +8836,7 @@ dependencies = [
  "signal-hook-registry",
  "socket2 0.6.5",
  "tokio-macros",
+ "tracing",
  "windows-sys 0.61.2",
 ]
 
@@ -9961,13 +9962,15 @@ dependencies = [
 name = "websocket-example"
 version = "0.0.0"
 dependencies = [
- "actix",
  "actix-files",
  "actix-web",
- "actix-web-actors",
+ "actix-ws",
  "env_logger",
+ "futures-util",
  "log",
+ "ractor",
  "rand 0.10.3",
+ "tokio",
 ]
 
 [[package]]
