@@ -56,7 +56,7 @@ async fn main() -> eyre::Result<()> {
     let (server, server_task) =
         server::ChatServer::spawn(None, server::ChatServer, app_state.clone())
             .await
-            .wrap_err("failed to start chat actor")?;
+            .wrap_err("Failed to start chat actor")?;
     let actor = server.clone();
     let shutdown = CancellationToken::new();
     watch_shutdown_signal(shutdown.clone());
@@ -81,7 +81,7 @@ async fn main() -> eyre::Result<()> {
 
     let result = match http_server {
         Ok(http_server) => http_server.run().await.wrap_err("HTTP server failed"),
-        Err(err) => Err(err).wrap_err("failed to bind HTTP server"),
+        Err(err) => Err(err).wrap_err("Failed to bind HTTP server"),
     };
 
     shutdown.cancel();
