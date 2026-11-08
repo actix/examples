@@ -142,7 +142,7 @@ async fn main() -> std::io::Result<()> {
 
     let network = Arc::new(RwLock::new(ObjNetwork::new()));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         let app_state = AppState::new(network.clone());

@@ -35,7 +35,7 @@ async fn main() -> io::Result<()> {
     // Create Juniper schema
     let schema = Arc::new(create_schema());
 
-    log::info!("starting HTTP server on port 8080");
+    log::info!("Starting HTTP server on port 8080");
     log::info!("GraphiQL playground: http://localhost:8080/graphiql");
 
     // Start HTTP server

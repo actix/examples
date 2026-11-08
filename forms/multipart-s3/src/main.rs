@@ -33,8 +33,8 @@ async fn upload_to_s3(
     let namespace = form.namespace.into_inner();
     let files = form.files;
 
-    log::info!("namespace = {namespace:?}");
-    log::info!("tmp_files = {files:?}");
+    log::info!("Namespace = {namespace:?}");
+    log::info!("Tmp_files = {files:?}");
 
     // make key prefix (make sure it ends with a forward slash)
     let s3_key_prefix = format!("uploads/{namespace}/");
@@ -57,7 +57,7 @@ async fn fetch_from_s3(
     let (file_size, file_stream) = s3_client
         .fetch_file(&s3_key)
         .await
-        .ok_or_else(|| error::ErrorNotFound("file with specified key not found"))?;
+        .ok_or_else(|| error::ErrorNotFound("File with specified key not found"))?;
 
     let stream = match method {
         // data stream for GET requests
@@ -82,7 +82,7 @@ async fn delete_from_s3(
     if s3_client.delete_file(&s3_key).await {
         Ok(HttpResponse::NoContent().finish())
     } else {
-        Err(error::ErrorNotFound("file with specified key not found"))
+        Err(error::ErrorNotFound("File with specified key not found"))
     }
 }
 
@@ -96,11 +96,11 @@ async fn main() -> std::io::Result<()> {
     unsafe { dotenv() }.ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("creating temporary upload directory");
+    log::info!("Creating temporary upload directory");
 
     fs::create_dir_all("./tmp").unwrap();
 
-    log::info!("configuring S3 client");
+    log::info!("Configuring S3 client");
     let aws_region = RegionProviderChain::default_provider().or_else("us-east-1");
     let aws_config = aws_config::defaults(BehaviorVersion::latest())
         .region(aws_region)
@@ -110,9 +110,9 @@ async fn main() -> std::io::Result<()> {
     // create singleton S3 client
     let s3_client = Client::new(&aws_config);
 
-    log::info!("using AWS region: {}", aws_config.region().unwrap());
+    log::info!("Using AWS region: {}", aws_config.region().unwrap());
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()

@@ -65,7 +65,7 @@ pub async fn cache_middleware(
     } else {
         format!("{}?{}", req.path(), req.query_string())
     };
-    println!("cache key: {key:?}");
+    println!("Cache key: {key:?}");
 
     // Get "Cache-Control" request header and get cache directive
     let headers = req.headers().to_owned();
@@ -94,13 +94,13 @@ pub async fn cache_middleware(
             let cached_response: Result<Vec<u8>, RedisError> = redis_conn.get(key.to_owned());
             if let Err(e) = cached_response {
                 // If cache cannot be deserialized
-                println!("cache get error: {}", e);
+                println!("Cache get error: {}", e);
             } else if cached_response.as_ref().unwrap().is_empty() {
                 // If cache body is empty
-                println!("cache not found");
+                println!("Cache not found");
             } else {
                 // If cache is found
-                println!("cache found");
+                println!("Cache found");
 
                 // Prepare response body
                 let res = HttpResponse::new(StatusCode::OK).set_body(cached_response.unwrap());
@@ -163,10 +163,10 @@ pub async fn cache_middleware(
 
             if let Err(e) = insert {
                 // If cache insertion failed
-                println!("cache insert error: {}", e);
+                println!("Cache insert error: {}", e);
             } else {
                 // This should print "cache insert success: OK"
-                println!("cache insert success: {}", insert.unwrap());
+                println!("Cache insert success: {}", insert.unwrap());
             }
         } else if let Err(e) = redis_conn {
             // If Redis connection failed
@@ -174,7 +174,7 @@ pub async fn cache_middleware(
         }
     } else {
         // If the request method is not "GET" or the operation failed or cache directive is "no-store"
-        println!("not inserting cache");
+        println!("Not inserting cache");
     }
     Ok(res)
 }

@@ -41,12 +41,12 @@ async fn main() -> eyre::Result<()> {
 
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", 12345))
         .await
-        .wrap_err("failed to bind TCP listener")?;
+        .wrap_err("Failed to bind TCP listener")?;
 
     // start chat server actor
     let (server, server_task) = server::ChatServer::spawn(None, server::ChatServer, ())
         .await
-        .wrap_err("failed to start chat actor")?;
+        .wrap_err("Failed to start chat actor")?;
     let actor = server.clone();
     let shutdown = CancellationToken::new();
     watch_shutdown_signal(shutdown.clone());
@@ -57,7 +57,7 @@ async fn main() -> eyre::Result<()> {
         shutdown.clone(),
     ));
 
-    tracing::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("Starting HTTP server at http://localhost:8080");
 
     let http_server = HttpServer::new(move || {
         App::new()
@@ -73,13 +73,13 @@ async fn main() -> eyre::Result<()> {
 
     let result = match http_server {
         Ok(http_server) => http_server.run().await.wrap_err("HTTP server failed"),
-        Err(err) => Err(err).wrap_err("failed to bind HTTP server"),
+        Err(err) => Err(err).wrap_err("Failed to bind HTTP server"),
     };
 
     shutdown.cancel();
     let tcp_result = tcp_task.await;
     actor.stop(None);
-    server_task.await.wrap_err("chat actor task failed")?;
+    server_task.await.wrap_err("Chat actor task failed")?;
 
     tcp_result
         .wrap_err("TCP listener task failed")?

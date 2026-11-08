@@ -55,7 +55,7 @@ async fn main() -> io::Result<()> {
     let manager = SqliteConnectionManager::file("weather.db");
     let pool = Pool::new(manager).unwrap();
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     // start HTTP server
     HttpServer::new(move || {

@@ -10,7 +10,7 @@ use super::*;
 async fn test() {
     let uri = std::env::var("MONGODB_URI").unwrap_or_else(|_| "mongodb://localhost:27017".into());
 
-    let client = Client::with_uri_str(uri).await.expect("failed to connect");
+    let client = Client::with_uri_str(uri).await.expect("Failed to connect");
 
     // Clear any data currently in the users collection.
     client
@@ -18,7 +18,7 @@ async fn test() {
         .collection::<User>(COLL_NAME)
         .drop()
         .await
-        .expect("drop collection should succeed");
+        .expect("Drop collection should succeed");
 
     let app = init_service(
         App::new()

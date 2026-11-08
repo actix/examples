@@ -29,14 +29,14 @@ impl MiniJinjaRenderer {
     ) -> actix_web::Result<impl Responder + use<T>> {
         self.tmpl_env
             .acquire_env()
-            .map_err(|_| error::ErrorInternalServerError("could not acquire template env"))?
+            .map_err(|_| error::ErrorInternalServerError("Could not acquire template env"))?
             .get_template(tmpl)
-            .map_err(|_| error::ErrorInternalServerError("could not find template"))?
+            .map_err(|_| error::ErrorInternalServerError("Could not find template"))?
             .render(ctx.into())
             .map(web::Html::new)
             .map_err(|err| {
                 tracing::error!(error = %Report::new(&err));
-                error::ErrorInternalServerError("template error")
+                error::ErrorInternalServerError("Template error")
             })
     }
 }
@@ -79,10 +79,10 @@ async fn main() -> std::io::Result<()> {
     let enable_template_autoreload = env::var("TEMPLATE_AUTORELOAD").as_deref() == Ok("true");
 
     if enable_template_autoreload {
-        tracing::info!("template auto-reloading is enabled");
+        tracing::info!("Template auto-reloading is enabled");
     } else {
         tracing::info!(
-            "template auto-reloading is disabled; run with TEMPLATE_AUTORELOAD=true to enable"
+            "Template auto-reloading is disabled; run with TEMPLATE_AUTORELOAD=true to enable"
         );
     }
 
@@ -104,7 +104,7 @@ async fn main() -> std::io::Result<()> {
 
     let tmpl_reloader = web::Data::new(tmpl_reloader);
 
-    tracing::info!("starting HTTP server at http://localhost:8080");
+    tracing::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()

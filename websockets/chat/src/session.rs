@@ -56,7 +56,7 @@ pub async fn chat_ws(
                         }
                     }
                     Some(Ok(AggregatedMessage::Close(reason))) => break reason,
-                    Some(Ok(AggregatedMessage::Binary(_))) => tracing::warn!("unexpected binary message"),
+                    Some(Ok(AggregatedMessage::Binary(_))) => tracing::warn!("Unexpected binary message"),
                     Some(Err(_)) | None => break None,
                 }
             }

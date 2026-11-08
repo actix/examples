@@ -12,7 +12,7 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 async fn main() {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting echo WebSocket client");
+    log::info!("Starting echo WebSocket client");
 
     let (cmd_tx, cmd_rx) = mpsc::unbounded_channel();
     let mut cmd_rx = UnboundedReceiverStream::new(cmd_rx);
@@ -23,7 +23,7 @@ async fn main() {
             let mut cmd = String::with_capacity(32);
 
             if io::stdin().read_line(&mut cmd).is_err() {
-                log::error!("error reading line");
+                log::error!("Error reading line");
                 return;
             }
 
@@ -37,8 +37,8 @@ async fn main() {
         .await
         .unwrap();
 
-    log::debug!("response: {res:?}");
-    log::info!("connected; server will echo messages sent");
+    log::debug!("Response: {res:?}");
+    log::info!("Connected; server will echo messages sent");
 
     loop {
         select! {

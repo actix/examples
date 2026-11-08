@@ -45,7 +45,7 @@ impl Client {
             object
                 .content_length()
                 .and_then(|len| len.try_into().ok())
-                .expect("file has invalid size"),
+                .expect("File has invalid size"),
             object.body,
         ))
     }
@@ -89,7 +89,7 @@ impl Client {
             .map(|md| md.len())
             .unwrap_or(1024)
             .try_into()
-            .expect("file too big");
+            .expect("File too big");
 
         let mut contents = Vec::with_capacity(size_estimate);
         file.read_to_end(&mut contents).await.unwrap();

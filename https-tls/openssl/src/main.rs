@@ -38,7 +38,7 @@ async fn main() -> io::Result<()> {
     // set the certificate chain file location
     builder.set_certificate_chain_file("cert.pem").unwrap();
 
-    log::info!("starting HTTPS server at http://localhost:8443");
+    log::info!("Starting HTTPS server at http://localhost:8443");
 
     HttpServer::new(|| {
         App::new()

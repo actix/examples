@@ -52,7 +52,7 @@ async fn main() -> std::io::Result<()> {
     // ```
     let secret_key = Key::generate();
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()

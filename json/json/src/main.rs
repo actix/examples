@@ -9,14 +9,14 @@ struct MyObj {
 
 /// This handler uses json extractor
 async fn index(item: web::Json<MyObj>) -> HttpResponse {
-    println!("model: {:?}", item);
+    println!("Model: {:?}", item);
     HttpResponse::Ok().json(item.0) // <- send response
 }
 
 /// This handler uses json extractor with limit
 async fn extract_item(item: web::Json<MyObj>, req: HttpRequest) -> HttpResponse {
-    println!("request: {req:?}");
-    println!("model: {item:?}");
+    println!("Request: {req:?}");
+    println!("Model: {item:?}");
 
     HttpResponse::Ok().json(item.0) // <- send json response
 }
@@ -32,7 +32,7 @@ async fn index_manual(body: web::Bytes) -> Result<HttpResponse, Error> {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(|| {
         App::new()

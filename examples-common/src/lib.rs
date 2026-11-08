@@ -38,7 +38,7 @@ pub fn watch_shutdown_signal(shutdown: CancellationToken) {
         if let Err(err) = result {
             tracing::error!(
                 error = %Report::new(&err),
-                "failed to listen for shutdown signals"
+                "Failed to listen for shutdown signals"
             );
         }
 
