@@ -33,7 +33,7 @@ async fn index(
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

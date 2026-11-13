@@ -37,7 +37,7 @@ pub async fn add_user(
     Ok(HttpResponse::Ok().json(new_user))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     unsafe { dotenv() }.ok();
 

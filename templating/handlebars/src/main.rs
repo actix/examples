@@ -34,7 +34,7 @@ async fn user(hb: web::Data<Handlebars<'_>>, path: web::Path<(String, String)>) 
     web::Html::new(body)
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

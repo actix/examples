@@ -13,7 +13,7 @@ async fn stop(Path(graceful): Path<bool>, stop_handle: web::Data<StopHandle>) ->
     HttpResponse::NoContent().finish()
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

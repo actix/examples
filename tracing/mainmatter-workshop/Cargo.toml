@@ -16,6 +16,7 @@ opentelemetry_sdk.features = [
   "rt-tokio-current-thread",
 ]
 opentelemetry-otlp = { version = "0.33", features = ["grpc-tonic", "tls-roots"] }
+tokio.workspace = true
 tonic = "0.14"
 tracing-actix-web = { version = "0.7.25", features = ["opentelemetry_0_32", "uuid_v7"] }
 tracing-opentelemetry = "0.34"

@@ -6,7 +6,6 @@ rust-version = { workspace = true }
 
 [dependencies]
 actix-http = { workspace = true }
-actix-rt = "2"
 actix-server = "2"
 actix-service = "2"
 

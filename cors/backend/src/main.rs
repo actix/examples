@@ -5,7 +5,7 @@ use actix_web::{App, HttpServer, http::header, middleware::Logger};
 
 mod user;
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
 

@@ -11,3 +11,4 @@ chrono.workspace = true
 env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
+tokio.workspace = true

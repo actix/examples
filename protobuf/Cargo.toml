@@ -10,3 +10,4 @@ actix-web.workspace = true
 env_logger.workspace = true
 log.workspace = true
 prost = { version = "0.14", features = ["derive"] }
+tokio.workspace = true

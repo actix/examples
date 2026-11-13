@@ -22,7 +22,7 @@ async fn fail(enforcer: web::Data<Enforcer>) -> HttpResponse {
     HttpResponse::Ok().body("Fail: alice is not data1_admin.") // In fact, it can't be displayed.
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

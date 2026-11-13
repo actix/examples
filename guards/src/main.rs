@@ -65,7 +65,7 @@ fn create_app() -> App<
         .wrap(DefaultHeaders::new().add(("Vary", "Accept-Version")))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(create_app)
         .bind(("127.0.0.1", 8080))?

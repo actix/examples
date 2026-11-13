@@ -8,3 +8,4 @@ rust-version.workspace = true
 actix-web.workspace = true
 env_logger.workspace = true
 log.workspace = true
+tokio.workspace = true

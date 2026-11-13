@@ -12,3 +12,4 @@ r2d2 = "0.8"
 r2d2_sqlite = "0.24"
 rusqlite = "0.31"
 serde = { version = "1", features = ["derive"] }
+tokio = { version = "1.51", features = ["macros", "rt"] }
