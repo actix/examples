@@ -9,3 +9,4 @@ actix-web = { workspace = true, features = ["openssl"] }
 env_logger.workspace = true
 log.workspace = true
 openssl.workspace = true
+tokio.workspace = true

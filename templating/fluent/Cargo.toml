@@ -12,3 +12,4 @@ fluent-templates = { version = "0.15", features = ["handlebars"] }
 handlebars = { version = "6", features = ["dir_source"] }
 serde.workspace = true
 serde_json.workspace = true
+tokio.workspace = true

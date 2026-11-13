@@ -14,6 +14,7 @@ actix-web.workspace = true
 derive_more = { workspace = true, features = ["display"] }
 env_logger.workspace = true
 log.workspace = true
+tokio.workspace = true
 yarte = { version = "0.15", features = ["bytes-buf", "html-min"] }
 
 [build-dependencies]

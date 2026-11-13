@@ -12,3 +12,4 @@ env_logger.workspace = true
 log.workspace = true
 mysql = "28"
 serde.workspace = true
+tokio.workspace = true

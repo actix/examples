@@ -13,4 +13,5 @@ futures-util.workspace = true
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+tokio.workspace = true
 validator = { version = "0.21", features = ["derive"] }

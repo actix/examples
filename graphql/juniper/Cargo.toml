@@ -10,3 +10,4 @@ actix-cors.workspace = true
 juniper = "0.17"
 env_logger.workspace = true
 log.workspace = true
+tokio.workspace = true

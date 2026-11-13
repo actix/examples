@@ -8,3 +8,4 @@ rust-version.workspace = true
 actix-web.workspace = true
 mongodb = "3"
 serde.workspace = true
+tokio.workspace = true

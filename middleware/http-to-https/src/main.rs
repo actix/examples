@@ -10,7 +10,7 @@ async fn index() -> String {
     String::from("<html><head><title>FOO BAR</title></head><body><h1>FOO BAR</h1></body></html>")
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

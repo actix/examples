@@ -79,6 +79,7 @@ dependencies = [
  "actix-web",
  "casbin",
  "env_logger",
+ "tokio",
 ]
 
 [[package]]
@@ -972,6 +973,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -1037,6 +1039,7 @@ dependencies = [
  "env_logger",
  "log",
  "slab",
+ "tokio",
 ]
 
 [[package]]
@@ -1231,6 +1234,7 @@ dependencies = [
  "mime",
  "rustls 0.23.46",
  "rustls-platform-verifier",
+ "tokio",
 ]
 
 [[package]]
@@ -2068,6 +2072,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "redis 1.8.0",
+ "tokio",
 ]
 
 [[package]]
@@ -2402,6 +2407,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -2412,6 +2418,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -2455,6 +2462,7 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -2825,6 +2833,7 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
+ "tokio",
  "uuid",
 ]
 
@@ -2839,6 +2848,7 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
+ "tokio",
  "uuid",
 ]
 
@@ -2849,6 +2859,7 @@ dependencies = [
  "actix-web",
  "mongodb",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -2861,6 +2872,7 @@ dependencies = [
  "derive_more 2.1.1",
  "dotenvor",
  "serde",
+ "tokio",
  "tokio-pg-mapper",
  "tokio-pg-mapper-derive",
  "tokio-postgres",
@@ -2874,6 +2886,7 @@ dependencies = [
  "env_logger",
  "redis 1.8.0",
  "serde",
+ "tokio",
  "tracing",
 ]
 
@@ -3197,6 +3210,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -3369,6 +3383,7 @@ dependencies = [
  "rand 0.10.3",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -3422,6 +3437,7 @@ dependencies = [
  "actix-web-lab",
  "async-stream",
  "examples-common",
+ "tokio",
  "tracing",
 ]
 
@@ -3670,6 +3686,7 @@ version = "0.0.0"
 dependencies = [
  "actix-web",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -3977,6 +3994,7 @@ name = "guards"
 version = "0.0.0"
 dependencies = [
  "actix-web",
+ "tokio",
 ]
 
 [[package]]
@@ -4100,6 +4118,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -4858,6 +4877,7 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -4871,6 +4891,7 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
+ "tokio",
  "validator",
 ]
 
@@ -4882,6 +4903,7 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -4893,6 +4915,7 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -4906,6 +4929,7 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -4942,6 +4966,7 @@ dependencies = [
  "mysql 28.0.4",
  "r2d2",
  "r2d2_mysql",
+ "tokio",
  "uuid",
 ]
 
@@ -4954,6 +4979,7 @@ dependencies = [
  "env_logger",
  "juniper",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -4974,7 +5000,6 @@ name = "kernel-tls-handoff-example"
 version = "0.0.0"
 dependencies = [
  "actix-http",
- "actix-rt",
  "actix-server",
  "actix-service",
  "err-report",
@@ -5370,6 +5395,7 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -5381,6 +5407,7 @@ dependencies = [
  "futures-util",
  "log",
  "rustls 0.23.46",
+ "tokio",
 ]
 
 [[package]]
@@ -5393,6 +5420,7 @@ dependencies = [
  "env_logger",
  "futures-util",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -5402,6 +5430,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -5413,6 +5442,7 @@ dependencies = [
  "futures-util",
  "log",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -5425,6 +5455,7 @@ dependencies = [
  "futures-util",
  "log",
  "pin-project-lite",
+ "tokio",
 ]
 
 [[package]]
@@ -5630,6 +5661,7 @@ dependencies = [
  "futures-util",
  "log",
  "sanitize-filename",
+ "tokio",
  "uuid",
 ]
 
@@ -5696,6 +5728,7 @@ dependencies = [
  "log",
  "mysql 28.0.4",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -5807,6 +5840,7 @@ dependencies = [
  "env_logger",
  "log",
  "serde",
+ "tokio",
 ]
 
 [[package]]
@@ -6217,6 +6251,8 @@ dependencies = [
  "portable-atomic",
  "rand 0.9.5",
  "thiserror 2.0.21",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -6773,6 +6809,7 @@ dependencies = [
  "env_logger",
  "log",
  "prost",
+ "tokio",
 ]
 
 [[package]]
@@ -7107,6 +7144,7 @@ dependencies = [
  "serde",
  "serde_json",
  "time",
+ "tokio",
 ]
 
 [[package]]
@@ -7425,6 +7463,7 @@ dependencies = [
  "env_logger",
  "log",
  "rustls 0.23.46",
+ "tokio",
 ]
 
 [[package]]
@@ -7436,6 +7475,7 @@ dependencies = [
  "env_logger",
  "log",
  "rustls 0.23.46",
+ "tokio",
 ]
 
 [[package]]
@@ -7901,6 +7941,7 @@ dependencies = [
  "env_logger",
  "log",
  "parking_lot",
+ "tokio",
 ]
 
 [[package]]
@@ -7966,6 +8007,7 @@ dependencies = [
  "sparklepost",
  "temp-env",
  "time",
+ "tokio",
  "uuid",
 ]
 
@@ -8283,6 +8325,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -8293,6 +8336,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -8530,6 +8574,7 @@ dependencies = [
  "askama",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
@@ -8543,6 +8588,7 @@ dependencies = [
  "handlebars",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -8553,6 +8599,7 @@ dependencies = [
  "env_logger",
  "handlebars",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -8564,6 +8611,7 @@ dependencies = [
  "examples-common",
  "minijinja",
  "minijinja-autoreload",
+ "tokio",
  "tracing",
 ]
 
@@ -8575,6 +8623,7 @@ dependencies = [
  "env_logger",
  "log",
  "sailfish",
+ "tokio",
 ]
 
 [[package]]
@@ -8585,6 +8634,7 @@ dependencies = [
  "env_logger",
  "log",
  "tera",
+ "tokio",
 ]
 
 [[package]]
@@ -8596,6 +8646,7 @@ dependencies = [
  "log",
  "serde_json",
  "tinytemplate",
+ "tokio",
 ]
 
 [[package]]
@@ -8606,6 +8657,7 @@ dependencies = [
  "derive_more 2.1.1",
  "env_logger",
  "log",
+ "tokio",
  "yarte",
  "yarte_helpers",
 ]
@@ -8785,6 +8837,7 @@ dependencies = [
  "env_logger",
  "log",
  "openssl",
+ "tokio",
 ]
 
 [[package]]
@@ -8821,6 +8874,7 @@ dependencies = [
  "serde",
  "sqlx",
  "tera",
+ "tokio",
 ]
 
 [[package]]
@@ -9228,7 +9282,7 @@ dependencies = [
  "opentelemetry 0.32.0",
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
- "opentelemetry_sdk 0.33.0",
+ "opentelemetry_sdk 0.32.1",
  "tokio",
  "tracing",
  "tracing-actix-web",
@@ -9280,6 +9334,7 @@ dependencies = [
  "opentelemetry 0.33.0",
  "opentelemetry-otlp 0.33.0",
  "opentelemetry_sdk 0.33.0",
+ "tokio",
  "tonic",
  "tracing",
  "tracing-actix-web",
@@ -9328,7 +9383,7 @@ dependencies = [
  "opentelemetry 0.32.0",
  "opentelemetry-otlp 0.32.0",
  "opentelemetry-semantic-conventions",
- "opentelemetry_sdk 0.33.0",
+ "opentelemetry_sdk 0.32.1",
  "tokio",
  "tracing",
  "tracing-actix-web",
@@ -9564,6 +9619,7 @@ dependencies = [
  "actix-web",
  "env_logger",
  "log",
+ "tokio",
 ]
 
 [[package]]
