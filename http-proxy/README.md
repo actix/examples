@@ -1,5 +1,9 @@
 # HTTP Proxy
 
+> [!WARNING]
+>
+> General-purpose web stacks such as Actix Web and hyper are not a good fit for building proxies. Consider [Rama](https://github.com/plabayo/rama) or [Pingora](https://github.com/cloudflare/pingora) instead.
+
 This is a relatively simple HTTP proxy, forwarding HTTP requests to another HTTP server, including request body, headers, and streaming uploads.
 
 ## Usage
