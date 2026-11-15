@@ -10,4 +10,5 @@ err-report = { workspace = true }
 examples-common = { workspace = true }
 minijinja = { version = "2", features = ["loader"] }
 minijinja-autoreload = "2"
+tokio.workspace = true
 tracing = { workspace = true }

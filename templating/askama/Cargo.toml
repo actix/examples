@@ -9,3 +9,4 @@ actix-web.workspace = true
 askama = "0.16"
 env_logger.workspace = true
 log.workspace = true
+tokio.workspace = true

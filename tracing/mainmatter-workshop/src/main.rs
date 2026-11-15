@@ -9,7 +9,7 @@ mod middleware;
 mod prometheus;
 mod routes;
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     unsafe { dotenvor::dotenv() }.ok();
     let tracer_provider = logging::init();

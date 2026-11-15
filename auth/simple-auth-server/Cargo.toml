@@ -23,4 +23,5 @@ serde.workspace = true
 sparklepost = "0.6"
 temp-env.workspace = true
 time.workspace = true
+tokio.workspace = true
 uuid.workspace = true

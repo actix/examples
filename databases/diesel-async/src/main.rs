@@ -72,7 +72,7 @@ async fn add_item(
     Ok(HttpResponse::Created().json(item))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     unsafe { dotenv() }.ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));

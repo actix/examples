@@ -71,7 +71,7 @@ async fn index(
     }
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     examples_common::init_standard_logger();
 

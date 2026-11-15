@@ -28,7 +28,7 @@ async fn index_manual(body: web::Bytes) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().json(obj)) // <- send response
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

@@ -10,7 +10,7 @@ use tokio::net::TcpStream;
 use tokio_rustls::TlsAcceptor;
 use tokio_util::future::FutureExt as _;
 
-#[actix_rt::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     examples_common::init_standard_logger();
 

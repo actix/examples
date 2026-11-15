@@ -76,7 +76,7 @@ async fn with_param(req: HttpRequest, Path((name,)): Path<(String,)>) -> HttpRes
         .body(format!("Hello {name}!"))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     examples_common::init_standard_logger();
 

@@ -26,7 +26,7 @@ async fn an_expensive_function(n: web::Path<u64>) -> impl Responder {
     HttpResponse::Ok().body(result.to_string())
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::result::Result<(), std::io::Error> {
     env_logger::init();
 

@@ -12,4 +12,5 @@ env_logger.workspace = true
 futures-util.workspace = true
 log.workspace = true
 sanitize-filename = "0.6"
+tokio.workspace = true
 uuid.workspace = true

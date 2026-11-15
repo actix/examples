@@ -51,7 +51,7 @@ async fn create_username_index(client: &Client) {
         .expect("Creating an index should succeed");
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     let uri = std::env::var("MONGODB_URI").unwrap_or_else(|_| "mongodb://localhost:27017".into());
 

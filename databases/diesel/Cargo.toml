@@ -11,4 +11,5 @@ dotenvor.workspace = true
 env_logger.workspace = true
 log.workspace = true
 serde.workspace = true
+tokio.workspace = true
 uuid.workspace = true

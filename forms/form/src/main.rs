@@ -5,7 +5,7 @@ struct AppState {
     foo: String,
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()

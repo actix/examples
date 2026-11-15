@@ -71,7 +71,7 @@ fn get_client_cert(connection: &dyn Any, data: &mut Extensions) {
     }
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

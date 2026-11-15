@@ -32,7 +32,7 @@ async fn index() -> Result<HttpResponse, Error> {
     })
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

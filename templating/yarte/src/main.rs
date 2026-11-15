@@ -21,7 +21,7 @@ async fn index(query: web::Query<HashMap<String, String>>) -> Result<HttpRespons
         .body(auto!(ywrite_min!(String, "{{> index }}"))))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

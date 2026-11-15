@@ -9,3 +9,4 @@ actix-web.workspace = true
 env_logger.workspace = true
 log.workspace = true
 tera = { version = "2", features = ["glob_fs"] }
+tokio.workspace = true

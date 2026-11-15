@@ -21,7 +21,7 @@ fn get_conn_builder(
         .pass(Some(db_password))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     // initialize environment
     unsafe { dotenvor::dotenv() }.ok();

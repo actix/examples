@@ -15,3 +15,4 @@ log.workspace = true
 serde.workspace = true
 sqlx = { version = "0.9", features = ["runtime-tokio", "tls-rustls", "sqlite"] }
 tera = { version = "2", features = ["glob_fs"] }
+tokio.workspace = true

@@ -47,7 +47,7 @@ async fn parallel_weather(db: web::Data<Pool>) -> Result<HttpResponse, AWError> 
     Ok(HttpResponse::Ok().json(result.map_err(AWError::from)?))
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

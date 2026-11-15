@@ -16,7 +16,7 @@ mod register_handler;
 mod schema;
 mod utils;
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     unsafe { dotenvor::dotenv() }.ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));

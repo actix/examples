@@ -12,3 +12,4 @@ async-graphql-actix-web = "7"
 env_logger.workspace = true
 log.workspace = true
 slab = "0.4"
+tokio.workspace = true

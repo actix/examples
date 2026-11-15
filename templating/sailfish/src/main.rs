@@ -40,7 +40,7 @@ async fn hello() -> impl Responder {
     web::Html::new("<p>Hello world!</p>".to_owned())
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 

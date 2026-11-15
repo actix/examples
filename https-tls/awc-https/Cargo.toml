@@ -12,3 +12,4 @@ log = { workspace = true }
 mime = { workspace = true }
 rustls = { workspace = true }
 rustls-platform-verifier = "0.7"
+tokio.workspace = true

@@ -16,7 +16,7 @@ async fn index(msg: ProtoBuf<MyObj>) -> Result<HttpResponse> {
     HttpResponse::Ok().protobuf(msg.0) // <- send response
 }
 
-#[actix_web::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
