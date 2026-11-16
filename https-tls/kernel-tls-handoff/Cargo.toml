@@ -4,7 +4,7 @@ publish = { workspace = true }
 edition = { workspace = true }
 rust-version = { workspace = true }
 
-[dependencies]
+[target.'cfg(target_os = "linux")'.dependencies]
 actix-http = { workspace = true }
 actix-server = "2"
 actix-service = "2"
