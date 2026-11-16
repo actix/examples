@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 use actix_web::web;
-use actix_ws::Message;
+use actix_ws::{AggregatedMessage, AggregatedMessageStream, Message, MessageStream, Session};
 use futures_util::{
     StreamExt as _,
     future::{self, Either},
@@ -18,10 +18,7 @@ const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// Echo text & binary messages received from the client, respond to ping messages, and monitor
 /// connection health to detect network issues and free up resources.
-pub async fn echo_heartbeat_ws(
-    mut session: actix_ws::Session,
-    mut msg_stream: actix_ws::MessageStream,
-) {
+pub async fn echo_heartbeat_ws(mut session: Session, mut msg_stream: AggregatedMessageStream) {
     log::info!("Connected");
 
     let mut last_heartbeat = Instant::now();
@@ -41,33 +38,26 @@ pub async fn echo_heartbeat_ws(
                 log::debug!("Msg: {msg:?}");
 
                 match msg {
-                    Message::Text(text) => {
+                    AggregatedMessage::Text(text) => {
                         session.text(text).await.unwrap();
                     }
 
-                    Message::Binary(bin) => {
+                    AggregatedMessage::Binary(bin) => {
                         session.binary(bin).await.unwrap();
                     }
 
-                    Message::Close(reason) => {
+                    AggregatedMessage::Close(reason) => {
                         break reason;
                     }
 
-                    Message::Ping(bytes) => {
+                    AggregatedMessage::Ping(bytes) => {
                         last_heartbeat = Instant::now();
                         let _ = session.pong(&bytes).await;
                     }
 
-                    Message::Pong(_) => {
+                    AggregatedMessage::Pong(_) => {
                         last_heartbeat = Instant::now();
                     }
-
-                    Message::Continuation(_) => {
-                        log::warn!("No support for continuation frames");
-                    }
-
-                    // no-op; ignore
-                    Message::Nop => {}
                 };
             }
 
@@ -110,7 +100,7 @@ pub async fn echo_heartbeat_ws(
 /// connections die or network issues arise.
 ///
 /// See [`echo_heartbeat_ws`] for a more realistic implementation.
-pub async fn echo_ws(mut session: actix_ws::Session, mut msg_stream: actix_ws::MessageStream) {
+pub async fn echo_ws(mut session: Session, mut msg_stream: AggregatedMessageStream) {
     log::info!("Connected");
 
     let close_reason = loop {
@@ -119,30 +109,23 @@ pub async fn echo_ws(mut session: actix_ws::Session, mut msg_stream: actix_ws::M
                 log::debug!("Msg: {msg:?}");
 
                 match msg {
-                    Message::Text(text) => {
+                    AggregatedMessage::Text(text) => {
                         session.text(text).await.unwrap();
                     }
 
-                    Message::Binary(bin) => {
+                    AggregatedMessage::Binary(bin) => {
                         session.binary(bin).await.unwrap();
                     }
 
-                    Message::Close(reason) => {
+                    AggregatedMessage::Close(reason) => {
                         break reason;
                     }
 
-                    Message::Ping(bytes) => {
+                    AggregatedMessage::Ping(bytes) => {
                         let _ = session.pong(&bytes).await;
                     }
 
-                    Message::Pong(_) => {}
-
-                    Message::Continuation(_) => {
-                        log::warn!("No support for continuation frames");
-                    }
-
-                    // no-op; ignore
-                    Message::Nop => {}
+                    AggregatedMessage::Pong(_) => {}
                 };
             }
 
@@ -160,8 +143,8 @@ pub async fn echo_ws(mut session: actix_ws::Session, mut msg_stream: actix_ws::M
 /// Broadcast text & binary messages received from a client, respond to ping messages, and monitor
 /// connection health to detect network issues and free up resources.
 pub async fn broadcast_ws(
-    mut session: actix_ws::Session,
-    mut msg_stream: actix_ws::MessageStream,
+    mut session: Session,
+    mut msg_stream: MessageStream,
     mut rx: broadcast::Receiver<web::Bytes>,
 ) {
     log::info!("Connected");

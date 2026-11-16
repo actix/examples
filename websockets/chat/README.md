@@ -28,9 +28,7 @@ cd websockets/chat
 cargo run --bin websocket-chat-server
 ```
 
-Press Ctrl-C to stop the server. On Unix, SIGINT, SIGTERM, and SIGQUIT start shutdown. The server
-closes WebSocket sessions with close code 1001 (Going Away). After the HTTP server finishes graceful
-shutdown, the chat actor stops.
+Press Ctrl-C to stop the server. On Unix, SIGINT, SIGTERM, and SIGQUIT start shutdown. The server closes WebSocket sessions with close code 1001 (Going Away). After the HTTP server finishes graceful shutdown, the chat actor stops.
 
 ## Browser Client
 

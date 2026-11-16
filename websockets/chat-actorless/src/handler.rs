@@ -1,6 +1,6 @@
 use std::time::{Duration, Instant};
 
-use actix_ws::AggregatedMessage;
+use actix_ws::{AggregatedMessage, AggregatedMessageStream, Session};
 use futures_util::StreamExt as _;
 use tokio::{sync::mpsc, time::interval};
 
@@ -16,8 +16,8 @@ const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 /// connection health to detect network issues and free up resources.
 pub async fn chat_ws(
     chat_server: ChatServerHandle,
-    mut session: actix_ws::Session,
-    msg_stream: actix_ws::MessageStream,
+    mut session: Session,
+    mut msg_stream: AggregatedMessageStream,
 ) {
     log::info!("Connected");
 
@@ -29,11 +29,6 @@ pub async fn chat_ws(
 
     // unwrap: chat server is not dropped before the HTTP server
     let conn_id = chat_server.connect(conn_tx).await;
-
-    let mut msg_stream = msg_stream
-        .max_frame_size(128 * 1024)
-        .aggregate_continuations()
-        .max_continuation_size(2 * 1024 * 1024);
 
     let close_reason = loop {
         tokio::select! {
@@ -88,7 +83,7 @@ pub async fn chat_ws(
 
 async fn process_text_msg(
     chat_server: &ChatServerHandle,
-    session: &mut actix_ws::Session,
+    session: &mut Session,
     text: &str,
     conn: ConnId,
     name: &mut Option<String>,

@@ -100,7 +100,7 @@ actix-tls = "3.4"
 actix-web = "4.11"
 actix-web-actors = "4.3"
 actix-web-lab = "0.29"
-actix-ws = "0.4"
+actix-ws = "0.4.1"
 awc = "3.7"
 
 async-stream = "0.3"

@@ -5,7 +5,8 @@
 use std::io;
 
 use actix_files::NamedFile;
-use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware, web};
+use actix_web::{App, Error, HttpResponse, HttpServer, Responder, middleware, web};
+use actix_ws::WebSocket;
 use tokio::{
     task::{spawn, spawn_local},
     try_join,
@@ -31,20 +32,17 @@ async fn index() -> impl Responder {
 
 /// Handshake and start WebSocket handler with heartbeats.
 async fn chat_ws(
-    req: HttpRequest,
-    stream: web::Payload,
+    WebSocket {
+        response,
+        session,
+        stream,
+    }: WebSocket,
     chat_server: web::Data<ChatServerHandle>,
 ) -> Result<HttpResponse, Error> {
-    let (res, session, msg_stream) = actix_ws::handle(&req, stream)?;
-
     // spawn websocket handler (and don't await it) so that the response is returned immediately
-    spawn_local(handler::chat_ws(
-        (**chat_server).clone(),
-        session,
-        msg_stream,
-    ));
+    spawn_local(handler::chat_ws((**chat_server).clone(), session, stream));
 
-    Ok(res)
+    Ok(response)
 }
 
 #[tokio::main(flavor = "current_thread")]

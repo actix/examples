@@ -8,6 +8,7 @@ use actix_files::NamedFile;
 use actix_web::{
     App, Error, HttpRequest, HttpResponse, HttpServer, Responder, middleware, rt, web,
 };
+use actix_ws::WebSocket;
 use tokio::sync::broadcast;
 
 mod handler;
@@ -17,13 +18,17 @@ async fn index() -> impl Responder {
 }
 
 /// Handshake and start WebSocket handler with heartbeats.
-async fn echo_heartbeat_ws(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    let (res, session, msg_stream) = actix_ws::handle(&req, stream)?;
-
+async fn echo_heartbeat_ws(
+    WebSocket {
+        response,
+        session,
+        stream,
+    }: WebSocket,
+) -> Result<HttpResponse, Error> {
     // spawn websocket handler (and don't await it) so that the response is returned immediately
-    rt::spawn(handler::echo_heartbeat_ws(session, msg_stream));
+    rt::spawn(handler::echo_heartbeat_ws(session, stream));
 
-    Ok(res)
+    Ok(response)
 }
 
 /// Handshake and start basic WebSocket handler.
@@ -31,13 +36,17 @@ async fn echo_heartbeat_ws(req: HttpRequest, stream: web::Payload) -> Result<Htt
 /// This example is just for simple demonstration. In reality, you likely want to include
 /// some handling of heartbeats for connection health tracking to free up server resources when
 /// connections die or network issues arise.
-async fn echo_ws(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    let (res, session, msg_stream) = actix_ws::handle(&req, stream)?;
-
+async fn echo_ws(
+    WebSocket {
+        response,
+        session,
+        stream,
+    }: WebSocket,
+) -> Result<HttpResponse, Error> {
     // spawn websocket handler (and don't await it) so that the response is returned immediately
-    rt::spawn(handler::echo_ws(session, msg_stream));
+    rt::spawn(handler::echo_ws(session, stream));
 
-    Ok(res)
+    Ok(response)
 }
 
 /// Send message to clients connected to broadcast WebSocket.

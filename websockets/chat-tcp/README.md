@@ -44,11 +44,8 @@ Open url: <http://localhost:8080>
 
 ## Protocol
 
-TCP uses JSON messages with a two-byte, big-endian length prefix. The request and response formats
-remain compatible with the included TCP client. Encoded messages must fit in 65,535 bytes.
+TCP uses JSON messages with a two-byte, big-endian length prefix. The request and response formats remain compatible with the included TCP client. Encoded messages must fit in 65,535 bytes.
 
 ## Shutdown
 
-SIGINT, SIGTERM, and SIGQUIT cancel both listeners on Unix; other platforms use Ctrl-C. WebSocket
-sessions close with code 1001. TCP sessions close their connections, and the chat actor stops after
-both listeners finish shutdown.
+SIGINT, SIGTERM, and SIGQUIT cancel both listeners on Unix; other platforms use Ctrl-C. WebSocket sessions close with code 1001. TCP sessions close their connections, and the chat actor stops after both listeners finish shutdown.
