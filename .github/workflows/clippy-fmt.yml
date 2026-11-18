@@ -13,15 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
-      - uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
+      - uses: zizmorcore/zizmor-action@v0.8.1
         with:
           advanced-security: false
           annotations: true
-          version: v1.24.1
+          version: v1.32.0
 
   fmt:
     name: rustfmt check
@@ -30,18 +30,18 @@ jobs:
     runs-on: ubuntu-slim
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@a188e68d0fd2bd36ad51dccb2b07ba6e75105f30 # v2.0.1
+        uses: actions-rust-lang/setup-rust-toolchain@v2.0.1
         with:
           toolchain: stable
           components: rustfmt
 
       - name: rustfmt
-        uses: actions-rust-lang/rustfmt@4066006ec54a31931b9b1fddfd38f2fdf2d27143 # v1.1.2
+        uses: actions-rust-lang/rustfmt@v1.1.2
 
   clippy:
     name: clippy check
@@ -54,12 +54,12 @@ jobs:
       CARGO_INCREMENTAL: false
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@a188e68d0fd2bd36ad51dccb2b07ba6e75105f30 # v2.0.1
+        uses: actions-rust-lang/setup-rust-toolchain@v2.0.1
         with:
           toolchain: stable
           components: clippy
