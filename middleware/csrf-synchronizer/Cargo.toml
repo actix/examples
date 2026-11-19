@@ -1,0 +1,12 @@
+[package]
+name = "middleware-csrf-synchronizer"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+actix-csrf-middleware = { version = "0.9", features = ["session"] }
+actix-session = { workspace = true, features = ["cookie-session"] }
+actix-web.workspace = true
+env_logger.workspace = true
+log.workspace = true
+serde.workspace = true
