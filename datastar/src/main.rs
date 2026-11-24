@@ -140,7 +140,7 @@ mod tests {
         String::from_utf8(chunk.to_vec()).unwrap()
     }
 
-    #[actix_web::test]
+    #[tokio::test(flavor = "local")]
     async fn votes_update_the_shared_results() {
         let app = test::init_service(
             App::new()
