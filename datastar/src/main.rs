@@ -23,14 +23,13 @@ struct Poll {
 
 impl Poll {
     fn results(counts: [u64; OPTIONS.len()]) -> String {
-        let total = counts.iter().copied().map(u128::from).sum::<u128>().max(1);
         let highest = counts.iter().copied().max().unwrap_or_default();
 
         let rows = OPTIONS
             .into_iter()
             .zip(counts)
             .map(|((choice, name), count)| {
-                let share = 100 * u128::from(count) / total;
+                let width = 100 * u128::from(count) / u128::from(highest.max(1));
                 let track = if count > 0 && count == highest { "track leader" } else { "track" };
 
                 formatdoc!(
@@ -38,7 +37,7 @@ impl Poll {
                     <div class="option">
                         <div>
                             <div class="tally">{name} <strong>{count}</strong></div>
-                            <div class="{track}"><span style="width: {share}%"></span></div>
+                            <div class="{track}"><span style="width: {width}%"></span></div>
                         </div>
                         <button id="vote-{choice}" data-on:click="@post('/vote/{choice}')">Vote</button>
                     </div>
@@ -188,7 +187,7 @@ mod tests {
         }
 
         let mut patch = String::new();
-        for choice in ["coffee", "tea", "coffee", "matcha", "hot-chocolate"] {
+        for choice in ["coffee", "tea", "matcha", "hot-chocolate", "coffee"] {
             let req = test::TestRequest::post()
                 .uri(&format!("/vote/{choice}"))
                 .to_request();
@@ -197,14 +196,18 @@ mod tests {
             patch = next_patch(&mut clients[0]).await;
             assert!(patch.contains("event: datastar-patch-elements"));
             assert_eq!(patch, next_patch(&mut clients[1]).await);
+
+            if choice == "hot-chocolate" {
+                assert_eq!(patch.matches("width: 100%").count(), 4);
+            }
         }
         assert!(patch.contains("Tea <strong>1</strong>"));
         assert!(patch.contains("Coffee <strong>2</strong>"));
         assert!(patch.contains("Matcha <strong>1</strong>"));
         assert!(patch.contains("Hot Chocolate <strong>1</strong>"));
-        assert_eq!(patch.matches("width: 20%").count(), 3);
-        assert_eq!(patch.matches("width: 40%").count(), 1);
+        assert_eq!(patch.matches("width: 50%").count(), 3);
+        assert_eq!(patch.matches("width: 100%").count(), 1);
         assert_eq!(patch.matches("track leader").count(), 1);
-        assert!(patch.contains(r#"class="track leader"><span style="width: 40%""#));
+        assert!(patch.contains(r#"class="track leader"><span style="width: 100%""#));
     }
 }
