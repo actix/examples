@@ -9,6 +9,7 @@ actix-web = { workspace = true }
 actix-sse = "0.3"
 datastar = { version = "0.4.2", features = ["actix-web"] }
 env_logger = { workspace = true }
-futures-util = { workspace = true }
 indoc = "2"
 log = { workspace = true }
+tokio = { workspace = true }
+tokio-stream = { workspace = true, features = ["sync"] }
