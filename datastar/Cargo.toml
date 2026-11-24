@@ -8,8 +8,8 @@ rust-version.workspace = true
 actix-web = { workspace = true }
 actix-sse = "0.3"
 datastar = { version = "0.4.2", features = ["actix-web"] }
-env_logger = { workspace = true }
+examples-common = { workspace = true }
 indoc = "2"
-log = { workspace = true }
 tokio = { workspace = true }
 tokio-stream = { workspace = true, features = ["sync"] }
+tracing = { workspace = true }

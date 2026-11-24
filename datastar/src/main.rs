@@ -97,11 +97,11 @@ async fn vote(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    examples_common::init_standard_logger();
 
     let poll = web::Data::new(Poll::default());
 
-    log::info!("Starting HTTP server at http://localhost:8080");
+    tracing::info!("Starting HTTP server at http://localhost:8080");
 
     HttpServer::new(move || {
         App::new()
@@ -120,18 +120,21 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use std::{future::poll_fn, pin::Pin, time::Duration};
+
     use actix_web::{
         body::{BoxBody, MessageBody},
         http::StatusCode,
+        rt::time::timeout,
         test,
     };
 
     use super::*;
 
     async fn next_patch(body: &mut BoxBody) -> String {
-        let chunk = actix_web::rt::time::timeout(
-            std::time::Duration::from_secs(2),
-            std::future::poll_fn(|cx| std::pin::Pin::new(&mut *body).poll_next(cx)),
+        let chunk = timeout(
+            Duration::from_secs(2),
+            poll_fn(|cx| Pin::new(&mut *body).poll_next(cx)),
         )
         .await
         .expect("timed out waiting for patch")
