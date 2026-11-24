@@ -3492,10 +3492,11 @@ dependencies = [
  "actix-sse",
  "actix-web",
  "datastar",
- "env_logger",
- "futures-util",
+ "examples-common",
  "indoc",
- "log",
+ "tokio",
+ "tokio-stream",
+ "tracing",
 ]
 
 [[package]]
