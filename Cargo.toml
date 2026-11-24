@@ -17,6 +17,7 @@ members = [
   "cache/redis",
   "cors/backend",
   "data-factory",
+  "datastar",
   "databases/diesel",
   "databases/diesel-async",
   "databases/mongodb",

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Datastar poll · Actix Web examples</title>
+    <link rel="icon" href="/actix.png">
+    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.5/bundles/datastar.js"></script>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <img src="/actix.png" width="32" height="32" alt="">Actix Web
+        <span>Datastar Example</span>
+      </nav>
+    </header>
+
+    <main data-on-interval__duration.5s="@get('/results')">
+      <div>
+        <h1>What should we brew?</h1>
+      </div>
+
+      <section>
+        <h2 id="results-heading">Live results</h2>
+        <!-- results -->
+      </section>
+    </main>
+  </body>
+</html>

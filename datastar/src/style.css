@@ -1,0 +1,133 @@
+:root {
+    color-scheme: light dark;
+    --page: light-dark(#fff, #1b1b1d);
+    --ink: light-dark(#202124, #f0eff3);
+    --accent: light-dark(#7036ab, #bc8aea);
+    --rule: light-dark(#dfdce4, #413e46);
+    --secondary: light-dark(#62616a, #bab7c3);
+    font:
+        1rem/1.5 system-ui,
+        sans-serif;
+    color: var(--ink);
+    background: var(--page);
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+}
+header {
+    border-bottom: 1px solid var(--rule);
+}
+nav,
+main {
+    max-width: 45rem;
+    margin: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+nav,
+nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+nav {
+    min-height: 3.75rem;
+}
+nav a {
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+}
+nav a:hover {
+    color: var(--accent);
+}
+nav span {
+    border-inline-start: 1px solid var(--rule);
+    padding-inline-start: 0.8rem;
+    color: var(--secondary);
+}
+main {
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 2.5rem);
+    padding-block: clamp(2rem, 7vw, 5rem);
+}
+h1 {
+    margin: 0;
+    font-size: clamp(2.25rem, 6vw, 3.25rem);
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+    text-wrap: balance;
+    font-weight: 750;
+}
+p {
+    color: var(--secondary);
+    margin: 0.5rem 0 0;
+}
+button {
+    padding: 0.75rem 0.5rem;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-weight: 650;
+    white-space: nowrap;
+    cursor: pointer;
+}
+button:hover {
+    background: var(--accent);
+    color: var(--page);
+}
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 5px;
+}
+section {
+    border-block: 1px solid var(--rule);
+    padding-block: 1.5rem;
+}
+h2 {
+    font-size: 1rem;
+    margin: 0;
+}
+@media (prefers-color-scheme: dark) {
+    img {
+        filter: invert(1);
+    }
+}
+#results {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.option {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7.75rem;
+    align-items: center;
+    gap: clamp(0.75rem, 4vw, 2rem);
+}
+.tally {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    justify-content: space-between;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+.track {
+    margin-top: 0.4rem;
+    height: 0.5rem;
+    background: var(--rule);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+.track span {
+    display: block;
+    height: 100%;
+    background: var(--secondary);
+}
+.track.leader span {
+    background: var(--accent);
+}
